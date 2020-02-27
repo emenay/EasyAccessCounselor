@@ -25,5 +25,9 @@ def notes():
 def schedule():
     return render_template('schedule.html')
 
+@app.route('/messages')
+def messages():
+    return render_template('messages.html')
+
 if __name__ == '__main__':
     app.run(debug=True)
