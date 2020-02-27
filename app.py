@@ -25,5 +25,9 @@ def notes():
 def schedule():
     return render_template('schedule.html')
 
+@app.route('/caseload_management')
+def caseload_management():
+    return render_template('caseload_management.html')
+
 if __name__ == '__main__':
     app.run(debug=True)
