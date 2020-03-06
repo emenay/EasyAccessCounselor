@@ -4,3 +4,4 @@ from flask import render_template
 @app.route('/caseload_management')
 def caseload_management():
     return render_template('caseload_management.html')
+
