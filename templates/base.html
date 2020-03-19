@@ -8,9 +8,13 @@
     {% endblock %}
   </head>
   <body>
+	<div id="page-name">
+		{% block pagename %}{% endblock %}
+	</div>
 	<div id="header">
+		<!-- TODO: Convert this to a vertical navbar on the left. -->
 		{% block header %}
-		<ul class="navbar">
+		<ul id="navbar">
 			<li><a href="/" class="nav-button">Home</a></li>
 			<li><a href="/about" class="nav-button">About</a></li>
 			<li><a href="/caseload_management" class="nav-button">Caseload</a></li>

@@ -1,4 +1,11 @@
-.navbar {
+#page-name {
+    width: 100%;
+    padding: 40px;
+    text-align: center;
+    font-size: 64pt
+}
+
+#navbar {
     display: inline-flex;
     justify-content: space-around;
     align-items: center;
@@ -7,7 +14,7 @@
     padding-inline-start: 0;
     margin: 0;
     height: 50px;
-    background-color: wheat;
+    background-color: #dabeef;
 }
 
 .nav-button {
