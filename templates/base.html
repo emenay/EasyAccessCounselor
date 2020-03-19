@@ -10,7 +10,16 @@
   <body>
 	<div id="header">
 		{% block header %}
-		This is a placeholder for the navbar, which I will make. :)
+		<ul class="navbar">
+			<li><a href="/" class="nav-button">Home</a></li>
+			<li><a href="/about" class="nav-button">About</a></li>
+			<li><a href="/caseload_management" class="nav-button">Caseload</a></li>
+			<li><a href="/college_list" class="nav-button">College List</a></li>
+			<li><a href="/messages" class="nav-button">Messages</a></li>
+			<li><a href="/notes" class="nav-button">Notes</a></li>
+			<li><a href="/schedule" class="nav-button">Schedule</a></li>
+			<li><a href="/tasks" class="nav-button">Tasks</a></li>
+		</ul>
 		{% endblock %}
 	</div>
     <div id="content">{% block content %}{% endblock %}</div>
