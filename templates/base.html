@@ -8,24 +8,29 @@
     {% endblock %}
   </head>
   <body>
-	<div id="page-name">
-		{% block pagename %}{% endblock %}
+	<div class="container">
+		<div id="menu">
+			<div id="logo-place">
+				<img id="logo" src="/static/assets/logo.png">
+				Easy Access
+			</div>
+			<ul id="nav-buttons">
+				<li class="nav-button"><a href="/" class="btn-text">Home</a></li>
+				<li class="nav-button"><a href="/about" class="btn-text">About</a></li>
+				<li class="nav-button"><a href="/caseload_management" class="btn-text">Caseload</a></li>
+				<li class="nav-button"><a href="/college_list" class="btn-text">College List</a></li>
+				<li class="nav-button"><a href="/messages" class="btn-text">Messages</a></li>
+				<li class="nav-button"><a href="/notes" class="btn-text">Notes</a></li>
+				<li class="nav-button"><a href="/schedule" class="btn-text">Schedule</a></li>
+				<li class="nav-button"><a href="/tasks" class="btn-text">Tasks</a></li>
+			</ul>
+		</div>
+		<div class="page-content">
+			<div id="page-name">
+				{% block pagename %}{% endblock %}
+			</div>
+			<div id="content">{% block content %}{% endblock %}</div>
+		</div>
 	</div>
-	<div id="header">
-		<!-- TODO: Convert this to a vertical navbar on the left. -->
-		{% block header %}
-		<ul id="navbar">
-			<li><a href="/" class="nav-button">Home</a></li>
-			<li><a href="/about" class="nav-button">About</a></li>
-			<li><a href="/caseload_management" class="nav-button">Caseload</a></li>
-			<li><a href="/college_list" class="nav-button">College List</a></li>
-			<li><a href="/messages" class="nav-button">Messages</a></li>
-			<li><a href="/notes" class="nav-button">Notes</a></li>
-			<li><a href="/schedule" class="nav-button">Schedule</a></li>
-			<li><a href="/tasks" class="nav-button">Tasks</a></li>
-		</ul>
-		{% endblock %}
-	</div>
-    <div id="content">{% block content %}{% endblock %}</div>
   </body>
 </html>
