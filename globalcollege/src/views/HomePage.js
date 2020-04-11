@@ -1,15 +1,14 @@
 import React from 'react';
-
-import { signOut } from '../firebase/firebase';
+import Header from '../components/Header';
 
 class HomePage extends React.Component {
     render() {
         return (
           <div>
-            <h1>Logged In</h1>
-            <button onClick={signOut}>
-                Logout
-            </button>
+            <Header/>
+            <div>
+              This is the Home page!
+            </div>
           </div>
         );
     }

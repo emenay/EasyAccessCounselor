@@ -1,6 +1,7 @@
 import React from 'react';
-
 import { db } from '../firebase/firebase';
+
+import Header from '../components/Header';
 
 class AboutPage extends React.Component {
     state = {
@@ -15,6 +16,7 @@ class AboutPage extends React.Component {
     render() {
         return (
           <div>
+            <Header/>
             <h1>{this.state.data ? this.state.data['NeedMet'] : ""}</h1>
           </div>
         );
