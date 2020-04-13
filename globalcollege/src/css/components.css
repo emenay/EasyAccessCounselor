@@ -1,0 +1,31 @@
+.sidenav {
+	height: 100%;
+	width: 250px;
+	max-width: 280px;
+	border: 1px solid rgba(0, 0, 0, 0.1);
+	text-decoration: none;
+}
+
+.header-acc {
+	padding-top: 10px;
+	padding-right: 10px;
+	text-align: right;
+	height: 25px;
+}
+
+.header-title {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	text-align: center;
+	height: 150px;
+	font-size: 42pt
+}
+
+.nav-button {
+	text-decoration: none
+}
+
+.LoginBox {
+	width: 365px;
+}
