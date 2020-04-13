@@ -5,7 +5,7 @@ import '../css/components.css'
 
 const items =  [
   { name: 'home', label: 'Home', path: '' },
-  { name: 'login', label: 'Account', path: 'login' },
+  { name: 'account', label: 'Account', path: 'account' },
   { name: 'about', label: 'About', path: 'about' },
   { name: 'caseload', label: 'Caseload Management', path: 'caseload_management' },
   { name: 'college_list', label: 'College List', path: 'college_list' },

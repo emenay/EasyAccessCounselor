@@ -1,18 +1,27 @@
 import React from 'react';
 import '../css/LoginPage.css';
 
-import LoginBox from '../components/login/LoginBox';
-import SignOut from '../components/login/SignOut';
+import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth';
+import { auth, emailAndPassword} from '../firebase/firebase';
 
 import Header from '../components/Header';
+
+const uiConfig = {
+    signInOptions: [emailAndPassword],
+    credentialHelper: 'none'
+};
 
 class LoginPage extends React.Component {
     render() {
       return (
-				<div>
-          <Header/>
-					{ this.props.hasUser ? <SignOut /> : <LoginBox />}
-				</div>
+      <div>
+        <Header/>
+        <div className="LoginBoxContainer">
+          <div className="LoginBox">
+            <StyledFirebaseAuth uiConfig={uiConfig} firebaseAuth={auth}/>
+          </div>
+        </div>
+      </div>
       );
     }
 }

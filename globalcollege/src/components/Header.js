@@ -3,7 +3,7 @@ import '../css/components.css'
 
 const paths = {
 	"/": "Home",
-	"/login": "Account",
+	"/account": "Account",
 	"/about": "About",
 	"/caseload_management": "Caseload Management",
 	"/college_list": "College List",
