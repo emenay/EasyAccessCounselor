@@ -1,5 +1,7 @@
-import React from 'react'
-import '../css/components.css'
+import React from 'react';
+import '../css/components.css';
+
+import SignOutBtn from './SignOutBtn';
 
 const paths = {
 	"/": "Home",
@@ -10,12 +12,25 @@ const paths = {
 	"/schedule": "Schedule"
 }
 
-function Header() {
+function Header(props) {
 	const pathname = window.location.pathname;
+
+	let signout;
+	if (props.isLoggedIn) {
+		signout = <SignOutBtn/>;
+	} else {
+		signout = null;
+	}
+
   return (
-    <div className="header">
-			{paths[pathname]}
-    </div>
+		<div className="header">
+			<div className="header-acc">
+				{ signout }
+			</div>
+			<div className="header-title">
+				{paths[pathname]}
+			</div>
+		</div>
   )
 }
 
