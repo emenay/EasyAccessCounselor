@@ -27,7 +27,7 @@ export default function App() {
   return (
     <Router>
       <div className="container">
-        <Sidenav/>
+        <Sidenav isLoggedIn={isLoggedIn}/>
         <div className="page-content">
           <Switch>
             <Route path="/account">
@@ -50,9 +50,6 @@ export default function App() {
               <Header isLoggedIn={isLoggedIn}/>
               { user ? <Schedule /> : <Login /> }
             </Route>
-            {/* <Route path="/logout">
-              <SignOut />
-            </Route> */}
             <Route path="/">
               <Header isLoggedIn={isLoggedIn}/>
               <Home />

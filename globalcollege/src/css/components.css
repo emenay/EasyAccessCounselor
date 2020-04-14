@@ -26,6 +26,11 @@
 	text-decoration: none
 }
 
+.menu-icon-container {
+	display: flex;
+	justify-content: flex-end
+}
+
 .LoginBox {
 	width: 365px;
 }
