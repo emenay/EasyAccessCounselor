@@ -21,7 +21,7 @@ const items =  [
 ]
 
 function Sidenav(props) {
-  const [isMenuOpen, setIsMenuOpen] = React.useState(false);
+  const [isMenuOpen, setIsMenuOpen] = React.useState(true);
 
   const openCloseMenu = () => {
     setIsMenuOpen((prev) => !prev);
