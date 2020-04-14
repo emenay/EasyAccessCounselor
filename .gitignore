@@ -153,3 +153,4 @@ yarn-debug.log*
 yarn-error.log*
 
 /globalcollege/src/auth/config.js
+/globalcollege/src/firebase/config.js

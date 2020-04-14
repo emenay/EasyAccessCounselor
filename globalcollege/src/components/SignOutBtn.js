@@ -3,12 +3,14 @@ import '../css/components.css'
 
 import { signOut } from '../firebase/firebase';
 
+import Button from '@material-ui/core/Button';
+
 function SignOut() {
   return (
     <div>
-			<button onClick={signOut}>
+			<Button onClick={signOut}>
         Sign Out
-      </button>
+      </Button>
     </div>
   )
 }
