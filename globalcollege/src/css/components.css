@@ -1,9 +1,14 @@
+.sidenav-container {
+	display: flex;
+	flex-direction: row
+}
+
 .sidenav {
 	height: 100%;
-	width: 250px;
+	width: 220px;
 	max-width: 280px;
-	border: 1px solid rgba(0, 0, 0, 0.1);
 	text-decoration: none;
+	text-align: center
 }
 
 .header-acc {
@@ -19,11 +24,24 @@
 	justify-content: center;
 	text-align: center;
 	height: 150px;
-	font-size: 42pt
+	font-size: 50px;
+	margin-bottom: 20px
+}
+.nav-list {
+	display: flex;
+	flex-direction: column;
+	justify-content: space-around
 }
 
 .nav-button {
-	text-decoration: none
+	text-decoration: none;
+	color: #1E3957;
+	width: 261px
+}
+
+.signin-btn {
+	margin-top: 50px;
+	color: #A5711A
 }
 
 .menu-icon-container {

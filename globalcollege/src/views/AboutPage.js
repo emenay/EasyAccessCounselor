@@ -14,6 +14,8 @@ class AboutPage extends React.Component {
     render() {
         return (
           <div>
+            This is the About page. Currently, this page has an example of how to get data
+            from the database.
             <h1>{this.state.data ? this.state.data['NeedMet'] : ""}</h1>
           </div>
         );

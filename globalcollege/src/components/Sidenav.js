@@ -13,6 +13,7 @@ import logo from '../assets/logo.svg';
 
 const items =  [
   { name: 'home', label: 'Home', path: '' },
+  { name: 'account', label: 'Account', path: 'account' },
   { name: 'about', label: 'About', path: 'about' },
   { name: 'caseload', label: 'Caseload Management', path: 'caseload_management' },
   { name: 'college_list', label: 'College List', path: 'college_list' },
@@ -27,46 +28,50 @@ function Sidenav(props) {
   }
 
   const signOutBtn =
-    <Link className="nav-button" to="" onClick={signOut} key="signOut">
+    <Link className="nav-button signin-btn" to="" onClick={signOut} key="signOut">
       <ListItem style={{height: 50}} button>
         <ListItemText>Sign Out</ListItemText>
       </ListItem>
     </Link>
 
   const signInBtn =
-    <Link className="nav-button" to="account" key="signIn">
+    <Link className="nav-button signin-btn" to="account" key="signIn">
       <ListItem style={{height: 50}} button>
         <ListItemText>Sign In</ListItemText>
       </ListItem>
     </Link>
 
   return (
-    <div>
-      { isMenuOpen ? null :
-        <IconButton onClick={openCloseMenu}>
-          <MenuIcon style={{fontSize: 35}}/>
-        </IconButton>
-      }
+    <div className="sidenav-container">
       <Slide direction="right" in={isMenuOpen} mountOnEnter unmountOnExit>
         <div className="sidenav">
-          <div className="menu-icon-container">
-            <IconButton onClick={openCloseMenu}>
-              <MenuOpenIcon style={{fontSize: 35}}/>
-            </IconButton>
-          </div>
           <img src={logo} alt="logo"/>
-          <List disablePadding dense>
-            {items.map(({label, name, path, ...rest}) => (
-              <Link className="nav-button" to={path} key={name}>
-                <ListItem style={{height: 50}} button {...rest}>
-                  <ListItemText>{label}</ListItemText>
-                </ListItem>
-              </Link>
-            ))}
+          <p style={{fontSize: 24, color: "#A5711A"}}>Easy Access</p>
+          <List disablePadding dense className="nav-list">
+            <div>
+              {items.map(({label, name, path, ...rest}) => (
+                <Link className="nav-button" to={path} key={name}>
+                  <ListItem style={{height: 50}} button {...rest}>
+                    <ListItemText>{label}</ListItemText>
+                  </ListItem>
+                </Link>
+              ))}
+            </div>
             { props.isLoggedIn ? signOutBtn : signInBtn }
           </List>
         </div>
       </Slide>
+      <div>
+        { isMenuOpen ?
+          <IconButton onClick={openCloseMenu}>
+            <MenuOpenIcon style={{fontSize: 35}}/>
+          </IconButton>
+          :
+          <IconButton onClick={openCloseMenu}>
+            <MenuIcon style={{fontSize: 35}}/>
+          </IconButton>
+        }
+      </div>
     </div>
   )
 }
