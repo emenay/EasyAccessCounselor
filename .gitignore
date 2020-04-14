@@ -152,5 +152,7 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-/globalcollege/src/auth/config.js
-/globalcollege/src/firebase/config.js
+src/auth/config.js
+src/firebase/config.js
+
+./node_modules
