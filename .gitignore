@@ -155,4 +155,4 @@ yarn-error.log*
 src/auth/config.js
 src/firebase/config.js
 
-./node_modules
+node_modules/**
