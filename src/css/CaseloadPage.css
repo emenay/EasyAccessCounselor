@@ -1,0 +1,22 @@
+.square {
+    width: 200px;
+    height: 200px;
+    float: left;
+    border-radius: 10px;
+    margin: 10px;
+    overflow: hidden;
+}
+
+#root {
+    width: auto;
+    margin: auto;
+}
+
+#grid {
+    margin: auto;
+}
+
+.card {
+    background-color: #ACE7FF!important;
+    height: 200px!important;
+}
