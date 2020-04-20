@@ -2,7 +2,7 @@ import React from 'react';
 import * as data2 from '../data_caseload_management.json';
 import '../css/CaseloadPage.css'
 import 'bulma/css/bulma.css'
-import { db } from '../firebase/firebase';
+//import { db } from '../firebase/firebase';
 import Spreadsheet from "react-spreadsheet";
 
 const RangeView = ({ cell, getValue }) => (
@@ -44,6 +44,9 @@ class CaseloadPage extends React.Component {
         console.log(arr)
         return (
         <div>
+          <div>
+            <Spreadsheet data={data} />
+          </div>
             <div id="root">
                 <div id="grid">
                 {arr[0].map(person => <div key={person.id} className="square">
@@ -59,9 +62,6 @@ class CaseloadPage extends React.Component {
                     </div>)}
                 </div>
             </div>
-          <div>
-            <Spreadsheet data={data} />
-          </div>
         </div>
         )
     }
