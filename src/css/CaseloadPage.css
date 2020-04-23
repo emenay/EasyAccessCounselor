@@ -1,10 +1,11 @@
 .square {
     width: 200px;
     height: 200px;
-    float: left;
     border-radius: 10px;
     margin: 10px;
     overflow: hidden;
+    float: left;
+    text-align: left;
 }
 
 #root {
@@ -13,10 +14,25 @@
 }
 
 #grid {
-    margin: auto;
+    text-align: center;
+    width: 880px;
+    margin: auto
 }
 
 .card {
     background-color: #ACE7FF!important;
     height: 200px!important;
+}
+
+.blockview-child {
+    width: 80%;
+    height: 200px;
+    border-radius: 10px;
+    margin: 20px auto;
+    overflow: hidden;
+}
+
+span.clear { 
+    clear: left; 
+    display: block; 
 }

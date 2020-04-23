@@ -40,16 +40,38 @@ export function GridView(props) {
   Object.keys(props.data).forEach(function(key) {
     arr.push(props.data[key]);
   });
-  console.log(arr)
   return (
     <div id="grid">
-    {arr[0].map(person => <div key={person.id} className="square">
+    {arr[0].map(person => <span key={person.id} className="square">
         <div className="card">
             <div className="card-content">
                 <p className="title is-4">{person.Name}</p>
                 <p className="subtitle is-6">{person.Essay}</p>
                 <div className="content">
                     <p>{person["Early Apps"]}</p>
+                </div>
+            </div>
+        </div>
+        </span>
+        )}
+    </div>
+  )
+}
+
+export function BlockView(props) {
+  var arr = [];
+  Object.keys(props.data).forEach(function(key) {
+    arr.push(props.data[key]);
+  });
+  return (
+    <div id="blockview">
+    {arr[0].map(person => <div key={person.id} className="blockview-child">
+        <div className="card">
+            <div className="card-content">
+                <p className="title is-4">{person.Name}</p>
+                <p className="subtitle is-6">{person.Essay}</p>
+                <div className="content">
+                    <p>{person["Tasks"]}</p>
                 </div>
             </div>
         </div>
@@ -65,9 +87,12 @@ class CaseloadPage extends React.Component {
           <div>
             <Spreadsheet data={data} />
           </div>
-            <div>
-                <GridView data={data2}/>
-            </div>
+          <div>
+            <BlockView data={data2}/>
+          </div>
+          <div>
+            <GridView data={data2}/>
+          </div>
         </div>
         )
     }
