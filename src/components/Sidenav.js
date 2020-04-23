@@ -14,7 +14,7 @@ import logo from '../assets/logo.svg';
 const items =  [
   { name: 'home', label: 'Home', path: '' },
   { name: 'account', label: 'Account', path: 'account' },
-  { name: 'about', label: 'About', path: 'about' },
+  { name: 'about', label: 'Testing', path: 'about' },
   { name: 'caseload', label: 'Caseload Management', path: 'caseload_management' },
   { name: 'college_list', label: 'College List', path: 'college_list' },
   { name: 'schedule', label: 'Schedule', path: 'schedule' }

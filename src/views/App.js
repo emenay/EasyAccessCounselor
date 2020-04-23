@@ -19,7 +19,6 @@ import Schedule from './SchedulePage';
 
 import Header from '../components/Header';
 import Sidenav from '../components/Sidenav';
-// import SignOut from '../components/login/SignOut';
 
 export default function App() {
   const user = useContext(UserContext);
@@ -36,7 +35,7 @@ export default function App() {
             </Route>
             <Route path="/about">
               <Header isLoggedIn={isLoggedIn}/>
-              <About />
+              { user ? <About cuid={user.uid} /> : <Login />}
             </Route>
             <Route path="/caseload_management">
               <Header isLoggedIn={isLoggedIn}/>

@@ -6,20 +6,33 @@ class AboutPage extends React.Component {
         data : null,
     }
 
-    async componentDidMount() {
-        let doc = await db.collection("NeedMet").doc("Adrian College").get();
-        this.setState({data: doc.data()})
-    }
+  async componentDidMount() {
+    let query = await db.collection("students").where("cuid", "==", this.props.cuid).get();
+    this.setState({data: query.docs.map(doc => doc.data())})
+  }
 
-    render() {
-        return (
-          <div>
-            This is the About page. Currently, this page has an example of how to get data
-            from the database.
-            <h1>{this.state.data ? this.state.data['NeedMet'] : ""}</h1>
-          </div>
-        );
-    }
+  displayTable() {
+    let students = [];
+    this.state.data.forEach(student => students.push(student));
+    let table = 
+        <div>
+          {students.map(student => <div key={student.name}>
+            {student.firstName} {student.lastName}
+          </div>)}
+        </div>
+    return table;
+  }
+
+  render() {
+      return (
+        <div>
+          This is just a tinkering page for right now. This currently has an example of how to
+          get the info for a counselor's students.
+          <h2>My Students</h2>
+          {this.state.data ? this.displayTable() : ""}
+        </div>
+      );
+  }
 }
 
 export default AboutPage;
