@@ -13,7 +13,7 @@ const RangeView = ({ cell, getValue }) => (
     style={{ pointerEvents: "none" }}
   />
 );
- 
+
 const RangeEdit = ({ getValue, cell, onChange }) => (
   <input
     type="range"
@@ -35,32 +35,38 @@ const data = [
   ]
 ];
 
+export function GridView(props) {
+  var arr = [];
+  Object.keys(props.data).forEach(function(key) {
+    arr.push(props.data[key]);
+  });
+  console.log(arr)
+  return (
+    <div id="grid">
+    {arr[0].map(person => <div key={person.id} className="square">
+        <div className="card">
+            <div className="card-content">
+                <p className="title is-4">{person.Name}</p>
+                <p className="subtitle is-6">{person.Essay}</p>
+                <div className="content">
+                    <p>{person["Early Apps"]}</p>
+                </div>
+            </div>
+        </div>
+        </div>)}
+    </div>
+  )
+}
+
 class CaseloadPage extends React.Component {
     render() {
-        var arr = [];
-        Object.keys(data2).forEach(function(key) {
-            arr.push(data2[key]);
-        });
-        console.log(arr)
         return (
         <div>
           <div>
             <Spreadsheet data={data} />
           </div>
-            <div id="root">
-                <div id="grid">
-                {arr[0].map(person => <div key={person.id} className="square">
-                    <div className="card">
-                        <div className="card-content">
-                            <p className="title is-4">{person.Name}</p>
-                            <p className="subtitle is-6">{person.Essay}</p>
-                            <div className="content">
-                                <p>{person["Early Apps"]}</p>
-                            </div>
-                        </div>
-                    </div>
-                    </div>)}
-                </div>
+            <div>
+                <GridView data={data2}/>
             </div>
         </div>
         )
