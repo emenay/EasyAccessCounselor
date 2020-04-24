@@ -66,14 +66,21 @@ class CaseloadPage extends React.Component {
   constructor(props){
     super(props);
     this.state = {
-      view: <GridView data={data2}/>
+      view: <GridView data={data2}/>    
     }
   }
 
   handleClick = (event) => {
     event.persist()
-    console.log(event)
     let currentComponent = this;
+
+    // switches active state of tabs
+    let navNodes = document.getElementById("navigation").childNodes
+    navNodes.forEach(e =>{
+      if(e.className.includes('is-active'))
+      e.classList.remove('is-active')}) 
+    event.target.parentElement.classList.add('is-active')
+    
     switch(event.target.id){
       case 'grid_view': currentComponent.setState({view: <GridView data={data2}/>})
       break;
@@ -84,15 +91,16 @@ class CaseloadPage extends React.Component {
       default: console.log("here")
     }
   }
+
     render() {
         return (
         <div>
           <div>
           <div className="tabs is-centered" id="tabs">
-            <ul>
-              <li className="btn is-active" onClick={this.handleClick}><a id="grid_view" className="navbar-item tab">Grid View</a></li>
-              <li className="btn" onClick={this.handleClick}><a id="block_view" className="navbar-item tab">Block View</a></li>
-              <li className= "btn" onClick={this.handleClick}><a id="spreadsheet_view" className="navbar-item tab">Spreadsheet View</a></li>
+            <ul id="navigation">
+              <li className="btn is-active" id="gview" onClick={this.handleClick}><a id="grid_view" className="navbar-item tab">Grid View</a></li>
+              <li className="btn" id = "bview" onClick={this.handleClick}><a id="block_view" className="navbar-item tab">Block View</a></li>
+              <li className= "btn" id = "sview" onClick={this.handleClick}><a id="spreadsheet_view" className="navbar-item tab">Spreadsheet View</a></li>
             </ul>
           </div>
           </div>
