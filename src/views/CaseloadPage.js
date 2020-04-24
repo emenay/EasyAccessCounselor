@@ -4,11 +4,6 @@ import * as data2 from '../data_caseload_management.json';
 import '../css/CaseloadPage.css'
 import 'bulma/css/bulma.css'
 
-// export function tabs(){
-//   return ();
-// }
-
-
 export function GridView(props) {
   var arr = [];
   Object.keys(props.data).forEach(function(key) {
@@ -62,6 +57,7 @@ export function SpreadsheetView(props) {
   )
 }
 
+
 class CaseloadPage extends React.Component {
   constructor(props){
     super(props);
@@ -80,7 +76,7 @@ class CaseloadPage extends React.Component {
       if(e.className.includes('is-active'))
       e.classList.remove('is-active')}) 
     event.target.parentElement.classList.add('is-active')
-    
+
     switch(event.target.id){
       case 'grid_view': currentComponent.setState({view: <GridView data={data2}/>})
       break;
@@ -92,10 +88,23 @@ class CaseloadPage extends React.Component {
     }
   }
 
+  inputSearch(){
+    let arr = data2.default.map(person => person.Name)
+    console.log(arr)
+}
+
     render() {
         return (
         <div>
           <div>
+            <div className="field has-addons">
+              <div className="control autocomplete is-expanded" onClick={this.inputSearch}>
+                <input className="input" type="text" placeholder="Find a student (Ex: John Doe)" id="search-input"></input>
+              </div>
+              <div className="control">
+                <a className="button is-info" id="submit">Search</a>
+              </div>
+            </div>
           <div className="tabs is-centered" id="tabs">
             <ul id="navigation">
               <li className="btn is-active" id="gview" onClick={this.handleClick}><a id="grid_view" className="navbar-item tab">Grid View</a></li>
