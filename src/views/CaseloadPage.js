@@ -1,39 +1,13 @@
 import React from 'react';
+// import ReactDOM from 'react-dom';
 import * as data2 from '../data_caseload_management.json';
 import '../css/CaseloadPage.css'
 import 'bulma/css/bulma.css'
-//import { db } from '../firebase/firebase';
-import Spreadsheet from "react-spreadsheet";
 
-const RangeView = ({ cell, getValue }) => (
-  <input
-    type="range"
-    value={getValue({ data: cell })}
-    disabled
-    style={{ pointerEvents: "none" }}
-  />
-);
+// export function tabs(){
+//   return ();
+// }
 
-const RangeEdit = ({ getValue, cell, onChange }) => (
-  <input
-    type="range"
-    onChange={e => {
-      onChange({ ...cell, value: e.target.value });
-    }}
-    value={getValue({ data: cell }) || 0}
-    autoFocus
-  />
-);
- 
-const data = [
-  [{ value: "Flavors" }],
-  [({ value: "Vanilla" }, { value: "Chocolate" })],
-  [{ value: "Strawberry" }, { value: "Cookies" }],
-  [
-    { value: "How much do you like ice cream?" },
-    { value: 100, DataViewer: RangeView, DataEditor: RangeEdit }
-  ]
-];
 
 export function GridView(props) {
   var arr = [];
@@ -80,18 +54,50 @@ export function BlockView(props) {
   )
 }
 
+export function SpreadsheetView(props) {
+  return (
+    <div id="spreadsheetview">
+    <h1>Spreadsheet View</h1>
+    </div>
+  )
+}
+
 class CaseloadPage extends React.Component {
+  constructor(props){
+    super(props);
+    this.state = {
+      view: <GridView data={data2}/>
+    }
+  }
+
+  handleClick = (event) => {
+    event.persist()
+    console.log(event)
+    let currentComponent = this;
+    switch(event.target.id){
+      case 'grid_view': currentComponent.setState({view: <GridView data={data2}/>})
+      break;
+      case 'block_view': currentComponent.setState({view: <BlockView data={data2}/>})
+      break;
+      case 'spreadsheet_view': currentComponent.setState({view: <SpreadsheetView data={data2}/>})
+      break;
+      default: console.log("here")
+    }
+  }
     render() {
         return (
         <div>
           <div>
-            <Spreadsheet data={data} />
+          <div className="tabs is-centered" id="tabs">
+            <ul>
+              <li className="btn is-active" onClick={this.handleClick}><a id="grid_view" className="navbar-item tab">Grid View</a></li>
+              <li className="btn" onClick={this.handleClick}><a id="block_view" className="navbar-item tab">Block View</a></li>
+              <li className= "btn" onClick={this.handleClick}><a id="spreadsheet_view" className="navbar-item tab">Spreadsheet View</a></li>
+            </ul>
           </div>
-          <div>
-            <BlockView data={data2}/>
           </div>
-          <div>
-            <GridView data={data2}/>
+          <div id = "render_view">
+                {this.state.view}
           </div>
         </div>
         )
