@@ -24,6 +24,11 @@
     height: 200px!important;
 }
 
+.card:hover{
+    background-color: rgba(172, 232, 255, 0.753)!important;
+    cursor: pointer;
+}
+
 .blockview-child {
     width: 80%;
     height: 200px;
