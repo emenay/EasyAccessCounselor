@@ -12,7 +12,7 @@ const db = admin.firestore();
  * @param {Object} context Details about the event.
  */
 
-const copyProfile = (snap, context) => {
+const copyStudent = (snap, context) => {
   const { firstName, lastName, uid, cuid } = snap.data();
 
   if (cuid) {
@@ -31,7 +31,7 @@ const copyProfile = (snap, context) => {
 };
 
 // Deletes a student's profile under a counselor if the student is deleted from the Students collection
-const deleteProfile = (snap, context) => {
+const deleteStudent = (snap, context) => {
   const { uid, cuid } = snap.data();
 
   if (cuid) {
@@ -44,9 +44,37 @@ const deleteProfile = (snap, context) => {
   }
 }
 
-// TODO: function for onUpdate
+const updateStudent = (change, context) => {
+  const { firstName, lastName, uid, cuid } = change.after.data();
+  const oldCuid = change.before.data().cuid;
+  // Delete student profile from old counselor if counselor changed
+  if (oldCuid && (cuid !== oldCuid)) {
+    db
+      .collection('counselors')
+      .doc(oldCuid)
+      .collection('students')
+      .doc(uid)
+      .delete()
+      .catch(console.error);
+  }
+  // Create copy of student under new counselor
+  if (cuid) {
+    return db
+    .collection('counselors')
+    .doc(cuid)
+    .collection('students')
+    .doc(uid)
+    .set({
+      firstName,
+      lastName,
+      uid
+    })
+    .catch(console.error);
+  }
+}
 
 module.exports = {
-  onStudentCreate: functions.firestore.document('students/{studentId}').onCreate(copyProfile),
-  onStudentDelete: functions.firestore.document('students/{studentId}').onDelete(deleteProfile)
+  onCreateStudent: functions.firestore.document('students/{studentId}').onCreate(copyStudent),
+  onDeleteStudent: functions.firestore.document('students/{studentId}').onDelete(deleteStudent),
+  onUpdateStudent: functions.firestore.document('students/{studentId}').onUpdate(updateStudent)
 };
