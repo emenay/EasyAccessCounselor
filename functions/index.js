@@ -27,13 +27,26 @@ const copyProfile = (snap, context) => {
           uid
       })
       .catch(console.error);
-  } else {
-    return;
   }
 };
 
-// TODO: functions for onDelete and onUpdate
+// Deletes a student's profile under a counselor if the student is deleted from the Students collection
+const deleteProfile = (snap, context) => {
+  const { uid, cuid } = snap.data();
+
+  if (cuid) {
+    const studentProfile = db.collection('counselors').doc(cuid).collection('students').doc(uid);
+    if (studentProfile) {
+      return studentProfile
+        .delete()
+        .catch(console.error);
+    }
+  }
+}
+
+// TODO: function for onUpdate
 
 module.exports = {
-  copyOnWrite: functions.firestore.document('students/{studentId}').onCreate(copyProfile)
+  onStudentCreate: functions.firestore.document('students/{studentId}').onCreate(copyProfile),
+  onStudentDelete: functions.firestore.document('students/{studentId}').onDelete(deleteProfile)
 };
