@@ -13,7 +13,6 @@ import Login from './LoginPage';
 import HomeDefault from './HomePageDefault';
 import HomeSignedIn from './HomePageSignedIn';
 import Account from './AccountPage';
-import About from './AboutPage';
 import Caseload from './CaseloadPage';
 import CollegeList from './CollegeListPage';
 import Schedule from './SchedulePage';
@@ -34,10 +33,6 @@ export default function App() {
               <Header isLoggedIn={isLoggedIn}/>
               { user ? <Account /> : <Login /> }
             </Route>
-            <Route path="/about">
-              <Header isLoggedIn={isLoggedIn}/>
-              { user ? <About cuid={user.uid} /> : <Login />}
-            </Route>
             <Route path="/caseload_management">
               <Header isLoggedIn={isLoggedIn}/>
               { user ? <Caseload /> : <Login /> }
@@ -52,7 +47,7 @@ export default function App() {
             </Route>
             <Route path="/">
               <Header isLoggedIn={isLoggedIn}/>
-              { user ? <HomeSignedIn /> : <HomeDefault /> }
+              { user ? <HomeSignedIn cuid={user.uid} /> : <HomeDefault /> }
             </Route>
           </Switch>
         </div>

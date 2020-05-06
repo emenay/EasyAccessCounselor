@@ -6,7 +6,6 @@ import SignOutBtn from './SignOutBtn';
 const paths = {
 	"/": "Home",
 	"/account": "Account",
-	"/about": "Testing",
 	"/caseload_management": "Caseload Management",
 	"/college_list": "College List",
 	"/schedule": "Schedule"
