@@ -1,6 +1,8 @@
 import React from 'react';
 import { db } from '../firebase/firebase';
 
+import '../css/AboutPage.css';
+
 class AboutPage extends React.Component {
     state = {
         data : null,
@@ -28,7 +30,7 @@ class AboutPage extends React.Component {
         <div>
           This is just a tinkering page for right now. This currently has an example of how to
           get the info for a counselor's students.
-          <h2>My Students</h2>
+          <p class="list-title">My Students</p>
           {this.state.data ? this.displayTable() : ""}
         </div>
       );
