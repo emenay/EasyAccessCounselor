@@ -25,7 +25,7 @@ export default function App() {
   const isLoggedIn = user ? 'true' : '';
   return (
     <Router>
-      <div className="container">
+      <div className="page-container">
         <Sidenav isLoggedIn={isLoggedIn}/>
         <div className="page-content">
           <Switch>
