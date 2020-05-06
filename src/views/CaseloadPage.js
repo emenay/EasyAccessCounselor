@@ -19,6 +19,8 @@ import FirstPageIcon from '@material-ui/icons/FirstPage';
 import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
 import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
 import LastPageIcon from '@material-ui/icons/LastPage';
+import TextField from '@material-ui/core/TextField';
+import Autocomplete from '@material-ui/lab/Autocomplete';
 
 const useStyles1 = makeStyles((theme) => ({
   root: {
@@ -91,6 +93,20 @@ const useStyles2 = makeStyles({
   },
 });
 
+export function inputSearch(props) {
+  return (
+    <div style={{ width: '100%' }}>
+      <Autocomplete
+        id="search-input"
+        freeSolo
+        options={props.default.map((option) => option.Name)}
+        renderInput={(params) => (
+          <TextField {...params} label="Find a student (Ex: John Doe)" margin="normal" variant="outlined" />
+        )}
+      />
+      </div>);
+      }
+
 export function TableView(props) {
   var arr = [];
   Object.keys(props.data).forEach(function (key) {
@@ -136,7 +152,7 @@ export function TableView(props) {
             <TableCell align="right">Testing</TableCell>
             <TableCell align="right">List</TableCell>
             <TableCell align="right">Fee Waiver</TableCell>
-            <TableCell align="right">>Early Apps</TableCell>
+            <TableCell align="right">Early Apps</TableCell>
             <TableCell align="right">Essay</TableCell>
             <TableCell align="right">Teacher Recs</TableCell>
             <TableCell align="right">Counselor Rec</TableCell>
@@ -288,22 +304,12 @@ class CaseloadPage extends React.Component {
     }
   }
 
-  inputSearch() {
-    let arr = data2.default.map(person => person.Name)
-    console.log(arr)
-  }
-
   render() {
     return (
       <div>
         <div>
           <div className="field has-addons">
-            <div className="control autocomplete is-expanded" onClick={this.inputSearch}>
-              <input className="input" type="text" placeholder="Find a student (Ex: John Doe)" id="search-input"></input>
-            </div>
-            <div className="control">
-              <a className="button is-info" id="submit">Search</a>
-            </div>
+            {inputSearch(data2)}
           </div>
           <div className="tabs is-centered" id="tabs">
             <ul id="navigation">
