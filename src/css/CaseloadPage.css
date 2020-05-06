@@ -1,0 +1,43 @@
+.square {
+    width: 200px;
+    height: 200px;
+    border-radius: 10px;
+    margin: 10px;
+    overflow: hidden;
+    float: left;
+    text-align: left;
+}
+
+#root {
+    width: auto;
+    margin: auto;
+}
+
+#grid {
+    text-align: center;
+    width: 880px;
+    margin: auto
+}
+
+.card {
+    background-color: #ACE7FF!important;
+    height: 200px!important;
+}
+
+.card:hover{
+    background-color: rgba(172, 232, 255, 0.753)!important;
+    cursor: pointer;
+}
+
+.blockview-child {
+    width: 80%;
+    height: 200px;
+    border-radius: 10px;
+    margin: 20px auto;
+    overflow: hidden;
+}
+
+span.clear { 
+    clear: left; 
+    display: block; 
+}
