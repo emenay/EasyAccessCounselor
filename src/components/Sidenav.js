@@ -11,13 +11,18 @@ import '../css/components.css';
 import { signOut } from '../firebase/firebase';
 import logo from '../assets/logo.svg';
 
-const items =  [
+const loggedInItems =  [
   { name: 'home', label: 'Home', path: '' },
   { name: 'account', label: 'Account', path: 'account' },
-  { name: 'about', label: 'About', path: 'about' },
+  { name: 'about', label: 'Testing', path: 'about' },
   { name: 'caseload', label: 'Caseload Management', path: 'caseload_management' },
   { name: 'college_list', label: 'College List', path: 'college_list' },
   { name: 'schedule', label: 'Schedule', path: 'schedule' }
+]
+
+const loggedOutItems = [
+  { name: 'home', label: 'Home', path: '' },
+  { name: 'about', label: 'Testing', path: 'about' }
 ]
 
 function Sidenav(props) {
@@ -40,6 +45,13 @@ function Sidenav(props) {
         <ListItemText>Sign In</ListItemText>
       </ListItem>
     </Link>
+
+  let items;
+  if (props.isLoggedIn) {
+    items = loggedInItems;
+  } else {
+    items = loggedOutItems;
+  }
 
   return (
     <div className="sidenav-container">
