@@ -10,7 +10,8 @@ import { UserContext } from "../providers/UserProvider";
 
 import '../css/App.css';
 import Login from './LoginPage';
-import Home from './HomePage';
+import HomeDefault from './HomePageDefault';
+import HomeSignedIn from './HomePageSignedIn';
 import Account from './AccountPage';
 import About from './AboutPage';
 import Caseload from './CaseloadPage';
@@ -51,7 +52,7 @@ export default function App() {
             </Route>
             <Route path="/">
               <Header isLoggedIn={isLoggedIn}/>
-              <Home />
+              { user ? <HomeSignedIn /> : <HomeDefault /> }
             </Route>
           </Switch>
         </div>

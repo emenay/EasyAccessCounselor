@@ -1,3 +1,8 @@
+:root {
+	--primary-color: #1E3957;
+	--secondary-color: #A5711A
+}
+
 .sidenav-container {
 	display: flex;
 	flex-direction: row
@@ -25,7 +30,8 @@
 	text-align: center;
 	height: 150px;
 	font-size: 50px;
-	margin-bottom: 20px
+	margin-bottom: 20px;
+	color: var(--primary-color)
 }
 .nav-list {
 	display: flex;
@@ -35,13 +41,13 @@
 
 .nav-button {
 	text-decoration: none;
-	color: #1E3957;
+	color: var(--primary-color);
 	width: 261px
 }
 
 .signin-btn {
 	margin-top: 50px;
-	color: #A5711A
+	color: var(--secondary-color)
 }
 
 .menu-icon-container {

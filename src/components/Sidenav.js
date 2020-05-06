@@ -58,7 +58,7 @@ function Sidenav(props) {
       <Slide direction="right" in={isMenuOpen} mountOnEnter unmountOnExit>
         <div className="sidenav">
           <img src={logo} alt="logo"/>
-          <p style={{fontSize: 24, color: "#A5711A"}}>Easy Access</p>
+          <p style={{fontSize: 24, color: "#A5711A", marginBottom: 20}}>Easy Access</p>
           <List disablePadding dense className="nav-list">
             <div>
               {items.map(({label, name, path, ...rest}) => (
