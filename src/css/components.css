@@ -16,6 +16,10 @@
 	text-align: center
 }
 
+.header {
+	margin-bottom: 20px;
+}
+
 .header-acc {
 	padding-top: 10px;
 	padding-right: 10px;
@@ -30,9 +34,9 @@
 	text-align: center;
 	height: 150px;
 	font-size: 50px;
-	margin-bottom: 20px;
 	color: var(--primary-color)
 }
+
 .nav-list {
 	display: flex;
 	flex-direction: column;

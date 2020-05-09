@@ -1,5 +1,5 @@
-import React from 'react'
-import '../css/components.css'
+import React from 'react';
+import '../css/components.css';
 
 import { signOut } from '../firebase/firebase';
 
