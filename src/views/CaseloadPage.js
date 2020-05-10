@@ -325,7 +325,6 @@ class CaseloadPage extends React.Component {
       </div>
     )
   }
-
 }
 
 export default CaseloadPage;

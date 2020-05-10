@@ -40,7 +40,7 @@ export default function App() {
             </Route>
             <Route path="/caseload_management">
               <Header isLoggedIn={isLoggedIn}/>
-              { user ? <Caseload /> : <Login /> }
+              { user ? <Caseload cuid={user.uid}/> : <Login /> }
             </Route>
             <Route path="/college_list">
               <Header isLoggedIn={isLoggedIn}/>
