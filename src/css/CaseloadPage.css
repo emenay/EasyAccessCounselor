@@ -20,13 +20,12 @@
 }
 
 .card {
-    background-color: #ACE7FF!important;
     height: 200px!important;
 }
 
 .card:hover{
-    background-color: rgba(172, 232, 255, 0.753)!important;
     cursor: pointer;
+    background-color: #ACE7FF!important;
 }
 
 .blockview-child {

@@ -96,14 +96,14 @@ const useStyles2 = makeStyles({
 export function inputSearch(props) {
   return (
     <div style={{ width: '100%' }}>
-      <Autocomplete
+      {<Autocomplete
         id="search-input"
         freeSolo
         options={props.default.map((option) => option.Name)}
         renderInput={(params) => (
           <TextField {...params} label="Find a student (Ex: John Doe)" margin="normal" variant="outlined" />
         )}
-      />
+        />}
       </div>);
       }
 
@@ -236,7 +236,7 @@ export function GridView(props) {
   return (
     <div id="grid">
       {arr[0].map(person => <span key={person.id} className="square">
-        <div className="card">
+        <div className="card" style={getBGColor(person)}>
           <div className="card-content">
             <p className="title is-4">{person.Name}</p>
             <p className="subtitle is-6">{person.Essay}</p>
@@ -251,6 +251,20 @@ export function GridView(props) {
   )
 }
 
+function getBGColor(person) {
+  let bgcolor = {backgroundColor: "#ACE7FF"};
+  switch (person.Results) {
+    case 'Waitlisted': bgcolor.backgroundColor = "#FFF284"
+      break;
+    case 'Accepted': bgcolor.backgroundColor = "#C0FF97"
+      break;
+    case 'Rejected': bgcolor.backgroundColor = "#FFA4A4"
+      break;
+    default: bgcolor.backgroundColor = "#ACE7FF"
+  }
+  return bgcolor;
+}
+
 export function BlockView(props) {
   var arr = [];
   Object.keys(props.data).forEach(function (key) {
@@ -259,7 +273,7 @@ export function BlockView(props) {
   return (
     <div id="blockview">
       {arr[0].map(person => <div key={person.id} className="blockview-child">
-        <div className="card">
+        <div className="card" style={getBGColor(person)}>
           <div className="card-content">
             <p className="title is-4">{person.Name}</p>
             <p className="subtitle is-6">{person.Essay}</p>
@@ -276,9 +290,12 @@ export function BlockView(props) {
 class CaseloadPage extends React.Component {
   constructor(props) {
     super(props);
+    this.currentData = data2;
     this.state = {
-      view: <GridView data={data2} />
+      currentData: data2,
+      view: 'grid_view'
     }
+    this.changeSort = this.changeSort.bind(this);
   }
 
   handleClick = (event) => {
@@ -294,13 +311,35 @@ class CaseloadPage extends React.Component {
     event.target.parentElement.classList.add('is-active')
 
     switch (event.target.id) {
-      case 'grid_view': currentComponent.setState({ view: <GridView data={data2} /> })
+      case 'grid_view': currentComponent.setState({ view: 'grid_view' })
         break;
-      case 'block_view': currentComponent.setState({ view: <BlockView data={data2} /> })
+      case 'block_view': currentComponent.setState({ view: 'block_view' })
         break;
-      case 'table_view': currentComponent.setState({ view: <TableView data={data2} /> })
+      case 'table_view': currentComponent.setState({ view: 'table_view' })
         break;
       default: console.log("here")
+    }
+  }
+
+  changeSort = (event) => {
+    let arr = [];
+    let currData = this.state.currentData;
+    console.log(currData)
+    Object.keys(currData).forEach(function (key) {
+      arr.push(currData[key]);
+    });
+    let newData = arr[0].sort(this.sortFunction(event.target.id))
+    this.setState({data: newData})
+  }
+
+  sortFunction(prop) {
+    return function(a, b) {
+        if (a[prop] > b[prop]) {
+            return 1;
+        } else if (a[prop] < b[prop]) {
+            return -1;
+        }
+        return 0;
     }
   }
 
@@ -318,9 +357,18 @@ class CaseloadPage extends React.Component {
               <li className="btn" id="tview" onClick={this.handleClick}><a id="table_view" className="navbar-item tab">Table View</a></li>
             </ul>
           </div>
+          <button className="btn" id="tview" onClick={this.changeSort}><a id="Name" className="navbar-item tab">Sort by Name</a></button>
+          <button className="btn" id="tview" onClick={this.changeSort}><a id="id" className="navbar-item tab">Sort by ID</a></button>
+          <button className="btn" id="tview" onClick={this.changeSort}><a id="Results" className="navbar-item tab">Sort by Results</a></button>
         </div>
         <div id="render_view">
-          {this.state.view}
+          {
+           {
+             'grid_view': <GridView data={this.state.currentData} />,
+             'block_view': <BlockView data={this.state.currentData} />,
+             'table_view': <TableView data={this.state.currentData} />
+           }[this.state.view]
+          }
         </div>
       </div>
     )
