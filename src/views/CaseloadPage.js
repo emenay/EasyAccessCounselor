@@ -239,7 +239,7 @@ export function GridView(props) {
         <div className="card" style={getBGColor(person)}>
           <div className="card-content">
             <p className="title is-4">{person.Name}</p>
-            <p className="subtitle is-6">{person.Essay}</p>
+            <p className="subtitle is-6">{person.Results}</p>
             <div className="content">
               <p>{person["Early Apps"]}</p>
             </div>
@@ -291,24 +291,25 @@ class DropdownMenu extends React.Component {
   constructor(props) {
       super(props);
       this.state = { collapsed: true };
+      this.handleToggle = this.handleToggle.bind(this);
   }
 
-  handleToggle() {
+  handleToggle = (event) => {
       this.setState({ collapsed: !this.state.collapsed });
   }
 
   render() {
       return(
-          <div className={"dropdown" + (this.state.collapsed ? "" : " is-active")} tabIndex="0" onBlur={() => this.handleToggle()}>
+          <div className={"dropdown" + (this.state.collapsed ? "" : " is-active")} tabIndex="0" onBlur={this.handleToggle}>
               <div className="dropdown-trigger">
-                  <button className="button" aria-haspopup="true" aria-controls="dropdown-menu" onClick={() => this.handleToggle()}>
-                      <span id="sort-status">Sort By:</span>
+                  <button className="button" aria-haspopup="true" aria-controls="dropdown-menu" onClick={this.handleToggle}>
+                      <span id="sort-status">Sort By: ID</span>
                   </button>
               </div>
               <div className="dropdown-menu" id="dropdown-menu" role="menu">
-                  <div className="dropdown-content">
+                  <div className="dropdown-content" id="sort-options">
                     <a id="Name" className="dropdown-item" onClick={this.props.onClick}>Name</a>
-                    <a id="id" className="dropdown-item" onClick={this.props.onClick}>ID</a>
+                    <a id="id" className="dropdown-item is-active" onClick={this.props.onClick}>ID</a>
                     <a id="Results" className="dropdown-item" onClick={this.props.onClick}>Results</a>
                   </div>
               </div>
@@ -320,12 +321,20 @@ class DropdownMenu extends React.Component {
 function changeSort(event){
   let arr = [];
   let currData = this.state.currentData;
-  console.log(currData)
   Object.keys(currData).forEach(function (key) {
     arr.push(currData[key]);
   });
   let newData = arr[0].sort(sortFunction(event.target.id))
   this.setState({data: newData})
+
+  let navNodes = document.getElementById("sort-options").childNodes
+  navNodes.forEach(e => {
+    if (e.className.includes('is-active'))
+      e.classList.remove('is-active')
+  })
+  event.target.classList.add('is-active')
+
+  document.getElementById("sort-status").innerHTML = "Sort by: " + event.target.innerHTML;
 }
 
 function sortFunction(prop) {
