@@ -1,6 +1,7 @@
 :root {
 	--primary-color: #1E3957;
-	--secondary-color: #A5711A
+	--secondary-color: #A5711A;
+	--off-white: #F9F9F9;
 }
 
 .sidenav-container {
@@ -32,7 +33,7 @@
 	align-items: center;
 	justify-content: center;
 	text-align: center;
-	height: 150px;
+	height: 120px;
 	font-size: 50px;
 	color: var(--primary-color)
 }
@@ -61,4 +62,37 @@
 
 .LoginBox {
 	width: 365px;
+}
+
+.blackout {
+	width: 100%;
+	height: 100%;
+	position: absolute;
+	left: 0;
+	top: 0;
+	z-index: 10;
+	background-color: black;
+	opacity: 0.5;
+}
+
+.add-students-modal {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	width: 700px;
+	max-width: 800px;
+	height: calc(100% - 75px);
+	z-index: 1000;
+	background-color: var(--off-white);
+	border-radius: 20px;
+	box-shadow: 0px 0px 20px rgba(62, 62, 62, 0.5);
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	text-align: center;
+}
+
+.modal-header {
+	font-size: 20pt;
 }

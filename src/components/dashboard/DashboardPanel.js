@@ -1,7 +1,7 @@
 import React from 'react';
 import '../../css/Dashboard.css';
 
-import AddStudentsBtn from '../AddStudentsBtn';
+import AddStudentsBtn from '../addStudents/AddStudentsBtn';
 import StudentCard from './StudentCard';
 
 function displayCards(data) {
@@ -18,15 +18,15 @@ function displayCards(data) {
 
 function DashboardPanel(props) {
   return (
-    <div class="dashboard-panel">
-      <div class="panel-header">
-        <p class="list-title">My Students</p>
+    <div className="dashboard-panel">
+      <div className="panel-header">
+        <p className="list-title">My Students</p>
         <p>Students: [num]</p>
       </div>
-      <div class="panel-section">
-        <AddStudentsBtn/>
+      <div className="panel-section">
+        <AddStudentsBtn viewAddStudent={props.viewAddStudent} closeAddStudent={props.closeAddStudent}/>
       </div>
-      <div class="student-list">
+      <div className="student-list">
         {props.data ? displayCards(props.data) : "You do not have any students."}
       </div>
     </div>
