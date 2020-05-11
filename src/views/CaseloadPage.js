@@ -287,15 +287,66 @@ export function BlockView(props) {
   )
 }
 
+class DropdownMenu extends React.Component {
+  constructor(props) {
+      super(props);
+      this.state = { collapsed: true };
+  }
+
+  handleToggle() {
+      this.setState({ collapsed: !this.state.collapsed });
+  }
+
+  render() {
+      return(
+          <div className={"dropdown" + (this.state.collapsed ? "" : " is-active")} tabIndex="0" onBlur={() => this.handleToggle()}>
+              <div className="dropdown-trigger">
+                  <button className="button" aria-haspopup="true" aria-controls="dropdown-menu" onClick={() => this.handleToggle()}>
+                      <span id="sort-status">Sort By:</span>
+                  </button>
+              </div>
+              <div className="dropdown-menu" id="dropdown-menu" role="menu">
+                  <div className="dropdown-content">
+                    <a id="Name" className="dropdown-item" onClick={this.props.onClick}>Name</a>
+                    <a id="id" className="dropdown-item" onClick={this.props.onClick}>ID</a>
+                    <a id="Results" className="dropdown-item" onClick={this.props.onClick}>Results</a>
+                  </div>
+              </div>
+          </div>
+      );
+  }
+}
+
+function changeSort(event){
+  let arr = [];
+  let currData = this.state.currentData;
+  console.log(currData)
+  Object.keys(currData).forEach(function (key) {
+    arr.push(currData[key]);
+  });
+  let newData = arr[0].sort(sortFunction(event.target.id))
+  this.setState({data: newData})
+}
+
+function sortFunction(prop) {
+  return function(a, b) {
+      if (a[prop] > b[prop]) {
+          return 1;
+      } else if (a[prop] < b[prop]) {
+          return -1;
+      }
+      return 0;
+  }
+}
+
 class CaseloadPage extends React.Component {
   constructor(props) {
     super(props);
-    this.currentData = data2;
     this.state = {
       currentData: data2,
       view: 'grid_view'
     }
-    this.changeSort = this.changeSort.bind(this);
+    this.changeSort = changeSort.bind(this);
   }
 
   handleClick = (event) => {
@@ -321,28 +372,6 @@ class CaseloadPage extends React.Component {
     }
   }
 
-  changeSort = (event) => {
-    let arr = [];
-    let currData = this.state.currentData;
-    console.log(currData)
-    Object.keys(currData).forEach(function (key) {
-      arr.push(currData[key]);
-    });
-    let newData = arr[0].sort(this.sortFunction(event.target.id))
-    this.setState({data: newData})
-  }
-
-  sortFunction(prop) {
-    return function(a, b) {
-        if (a[prop] > b[prop]) {
-            return 1;
-        } else if (a[prop] < b[prop]) {
-            return -1;
-        }
-        return 0;
-    }
-  }
-
   render() {
     return (
       <div>
@@ -357,9 +386,7 @@ class CaseloadPage extends React.Component {
               <li className="btn" id="tview" onClick={this.handleClick}><a id="table_view" className="navbar-item tab">Table View</a></li>
             </ul>
           </div>
-          <button className="btn" id="tview" onClick={this.changeSort}><a id="Name" className="navbar-item tab">Sort by Name</a></button>
-          <button className="btn" id="tview" onClick={this.changeSort}><a id="id" className="navbar-item tab">Sort by ID</a></button>
-          <button className="btn" id="tview" onClick={this.changeSort}><a id="Results" className="navbar-item tab">Sort by Results</a></button>
+          <DropdownMenu onClick={this.changeSort}/>
         </div>
         <div id="render_view">
           {
