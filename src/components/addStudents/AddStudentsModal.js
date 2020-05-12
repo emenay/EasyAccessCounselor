@@ -35,6 +35,10 @@ class AddStudentsModal extends React.Component {
     }
   }
 
+  temp() {
+    alert("This will eventually submit the changes to the database. Right now, it just shows this alert.");
+  }
+
   render() {
     return (
       <div>
@@ -50,10 +54,17 @@ class AddStudentsModal extends React.Component {
           <div className="add-students-view">
             {this.state.view}
           </div>
-          <div>
-            <Button variant="outlined" onClick={this.props.closeAddStudent}>
-              Close
-            </Button>
+          <div className="add-modal-btns">
+            <div style={{marginRight: 60}}>
+              <Button variant="outlined" onClick={this.props.closeAddStudent}>
+                Cancel
+              </Button>
+            </div>
+            <div>
+              <Button variant="contained" color="primary" onClick={this.temp}>
+                Add
+              </Button>
+            </div>
           </div>
         </div>
       </div>
