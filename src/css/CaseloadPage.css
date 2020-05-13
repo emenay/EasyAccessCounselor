@@ -24,13 +24,29 @@
     margin-top: 30px;
 }
 
+.filter-button{
+    margin-left: 20px;
+}
+
+.filter-label{
+    font-size: 17px;
+    line-height: 39px;
+    margin-left: 20px;
+}
+
 .card {
     height: 200px!important;
+    -webkit-transition: background-color 150ms linear;
+    -ms-transition: background-color 150ms linear;
+    transition: background-color 150ms linear;
 }
 
 .card:hover{
     cursor: pointer;
     background-color: #ACE7FF!important;
+    -webkit-transition: background-color 150ms linear;
+    -ms-transition: background-color 150ms linear;
+    transition: background-color 150ms linear;
 }
 
 .blockview-child {
