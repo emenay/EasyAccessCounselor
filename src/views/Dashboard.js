@@ -45,7 +45,7 @@ class Dashboard extends React.Component {
   render() {
       return (
         <div className="dashboard-container">
-          {this.state.viewAddStudentModal ? <AddStudentsModal closeAddStudent={this.closeAddStudent} /> : ''}
+          {this.state.viewAddStudentModal ? <AddStudentsModal cuid={this.props.cuid} closeAddStudent={this.closeAddStudent} /> : ''}
           <div className="dash-container-left">
             <DashboardPanel data={this.state.data} viewAddStudent={this.viewAddStudent} />
           </div>

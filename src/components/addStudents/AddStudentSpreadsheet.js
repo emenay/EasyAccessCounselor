@@ -8,6 +8,10 @@ class AddStudentSpreadsheet extends React.Component {
 
   }
 
+  temp() {
+    alert("WIP! This functionality is currently not supported.")
+  }
+
   render() {
     return (
       <div className="add-student-spreadsheet">
@@ -21,7 +25,10 @@ class AddStudentSpreadsheet extends React.Component {
             </Button>
           </div>
           <div>
-            <Button variant="contained" color="primary" onClick={(e) => this.props.onSubmit(e, this)}>
+            {/* <Button variant="contained" color="primary" onClick={(e) => this.props.onSubmit(e, this)}>
+              Add
+            </Button> */}
+            <Button variant="contained" color="primary" onClick={this.temp}>
               Add
             </Button>
           </div>

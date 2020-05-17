@@ -1,8 +1,12 @@
-import React from 'react';
+import React, { useContext } from 'react';
+import { UserContext } from "../../providers/UserProvider";
+
 import '../../css/components.css';
 
 import AddStudentManual from './AddStudentManual';
 import AddStudentSpreadsheet from './AddStudentSpreadsheet';
+
+import { db } from '../../firebase/firebase';
 
 // This modal will have two options: add a single student manually or import a spreadsheet.
 
@@ -43,10 +47,19 @@ class AddStudentsModal extends React.Component {
   }
 
   onSubmit(e, child) {
+    child.state.cuid = this.props.cuid;
+    const newStudent = db.collection('students').doc();
+    const uid = newStudent.id;
+    child.state.uid = uid;
+
     this.setState({
       data: child.state
+    }, () => {
+      newStudent.set(this.state.data).catch(console.error);
+      this.props.closeAddStudent();
+      // TODO: Replace the page reload with a loading animation and update components as needed.
+      window.location.reload();
     });
-    // TODO: Actually send this to the database with the UID, CUID, schoolCode, etc.
   }
 
   render() {
