@@ -16,17 +16,37 @@
 #grid {
     text-align: center;
     width: 880px;
-    margin: auto
+    margin: auto;
+    margin-top: 20px;
+}
+
+#blockview {
+    margin-top: 30px;
+}
+
+.filter-button{
+    margin-left: 20px;
+}
+
+.filter-label{
+    font-size: 17px;
+    line-height: 39px;
+    margin-left: 20px;
 }
 
 .card {
-    background-color: #ACE7FF!important;
     height: 200px!important;
+    -webkit-transition: background-color 150ms linear;
+    -ms-transition: background-color 150ms linear;
+    transition: background-color 150ms linear;
 }
 
 .card:hover{
-    background-color: rgba(172, 232, 255, 0.753)!important;
     cursor: pointer;
+    background-color: #ACE7FF!important;
+    -webkit-transition: background-color 150ms linear;
+    -ms-transition: background-color 150ms linear;
+    transition: background-color 150ms linear;
 }
 
 .blockview-child {
