@@ -14,15 +14,13 @@ import logo from '../assets/logo.svg';
 const loggedInItems =  [
   { name: 'home', label: 'Home', path: '' },
   { name: 'account', label: 'Account', path: 'account' },
-  { name: 'about', label: 'Testing', path: 'about' },
   { name: 'caseload', label: 'Caseload Management', path: 'caseload_management' },
   { name: 'college_list', label: 'College List', path: 'college_list' },
   { name: 'schedule', label: 'Schedule', path: 'schedule' }
 ]
 
 const loggedOutItems = [
-  { name: 'home', label: 'Home', path: '' },
-  { name: 'about', label: 'Testing', path: 'about' }
+  { name: 'home', label: 'Home', path: '' }
 ]
 
 function Sidenav(props) {
@@ -58,7 +56,7 @@ function Sidenav(props) {
       <Slide direction="right" in={isMenuOpen} mountOnEnter unmountOnExit>
         <div className="sidenav">
           <img src={logo} alt="logo"/>
-          <p style={{fontSize: 24, color: "#A5711A"}}>Easy Access</p>
+          <p style={{fontSize: 24, color: "#A5711A", marginBottom: 20}}>Easy Access</p>
           <List disablePadding dense className="nav-list">
             <div>
               {items.map(({label, name, path, ...rest}) => (

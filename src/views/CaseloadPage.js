@@ -104,8 +104,9 @@ export function inputSearch(props) {
           <TextField {...params} label="Find a student (Ex: John Doe)" margin="normal" variant="outlined" />
         )}
       />
-      </div>);
-      }
+    </div>
+  );
+}
 
 export function TableView(props) {
   var arr = [];
@@ -124,6 +125,7 @@ export function TableView(props) {
       }
     }
   }
+  
   const classes = useStyles2();
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
