@@ -10,33 +10,28 @@ import { UserContext } from "../providers/UserProvider";
 
 import '../css/App.css';
 import Login from './LoginPage';
-import Home from './HomePage';
+import HomeDefault from './HomePageDefault';
+import Dashboard from './Dashboard';
 import Account from './AccountPage';
-import About from './AboutPage';
 import Caseload from './CaseloadPage';
 import CollegeList from './CollegeListPage';
 import Schedule from './SchedulePage';
 
 import Header from '../components/Header';
 import Sidenav from '../components/Sidenav';
-// import SignOut from '../components/login/SignOut';
 
 export default function App() {
   const user = useContext(UserContext);
   const isLoggedIn = user ? 'true' : '';
   return (
     <Router>
-      <div className="container">
+      <div className="page-container">
         <Sidenav isLoggedIn={isLoggedIn}/>
         <div className="page-content">
           <Switch>
             <Route path="/account">
               <Header isLoggedIn={isLoggedIn}/>
               { user ? <Account /> : <Login /> }
-            </Route>
-            <Route path="/about">
-              <Header isLoggedIn={isLoggedIn}/>
-              <About />
             </Route>
             <Route path="/caseload_management">
               <Header isLoggedIn={isLoggedIn}/>
@@ -52,7 +47,7 @@ export default function App() {
             </Route>
             <Route path="/">
               <Header isLoggedIn={isLoggedIn}/>
-              <Home />
+              { user ? <Dashboard cuid={user.uid} /> : <HomeDefault /> }
             </Route>
           </Switch>
         </div>

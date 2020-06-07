@@ -4,9 +4,8 @@ import '../css/components.css';
 import SignOutBtn from './SignOutBtn';
 
 const paths = {
-	"/": "Home",
+	"/": "Easy Access",
 	"/account": "Account",
-	"/about": "About",
 	"/caseload_management": "Caseload Management",
 	"/college_list": "College List",
 	"/schedule": "Schedule"
