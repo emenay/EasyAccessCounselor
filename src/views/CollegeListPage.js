@@ -23,7 +23,9 @@ import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
 import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
 import LastPageIcon from '@material-ui/icons/LastPage';
 
+// --- START TablePagination
 
+// Creates styling for the TablePaginationActions
 const useStyles1 = makeStyles((theme) => ({
   root: {
     flexShrink: 0,
@@ -31,6 +33,9 @@ const useStyles1 = makeStyles((theme) => ({
   },
 }));
 
+// The TablePaginationActions Component handles the bottom section of a table where a user can click back and forth through pages
+// It does NOT handle selecting the number of rows to display
+// The onChangePage is a function passed as a prop that selects which page to display. The handle functions are wrappers to select the exact page num
 function TablePaginationActions(props) {
   const classes = useStyles1();
   const theme = useTheme();
@@ -82,6 +87,7 @@ function TablePaginationActions(props) {
   );
 }
 
+// Makes the props required
 TablePaginationActions.propTypes = {
   count: PropTypes.number.isRequired,
   onChangePage: PropTypes.func.isRequired,
@@ -89,18 +95,29 @@ TablePaginationActions.propTypes = {
   rowsPerPage: PropTypes.number.isRequired,
 };
 
+// --- END TablePagination
+
+
+// --- START TableView
+
+// Styles to use with TableView
 const useStyles2 = makeStyles({
   table: {
     minWidth: 500,
   },
 });
 
+// Component for creating the actual table view of the data
 function TableView(props) {
+
+  // Section for loading the data from the example json
+  // Loops through array of maps and assigns to people
   var arr = [];
-  Object.keys(props.data).forEach(function (key) {
+  Object.keys(props.data).forEach(function (key) { 
     arr.push(props.data[key]);
   });
-  let people = arr[0]
+  let people = arr[0];
+  // I have no idea what this section is for
   for(var tdata of people){
     for(var tdatakey of Object.keys(tdata)){
        
@@ -112,19 +129,22 @@ function TableView(props) {
       }
     }
   }
+  
   const classes = useStyles2();
-  const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(5);
+  const [page, setPage] = React.useState(0); // Hook for starting at first page of data
+  const [rowsPerPage, setRowsPerPage] = React.useState(5); // Hook that sets default rows per page to 5
 
   const emptyRows = rowsPerPage - Math.min(rowsPerPage, people.length - page * rowsPerPage);
 
+  // Function to change to a specific Page
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
 
+  // Function to set the rows per page to a certain number
   const handleChangeRowsPerPage = (event) => {
     setRowsPerPage(parseInt(event.target.value, 10));
-    setPage(0);
+    setPage(0); // NOTE: currently sets page to first page
   };
 
   return (
@@ -286,7 +306,7 @@ class CollegeListPage extends React.Component {
     let currentComponent = this;
 
     // switches active state of tabs
-    let navNodes = document.getElementById("navigation").childNodes
+    let navNodes = document.getElementById("navigation").childNodes;
     navNodes.forEach(e => {
       if (e.className.includes('is-active'))
         e.classList.remove('is-active')
