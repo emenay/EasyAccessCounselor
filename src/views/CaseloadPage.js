@@ -297,6 +297,30 @@ class CaseloadPage extends React.Component {
     }
     this.changeSort = changeSort.bind(this);
     this.changeFilter = changeFilter.bind(this);
+    this.fields = [
+      "Name",
+      "Goal",
+      "Meetings",
+      "Tasks",
+      "Visit",
+      "Testing",
+      "List",
+      "Fee Waiver",
+      "Early Apps",
+      "Essay",
+      "Teacher Recs",
+      "Counselor Rec",
+      "Resume",
+      "FAFSA",
+      "CSS Profile",
+      "Results",
+      "Verification",
+      "Award Letters",
+      "Appeal",
+      "Spring Visit",
+      "Decision",
+      "Latest"
+    ];
   }
 
   // async componentDidMount() {
@@ -348,9 +372,9 @@ class CaseloadPage extends React.Component {
         <div id="render_view">
           {
            {
-             'grid_view': <GridView data={this.state.currentData} />,
+             'grid_view': <GridView data={this.state.currentData}/>,
              'block_view': <BlockView data={this.state.currentData} />,
-             'table_view': <TableView data={this.state.currentData} />
+             'table_view': <TableView data={this.state.currentData} fields={this.fields} />
            }[this.state.view]
           }
         </div>
