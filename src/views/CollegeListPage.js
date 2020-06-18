@@ -1,230 +1,12 @@
 import React from 'react';
 import {inputSearch} from './CaseloadPage.js';
 // import {TableView} from './CaseloadPage.js';
-import {GridView} from './CaseloadPage.js';
-import {BlockView }from './CaseloadPage.js';
+import {BlockView} from "../components/dataViews/BlockView";
+import {GridView} from "../components/dataViews/GridView";
+import {TableView} from "../components/dataViews/TableView";
 import * as data2 from '../data_caseload_management.json';
 import '../css/CaseloadPage.css'
 import 'bulma/css/bulma.css'
-import PropTypes from 'prop-types';
-import { makeStyles, useTheme } from '@material-ui/core/styles';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableHead from '@material-ui/core/TableHead';
-import TableContainer from '@material-ui/core/TableContainer';
-import TableFooter from '@material-ui/core/TableFooter';
-import TablePagination from '@material-ui/core/TablePagination';
-import TableRow from '@material-ui/core/TableRow';
-import Paper from '@material-ui/core/Paper';
-import IconButton from '@material-ui/core/IconButton';
-import FirstPageIcon from '@material-ui/icons/FirstPage';
-import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
-import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
-import LastPageIcon from '@material-ui/icons/LastPage';
-
-// --- START TablePagination
-
-// Creates styling for the TablePaginationActions
-const useStyles1 = makeStyles((theme) => ({
-  root: {
-    flexShrink: 0,
-    marginLeft: theme.spacing(2.5),
-  },
-}));
-
-// The TablePaginationActions Component handles the bottom section of a table where a user can click back and forth through pages
-// It does NOT handle selecting the number of rows to display
-// The onChangePage is a function passed as a prop that selects which page to display. The handle functions are wrappers to select the exact page num
-function TablePaginationActions(props) {
-  const classes = useStyles1();
-  const theme = useTheme();
-  const { count, page, rowsPerPage, onChangePage } = props;
-
-  const handleFirstPageButtonClick = (event) => {
-    onChangePage(event, 0);
-  };
-
-  const handleBackButtonClick = (event) => {
-    onChangePage(event, page - 1);
-  };
-
-  const handleNextButtonClick = (event) => {
-    onChangePage(event, page + 1);
-  };
-
-  const handleLastPageButtonClick = (event) => {
-    onChangePage(event, Math.max(0, Math.ceil(count / rowsPerPage) - 1));
-  };
-
-  return (
-    <div className={classes.root}>
-      <IconButton
-        onClick={handleFirstPageButtonClick}
-        disabled={page === 0}
-        aria-label="first page"
-      >
-        {theme.direction === 'rtl' ? <LastPageIcon /> : <FirstPageIcon />}
-      </IconButton>
-      <IconButton onClick={handleBackButtonClick} disabled={page === 0} aria-label="previous page">
-        {theme.direction === 'rtl' ? <KeyboardArrowRight /> : <KeyboardArrowLeft />}
-      </IconButton>
-      <IconButton
-        onClick={handleNextButtonClick}
-        disabled={page >= Math.ceil(count / rowsPerPage) - 1}
-        aria-label="next page"
-      >
-        {theme.direction === 'rtl' ? <KeyboardArrowLeft /> : <KeyboardArrowRight />}
-      </IconButton>
-      <IconButton
-        onClick={handleLastPageButtonClick}
-        disabled={page >= Math.ceil(count / rowsPerPage) - 1}
-        aria-label="last page"
-      >
-        {theme.direction === 'rtl' ? <FirstPageIcon /> : <LastPageIcon />}
-      </IconButton>
-    </div>
-  );
-}
-
-// Makes the props required
-TablePaginationActions.propTypes = {
-  count: PropTypes.number.isRequired,
-  onChangePage: PropTypes.func.isRequired,
-  page: PropTypes.number.isRequired,
-  rowsPerPage: PropTypes.number.isRequired,
-};
-
-// --- END TablePagination
-
-
-// --- START TableView
-
-// Styles to use with TableView
-const useStyles2 = makeStyles({
-  table: {
-    minWidth: 500,
-  },
-});
-
-// Component for creating the actual table view of the data
-function TableView(props) {
-
-  // Section for loading the data from the example json
-  // Loops through array of maps and assigns to people
-  var arr = [];
-  Object.keys(props.data).forEach(function (key) { 
-    arr.push(props.data[key]);
-  });
-  let people = arr[0];
-  // I have no idea what this section is for
-  for(var tdata of people){
-    for(var tdatakey of Object.keys(tdata)){
-       
-      if(tdata[tdatakey] === true){
-        tdata[tdatakey] = "true";
-      }
-      if(tdata[tdatakey] === false){
-        tdata[tdatakey] = "false";
-      }
-    }
-  }
-  
-  const classes = useStyles2();
-  const [page, setPage] = React.useState(0); // Hook for starting at first page of data
-  const [rowsPerPage, setRowsPerPage] = React.useState(5); // Hook that sets default rows per page to 5
-
-  const emptyRows = rowsPerPage - Math.min(rowsPerPage, people.length - page * rowsPerPage);
-
-  // Function to change to a specific Page
-  const handleChangePage = (event, newPage) => {
-    setPage(newPage);
-  };
-
-  // Function to set the rows per page to a certain number
-  const handleChangeRowsPerPage = (event) => {
-    setRowsPerPage(parseInt(event.target.value, 10));
-    setPage(0); // NOTE: currently sets page to first page
-  };
-
-  return (
-    <TableContainer component={Paper}>
-      <Table className={classes.table} aria-label="custom pagination table">
-        <TableHead>
-          <TableRow>
-            <TableCell>Name</TableCell>
-            <TableCell align="right">Goal</TableCell>
-            <TableCell align="right">Public Safety</TableCell>
-            <TableCell align="right">Public Target</TableCell>
-            <TableCell align="right">Public Reach</TableCell>
-            <TableCell align="right">Private Safety</TableCell>
-            <TableCell align="right">Private Target</TableCell>
-            <TableCell align="right">Private Reach</TableCell>
-            <TableCell align="right">GPA</TableCell>
-            <TableCell align="right">SAT</TableCell>
-            <TableCell align="right">ACT</TableCell>
-            <TableCell align="right">EFC</TableCell>
-            <TableCell align="right">Ability to Pay</TableCell>
-            <TableCell align="right">ZIP</TableCell>
-            <TableCell align="right">state</TableCell>
-            <TableCell align="right">Want to Attend (Region)</TableCell>
-            <TableCell align="right">Major</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {(rowsPerPage > 0
-            ? people.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-            : people
-          ).map((people) => (
-            <TableRow key={people.id}>
-              <TableCell component="th" scope="row"> {people.Name}</TableCell>
-              <TableCell align="right">{people.Goal}</TableCell>
-              <TableCell align="right">""</TableCell>
-              <TableCell align="right">""</TableCell>
-              <TableCell align="right">""</TableCell>
-              <TableCell align="right">""</TableCell>
-              <TableCell align="right">""</TableCell>
-              <TableCell align="right">""</TableCell>
-              <TableCell align="right">""</TableCell>
-              <TableCell align="right">{people.Testing}</TableCell>
-              <TableCell align="right">{people.Testing}</TableCell>
-              <TableCell align="right">{people.Testing}</TableCell>
-              <TableCell align="right">""</TableCell>
-              <TableCell align="right">""</TableCell>
-              <TableCell align="right">""</TableCell>
-              <TableCell align="right">""</TableCell>
-              <TableCell align="right">""</TableCell>
-            </TableRow>
-          ))}
-
-          {emptyRows > 0 && (
-            <TableRow style={{ height: 53 * emptyRows }}>
-              <TableCell colSpan={6} />
-            </TableRow>
-          )}
-        </TableBody>
-        <TableFooter>
-          <TableRow>
-            <TablePagination
-              rowsPerPageOptions={[5, 10, 25, { label: 'All', value: -1 }]}
-              colSpan={22}
-              count={people.length}
-              rowsPerPage={rowsPerPage}
-              page={page}
-              SelectProps={{
-                inputProps: { 'aria-label': 'rows per page' },
-                native: true,
-              }}
-              onChangePage={handleChangePage}
-              onChangeRowsPerPage={handleChangeRowsPerPage}
-              ActionsComponent={TablePaginationActions}
-            />
-          </TableRow>
-        </TableFooter>
-      </Table>
-    </TableContainer>
-  );
-}
 
 class DropdownMenu extends React.Component {
   constructor(props) {
@@ -291,6 +73,7 @@ function sortFunction(prop) {
   }
 }
 
+
 class CollegeListPage extends React.Component {
   constructor(props) {
     super(props);
@@ -299,6 +82,24 @@ class CollegeListPage extends React.Component {
       view: 'table_view'
     }
     this.changeSort = changeSort.bind(this);
+    this.fields = [
+      "Goal",
+      "Public Safety",
+      "Public Target",
+      "Public Reach",
+      "Private Safety",
+      "Private Target",
+      "Public Reach",
+      "GPA",
+      "SAT",
+      "ACT",
+      "EFC",
+      "Ability to Pay",
+      "ZIP",
+      "State",
+      "Want to Attend (Region)",
+      "Major"
+    ];
   }
 
   handleClick = (event) => {
@@ -314,10 +115,10 @@ class CollegeListPage extends React.Component {
     event.target.parentElement.classList.add('is-active')
 
     switch (event.target.id) {
-      // case 'grid_view': currentComponent.setState({ view: 'grid_view' })
-      //   break;
-      // case 'block_view': currentComponent.setState({ view: 'block_view' })
-      //   break;
+      case 'grid_view': currentComponent.setState({ view: 'grid_view' })
+         break;
+      case 'block_view': currentComponent.setState({ view: 'block_view' })
+         break;
       case 'table_view': currentComponent.setState({ view: 'table_view' })
         break;
       default: console.log("here")
@@ -332,8 +133,8 @@ class CollegeListPage extends React.Component {
             </div>
             <div className="tabs is-centered" id="tabs">
               <ul id="navigation">
-                {/* <li className="btn is-active" id="gview" onClick={this.handleClick}><a id="grid_view" className="navbar-item tab">Grid View</a></li>
-                <li className="btn" id="bview" onClick={this.handleClick}><a id="block_view" className="navbar-item tab">Block View</a></li> */}
+                <li className="btn is-active" id="gview" onClick={this.handleClick}><a id="grid_view" className="navbar-item tab">Grid View</a></li>
+                <li className="btn" id="bview" onClick={this.handleClick}><a id="block_view" className="navbar-item tab">Block View</a></li>
                 <li className="btn" id="tview" onClick={this.handleClick}><a id="table_view" className="navbar-item tab">Table View</a></li>
               </ul>
             </div>
@@ -342,9 +143,9 @@ class CollegeListPage extends React.Component {
           <div id="render_view">
             {
              {
-              //  'grid_view': <GridView data={this.state.currentData} />,
-              //  'block_view': <BlockView data={this.state.currentData} />,
-               'table_view': <TableView data={this.state.currentData} />
+               'grid_view': <GridView data={this.state.currentData} />,
+               'block_view': <BlockView data={this.state.currentData} />,
+               'table_view': <TableView data={this.state.currentData} fields={this.fields}/>
              }[this.state.view]
             }
           </div>

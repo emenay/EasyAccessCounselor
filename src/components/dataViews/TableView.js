@@ -133,6 +133,7 @@ const useStyles1 = makeStyles((theme) => ({
         <Table className={classes.table} aria-label="custom pagination table">
           <TableHead>
             <TableRow>
+              <TableCell>Name</TableCell>
               {props.fields.map(title=>{
                 return <TableCell align="right">{title}</TableCell>
               })}
@@ -144,6 +145,7 @@ const useStyles1 = makeStyles((theme) => ({
               : people
             ).map((people) => (
               <TableRow key={people.id}>
+                <TableCell component="th" scope="row"> {people.Name}</TableCell>
                 {props.fields.map(field=>{
                   return <TableCell align="right">{people[field]}</TableCell>
                 })}

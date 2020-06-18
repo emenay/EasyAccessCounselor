@@ -298,7 +298,6 @@ class CaseloadPage extends React.Component {
     this.changeSort = changeSort.bind(this);
     this.changeFilter = changeFilter.bind(this);
     this.fields = [
-      "Name",
       "Goal",
       "Meetings",
       "Tasks",
