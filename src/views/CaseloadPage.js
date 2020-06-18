@@ -30,9 +30,13 @@ export function inputSearch(props) {
 class DropdownSortMenu extends React.Component {
   constructor(props) {
       super(props);
-      this.state = { collapsed: true };
+      this.state = { 
+        collapsed: true,
+        sort: "ID" 
+      };
       this.handleToggle = this.handleToggle.bind(this);
       this.handleBlur = this.handleBlur.bind(this);
+      this.changeSelected = this.changeSelected.bind(this);
   }
 
   handleToggle = (event) => {
@@ -43,19 +47,24 @@ class DropdownSortMenu extends React.Component {
     this.setState({ collapsed: true });
   }
 
+  changeSelected(sortName){
+    this.props.changeSort(sortName);
+    this.setState({sort: sortName});
+  }
+
   render() {
       return(
           <div className={"dropdown" + (this.state.collapsed ? "" : " is-active")} tabIndex="0" onBlur={this.handleBlur}>
               <div className="dropdown-trigger">
                   <button className="button" aria-haspopup="true" aria-controls="dropdown-menu" onClick={this.handleToggle}>
-                      <span id="sort-status">Sort By: ID</span>
+      <span id="sort-status">{"Sort By: " + this.state.sort}</span>
                   </button>
               </div>
               <div className="dropdown-menu" id="dropdown-menu" role="menu">
                   <div className="dropdown-content" id="sort-options">
-                    <a id="Name" className="dropdown-item" onClick={this.props.onClick}>Name</a>
-                    <a id="id" className="dropdown-item is-active" onClick={this.props.onClick}>ID</a>
-                    <a id="Results" className="dropdown-item" onClick={this.props.onClick}>Results</a>
+                    <a id="Name" className="dropdown-item" onMouseDown={()=>this.changeSelected("Name")}>Name</a>
+                    <a id="id" className="dropdown-item" onMouseDown={()=>this.changeSelected("ID")}>ID</a>
+                    <a id="Results" className="dropdown-item" onMouseDown={()=>this.changeSelected("Results")}>Results</a>
                   </div>
               </div>
           </div>
@@ -63,24 +72,6 @@ class DropdownSortMenu extends React.Component {
   }
 }
 
-function changeSort(event){
-  let arr = [];
-  let currData = this.state.currentData;
-  Object.keys(currData).forEach(function (key) {
-    arr.push(currData[key]);
-  });
-  let newData = this.state.currentData.default.sort(sortFunction(event.target.id))
-  this.setState({currentData: {default: newData}, sortStatus: event.target.id})
-
-  let navNodes = document.getElementById("sort-options").childNodes
-  navNodes.forEach(e => {
-    if (e.className.includes('is-active'))
-      e.classList.remove('is-active')
-  })
-  event.target.classList.add('is-active');
-
-  document.getElementById("sort-status").innerHTML = "Sort by: " + event.target.innerHTML;
-}
 
 function sortFunction(prop) {
   return function(a, b) {
@@ -295,7 +286,6 @@ class CaseloadPage extends React.Component {
       view: 'grid_view',
       sortState: "id"
     }
-    this.changeSort = changeSort.bind(this);
     this.changeFilter = changeFilter.bind(this);
     this.fields = [
       "Goal",
@@ -327,6 +317,26 @@ class CaseloadPage extends React.Component {
   //   console.log(query);
   //   this.setState({currentData: query.docs.map(doc => doc.data())})
   // }
+
+  changeSort = (sortName) => {
+    /*
+    let arr = [];
+    let currData = this.state.currentData;
+    Object.keys(currData).forEach(function (key) {
+      arr.push(currData[key]);
+    });
+    let newData = this.state.currentData.default.sort(sortFunction(event.target.id))
+    this.setState({currentData: {default: newData}, sortStatus: event.target.id})
+  
+    let navNodes = document.getElementById("sort-options").childNodes
+    navNodes.forEach(e => {
+      if (e.className.includes('is-active'))
+        e.classList.remove('is-active')
+    })
+    event.target.classList.add('is-active');
+  
+    document.getElementById("sort-status").innerHTML = "Sort by: " + event.target.innerHTML;*/
+  }
 
   handleClick = (event) => {
     event.persist()
@@ -365,7 +375,7 @@ class CaseloadPage extends React.Component {
               <li className="btn" id="tview" onClick={this.handleClick}><a id="table_view" className="navbar-item tab">Table View</a></li>
             </ul>
           </div>
-          <DropdownSortMenu onClick={this.changeSort}/>
+          <DropdownSortMenu changeSort={this.changeSort}/>
           <DropdownFilterMenu data={this.state.originalData} onFilter={this.changeFilter}/>
         </div>
         <div id="render_view">

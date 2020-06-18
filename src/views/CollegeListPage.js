@@ -33,9 +33,9 @@ class DropdownMenu extends React.Component {
               </div>
               <div className="dropdown-menu" id="dropdown-menu" role="menu">
                   <div className="dropdown-content" id="sort-options">
-                    <a id="Name" className="dropdown-item" onClick={this.props.onClick}>Name</a>
-                    <a id="id" className="dropdown-item is-active" onClick={this.props.onClick}>ID</a>
-                    <a id="Results" className="dropdown-item" onClick={this.props.onClick}>Results</a>
+                    <a id="Name" className="dropdown-item" onMouseDown={this.props.onClick}>Name</a>
+                    <a id="id" className="dropdown-item is-active" onMouseDown={this.props.onClick}>ID</a>
+                    <a id="Results" className="dropdown-item" onMouseDown={this.props.onClick}>Results</a>
                   </div>
               </div>
           </div>
