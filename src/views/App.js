@@ -16,7 +16,7 @@ import Account from './AccountPage';
 import Caseload from './CaseloadPage';
 import CollegeList from './CollegeListPage';
 import Schedule from './SchedulePage';
-
+import Notes from './NotesPage';
 import Header from '../components/Header';
 import Sidenav from '../components/Sidenav';
 
@@ -40,6 +40,10 @@ export default function App() {
             <Route path="/college_list">
               <Header isLoggedIn={isLoggedIn}/>
               { user ? <CollegeList /> : <Login /> }
+            </Route>
+            <Route path="/notes">
+              <Header isLoggedIn={isLoggedIn}/>
+              { user ? <Notes /> : <Login /> }
             </Route>
             <Route path="/schedule">
               <Header isLoggedIn={isLoggedIn}/>

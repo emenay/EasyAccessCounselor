@@ -16,6 +16,7 @@ const loggedInItems =  [
   { name: 'account', label: 'Account', path: 'account' },
   { name: 'caseload', label: 'Caseload Management', path: 'caseload_management' },
   { name: 'college_list', label: 'College List', path: 'college_list' },
+  { name: 'notes', label: 'Notes', path: 'notes'},
   { name: 'schedule', label: 'Schedule', path: 'schedule' }
 ]
 

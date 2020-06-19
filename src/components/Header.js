@@ -8,6 +8,7 @@ const paths = {
 	"/account": "Account",
 	"/caseload_management": "Caseload Management",
 	"/college_list": "College List",
+	"/notes": 'Notes',
 	"/schedule": "Schedule"
 }
 
