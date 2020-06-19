@@ -110,8 +110,6 @@ const useStyles1 = makeStyles((theme) => ({
         }
       }
     }
-
-    console.log(props);
     
     const classes = useStyles2();
     const [page, setPage] = React.useState(0);
@@ -181,56 +179,3 @@ const useStyles1 = makeStyles((theme) => ({
     );
   }
 
-  TableView.propTypes = {
-    fields: PropTypes.number.isRequired
-  };
-  
-  
-  
-  /*
-  <TableCell>Name</TableCell>
-              <TableCell align="right">Goal</TableCell>
-              <TableCell align="right">Meetings</TableCell>
-              <TableCell align="right">Tasks</TableCell>
-              <TableCell align="right">Visit</TableCell>
-              <TableCell align="right">Testing</TableCell>
-              <TableCell align="right">List</TableCell>
-              <TableCell align="right">Fee Waiver</TableCell>
-              <TableCell align="right">Early Apps</TableCell>
-              <TableCell align="right">Essay</TableCell>
-              <TableCell align="right">Teacher Recs</TableCell>
-              <TableCell align="right">Counselor Rec</TableCell>
-              <TableCell align="right">Resume</TableCell>
-              <TableCell align="right">FAFSA</TableCell>
-              <TableCell align="right">CSS Profile</TableCell>
-              <TableCell align="right">Results</TableCell>
-              <TableCell align="right">Verification</TableCell>
-              <TableCell align="right">Award Letters</TableCell>
-              <TableCell align="right">Appeal</TableCell>
-              <TableCell align="right">Spring Visit</TableCell>
-              <TableCell align="right">Decision</TableCell>
-              <TableCell align="right">Latest</TableCell>
-
-
-                <TableCell component="th" scope="row"> {people.Name}</TableCell>
-                <TableCell align="right">{people["Goal"]}</TableCell>
-                <TableCell align="right">{people["Meetings"]}</TableCell>
-                <TableCell align="right">{people.Tasks}</TableCell>
-                <TableCell align="right">{people.Visit}</TableCell>
-                <TableCell align="right">{people.Testing}</TableCell>
-                <TableCell align="right">{people.List}</TableCell>
-                <TableCell align="right">{people["Fee Waiver"]}</TableCell>
-                <TableCell align="right">{people["Early Apps"]}</TableCell>
-                <TableCell align="right">{people.Essay}</TableCell>
-                <TableCell align="right">{people["Teacher Recs"]}</TableCell>
-                <TableCell align="right">{people["Counselor Rec"]}</TableCell>
-                <TableCell align="right">{people.Resume}</TableCell>
-                <TableCell align="right">{people.FAFSA}</TableCell>
-                <TableCell align="right">{people["CSS Profile"]}</TableCell>
-                <TableCell align="right">{people.Results}</TableCell>
-                <TableCell align="right">{people.Verification}</TableCell>
-                <TableCell align="right">{people["Award Letters"]}</TableCell>
-                <TableCell align="right">{people.Appeal}</TableCell>
-                <TableCell align="right">{people["Spring Visit"]}</TableCell>
-                <TableCell align="right">{people.Decision}</TableCell>
-                <TableCell align="right">{people["Latest Note"]}</TableCell>*/

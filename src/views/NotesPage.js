@@ -5,6 +5,7 @@ class NotesPage extends React.Component {
   constructor(props){
     super(props);
     this.fields = [
+      "Meetings",
       "Latest Note"
     ];
   }

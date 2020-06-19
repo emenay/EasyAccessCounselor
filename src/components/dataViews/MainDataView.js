@@ -241,7 +241,7 @@ class DropdownSortMenu extends React.Component {
           arr = arrayRemove(this.state[event.target.name + "filter"], event.target.id)
           this.state[event.target.name + "filter"] = arr;
         }
-        event.target.classList.remove('is-active')
+        event.target.classList.remove('is-active');
       } else {
         if(this.state[event.target.name + "filter"] != undefined){
           arr = this.state[event.target.name + "filter"]
@@ -249,7 +249,7 @@ class DropdownSortMenu extends React.Component {
         } else {
           arr = [event.target.id]
         }
-        event.target.classList.add('is-active')
+        event.target.classList.add('is-active');
       }
       this.props.onFilter(this.state);
     }
