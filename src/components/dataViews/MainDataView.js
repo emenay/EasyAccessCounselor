@@ -151,7 +151,7 @@ function changeFilter(filterSettings){
               </ul>
             </div>
             <DropdownSortMenu changeSort={this.changeSort} sortFields={this.sortFields}/>
-            <DropdownFilterMenu data={this.state.originalData} onFilter={this.changeFilter}/>
+            <DropdownFilterMenu filterFields={this.props.filterFields} onFilter={this.changeFilter}/>
           </div>
           <div id="render_view">
             {

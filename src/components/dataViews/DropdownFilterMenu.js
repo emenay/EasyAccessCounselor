@@ -20,8 +20,56 @@ function arrayRemove(currData, value) {
     });
     return data.filter(function(ele){ return ele !== value; });
 }
-  
 
+class DropdownFilterMenu extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            selectedMenu: null,
+            currentFilters: {}
+        }
+        this.handleToggle = this.handleToggle.bind(this);
+        this.handleBlur = this.handleBlur.bind(this);
+        this.handleClick = this.handleClick.bind(this);
+    }
+
+    handleToggle(filterField) {
+        this.setState({selectedMenu: filterField});
+    }
+
+    handleBlur() {
+        this.setState({selectedMenu: null});
+    }
+
+    handleClick() {
+        console.log("implement");
+    }
+
+    render() {
+        return(
+          <span>
+            <span className="filter-label">Filter by:</span>
+            {Array.from(this.props.filterFields).map(([name, vals]) =>
+              (<div className={"dropdown filter-button" + (name === this.state.selectedMenu ? " is-active" : "")} tabIndex="0" key={name} onBlur={this.handleBlur}>
+                  <div className="dropdown-trigger">
+                      <span><button id={name} className="button" aria-haspopup="true" aria-controls="dropdown-menu" onClick={()=>this.handleToggle(name)}>
+                          {name + ":"}
+                      </button></span>
+                  </div>
+                  <div className="dropdown-menu" id="dropdown-menu" role="menu">
+                      <div className="dropdown-content" id="filter-options">
+                        {vals.map(value => <a id={value} name={name} key={value} className="dropdown-item" onClick={this.handleClick}>{value}</a>)}
+                      </div>
+                  </div>
+              </div>
+              )
+            )}
+          </span>
+        );
+    }
+    
+}
+/*
 class DropdownFilterMenu extends React.Component {
     constructor(props) {
         super(props);
@@ -160,7 +208,7 @@ class DropdownFilterMenu extends React.Component {
           </span>
         );
     }
-  }
+  }*/
 
 export default DropdownFilterMenu;
   

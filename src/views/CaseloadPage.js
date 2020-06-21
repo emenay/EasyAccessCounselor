@@ -50,9 +50,14 @@ class CaseloadPage extends React.Component {
       "Latest"
     ];
 
+    this.filterFields = new Map([
+      ["Goal", ["4 year", "2 year"]],
+      ["Early Apps", ["yes", "no"]]
+    ]);
+
   }
   render(){
-    return <MainDataView fields={this.fields}/>
+    return <MainDataView fields={this.fields} filterFields={this.filterFields}/>
   }
 }
 
