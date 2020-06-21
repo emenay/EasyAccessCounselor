@@ -49,6 +49,7 @@ class CaseloadPage extends React.Component {
       "Decision",
       "Latest"
     ];
+
   }
   render(){
     return <MainDataView fields={this.fields}/>

@@ -1,9 +1,11 @@
 import React from 'react';
 // import ReactDOM from 'react-dom';
 import * as data2 from '../../data_caseload_management.json';
-import {BlockView} from "./BlockView";
-import {GridView} from "./GridView";
-import {TableView} from "./TableView";
+import {BlockView} from "./BlockView.js";
+import {GridView} from "./GridView.js";
+import {TableView} from "./TableView.js";
+import DropdownSortMenu from "./DropdownSortMenu.js";
+import DropdownFilterMenu from "./DropdownFilterMenu.js";
 import '../../css/CaseloadPage.css'
 import 'bulma/css/bulma.css'
 
@@ -22,64 +24,10 @@ export function inputSearch(props) {
     );
   }
 
-// -- START Sort Menu 
-class DropdownSortMenu extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = { 
-          collapsed: true,
-          sort: "ID" 
-        };
-        this.handleToggle = this.handleToggle.bind(this);
-        this.handleBlur = this.handleBlur.bind(this);
-        this.changeSelected = this.changeSelected.bind(this);
-    }
-  
-    handleToggle = (event) => {
-        this.setState({ collapsed: !this.state.collapsed });
-    }
-  
-    handleBlur = (event) => {
-      this.setState({ collapsed: true });
-    }
-  
-    changeSelected(sortName){
-      this.props.changeSort(sortName);
-      this.setState({sort: sortName});
-    }
-  
-    render() {
-        return(
-            <div className={"dropdown" + (this.state.collapsed ? "" : " is-active")} tabIndex="0" onBlur={this.handleBlur}>
-                <div className="dropdown-trigger">
-                    <button className="button" aria-haspopup="true" aria-controls="dropdown-menu" onClick={this.handleToggle}>
-        <span id="sort-status">{"Sort By: " + this.state.sort}</span>
-                    </button>
-                </div>
-                <div className="dropdown-menu" id="dropdown-menu" role="menu">
-                    <div className="dropdown-content" id="sort-options">
-                      <a id="Name" className="dropdown-item" onMouseDown={()=>this.changeSelected("Name")}>Name</a>
-                      <a id="id" className="dropdown-item" onMouseDown={()=>this.changeSelected("ID")}>ID</a>
-                      <a id="Results" className="dropdown-item" onMouseDown={()=>this.changeSelected("Results")}>Results</a>
-                    </div>
-                </div>
-            </div>
-        );
-    }
-  }
-  
-  
-  function sortFunction(prop) {
-    return function(a, b) {
-        if (a[prop] > b[prop]) {
-            return 1;
-        } else if (a[prop] < b[prop]) {
-            return -1;
-        }
-        return 0;
-    }
-  }
-  
+function changeFilter(filterSettings){
+  return null;
+}
+/*
   function changeFilter(filterSettings){
     let arr = [];
     let currData = this.state.originalData;
@@ -125,170 +73,17 @@ class DropdownSortMenu extends React.Component {
     this.setState({currentData: {default : newData}})
   }
   
-  function arrayRemove(currData, value) {
-    let data = [];
-    Object.keys(currData).forEach(function (key) {
-      data.push(currData[key]);
-    });
-    return data.filter(function(ele){ return ele !== value; });
-  }
-  
-  
-// -- END Sort Menu
+*/
 
-// -- START Filter Menu
-
-  class DropdownFilterMenu extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = { 
-          "Goalcollapse": true,
-          "Early Appscollapse": true,
-          "Essaycollapse": true,
-          "Resultscollapse": true,
-          "Decisioncollapse": true,
-          uniqueValues: this.getUniqueValues(props.data),
-          "Goalfilter": [],
-          "Early Appsfilter": [],
-          "Essayfilter": [],
-          "Resultsfilter": [],
-          "Decisionfilter": []
-        };
-        this.handleToggle = this.handleToggle.bind(this);
-        this.handleBlur = this.handleBlur.bind(this);
-        this.handleClick = this.handleClick.bind(this);
-    }
-  
-    getUniqueValues(data) {
-      let unique = {
-        "Goal": [],
-        "Early Apps": [],
-        "Essay": [],
-        "Results": [],
-        "Decision": []
-      }
-  
-      let lookup1 = {};
-      let lookup2 = {};
-      let lookup3 = {};
-      let lookup4 = {};
-      let lookup5 = {};
-  
-      let arr = [];
-      Object.keys(data).forEach(function (key) {
-        arr.push(data[key]);
-      });
-  
-      let dataArray = arr[0]
-  
-      for (var i = 0; i < dataArray.length; i++) {
-        let person = dataArray[i];
-        var goal = person["Goal"];
-        var early = person["Early Apps"];
-        var essay = person["Essay"];
-        var results = person["Results"];
-        var decision = person["Decision"];
-  
-        if (!(goal in lookup1)) {
-          lookup1[goal] = 1;
-          unique["Goal"].push(goal);
-        }
-  
-        if (!(early in lookup2)) {
-          lookup2[early] = 1;
-          unique["Early Apps"].push(early);
-        }
-  
-        if (!(essay in lookup3)) {
-          lookup3[essay] = 1;
-          unique["Essay"].push(essay);
-        }
-  
-        if (!(results in lookup4)) {
-          lookup4[results] = 1;
-          unique["Results"].push(results);
-        }
-  
-        if (!(decision in lookup5)) {
-          lookup5[decision] = 1;
-          unique["Decision"].push(decision);
-        }
-      }
-  
-      return unique;
-    }
-  
-    handleToggle = (event) => {
-      this.setState({ 
-        [event.target.id + "collapse"]: !this.state[event.target.id + "collapse"]
-      });
-    }
-  
-    handleBlur() {
-      this.setState({
-        "Goalcollapse": true,
-        "Early Appscollapse": true,
-        "Essaycollapse": true,
-        "Resultscollapse": true,
-        "Decisioncollapse": true
-      });
-    }
-  
-    handleClick = (event) => {
-      let arr = [];
-      if (event.target.className.includes('is-active')) {
-        if(this.state[event.target.name + "filter"] != undefined) {
-          arr = arrayRemove(this.state[event.target.name + "filter"], event.target.id)
-          this.state[event.target.name + "filter"] = arr;
-        }
-        event.target.classList.remove('is-active');
-      } else {
-        if(this.state[event.target.name + "filter"] != undefined){
-          arr = this.state[event.target.name + "filter"]
-          arr[arr.length] = event.target.id
-        } else {
-          arr = [event.target.id]
-        }
-        event.target.classList.add('is-active');
-      }
-      this.props.onFilter(this.state);
-    }
-  
-    render() {
-        return(
-          <span>
-            <span className="filter-label">Filter by:</span>
-            {Object.entries(this.state.uniqueValues).map(([name, info]) =>
-              (<div className={"dropdown filter-button" + (this.state[name + "collapse"] ? "" : " is-active")} tabIndex="0" key={name} onBlur={this.handleBlur}>
-                  <div className="dropdown-trigger">
-                      <span><button id={name} className="button" aria-haspopup="true" aria-controls="dropdown-menu" onClick={this.handleToggle}>
-                          {name + ":"}
-                      </button></span>
-                  </div>
-                  <div className="dropdown-menu" id="dropdown-menu" role="menu">
-                      <div className="dropdown-content" id="filter-options">
-                        {info.map(value => <a id={value} name={name} key={value} className="dropdown-item" onClick={this.handleClick}>{value}</a>)}
-                      </div>
-                  </div>
-              </div>
-              )
-            )}
-          </span>
-        );
-    }
-  }
-
-  // -- END Filter Menu
-  
   class MainDataView extends React.Component {
     constructor(props) {
       super(props);
       this.state = {
         currentData: data2,
         originalData: data2,
-        view: 'grid_view',
-        sortState: "id"
+        view: 'grid_view'
       }
+      this.sortFields = ["ID", "Name", "Result"];
       this.changeFilter = changeFilter.bind(this);
     }
   
@@ -355,7 +150,7 @@ class DropdownSortMenu extends React.Component {
                 <li className="btn" id="tview" onClick={this.handleClick}><a id="table_view" className="navbar-item tab">Table View</a></li>
               </ul>
             </div>
-            <DropdownSortMenu changeSort={this.changeSort}/>
+            <DropdownSortMenu changeSort={this.changeSort} sortFields={this.sortFields}/>
             <DropdownFilterMenu data={this.state.originalData} onFilter={this.changeFilter}/>
           </div>
           <div id="render_view">
