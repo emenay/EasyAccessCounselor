@@ -5,7 +5,7 @@ export function GridView(props) {
     return (
       <div id="grid">
         {props.data.map(person =>
-          <div className="card" key={person.id}>
+          <div className="card" key={person.id} onClick={()=>props.clickCard(person.Name)}>
               <div className="card-content">
                 <p className="card-title">{person.Name}</p>
                 <p>College Info Not Available!</p>
