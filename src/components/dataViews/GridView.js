@@ -4,17 +4,16 @@ import {getBGColor} from './getBGColor';
 export function GridView(props) {
     return (
       <div id="grid">
-        {props.data.default.map(person => <span key={person.id} className="square">
-          <div className="card" style={getBGColor(person)}>
-            <div className="card-content">
-              <p className="title is-4">{person.Name}</p>
-              <p className="subtitle is-6">{person.Results}</p>
-              <div className="content">
-                <p>{person["Early Apps"]}</p>
+        {props.data.default.map(person =>
+          <div className="card" key={person.id}>
+              <div className="card-content">
+                <p className="card-title">{person.Name}</p>
+                <p>College Info Not Available!</p>
+                <p>GPA: Not Available!</p>
+                <p>{"SAT: " + person["Testing"]}</p>
+                <p>Major: Not Available!</p>
               </div>
-            </div>
           </div>
-        </span>
         )}
       </div>
     )

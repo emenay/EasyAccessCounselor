@@ -1,21 +1,24 @@
-.square {
-    width: 200px;
-    height: 200px;
-    border-radius: 10px;
-    margin: 10px;
-    overflow: hidden;
-    float: left;
-    text-align: left;
+.profiles-content {
+    width: 90%;
+    margin: auto;
 }
+
 
 #root {
     width: auto;
     margin: auto;
 }
 
+p {
+    line-height: 1.6;
+    font-size: 17px;
+}
+
 #grid {
     text-align: center;
-    width: 880px;
+    display: grid;
+    gap: 20px 10px;
+    grid-template-columns: auto auto auto;
     margin: auto;
     margin-top: 20px;
 }
@@ -34,16 +37,26 @@
     margin-left: 20px;
 }
 
+.card-title {
+    font-size: 26px;
+}
+
+
 .card {
+    border-radius: 5px;
     height: 200px!important;
+    background-color:  #3298CB!important;
     -webkit-transition: background-color 150ms linear;
     -ms-transition: background-color 150ms linear;
     transition: background-color 150ms linear;
+    color: white!important;
+    text-align: left;
 }
 
 .card:hover{
     cursor: pointer;
     background-color: #ACE7FF!important;
+    color: black!important;
     -webkit-transition: background-color 150ms linear;
     -ms-transition: background-color 150ms linear;
     transition: background-color 150ms linear;
