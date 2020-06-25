@@ -3,6 +3,23 @@
     margin: auto;
 }
 
+.profiles-header {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.flag-wrapper {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.flag {
+    width: 30px;
+    height: 30px;
+}
+
 /* Taken from https://www.w3schools.com/howto/howto_css_modals.asp example*/
 .studentdetails-modal {
     position: fixed; /* Stay in place */

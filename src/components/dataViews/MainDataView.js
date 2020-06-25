@@ -24,12 +24,12 @@ export function inputSearch(props) {
   }
 
 // -- START Sort Menu 
-class DropdownSortMenu extends React.Component {
+export class DropdownSortMenu extends React.Component {
     constructor(props) {
         super(props);
         this.state = { 
           collapsed: true,
-          sort: "ID" 
+          sort: "Testing" 
         };
         this.handleToggle = this.handleToggle.bind(this);
         this.handleBlur = this.handleBlur.bind(this);
@@ -60,8 +60,8 @@ class DropdownSortMenu extends React.Component {
                 <div className="dropdown-menu" id="dropdown-menu" role="menu">
                     <div className="dropdown-content" id="sort-options">
                       <a id="Name" className="dropdown-item" onMouseDown={()=>this.changeSelected("Name")}>Name</a>
-                      <a id="id" className="dropdown-item" onMouseDown={()=>this.changeSelected("ID")}>ID</a>
-                      <a id="Results" className="dropdown-item" onMouseDown={()=>this.changeSelected("Results")}>Results</a>
+                      <a id="id" className="dropdown-item" onMouseDown={()=>this.changeSelected("id")}>ID</a>
+                      <a id="Results" className="dropdown-item" onMouseDown={()=>this.changeSelected("Testing")}>Results</a>
                     </div>
                 </div>
             </div>

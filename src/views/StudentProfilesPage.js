@@ -1,6 +1,6 @@
 import React from 'react';
 import {GridView} from "../components/dataViews/GridView.js";
-import 'bulma/css/bulma.css';
+import {DropdownSortMenu} from "../components/dataViews/MainDataView.js";
 import "../css/CaseloadPage.css";
 import data2 from '../data_caseload_management.json';
 
@@ -18,10 +18,16 @@ class StudentDetailsModal extends React.Component {
 class StudentProfilesPage extends React.Component{
     constructor(props){
         super(props);
+        let flagMap = new Map();
+        data2.forEach(person=>{
+            flagMap.set(person.id, false);
+        });
         this.state = {
             selectedCard: null,
             sortField: "Testing",
-            searchString: ""
+            searchString: "",
+            flagMap: flagMap,
+            flagToggle: false
         }
     }
 
@@ -36,8 +42,20 @@ class StudentProfilesPage extends React.Component{
         return comparison;
     }
 
+    changeSort = (field) => {
+        this.setState({sortField: field});
+    }
+
     clickCard = (name) => {
         this.setState({selectedCard: name});
+    }
+
+    clickFlag = (id) => {
+        this.setState({flagMap: this.state.flagMap.set(id, !this.state.flagMap.get(id))});
+    }
+
+    flagToggle = () => {
+        this.setState({flagToggle: !this.state.flagToggle});
     }
 
     exitModal = () => {
@@ -45,15 +63,14 @@ class StudentProfilesPage extends React.Component{
     }
 
     render(){
-        let details;
-        if (this.state.selectedCard){
-            console.log(typeof(this.state.selectedCard));
-            details = <StudentDetailsModal exitModal={this.exitModal} studentName={this.state.selectedCard} />
-        }
-        let sortedData = data2.sort(this.compare);
+        let data = this.state.flagToggle ? data2.filter(person => {return this.state.flagMap.get(person.id)}) : data2;
         return <div className="profiles-content">
-            {details}
-            <GridView data={sortedData} clickCard={this.clickCard} />
+            <div className="profiles-header">
+                <button className="flag-toggle" onClick={this.flagToggle}>Toggle Flags</button>
+                <DropdownSortMenu changeSort={this.changeSort} />
+            </div>
+            {this.state.selectedCard && <StudentDetailsModal exitModal={this.exitModal} studentName={this.state.selectedCard} />}
+            <GridView data={data.sort(this.compare)} clickCard={this.clickCard} clickFlag={this.clickFlag} flags={this.state.flagMap}/>
         </div>
     }
 }
