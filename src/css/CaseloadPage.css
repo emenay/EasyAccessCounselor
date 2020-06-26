@@ -55,7 +55,7 @@ p {
     text-align: center;
     display: grid;
     gap: 20px 10px;
-    grid-template-columns: auto auto auto;
+    grid-template-columns: 33% 33% 33%;
     margin: auto;
     margin-top: 20px;
 }
@@ -88,6 +88,7 @@ p {
     transition: background-color 150ms linear;
     color: white!important;
     text-align: left;
+    word-wrap: normal;
 }
 
 .card:hover{
