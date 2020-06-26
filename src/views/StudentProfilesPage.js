@@ -8,8 +8,11 @@ class StudentDetailsModal extends React.Component {
 
     render(){
         return <div className="studentdetails-modal" onClick={this.props.exitModal}>
-            <div className="studentdetails-content">
-                <p>{this.props.studentName}</p>
+            <div className="studentdetails-background">
+                <p className="studentdetails-title">{this.props.studentName}</p>
+                <div className="studentdetails-content">
+                    <p>{this.props.studentName}</p>
+                </div>
             </div>
         </div>
     }

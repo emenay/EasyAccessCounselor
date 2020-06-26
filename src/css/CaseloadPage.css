@@ -20,6 +20,11 @@
     height: 30px;
 }
 
+.scard-content {
+    margin: auto;
+    padding: 1rem 1.5rem;
+}
+
 /* Taken from https://www.w3schools.com/howto/howto_css_modals.asp example*/
 .studentdetails-modal {
     position: fixed; /* Stay in place */
@@ -33,12 +38,26 @@
     background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
 }
 
+.studentdetails-background {
+    position: relative;
+    width: 80%;
+    margin: 10% auto;
+    width: 80%;
+    height: 90px;
+    border-radius: 15px;
+    opacity: 1;
+    background: #0E1030 0% 0% no-repeat padding-box;
+}
+
 .studentdetails-content {
+    position: absolute;
     background-color: #fefefe;
-    margin: 15% auto; /* 15% from the top and centered */
+    border-radius: 15px;
     padding: 20px;
+    height: 80%;
+    bottom: 0;
+    width: 100%;
     border: 1px solid #888;
-    width: 80%; /* Could be more or less, depending on screen size */
 }
 
 #root {
@@ -49,7 +68,7 @@
 p {
     line-height: 1.6;
     font-size: 17px;
-    font-family: sans-serif;
+    font-family: "Open Sans";
 }
 
 #grid {
