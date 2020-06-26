@@ -49,13 +49,14 @@
 p {
     line-height: 1.6;
     font-size: 17px;
+    font-family: sans-serif;
 }
 
 #grid {
     text-align: center;
     display: grid;
-    gap: 20px 10px;
-    grid-template-columns: 33% 33% 33%;
+    gap: 30px 1.25%;
+    grid-template-columns: 32.5% 32.5% 32.5%;
     margin: auto;
     margin-top: 20px;
 }
@@ -75,7 +76,7 @@ p {
 }
 
 .card-title {
-    font-size: 26px;
+    font-size: 28px;
 }
 
 
