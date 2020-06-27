@@ -78,6 +78,21 @@
     height: 50px;
 }
 
+.studentdetails-editbutton {
+    position: absolute;
+    bottom: 5px;
+    right: 5px;
+    background-image: url('../assets/edit_symbol.png');
+    width: 39px;
+    height: 52px;
+    background-color:  #fefefe;
+    border: none;
+}
+
+.studentdetails-editbutton:hover {
+    border: 0.5px solid #3298CB;
+}
+
 .studentdetails-tab {
     position: absolute;
     bottom: 80%;
@@ -122,6 +137,11 @@
 
 }
 
+.studentdetails-avatar {
+    height: 200px;
+    width: 190px;
+}
+
 .studentdetails-title {
     color: white;
     font-size: 30px;
@@ -156,7 +176,7 @@
 }
 
 .geninfo-col3 {
-    text-align: center;
+    text-align: right;
 }
 
 #root {

@@ -1,4 +1,6 @@
 import React from 'react';
+import edit_symbol from '../assets/edit_symbol.png';
+import profile_avatar from '../assets/profile_avatar.png';
 
 class GeneralInformationPanel extends React.Component {
     render() {
@@ -24,11 +26,12 @@ class GeneralInformationPanel extends React.Component {
                     <p><span>Student Phone: </span>--</p>
                 </div>
                 <div className="geninfo-col3">
-                    <img className="studentdetails-avatar" alt="avatar icon" src=""/>
+                    <img className="studentdetails-avatar" alt="avatar icon" src={profile_avatar}/>
                     <p><span>Student ID: </span>{info.id}</p>
                 </div>
             </div>
             <p><span>Counselor Notes: </span>{info["Latest Note"]}</p>
+            {this.props.isEditing ? <p>EDITING</p> : null}
         </div>
     }
 }
@@ -38,7 +41,8 @@ class StudentDetailsModal extends React.Component {
         super(props);
         this.tabs = ["General Information", "Caseload Management", "College List", "Application Process"];
         this.state = {
-            selectedTab: "General Information"
+            selectedTab: "General Information",
+            isEditing: false
         }
     }
 
@@ -49,10 +53,14 @@ class StudentDetailsModal extends React.Component {
     whichPanel = (tab) => {
         switch(tab){
             case 'General Information':
-                return <GeneralInformationPanel info={this.props.info}/>
+                return <GeneralInformationPanel info={this.props.info} isEditing={this.state.isEditing}/>
             default:
                 return <p>Hello world</p>
         }
+    }
+
+    editToggle = () => {
+        this.setState({isEditing: !this.state.isEditing});
     }
 
     render(){
@@ -67,6 +75,7 @@ class StudentDetailsModal extends React.Component {
                 <div className="studentdetails-innerbackground"/>
                 <div className="studentdetails-content">
                     {this.whichPanel(this.state.selectedTab)}
+                    <button className="studentdetails-editbutton" onClick={this.editToggle}/>
                 </div>
             </div>
         </div>
