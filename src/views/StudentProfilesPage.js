@@ -2,41 +2,10 @@ import React from 'react';
 import {GridView} from "../components/dataViews/GridView.js";
 import {DropdownSortMenu} from "../components/dataViews/MainDataView.js";
 import "../css/CaseloadPage.css";
+import StudentDetailsModal from '../components/StudentDetailsModal.js';
 import data2 from '../data_caseload_management.json';
 
-class StudentDetailsModal extends React.Component {
-    constructor(props) {
-        super(props);
-        this.tabs = ["General Information", "Caseload Management", "College List", "Application Process"];
-        this.state = {
-            selectedTab: "General Information"
-        }
-    }
 
-    changeTab = (tab) => {
-        this.setState({selectedTab: tab})
-    }
-
-    render(){
-        let info = this.props.info;
-        return <div className="studentdetails-modal" onClick={this.props.exitModal}>
-            <div className="studentdetails-background" onClick={(e)=> e.stopPropagation()}>
-                <div className="studentdetails-tab-wrapper">
-                    {this.tabs.map((name, index)=>{
-                        return <div className={"studentdetails-tab" + (this.state.selectedTab === name ? " tab-selected" : "")} onClick={()=>this.changeTab(name)} key={index}>
-                            <p className="tab-text">{name}</p>
-                        </div>
-                    })}
-                </div>
-                <p className="studentdetails-title">{info.Name}</p>
-                <div className="studentdetails-innerbackground"/>
-                <div className="studentdetails-content">
-                    <p>{info.id}</p>
-                </div>
-            </div>
-        </div>
-    }
-}
 
 class StudentProfilesPage extends React.Component{
     constructor(props){
