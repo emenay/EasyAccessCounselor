@@ -12,6 +12,18 @@ const uiConfig = {
 class LoginPage extends React.Component {
     render() {
       return (
+        <div className="loginbackground-gradient">
+          <div className="LoginBox">
+            
+          </div>
+        </div>
+      );
+    }
+}
+
+export default LoginPage;
+
+/* Original 
       <div>
         <div className="LoginBoxContainer">
           <div className="LoginBox">
@@ -19,8 +31,4 @@ class LoginPage extends React.Component {
           </div>
         </div>
       </div>
-      );
-    }
-}
-
-export default LoginPage;
+*/

@@ -6,5 +6,17 @@
 }
 
 .LoginBox {
-    width: 365px;
+    width: 40%;
+    height: 40%;
+    background: white;
+    margin: auto;
+}
+
+.loginbackground-gradient {
+    height: 100%;
+    width: 100%;
+    background: transparent linear-gradient(299deg, #3298CB 0%, #2E8CBB 0%, #1E5A78 53%, #194C66 100%) 0% 0% no-repeat padding-box;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }

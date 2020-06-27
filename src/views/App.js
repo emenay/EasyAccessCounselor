@@ -25,37 +25,36 @@ export default function App() {
   const isLoggedIn = user ? 'true' : '';
   return (
     <Router>
-      <div className="page-container">
-        <Sidenav isLoggedIn={isLoggedIn}/>
-        <div className="page-content">
-          <Switch>
-            <Route path="/account">
-              <Header isLoggedIn={isLoggedIn}/>
-              { user ? <Account /> : <Login /> }
-            </Route>
-            <Route path="/caseload_management">
-              <Header isLoggedIn={isLoggedIn}/>
-              { user ? <Caseload cuid={user.uid}/> : <Login /> }
-            </Route>
-            <Route path="/college_list">
-              <Header isLoggedIn={isLoggedIn}/>
-              { user ? <CollegeList /> : <Login /> }
-            </Route>
-            <Route path="/notes">
-              <Header isLoggedIn={isLoggedIn}/>
-              { user ? <Notes /> : <Login /> }
-            </Route>
-            <Route path="/schedule">
-              <Header isLoggedIn={isLoggedIn}/>
-              { user ? <Schedule /> : <Login /> }
-            </Route>
-            <Route path="/">
-              <Header isLoggedIn={isLoggedIn}/>
-              { user ? <Dashboard cuid={user.uid} /> : <HomeDefault /> }
-            </Route>
-          </Switch>
-        </div>
+    <div className="page-container">
+      <Sidenav isLoggedIn={isLoggedIn}/>
+      <div className="page-content">
+        <Switch>
+          <Route path="/account">
+            { user ? <Account /> : <Login /> }
+          </Route>
+          <Route path="/caseload_management">
+            <Header isLoggedIn={isLoggedIn}/>
+            { user ? <Caseload cuid={user.uid}/> : <Login /> }
+          </Route>
+          <Route path="/college_list">
+            <Header isLoggedIn={isLoggedIn}/>
+            { user ? <CollegeList /> : <Login /> }
+          </Route>
+          <Route path="/notes">
+            <Header isLoggedIn={isLoggedIn}/>
+            { user ? <Notes /> : <Login /> }
+          </Route>
+          <Route path="/schedule">
+            <Header isLoggedIn={isLoggedIn}/>
+            { user ? <Schedule /> : <Login /> }
+          </Route>
+          <Route path="/">
+            <Header isLoggedIn={isLoggedIn}/>
+            { user ? <Dashboard cuid={user.uid} /> : <HomeDefault /> }
+          </Route>
+        </Switch>
       </div>
-    </Router>
+    </div>
+  </Router>
   );
 }
