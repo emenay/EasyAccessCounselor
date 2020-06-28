@@ -6,10 +6,37 @@
 }
 
 .LoginBox {
-    width: 40%;
-    height: 40%;
     background: white;
+    height: 100%;
+    
+}
+
+.loginbox-wrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    width: 40%;
+    max-width: 600px;
     margin: auto;
+    height: 40%;
+
+}
+
+.loginbox-tabs {
+    height: 40px;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+}
+
+.loginbox-tab {
+    height: 100%;
+    width: 20%;
+    background-color: white;
+    border: none;
+    margin: 0;
+    outline: none;
+    text-decoration: none;
 }
 
 .loginbackground-gradient {

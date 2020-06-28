@@ -9,16 +9,29 @@ const uiConfig = {
     credentialHelper: 'none'
 };
 
-class LoginPage extends React.Component {
-    render() {
-      return (
-        <div className="loginbackground-gradient">
+class LoginPage extends React.Component { 
+  constructor(props){
+    super(props);
+    this.state = {
+      selectedCounselor: true // True when counselor view selected, false when student
+    }
+  }
+
+  render() {
+    return (
+      <div className="loginbackground-gradient">
+        <div className="loginbox-wrapper">
+          <div className="loginbox-tabs">
+            <button className="loginbox-tab">Counselor</button>
+            <button className="loginbox-tab">Students</button>
+          </div>
           <div className="LoginBox">
-            
+            Hello world!
           </div>
         </div>
-      );
-    }
+      </div>
+    );
+  }
 }
 
 export default LoginPage;
