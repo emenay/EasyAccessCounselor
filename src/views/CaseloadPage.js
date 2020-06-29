@@ -1,8 +1,6 @@
 import React from 'react';
 // import ReactDOM from 'react-dom';
-import * as data2 from '../data_caseload_management.json';
 import MainDataView from '../components/dataViews/MainDataView';
-import '../css/CaseloadPage.css'
 import 'bulma/css/bulma.css'
 
 //import Autocomplete from '@material-ui/lab/Autocomplete';

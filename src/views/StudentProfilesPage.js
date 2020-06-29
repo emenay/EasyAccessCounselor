@@ -2,6 +2,7 @@ import React from 'react';
 import {GridView} from "../components/dataViews/GridView.js";
 import {DropdownSortMenu} from "../components/dataViews/MainDataView.js";
 import "../css/CaseloadPage.css";
+import "../css/searchBar.css"
 import StudentDetailsModal from '../components/StudentDetailsModal.js';
 import data2 from '../data_caseload_management.json';
 
@@ -43,8 +44,8 @@ class StudentProfilesPage extends React.Component{
         this.setState({sortField: field});
     }
 
-    changeSearchString = (string) => {
-        this.setState({searchString: string});
+    changeSearchString = (event) => {
+        this.setState({searchString: event.target.value});
     }
 
     reverseSortOrder = () => {
@@ -77,6 +78,7 @@ class StudentProfilesPage extends React.Component{
         }
         return <div className="profiles-content">
             <div className="profiles-header">
+                <input type="text" id="myInput" onKeyUp={this.changeSearchString} placeholder="Search for Students.." />
                 <button className="flag-toggle" onClick={this.flagToggle}>Toggle Flags</button>
                 <DropdownSortMenu changeSort={this.changeSort} />
                 <button className="flag-toggle" onClick={this.reverseSortOrder}>Reverse Sort</button>

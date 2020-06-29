@@ -125,7 +125,6 @@ const useStyles1 = makeStyles((theme) => ({
       setRowsPerPage(parseInt(event.target.value, 10));
       setPage(0);
     };
-  
     return (
       <TableContainer component={Paper}>
         <Table className={classes.table} aria-label="custom pagination table">
@@ -133,6 +132,7 @@ const useStyles1 = makeStyles((theme) => ({
             <TableRow>
               <TableCell>Name</TableCell>
               {props.fields.map(title=>{
+                console.log(title);
                 return <TableCell align="right">{title}</TableCell>
               })}
             </TableRow>

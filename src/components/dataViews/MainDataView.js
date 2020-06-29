@@ -287,7 +287,7 @@ export class DropdownSortMenu extends React.Component {
       this.state = {
         currentData: data2,
         originalData: data2,
-        view: 'grid_view',
+        view: 'table_view',
         sortState: "id"
       }
       this.changeFilter = changeFilter.bind(this);
@@ -351,9 +351,7 @@ export class DropdownSortMenu extends React.Component {
             </div>
             <div className="tabs is-centered" id="tabs">
               <ul id="navigation">
-                <li className="btn is-active" id="gview" onClick={this.handleClick}><a id="grid_view" className="navbar-item tab">Grid View</a></li>
-                <li className="btn" id="bview" onClick={this.handleClick}><a id="block_view" className="navbar-item tab">Block View</a></li>
-                <li className="btn" id="tview" onClick={this.handleClick}><a id="table_view" className="navbar-item tab">Table View</a></li>
+                <li className="btn is-active" id="tview" ><a id="table_view" className="navbar-item tab">Table View</a></li>
               </ul>
             </div>
             <DropdownSortMenu changeSort={this.changeSort}/>
@@ -362,9 +360,7 @@ export class DropdownSortMenu extends React.Component {
           <div id="render_view">
             {
              {
-               'grid_view': <GridView data={this.state.currentData}/>,
-               'block_view': <BlockView data={this.state.currentData} />,
-               'table_view': <TableView data={this.state.currentData} fields={this.props.fields} />
+               'table_view': <TableView data={data2} fields={this.props.fields} />
              }[this.state.view]
             }
           </div>
@@ -374,3 +370,7 @@ export class DropdownSortMenu extends React.Component {
   }
   
 export default MainDataView;
+
+/* 
+'grid_view': <GridView data={data2.default}/>,
+               'block_view': <BlockView data={this.state.currentData} />*/
