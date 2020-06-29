@@ -4,8 +4,9 @@ import * as data2 from '../../data_caseload_management.json';
 import {BlockView} from "./BlockView";
 import {GridView} from "./GridView";
 import {TableView} from "./TableView";
-import '../../css/CaseloadPage.css'
-import 'bulma/css/bulma.css'
+import 'bulma/css/bulma.css';
+import '../../css/CaseloadPage.css';
+
 
 export function inputSearch(props) {
     return (
@@ -23,12 +24,12 @@ export function inputSearch(props) {
   }
 
 // -- START Sort Menu 
-class DropdownSortMenu extends React.Component {
+export class DropdownSortMenu extends React.Component {
     constructor(props) {
         super(props);
         this.state = { 
           collapsed: true,
-          sort: "ID" 
+          sort: "Testing" 
         };
         this.handleToggle = this.handleToggle.bind(this);
         this.handleBlur = this.handleBlur.bind(this);
@@ -59,8 +60,8 @@ class DropdownSortMenu extends React.Component {
                 <div className="dropdown-menu" id="dropdown-menu" role="menu">
                     <div className="dropdown-content" id="sort-options">
                       <a id="Name" className="dropdown-item" onMouseDown={()=>this.changeSelected("Name")}>Name</a>
-                      <a id="id" className="dropdown-item" onMouseDown={()=>this.changeSelected("ID")}>ID</a>
-                      <a id="Results" className="dropdown-item" onMouseDown={()=>this.changeSelected("Results")}>Results</a>
+                      <a id="id" className="dropdown-item" onMouseDown={()=>this.changeSelected("id")}>ID</a>
+                      <a id="Results" className="dropdown-item" onMouseDown={()=>this.changeSelected("Testing")}>Results</a>
                     </div>
                 </div>
             </div>
@@ -286,7 +287,7 @@ class DropdownSortMenu extends React.Component {
       this.state = {
         currentData: data2,
         originalData: data2,
-        view: 'grid_view',
+        view: 'table_view',
         sortState: "id"
       }
       this.changeFilter = changeFilter.bind(this);
@@ -350,9 +351,7 @@ class DropdownSortMenu extends React.Component {
             </div>
             <div className="tabs is-centered" id="tabs">
               <ul id="navigation">
-                <li className="btn is-active" id="gview" onClick={this.handleClick}><a id="grid_view" className="navbar-item tab">Grid View</a></li>
-                <li className="btn" id="bview" onClick={this.handleClick}><a id="block_view" className="navbar-item tab">Block View</a></li>
-                <li className="btn" id="tview" onClick={this.handleClick}><a id="table_view" className="navbar-item tab">Table View</a></li>
+                <li className="btn is-active" id="tview" ><a id="table_view" className="navbar-item tab">Table View</a></li>
               </ul>
             </div>
             <DropdownSortMenu changeSort={this.changeSort}/>
@@ -361,9 +360,7 @@ class DropdownSortMenu extends React.Component {
           <div id="render_view">
             {
              {
-               'grid_view': <GridView data={this.state.currentData}/>,
-               'block_view': <BlockView data={this.state.currentData} />,
-               'table_view': <TableView data={this.state.currentData} fields={this.props.fields} />
+               'table_view': <TableView data={data2} fields={this.props.fields} />
              }[this.state.view]
             }
           </div>
@@ -373,3 +370,7 @@ class DropdownSortMenu extends React.Component {
   }
   
 export default MainDataView;
+
+/* 
+'grid_view': <GridView data={data2.default}/>,
+               'block_view': <BlockView data={this.state.currentData} />*/

@@ -17,6 +17,7 @@ import Caseload from './CaseloadPage';
 import CollegeList from './CollegeListPage';
 import Schedule from './SchedulePage';
 import Notes from './NotesPage';
+import StudentProfilesPage from './StudentProfilesPage';
 import Header from '../components/Header';
 import Sidenav from '../components/Sidenav';
 
@@ -32,6 +33,10 @@ export default function App() {
             <Route path="/account">
               <Header isLoggedIn={isLoggedIn}/>
               { user ? <Account /> : <Login /> }
+            </Route>
+            <Route path="/profiles">
+              <Header isLoggedIn={isLoggedIn}/>
+              { user ? <StudentProfilesPage /> : <Login /> }
             </Route>
             <Route path="/caseload_management">
               <Header isLoggedIn={isLoggedIn}/>
