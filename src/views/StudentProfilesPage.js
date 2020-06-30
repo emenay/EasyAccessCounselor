@@ -1,8 +1,8 @@
 import React from 'react';
 import {GridView} from "../components/dataViews/GridView.js";
 import {DropdownSortMenu} from "../components/dataViews/MainDataView.js";
-import "../css/CaseloadPage.css";
-import "../css/searchBar.css"
+import "../css/StudentProfilesPage.css";
+import "../css/searchBar.css";
 import StudentDetailsModal from '../components/StudentDetailsModal.js';
 import data2 from '../data_caseload_management.json';
 import black_flag from "../assets/black_flag.png";
