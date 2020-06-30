@@ -5,6 +5,8 @@ import "../css/CaseloadPage.css";
 import "../css/searchBar.css"
 import StudentDetailsModal from '../components/StudentDetailsModal.js';
 import data2 from '../data_caseload_management.json';
+import black_flag from "../assets/black_flag.png";
+import orange_flag from "../assets/orange_flag.png";
 
 
 
@@ -69,18 +71,22 @@ class StudentProfilesPage extends React.Component{
     }
 
     render(){
-        let data = Array.from(this.state.dataMap).map(info => {return info[1]});
+        let data = data2;
         data = this.state.flagToggle ? data.filter(person => {return this.state.flagMap.get(person.id)}) : data;
         if (this.state.searchString !== "") {
             data = data.filter(person=>{
-                return this.state.searchString === person.Name.toLowerCase().slice(0, this.state.searchString.length);
+                let subnames = person.Name.toLowerCase().split(" ");
+                for(let i=0; i<subnames.length; i++){
+                    if (subnames[i].slice(0, this.state.searchString.length) === this.state.searchString) return true;
+                }
+                return false;
             });
         }
         return <div className="profiles-content">
             <div className="profiles-header">
                 <input type="text" id="myInput" onKeyUp={this.changeSearchString} placeholder="Search for Students.." />
-                <button className="flag-toggle" onClick={this.flagToggle}>Toggle Flags</button>
-                <DropdownSortMenu changeSort={this.changeSort} />
+                <button className="flag-button" onClick={this.flagToggle}><img className="flag-image" src={this.state.flagToggle? orange_flag : black_flag} /></button>
+                <DropdownSortMenu changeEvent={this.changeSort} />
                 <button className="flag-toggle" onClick={this.reverseSortOrder}>Reverse Sort</button>
             </div>
             {this.state.selectedCard && <StudentDetailsModal exitModal={this.exitModal} info={this.state.dataMap.get(this.state.selectedCard)} />}

@@ -4,8 +4,9 @@ import * as data2 from '../../data_caseload_management.json';
 import {BlockView} from "./BlockView";
 import {GridView} from "./GridView";
 import {TableView} from "./TableView";
-import 'bulma/css/bulma.css';
 import '../../css/CaseloadPage.css';
+import 'bulma/css/bulma.css';
+import filter_icon from "../../assets/filter_icon.png";
 
 
 export function inputSearch(props) {
@@ -29,7 +30,7 @@ export class DropdownSortMenu extends React.Component {
         super(props);
         this.state = { 
           collapsed: true,
-          sort: "Testing" 
+          selected: "Testing" 
         };
         this.handleToggle = this.handleToggle.bind(this);
         this.handleBlur = this.handleBlur.bind(this);
@@ -44,24 +45,27 @@ export class DropdownSortMenu extends React.Component {
       this.setState({ collapsed: true });
     }
   
-    changeSelected(sortName){
-      this.props.changeSort(sortName);
-      this.setState({sort: sortName});
+    changeSelected(selectedName){
+      this.props.changeEvent(selectedName);
+      this.setState({selected: selectedName});
     }
   
     render() {
         return(
             <div className={"dropdown" + (this.state.collapsed ? "" : " is-active")} tabIndex="0" onBlur={this.handleBlur}>
                 <div className="dropdown-trigger">
-                    <button className="button" aria-haspopup="true" aria-controls="dropdown-menu" onClick={this.handleToggle}>
-        <span id="sort-status">{"Sort By: " + this.state.sort}</span>
+                    <button className="dropdown-btn" aria-haspopup="true" aria-controls="dropdown-menu" onClick={this.handleToggle}>
+                      <div className="sortbutton-items">
+                        <span className="sort-status">{this.state.selected.toUpperCase()}</span>
+                        <img className="filter-icon" src={filter_icon} alt="filter icon" />
+                      </div>
                     </button>
                 </div>
                 <div className="dropdown-menu" id="dropdown-menu" role="menu">
                     <div className="dropdown-content" id="sort-options">
-                      <a id="Name" className="dropdown-item" onMouseDown={()=>this.changeSelected("Name")}>Name</a>
-                      <a id="id" className="dropdown-item" onMouseDown={()=>this.changeSelected("id")}>ID</a>
-                      <a id="Results" className="dropdown-item" onMouseDown={()=>this.changeSelected("Testing")}>Results</a>
+                      <a className="dropdown-item" onMouseDown={()=>this.changeSelected("Name")}>Name</a>
+                      <a className="dropdown-item" onMouseDown={()=>this.changeSelected("id")}>ID</a>
+                      <a className="dropdown-item" onMouseDown={()=>this.changeSelected("Testing")}>Testing</a>
                     </div>
                 </div>
             </div>
@@ -354,7 +358,7 @@ export class DropdownSortMenu extends React.Component {
                 <li className="btn is-active" id="tview" ><a id="table_view" className="navbar-item tab">Table View</a></li>
               </ul>
             </div>
-            <DropdownSortMenu changeSort={this.changeSort}/>
+            <DropdownSortMenu changeEvent={this.changeSort}/>
             <DropdownFilterMenu data={this.state.originalData} onFilter={this.changeFilter}/>
           </div>
           <div id="render_view">
