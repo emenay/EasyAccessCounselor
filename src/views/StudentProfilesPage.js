@@ -5,12 +5,32 @@ import "../css/CaseloadPage.css";
 import "../css/searchBar.css"
 import StudentDetailsModal from '../components/StudentDetailsModal.js';
 import data2 from '../data_caseload_management.json';
-
+import {auth, db} from "../firebase/firebase";
 
 
 class StudentProfilesPage extends React.Component{
     constructor(props){
         super(props);
+
+        db.collection("students").get().then(function(querySnapshot) {
+            querySnapshot.forEach(function(doc) {
+                // doc.data() is never undefined for query doc snapshots
+                console.log(doc.id, " => ", doc.data());
+            });
+        });
+
+        //OR
+
+        db.collection("students")
+        .get()
+        .then(querySnapshot => {
+        // array of student objects
+        const data = querySnapshot.docs.map(doc => doc.data());
+        console.log(data); 
+        });
+        
+
+
         let flagMap = new Map();
         let dataMap = new Map();
         data2.forEach(person=>{
