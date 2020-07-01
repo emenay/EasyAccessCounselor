@@ -26,12 +26,17 @@ export function inputSearch(props) {
   }
 
 // -- START Sort Menu 
+
+/*
+pass props: 
+
+*/
 export class DropdownSortMenu extends React.Component {
     constructor(props) {
         super(props);
         this.state = { 
           collapsed: true,
-          selected: "Testing" 
+          selected: "SAT" 
         };
         this.handleToggle = this.handleToggle.bind(this);
         this.handleBlur = this.handleBlur.bind(this);
@@ -64,9 +69,9 @@ export class DropdownSortMenu extends React.Component {
                 </div>
                 <div className="dropdown-menu" id="dropdown-menu" role="menu">
                     <div className="dropdown-content" id="sort-options">
-                      <a className="dropdown-item" onMouseDown={()=>this.changeSelected("Name")}>Name</a>
-                      <a className="dropdown-item" onMouseDown={()=>this.changeSelected("id")}>ID</a>
-                      <a className="dropdown-item" onMouseDown={()=>this.changeSelected("Testing")}>Testing</a>
+                      <a className="dropdown-item" onMouseDown={()=>this.changeSelected("lastName")}>Name</a>
+                      <a className="dropdown-item" onMouseDown={()=>this.changeSelected("uid")}>ID</a>
+                      <a className="dropdown-item" onMouseDown={()=>this.changeSelected("SAT")}>SAT</a>
                     </div>
                 </div>
             </div>

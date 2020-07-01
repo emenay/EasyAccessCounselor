@@ -4,40 +4,69 @@ import {DropdownSortMenu} from "../components/dataViews/MainDataView.js";
 import "../css/StudentProfilesPage.css";
 import "../css/searchBar.css";
 import StudentDetailsModal from '../components/StudentDetailsModal.js';
-import data2 from '../data_caseload_management.json';
 import black_flag from "../assets/black_flag.png";
 import orange_flag from "../assets/orange_flag.png";
-
+import {db} from "../firebase/firebase";
 
 
 class StudentProfilesPage extends React.Component{
     constructor(props){
         super(props);
-        let flagMap = new Map();
-        let dataMap = new Map();
-        data2.forEach(person=>{
-            flagMap.set(person.id, false);
-            dataMap.set(person.id, person);
-        });
         this.state = {
+            data: [],
             selectedCard: null,
-            sortField: "Testing",
+            sortField: "SAT",
             sortReverse: false,
             searchString: "",
-            flagMap: flagMap,
-            dataMap: dataMap,
+            flagMap: new Map(),
+            dataMap: new Map(),
             flagToggle: false
         }
     }
 
+    async componentDidMount() {
+        db.collection("students")
+        .get()
+        .then(querySnapshot => {
+        // array of student objects
+            return querySnapshot.docs.map(doc => doc.data());
+         
+        })
+        .then(data => {
+            let flagMap = new Map();
+            let dataMap = new Map();
+            data.forEach(person=>{
+                flagMap.set(person.uid, false);
+                dataMap.set(person.uid, person);
+            });
+            this.setState({
+                data: data,
+                flagMap: flagMap,
+                dataMap: dataMap
+            });
+        });
+    }
+
     // Helper function for sorting
     compare = (a, b) => {
-        let comparison = 0;
-        if (b[this.state.sortField] > a[this.state.sortField]) {
-          comparison = -1;
-        } else if (b[this.state.sortField] < a[this.state.sortField]) {
-          comparison = 1;
+        let comparison;
+        let aVal = a[this.state.sortField];
+        let bVal = b[this.state.sortField];
+        if (!aVal || !bVal) {
+            if (!aVal && bVal){
+                comparison = -1;
+            } else if (!bVal && aVal){
+                comparison = 1;
+            }
+        } else {
+            if (bVal > aVal) {
+                comparison = 1;
+            } else if (aVal > bVal) {
+                comparison = -1;
+            }
         }
+        console.log(comparison);
+
         if (this.state.sortReverse) comparison *= -1;
         return comparison;
     }
@@ -71,17 +100,17 @@ class StudentProfilesPage extends React.Component{
     }
 
     render(){
-        let data = data2;
+        let data = this.state.data;
         data = this.state.flagToggle ? data.filter(person => {return this.state.flagMap.get(person.id)}) : data;
         if (this.state.searchString !== "") {
             data = data.filter(person=>{
-                let subnames = person.Name.toLowerCase().split(" ");
-                for(let i=0; i<subnames.length; i++){
-                    if (subnames[i].slice(0, this.state.searchString.length) === this.state.searchString) return true;
+                if ((person.firstName.toLowerCase().slice(0, this.state.searchString.length) === this.state.searchString.toLowerCase()) || (person.lastName.toLowerCase().slice(0, this.state.searchString.length) === this.state.searchString.toLowerCase())){
+                    return true;
                 }
                 return false;
             });
         }
+        data = data.slice().sort(this.compare);
         return <div className="profiles-content">
             <div className="profiles-header">
                 <input type="text" id="myInput" onKeyUp={this.changeSearchString} placeholder="Search for Students.." />
@@ -90,7 +119,7 @@ class StudentProfilesPage extends React.Component{
                 <button className="flag-toggle" onClick={this.reverseSortOrder}>Reverse Sort</button>
             </div>
             {this.state.selectedCard && <StudentDetailsModal exitModal={this.exitModal} info={this.state.dataMap.get(this.state.selectedCard)} />}
-            <GridView data={data.sort(this.compare)} clickCard={this.clickCard} clickFlag={this.clickFlag} flags={this.state.flagMap}/>
+            <GridView data={data} clickCard={this.clickCard} clickFlag={this.clickFlag} flags={this.state.flagMap}/>
         </div>
     }
 }
