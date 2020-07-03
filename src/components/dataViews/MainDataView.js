@@ -39,7 +39,7 @@ export class DropdownSortMenu extends React.Component {
           collapsed: true,
           openedSubmenu: null,
           smPosition: 0,
-          selected: "SAT" 
+          selected: null
         };
         this.handleToggle = this.handleToggle.bind(this);
         this.handleBlur = this.handleBlur.bind(this);
@@ -65,7 +65,7 @@ export class DropdownSortMenu extends React.Component {
 
     displaySubmenu = () => {
       var selected = this.state.openedSubmenu;
-      return (<div className="dropdown-submenu" style={{top: (this.state.smPosition + 1) * 32.5 + 12.5 + "px"}} role="menu">
+      return (<div className="dropdown-submenu" style={{top: (this.state.smPosition + 1) * 32.5 + 12 + "px"}} role="menu">
         <a className="dropdown-item" onMouseDown={()=>this.changeSelected(selected.name, false)}>{selected.smitem[0]}</a>
         <a className="dropdown-item" onMouseDown={()=>this.changeSelected(selected.name, true)}>{selected.smitem[1]}</a>
       </div>);
@@ -82,7 +82,7 @@ export class DropdownSortMenu extends React.Component {
                 <div className="dropdown-menu" id="dropdown-menu" role="menu">
                     <div className="dropdown-content" id="sort-options">
                       {this.props.fields.map((field, index) => {
-                        return <a className="dropdown-item" onMouseOver={()=>this.changeSubmenu(index, field)}>{field.displayName + "   \u25B7"}</a>
+                        return <a className={"dropdown-item" + (this.state.selected === field.name ? " is-active": "")} onMouseOver={()=>this.changeSubmenu(index, field)}>{field.displayName + "   \u25B7"}</a>
                       })}
                     </div>
                 </div>
