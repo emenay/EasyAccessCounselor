@@ -3,27 +3,12 @@ import React from 'react';
 import MainDataView from '../components/dataViews/MainDataView';
 import 'bulma/css/bulma.css'
 
-//import Autocomplete from '@material-ui/lab/Autocomplete';
-import { db } from '../firebase/firebase';
-
-export function inputSearch(props) {
-  return (
-    <div style={{ width: '100%' }}>
-      {/*<Autocomplete
-        id="search-input"
-        freeSolo
-        options={props.default.map((option) => option.Name)}
-        renderInput={(params) => (
-          <TextField {...params} label="Find a student (Ex: John Doe)" margin="normal" variant="outlined" />
-        )}
-      />*/}
-    </div>
-  );
-}
-
 class CaseloadPage extends React.Component {
   constructor(props){
     super(props);
+    this.state = ({
+      searchString: ""
+    });
     this.fields = [
       "Goal",
       "Meetings",
@@ -47,10 +32,40 @@ class CaseloadPage extends React.Component {
       "Decision",
       "Latest"
     ];
+    
+  }
+
+  getContent = (e) => {
+    console.log(e.target.value);
   }
   render(){
-    return <MainDataView fields={this.fields}/>
+    console.log("rendered");
+    return (
+      <div className="caseload-content">
+        <div className="profiles-header">
+          <input type="text" id="myInput" onKeyUp={this.changeSearchString} placeholder="Search for Students.." />
+        </div>
+      </div>
+    );
   }
 }
 
 export default CaseloadPage;
+
+/*
+
+<table id="caseload-table">
+            <thead>
+              {this.fields.map(field => {
+                return <th className="caseload-headcell">{field}</th>;
+              })}
+
+            </thead>
+            <tbody>
+            <tr>
+              <td className="tableCell" ><input className="inputCell" type="text" defaultValue="Hi" onChange={this.getContent}/></td>
+            </tr>
+            </tbody>
+          </table>
+
+*/

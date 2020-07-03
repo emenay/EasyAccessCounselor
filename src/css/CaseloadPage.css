@@ -1,0 +1,11 @@
+.caseload-content {
+    width: 90%;
+    margin: auto;
+}
+
+.maintable {
+    width: 100%;
+    height: 100%;
+    overflow-x: auto;
+    overflow-y: auto;
+}
