@@ -29,12 +29,14 @@ class StudentProfilesPage extends React.Component{
         .get()
         .then(querySnapshot => {
         // array of student objects
+            console.log(querySnapshot);
             return querySnapshot.docs.map(doc => doc.data());
          
         })
         .then(data => {
             let flagMap = new Map();
             let dataMap = new Map();
+            console.log(data);
             data.forEach(person=>{
                 flagMap.set(person.uid, false);
                 dataMap.set(person.uid, person);
