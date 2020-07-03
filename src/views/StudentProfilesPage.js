@@ -33,7 +33,7 @@ class StudentProfilesPage extends React.Component{
     }
 
     async componentDidMount() {
-        db.collection("students")
+        db.collection("student_counselor").doc("Vt4H50TQklsch0mJNGBM").collection("students")
         .get()
         .then(querySnapshot => {
         // array of student objects
@@ -43,7 +43,6 @@ class StudentProfilesPage extends React.Component{
         .then(data => {
             let flagMap = new Map();
             let dataMap = new Map();
-            console.log(data);
             data.forEach(person=>{
                 flagMap.set(person.uid, false);
                 dataMap.set(person.uid, person);
@@ -53,7 +52,8 @@ class StudentProfilesPage extends React.Component{
                 flagMap: flagMap,
                 dataMap: dataMap
             });
-        });
+        })
+        .catch(error => {console.log(error)});
     }
 
     // Helper function for sorting
@@ -109,6 +109,7 @@ class StudentProfilesPage extends React.Component{
     }
 
     render(){
+        console.log(this.state.sortField, this.state.sortReverse);
         let data = this.state.data;
         data = this.state.flagToggle ? data.filter(person => {return this.state.flagMap.get(person.id)}) : data;
         if (this.state.searchString !== "") {

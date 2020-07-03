@@ -58,8 +58,8 @@ export class DropdownSortMenu extends React.Component {
       this.setState({openedSubmenu: name, smPosition: index});
     }
   
-    changeSelected(selectedName){
-      this.props.changeEvent(selectedName);
+    changeSelected(selectedName, isReverse){
+      this.props.changeEvent(selectedName, isReverse);
       this.setState({selected: selectedName});
     }
 
