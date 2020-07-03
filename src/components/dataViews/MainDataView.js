@@ -7,7 +7,7 @@ import {TableView} from "./TableView";
 import '../../css/StudentProfilesPage.css';
 import '../../css/CaseloadPage.css';
 import 'bulma/css/bulma.css';
-import filter_icon from "../../assets/filter_icon.png";
+
 
 
 export function inputSearch(props) {
@@ -28,7 +28,8 @@ export function inputSearch(props) {
 // -- START Sort Menu 
 
 /*
-pass props: 
+pass fields prop:
+array of objs with fields name, displayName, submenu items
 
 */
 export class DropdownSortMenu extends React.Component {
@@ -36,6 +37,8 @@ export class DropdownSortMenu extends React.Component {
         super(props);
         this.state = { 
           collapsed: true,
+          openedSubmenu: null,
+          smPosition: 0,
           selected: "SAT" 
         };
         this.handleToggle = this.handleToggle.bind(this);
@@ -48,12 +51,24 @@ export class DropdownSortMenu extends React.Component {
     }
   
     handleBlur = (event) => {
-      this.setState({ collapsed: true });
+      this.setState({ collapsed: true, openedSubmenu: null });
+    }
+
+    changeSubmenu = (index, name) => {
+      this.setState({openedSubmenu: name, smPosition: index});
     }
   
     changeSelected(selectedName){
       this.props.changeEvent(selectedName);
       this.setState({selected: selectedName});
+    }
+
+    displaySubmenu = () => {
+      var selected = this.state.openedSubmenu;
+      return (<div className="dropdown-submenu" style={{top: (this.state.smPosition + 1) * 32.5 + 12.5 + "px"}} role="menu">
+        <a className="dropdown-item" onMouseDown={()=>this.changeSelected(selected.name, false)}>{selected.smitem[0]}</a>
+        <a className="dropdown-item" onMouseDown={()=>this.changeSelected(selected.name, true)}>{selected.smitem[1]}</a>
+      </div>);
     }
   
     render() {
@@ -61,23 +76,27 @@ export class DropdownSortMenu extends React.Component {
             <div className={"dropdown" + (this.state.collapsed ? "" : " is-active")} tabIndex="0" onBlur={this.handleBlur}>
                 <div className="dropdown-trigger">
                     <button className="dropdown-btn" aria-haspopup="true" aria-controls="dropdown-menu" onClick={this.handleToggle}>
-                      <div className="sortbutton-items">
-                        <span className="sort-status">{this.state.selected.toUpperCase()}</span>
-                        <img className="filter-icon" src={filter_icon} alt="filter icon" />
-                      </div>
+                      <img className="filter-icon" src={this.props.icon} alt="sort icon" />
                     </button>
                 </div>
                 <div className="dropdown-menu" id="dropdown-menu" role="menu">
                     <div className="dropdown-content" id="sort-options">
-                      <a className="dropdown-item" onMouseDown={()=>this.changeSelected("lastName")}>Name</a>
-                      <a className="dropdown-item" onMouseDown={()=>this.changeSelected("uid")}>ID</a>
-                      <a className="dropdown-item" onMouseDown={()=>this.changeSelected("SAT")}>SAT</a>
+                      {this.props.fields.map((field, index) => {
+                        return <a className="dropdown-item" onMouseOver={()=>this.changeSubmenu(index, field)}>{field.displayName + "   \u25B7"}</a>
+                      })}
                     </div>
                 </div>
+                {this.state.openedSubmenu !== null && this.displaySubmenu()}
+                
             </div>
         );
     }
   }
+  /*
+                        <a className="dropdown-item" onMouseOver={()=>this.changeSubmenu("lastName")}>{"Name   \u25B7"}</a>
+                      <a className="dropdown-item" onMouseDown={()=>this.changeSelected("uid")}>ID</a>
+                      <a className="dropdown-item" onMouseDown={()=>this.changeSelected("SAT")}>SAT</a>
+                      */
   
   
   function sortFunction(prop) {

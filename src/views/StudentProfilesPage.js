@@ -7,15 +7,23 @@ import StudentDetailsModal from '../components/StudentDetailsModal.js';
 import black_flag from "../assets/black_flag.png";
 import orange_flag from "../assets/orange_flag.png";
 import {db} from "../firebase/firebase";
-
+import filter_icon from "../assets/filter_icon.png";
+import sorted_ascend from "../assets/sorted_ascend.png";
+import sorted_descend from "../assets/sorted_descend.png";
+import unsorted_icon from "../assets/unsorted_icon.png";
 
 class StudentProfilesPage extends React.Component{
     constructor(props){
         super(props);
+        this.sortFields = [
+            {name: "firstName", displayName: "First Name", smitem: ["A to Z", "Z to A"]},
+            {name: "lastName", displayName: "Last Name", smitem: ["A to Z", "Z to A"]},
+            {name: "SAT", displayName: "SAT", smitem: ["Low to High", "High to Low"]}
+        ]
         this.state = {
             data: [],
             selectedCard: null,
-            sortField: "SAT",
+            sortField: "uid",
             sortReverse: false,
             searchString: "",
             flagMap: new Map(),
@@ -29,7 +37,6 @@ class StudentProfilesPage extends React.Component{
         .get()
         .then(querySnapshot => {
         // array of student objects
-            console.log(querySnapshot);
             return querySnapshot.docs.map(doc => doc.data());
          
         })
@@ -73,8 +80,8 @@ class StudentProfilesPage extends React.Component{
         return comparison;
     }
 
-    changeSort = (field) => {
-        this.setState({sortField: field});
+    changeSort = (field, isReverse) => {
+        this.setState({sortField: field, sortReverse: isReverse});
     }
 
     changeSearchString = (event) => {
@@ -117,7 +124,7 @@ class StudentProfilesPage extends React.Component{
             <div className="profiles-header">
                 <input type="text" id="myInput" onKeyUp={this.changeSearchString} placeholder="Search for Students.." />
                 <button className="flag-button" onClick={this.flagToggle}><img className="flag-image" src={this.state.flagToggle? orange_flag : black_flag} /></button>
-                <DropdownSortMenu changeEvent={this.changeSort} />
+                <DropdownSortMenu fields={this.sortFields} changeEvent={this.changeSort} icon={this.state.sortReverse ? sorted_ascend : sorted_descend}/>
                 <button className="flag-toggle" onClick={this.reverseSortOrder}>Reverse Sort</button>
             </div>
             {this.state.selectedCard && <StudentDetailsModal exitModal={this.exitModal} info={this.state.dataMap.get(this.state.selectedCard)} />}
