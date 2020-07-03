@@ -82,7 +82,7 @@ export class DropdownSortMenu extends React.Component {
                 <div className="dropdown-menu" id="dropdown-menu" role="menu">
                     <div className="dropdown-content" id="sort-options">
                       {this.props.fields.map((field, index) => {
-                        return <a className={"dropdown-item" + (this.state.selected === field.name ? " is-active": "")} onMouseOver={()=>this.changeSubmenu(index, field)}>{field.displayName + "   \u25B7"}</a>
+                        return <a key={index} className={"dropdown-item" + (this.state.selected === field.name ? " is-active": "")} onMouseOver={()=>this.changeSubmenu(index, field)}>{field.displayName + "   \u25B7"}</a>
                       })}
                     </div>
                 </div>
