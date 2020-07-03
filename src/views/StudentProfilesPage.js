@@ -32,7 +32,7 @@ class StudentProfilesPage extends React.Component{
         }
     }
 
-    async componentDidMount() {
+    componentDidMount() {
         db.collection("student_counselor").doc("Vt4H50TQklsch0mJNGBM").collection("students")
         .get()
         .then(querySnapshot => {
