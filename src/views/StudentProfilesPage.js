@@ -33,7 +33,7 @@ class StudentProfilesPage extends React.Component{
     }
 
     componentDidMount() {
-        db.collection("student_counselor").doc("Vt4H50TQklsch0mJNGBM").collection("students")
+        db.collection("student_counselors").doc("Vt4H50TQklsch0mJNGBM").collection("students")
         .get()
         .then(querySnapshot => {
         // array of student objects
