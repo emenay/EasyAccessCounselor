@@ -27,7 +27,6 @@ class StudentProfilesPage extends React.Component{
             sortReverse: false,
             searchString: "",
             flagMap: new Map(),
-            dataMap: new Map(),
             flagToggle: false
         }
     }
@@ -42,16 +41,12 @@ class StudentProfilesPage extends React.Component{
         })
         .then(data => {
             let flagMap = new Map();
-            let dataMap = new Map();
-            console.log(data);
             data.forEach(person=>{
                 flagMap.set(person.uid, false);
-                dataMap.set(person.uid, person);
             });
             this.setState({
                 data: data,
-                flagMap: flagMap,
-                dataMap: dataMap
+                flagMap: flagMap
             });
         })
         .catch(error => {console.log(error)});
@@ -92,8 +87,8 @@ class StudentProfilesPage extends React.Component{
         this.setState({sortReverse: !this.state.sortReverse});
     }
 
-    clickCard = (id) => {
-        this.setState({selectedCard: id});
+    clickCard = (person) => {
+        this.setState({selectedCard: person});
     }
 
     clickFlag = (id) => {
@@ -127,7 +122,7 @@ class StudentProfilesPage extends React.Component{
                 <DropdownSortMenu fields={this.sortFields} changeEvent={this.changeSort} icon={this.state.sortReverse ? sorted_ascend : sorted_descend}/>
                 <button className="flag-toggle" onClick={this.reverseSortOrder}>Reverse Sort</button>
             </div>
-            {this.state.selectedCard && <StudentDetailsModal exitModal={this.exitModal} info={this.state.dataMap.get(this.state.selectedCard)} />}
+            {this.state.selectedCard && <StudentDetailsModal exitModal={this.exitModal} info={this.state.selectedCard} />}
             <GridView data={data} clickCard={this.clickCard} clickFlag={this.clickFlag} flags={this.state.flagMap}/>
         </div>
     }

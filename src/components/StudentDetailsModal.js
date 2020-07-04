@@ -71,7 +71,7 @@ class StudentDetailsModal extends React.Component {
                         <p className="tab-text">{name}</p>
                     </div>
                 })}
-                <p className="studentdetails-title">{this.props.info.Name}</p>
+                <p className="studentdetails-title">{this.props.info.firstName + " " + this.props.info.lastName}</p>
                 <div className="studentdetails-innerbackground"/>
                 <div className="studentdetails-content">
                     {this.whichPanel(this.state.selectedTab)}
