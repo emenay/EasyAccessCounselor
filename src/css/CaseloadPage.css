@@ -1,11 +1,55 @@
 .caseload-content {
-    width: 90%;
+    max-width: 90%;
+    min-width: 90%;
     margin: auto;
 }
 
 .maintable {
-    width: 100%;
+    max-width: 100%;
     height: 100%;
     overflow-x: auto;
     overflow-y: auto;
+}
+
+.ag-theme-alpine .ag-header-cell-label {
+    font-size: 24px;
+}
+
+.ag-theme-alpine .ag-header-cell {
+    border-right-color: black;
+    border-right-width: 1px;
+    border-right-style: solid;
+    border-bottom-color: black;
+    border-bottom-style: solid;
+    border-bottom-width: 1px;
+}
+
+.ag-theme-alpine .ag-ltr .ag-cell {
+    border-right-color: black;
+    border-right-width: 1px;
+    border-right-style: solid;
+    border-bottom-color: black;
+    border-bottom-style: solid;
+    border-bottom-width: 1px;
+    font-size: 18px;
+}
+
+.ag-theme-alpine {
+    --ag-header-background-color: #3298CB;
+    --ag-header-foreground-color: white;
+}
+
+.ag-root ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+    background-color: white; /* or add it to the track */
+}
+
+.ag-root ::-webkit-scrollbar-thumb {
+    background: gray; 
+    border-radius: 20px
+}
+
+.ag-theme-alpine .ag-icon {
+    font-size: 30px
 }
