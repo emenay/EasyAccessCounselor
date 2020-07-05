@@ -12,7 +12,7 @@ class CaseloadPage extends React.Component {
     super(props);
     this.state = ({
       searchString: "",
-      data: data2
+      data: []
     });
     this.fields = [
       {field: "id", headerName: "ID", width: "70"},
@@ -32,9 +32,6 @@ class CaseloadPage extends React.Component {
   }
 
   componentDidMount() {
-    console.log("mounted");
-    // TODO: where fetch data for display will be implemented
-    
     db.collection("student_counselors").doc("Vt4H50TQklsch0mJNGBM").collection("students")
         .get()
         .then(querySnapshot => {
@@ -47,7 +44,7 @@ class CaseloadPage extends React.Component {
          
         })
         .then(data => {
-          console.log(data);
+            data.push({});
             this.setState({
                 data: data
             });
@@ -59,12 +56,17 @@ class CaseloadPage extends React.Component {
 
   cellEditingStopped(e) {
     // TODO: where updating the database will occur
-    var data = Object.assign({}, e.data);
-    var uid = data.uid;
-    delete data.uid;
-    db.collection("student_counselors").doc("Vt4H50TQklsch0mJNGBM").collection("students")
-    .doc(uid)
-    .set(data);
+    if (e.data.uid in e.data) {
+      var data = Object.assign({}, e.data);
+      var uid = data.uid;
+      delete data.uid;
+      db.collection("student_counselors").doc("Vt4H50TQklsch0mJNGBM").collection("students")
+      .doc(uid)
+      .set(data);
+    } else {
+      console.log(e);
+    }
+
 
   }
 
