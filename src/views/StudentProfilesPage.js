@@ -16,9 +16,11 @@ class StudentProfilesPage extends React.Component{
     constructor(props){
         super(props);
         this.sortFields = [
+            {name: "SAT", displayName: "SAT", smitem: ["Low to High", "High to Low"]},
+            {name: "GPA", displayName: "GPA", smitem: ["Low to High", "High to Low"]},
+            {name: "ACT", displayName: "ACT", smitem: ["Low to High", "High to Low"]},
             {name: "firstName", displayName: "First Name", smitem: ["A to Z", "Z to A"]},
-            {name: "lastName", displayName: "Last Name", smitem: ["A to Z", "Z to A"]},
-            {name: "SAT", displayName: "SAT", smitem: ["Low to High", "High to Low"]}
+            {name: "lastName", displayName: "Last Name", smitem: ["A to Z", "Z to A"]}
         ]
         this.state = {
             data: [],
@@ -116,7 +118,7 @@ class StudentProfilesPage extends React.Component{
         data = this.state.flagToggle ? data.filter(person => {return this.state.flagMap.get(person.uid)}) : data;
         if (this.state.searchString !== "") {
             data = data.filter(person=>{
-                if ((person.firstName.toLowerCase().slice(0, this.state.searchString.length) === this.state.searchString.toLowerCase()) || (person.lastName.toLowerCase().slice(0, this.state.searchString.length) === this.state.searchString.toLowerCase())){
+                if ((person.firstName && person.firstName.toLowerCase().slice(0, this.state.searchString.length) === this.state.searchString.toLowerCase()) || (person.lastName && person.lastName.toLowerCase().slice(0, this.state.searchString.length) === this.state.searchString.toLowerCase())){
                     return true;
                 }
                 return false;
@@ -125,7 +127,7 @@ class StudentProfilesPage extends React.Component{
         return <div className="profiles-content">
             <div className="profiles-header">
                 <input type="text" id="myInput" onKeyUp={this.changeSearchString} placeholder="Search for Students.." />
-                <button className="flag-button" onClick={this.flagToggle}><img className="flag-image" src={this.state.flagToggle? orange_flag : black_flag} /></button>
+                <button className="flag-button" onClick={this.flagToggle}><img className="flag-image" alt="Select flagged fields icon" src={this.state.flagToggle? orange_flag : black_flag} /></button>
                 <DropdownSortMenu fields={this.sortFields} changeEvent={this.changeSort} icon={this.state.sortIcon}/>
             </div>
             {this.state.selectedCard && <StudentDetailsModal exitModal={this.exitModal} info={this.state.selectedCard} />}
