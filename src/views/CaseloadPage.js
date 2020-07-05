@@ -5,17 +5,19 @@ import { AgGridReact } from 'ag-grid-react';
 import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
 import '../css/CaseloadPage.css';
+import {db} from '../firebase/firebase.js';
 
 class CaseloadPage extends React.Component {
   constructor(props){
     super(props);
     this.state = ({
-      searchString: ""
+      searchString: "",
+      data: data2
     });
     this.fields = [
       {field: "id", headerName: "ID", width: "70"},
-      {field: "Name", headerName: "Name", sortable: true, filter: true, editable: true, resizable: true},
-      {field: 'Goal', headerName: 'Goal', sortable: true, filter: true, editable: true, resizable: true},
+      {field: "firstName", headerName: "First Name", sortable: true, filter: true, editable: true, resizable: true},
+      {field: 'lastName', headerName: 'Last Name', sortable: true, filter: true, editable: true, resizable: true},
       {field: "Meetings", headerName: 'Meetings', sortable: true, editable: true, filter: 'agNumberColumnFilter', resizable: true},
       {field: "Tasks", headerName: 'Tasks', sortable: true, editable: true, filter: 'agNumberColumnFilter', resizable: true},
       {field: "Visit", headerName: 'Visit', sortable: true, filter: true, editable: true, resizable: true},
@@ -32,11 +34,38 @@ class CaseloadPage extends React.Component {
   componentDidMount() {
     console.log("mounted");
     // TODO: where fetch data for display will be implemented
+    
+    db.collection("student_counselors").doc("Vt4H50TQklsch0mJNGBM").collection("students")
+        .get()
+        .then(querySnapshot => {
+        // array of student objects
+            return querySnapshot.docs.map(doc =>{
+              var ent = doc.data();
+              ent.uid = doc.id;
+              return ent;
+            } );
+         
+        })
+        .then(data => {
+          console.log(data);
+            this.setState({
+                data: data
+            });
+        })
+        .catch(error => {console.log(error)});
+
+    
   }
 
-  async cellEditingStopped(e) {
-    console.log(e.colDef.field + ": " + e.data.id + " " + e.data[e.colDef.field]);
+  cellEditingStopped(e) {
     // TODO: where updating the database will occur
+    var data = Object.assign({}, e.data);
+    var uid = data.uid;
+    delete data.uid;
+    db.collection("student_counselors").doc("Vt4H50TQklsch0mJNGBM").collection("students")
+    .doc(uid)
+    .set(data);
+
   }
 
   changeSearchString = (e) => {
@@ -59,7 +88,7 @@ class CaseloadPage extends React.Component {
             quickFilterText={this.state.searchString}
             onCellEditingStopped={(e) => this.cellEditingStopped(e)}
             columnDefs={this.fields}
-            rowData={data2}>
+            rowData={this.state.data}>
           </AgGridReact>
         </div>
       </div>
