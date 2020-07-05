@@ -27,7 +27,8 @@ class StudentProfilesPage extends React.Component{
             sortReverse: false,
             searchString: "",
             flagMap: new Map(),
-            flagToggle: false
+            flagToggle: false,
+            sortIcon: unsorted_icon
         }
     }
 
@@ -36,7 +37,11 @@ class StudentProfilesPage extends React.Component{
         .get()
         .then(querySnapshot => {
         // array of student objects
-            return querySnapshot.docs.map(doc => doc.data());
+            return querySnapshot.docs.map(doc => {
+                var ent = doc.data();
+                ent.uid = doc.id;
+                return ent;
+            });
          
         })
         .then(data => {
@@ -53,38 +58,41 @@ class StudentProfilesPage extends React.Component{
     }
 
     // Helper function for sorting
-    compare = (a, b) => {
-        let comparison;
-        let aVal = a[this.state.sortField];
-        let bVal = b[this.state.sortField];
-        if (!aVal || !bVal) {
-            if (!aVal && bVal){
-                comparison = -1;
-            } else if (!bVal && aVal){
-                comparison = 1;
+    compare = (field, isReverse) => {
+        return function (a, b){
+            let comparison;
+            let aVal = a[field];
+            let bVal = b[field];
+            if (!aVal || !bVal) {
+                if (!aVal && bVal){
+                    comparison = -1;
+                } else if (!bVal && aVal){
+                    comparison = 1;
+                }
+            } else {
+                if (bVal > aVal) {
+                    comparison = -1;
+                } else if (aVal > bVal) {
+                    comparison = 1;
+                }
             }
-        } else {
-            if (bVal > aVal) {
-                comparison = -1;
-            } else if (aVal > bVal) {
-                comparison = 1;
-            }
-        }
 
-        if (this.state.sortReverse) comparison *= -1;
-        return comparison;
+            if (isReverse) comparison *= -1;
+            return comparison;
+        }
     }
 
     changeSort = (field, isReverse) => {
-        this.setState({sortField: field, sortReverse: isReverse});
+        let data = this.state.data;
+        // ONLY SORT WHEN NECESSARY
+        if (field !== this.state.sortField || isReverse !== this.state.sortReverse){
+            data = data.slice().sort(this.compare(field, isReverse));
+        }
+        this.setState({data: data, sortField: field, sortReverse: isReverse, sortIcon: isReverse ? sorted_ascend : sorted_descend});
     }
 
     changeSearchString = (event) => {
         this.setState({searchString: event.target.value});
-    }
-
-    reverseSortOrder = () => {
-        this.setState({sortReverse: !this.state.sortReverse});
     }
 
     clickCard = (person) => {
@@ -105,7 +113,7 @@ class StudentProfilesPage extends React.Component{
 
     render(){
         let data = this.state.data;
-        data = this.state.flagToggle ? data.filter(person => {return this.state.flagMap.get(person.id)}) : data;
+        data = this.state.flagToggle ? data.filter(person => {return this.state.flagMap.get(person.uid)}) : data;
         if (this.state.searchString !== "") {
             data = data.filter(person=>{
                 if ((person.firstName.toLowerCase().slice(0, this.state.searchString.length) === this.state.searchString.toLowerCase()) || (person.lastName.toLowerCase().slice(0, this.state.searchString.length) === this.state.searchString.toLowerCase())){
@@ -114,13 +122,11 @@ class StudentProfilesPage extends React.Component{
                 return false;
             });
         }
-        data = data.slice().sort(this.compare);
         return <div className="profiles-content">
             <div className="profiles-header">
                 <input type="text" id="myInput" onKeyUp={this.changeSearchString} placeholder="Search for Students.." />
                 <button className="flag-button" onClick={this.flagToggle}><img className="flag-image" src={this.state.flagToggle? orange_flag : black_flag} /></button>
-                <DropdownSortMenu fields={this.sortFields} changeEvent={this.changeSort} icon={this.state.sortReverse ? sorted_ascend : sorted_descend}/>
-                <button className="flag-toggle" onClick={this.reverseSortOrder}>Reverse Sort</button>
+                <DropdownSortMenu fields={this.sortFields} changeEvent={this.changeSort} icon={this.state.sortIcon}/>
             </div>
             {this.state.selectedCard && <StudentDetailsModal exitModal={this.exitModal} info={this.state.selectedCard} />}
             <GridView data={data} clickCard={this.clickCard} clickFlag={this.clickFlag} flags={this.state.flagMap}/>
