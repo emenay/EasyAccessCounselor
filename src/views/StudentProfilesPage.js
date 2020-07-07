@@ -15,34 +15,6 @@ import unsorted_icon from "../assets/unsorted_icon.png";
 class StudentProfilesPage extends React.Component{
     constructor(props){
         super(props);
-<<<<<<< HEAD
-
-        db.collection("students").get().then(function(querySnapshot) {
-            querySnapshot.forEach(function(doc) {
-                // doc.data() is never undefined for query doc snapshots
-                console.log(doc.id, " => ", doc.data());
-            });
-        });
-
-        //OR
-
-        db.collection("students")
-        .get()
-        .then(querySnapshot => {
-        // array of student objects
-        const data = querySnapshot.docs.map(doc => doc.data());
-        console.log(data); 
-        });
-        
-
-
-        let flagMap = new Map();
-        let dataMap = new Map();
-        data2.forEach(person=>{
-            flagMap.set(person.id, false);
-            dataMap.set(person.id, person);
-        });
-=======
         this.sortFields = [
             {name: "SAT", displayName: "SAT", smitem: ["Low to High", "High to Low"]},
             {name: "GPA", displayName: "GPA", smitem: ["Low to High", "High to Low"]},
@@ -50,7 +22,6 @@ class StudentProfilesPage extends React.Component{
             {name: "firstName", displayName: "First Name", smitem: ["A to Z", "Z to A"]},
             {name: "lastName", displayName: "Last Name", smitem: ["A to Z", "Z to A"]}
         ]
->>>>>>> studentprofiles
         this.state = {
             data: [],
             selectedCard: null,
