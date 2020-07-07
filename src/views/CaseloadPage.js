@@ -1,11 +1,12 @@
 import React from 'react';
-// import ReactDOM from 'react-dom';
-import data2 from "../data_caseload_management.json";
 import { AgGridReact } from 'ag-grid-react';
 import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
 import '../css/CaseloadPage.css';
 import {db} from '../firebase/firebase.js';
+import '../css/searchBar.css';
+import '../css/CaseloadPage.css';
+
 
 class CaseloadPage extends React.Component {
   constructor(props){

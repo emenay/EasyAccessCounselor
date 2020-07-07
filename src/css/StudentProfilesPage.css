@@ -6,12 +6,25 @@
 .profiles-header {
     width: 100%;
     display: grid;
-    grid-template-columns: 3fr 1fr 1fr 1fr;
+    grid-template-columns: 32.5% 50px 50px 50px;
     align-items: center;
     background-color: white;
     background: none;
     justify-items: end;
     
+}
+
+.dropdown-submenu {
+    position: absolute;
+    left: 192px;
+    top: 45px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    background-color: white;
+    border: 1px solid black;
+    z-index: 1;
+
 }
 
 .flag-wrapper {
