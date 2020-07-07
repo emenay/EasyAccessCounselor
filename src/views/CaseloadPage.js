@@ -56,7 +56,8 @@ class CaseloadPage extends React.Component {
 
   cellEditingStopped(e) {
     // TODO: where updating the database will occur
-    if (e.data.uid in e.data) {
+    if (e.data.uid) {
+      console.log("here");
       var data = Object.assign({}, e.data);
       var uid = data.uid;
       delete data.uid;
