@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect } from 'react';
+import React, { useContext, useState, createContext } from 'react';
 
 import { 
   BrowserRouter as Router,
@@ -20,32 +20,42 @@ import Notes from './NotesPage';
 import StudentProfilesPage from './StudentProfilesPage';
 import Header from '../components/Header';
 import Sidenav from '../components/Sidenav';
-import {db, auth} from '../firebase/firebase';
+import {db} from '../firebase/firebase';
+
+export const CohortContext = createContext({ selectedCohort: null, cohorts: []});
 
 export default function App() {
   const user = useContext(UserContext);
   const isLoggedIn = user ? 'true' : '';
-  const [cohorts, setCohort] = useState([]);
+  const [selectedCohort, setSelectedCohort] = useState(null);
+  const [cohorts, setCohorts] = useState([]);
+  const [hasQueried, setHasQueried] = useState(false);
+  
+  if (!hasQueried && user) {
+    console.log(user.uid);
+    db.collection("student_counselors").where("counselor", "==", user.uid).get()
+      .then(querySnapshot=>{
+          return querySnapshot.docs.map(doc =>doc.data());
+      })
+      .then(data=>{console.log(data); setHasQueried(true); setCohorts(data); setSelectedCohort(data[0] ? data[0]: null)});
+  }
 
-  useEffect(()=>{
-    if (user) {
-      db.collection("student_counselors").where("counselor", "==", user.currentUser.uid).get()
-        .then(querySnapshot=>{
-            return querySnapshot.docs.map(doc =>doc.data());
-        })
-        .then(data=>setCohort(data));
-    }
+  console.log(cohorts);
+  console.log(selectedCohort);
 
-  }, []);
+  const updateCohort = (cohortId) => {
+    setSelectedCohort(cohortId);
+  }
 
   return (
     <Router>
+      <Cohort.Provider value={{"selectedCohort": selectedCohort, "cohorts": cohorts}}>
       <div className="page-container">
         <Sidenav isLoggedIn={isLoggedIn}/>
         <div className="page-content">
           <Switch>
             <Route path="/account">
-              <Header isLoggedIn={isLoggedIn}/>
+              <Header isLoggedIn={isLoggedIn} updateCohort={updateCohort}/>
               { user ? <Account /> : <Login /> }
             </Route>
             <Route path="/profiles">
@@ -75,6 +85,7 @@ export default function App() {
           </Switch>
         </div>
       </div>
+      </Cohort.Provider>
     </Router>
   );
 }

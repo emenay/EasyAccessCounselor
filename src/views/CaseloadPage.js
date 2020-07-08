@@ -6,6 +6,7 @@ import '../css/CaseloadPage.css';
 import {db} from '../firebase/firebase.js';
 import '../css/searchBar.css';
 import '../css/CaseloadPage.css';
+import {UserContext} from '../providers/UserProvider';
 
 
 class CaseloadPage extends React.Component {
