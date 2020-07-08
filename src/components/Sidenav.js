@@ -17,7 +17,7 @@ const loggedInItems =  [
   { name: 'profiles', label: 'Student Profiles', path: 'profiles' },
   { name: 'caseload', label: 'Caseload Management', path: 'caseload_management' },
   { name: 'college_list', label: 'College List', path: 'college_list' },
-  { name: 'schedule', label: 'Schedule', path: 'schedule' }
+  { name: 'cohortcreation', label: 'Cohort Creation', path: 'cohortcreation' }
 ]
 
 const loggedOutItems = [

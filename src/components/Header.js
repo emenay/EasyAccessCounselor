@@ -2,6 +2,7 @@ import React from 'react';
 import '../css/components.css';
 
 import SignOutBtn from './SignOutBtn';
+import { render } from '@testing-library/react';
 
 const paths = {
 	"/": "Easy Access",
@@ -12,26 +13,25 @@ const paths = {
 	"/schedule": "Schedule"
 }
 
-function Header(props) {
-	const pathname = window.location.pathname;
-
-	let signout;
-	if (props.isLoggedIn) {
-		signout = <SignOutBtn/>;
-	} else {
-		signout = null;
+class Header extends React.Component{
+	constructor(props){
+		super(props);
+		this.pathname = window.location.pathname;
 	}
 
-  return (
-		<div className="header">
-			<div className="header-acc">
-				{ signout }
+	render() {
+		return (
+			<div className="header">
+				<div className="header-acc">
+					{this.props.isLoggedIn ? <SignOutBtn/>: null}
+				</div>
+				<div className="header-title">
+					{paths[this.pathname]}
+				</div>
 			</div>
-			<div className="header-title">
-				{paths[pathname]}
-			</div>
-		</div>
-  )
+	  );
+
+	}
 }
 
 export default Header;

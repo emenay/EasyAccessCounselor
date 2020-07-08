@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 
 import { 
   BrowserRouter as Router,
@@ -15,15 +15,29 @@ import Dashboard from './Dashboard';
 import Account from './AccountPage';
 import Caseload from './CaseloadPage';
 import CollegeList from './CollegeListPage';
-import Schedule from './SchedulePage';
+import CohortCreation from './CohortCreation';
 import Notes from './NotesPage';
 import StudentProfilesPage from './StudentProfilesPage';
 import Header from '../components/Header';
 import Sidenav from '../components/Sidenav';
+import {db, auth} from '../firebase/firebase';
 
 export default function App() {
   const user = useContext(UserContext);
   const isLoggedIn = user ? 'true' : '';
+  const [cohorts, setCohort] = useState([]);
+
+  useEffect(()=>{
+    if (user) {
+      db.collection("student_counselors").where("counselor", "==", user.currentUser.uid).get()
+        .then(querySnapshot=>{
+            return querySnapshot.docs.map(doc =>doc.data());
+        })
+        .then(data=>setCohort(data));
+    }
+
+  }, []);
+
   return (
     <Router>
       <div className="page-container">
@@ -50,9 +64,9 @@ export default function App() {
               <Header isLoggedIn={isLoggedIn}/>
               { user ? <Notes /> : <Login /> }
             </Route>
-            <Route path="/schedule">
+            <Route path="/cohortcreation">
               <Header isLoggedIn={isLoggedIn}/>
-              { user ? <Schedule /> : <Login /> }
+              { user ? <CohortCreation /> : <Login /> }
             </Route>
             <Route path="/">
               <Header isLoggedIn={isLoggedIn}/>
