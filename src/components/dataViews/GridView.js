@@ -6,7 +6,7 @@ import orange_flag from "../../assets/orange_flag.png";
 
 function generateField(name, dataField) {
   if (typeof(dataField) === "undefined") {
-    return name + "Not Available!"; 
+    return name + "Not Available"; 
     
   }
   return name + dataField;
