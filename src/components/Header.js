@@ -18,7 +18,6 @@ class Header extends React.Component{
 	static contextType = UserContext;
 	constructor(props){
 		super(props);
-		this.pathname = window.location.pathname;
 		this.state = {selectedCohort: typeof this.context !== "undefined" ? this.context.state.selectedCohort : null}
 	}
 
@@ -29,7 +28,6 @@ class Header extends React.Component{
 	}
 
 	render() {
-		console.log(this.context);
 		return (
 			<div className="header">
 				<div className="header-acc">
@@ -41,7 +39,7 @@ class Header extends React.Component{
 					</select>
 				</div>
 				<div className="header-title">
-					{paths[this.pathname]}
+					{paths[window.location.pathname]}
 				</div>
 			</div>
 	  );

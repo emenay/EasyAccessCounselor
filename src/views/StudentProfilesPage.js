@@ -19,7 +19,7 @@ class StudentProfilesPage extends React.Component{
         super(props);
         this.sortFields = [
             {name: "SAT", displayName: "SAT", smitem: ["Low to High", "High to Low"]},
-            {name: "GPA", displayName: "GPA", smitem: ["Low to High", "High to Low"]},
+            {name: "gpa", displayName: "GPA", smitem: ["Low to High", "High to Low"]},
             {name: "ACT", displayName: "ACT", smitem: ["Low to High", "High to Low"]},
             {name: "firstName", displayName: "First Name", smitem: ["A to Z", "Z to A"]},
             {name: "lastName", displayName: "Last Name", smitem: ["A to Z", "Z to A"]}
