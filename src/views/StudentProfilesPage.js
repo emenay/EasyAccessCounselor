@@ -14,6 +14,7 @@ import unsorted_icon from "../assets/unsorted_icon.png";
 import {UserContext} from '../providers/UserProvider';
 
 class StudentProfilesPage extends React.Component{
+    static contextType = UserContext;
     constructor(props){
         super(props);
         this.sortFields = [
@@ -31,33 +32,48 @@ class StudentProfilesPage extends React.Component{
             searchString: "",
             flagMap: new Map(),
             flagToggle: false,
-            sortIcon: unsorted_icon
+            sortIcon: unsorted_icon,
+            lastCohort: null
+        }
+    }
+
+    getCohortData = () => {
+        if (this.context.state && this.state.lastCohort !== this.context.state.selectedCohort){
+            console.log("getting cohor data");
+            db.collection("student_counselors").doc(this.context.state.selectedCohort).collection("students")
+            .get()
+            .then(querySnapshot => {
+            // array of student objects
+                return querySnapshot.docs.map(doc => {
+                    var ent = doc.data();
+                    ent.uid = doc.id;
+                    return ent;
+                });
+            
+            })
+            .then(data => {
+                console.log(data);
+                console.log(this.context.state.selectedCohort);
+                let flagMap = new Map();
+                data.forEach(person=>{
+                    flagMap.set(person.uid, false);
+                });
+                this.setState({
+                    data: data,
+                    flagMap: flagMap,
+                    lastCohort: this.context.state.selectedCohort
+                });
+            })
+            .catch(error => {console.log(error)});
         }
     }
 
     componentDidMount() {
-        db.collection("student_counselors").doc(this.context.state.selectedCohort).collection("students")
-        .get()
-        .then(querySnapshot => {
-        // array of student objects
-            return querySnapshot.docs.map(doc => {
-                var ent = doc.data();
-                ent.uid = doc.id;
-                return ent;
-            });
-         
-        })
-        .then(data => {
-            let flagMap = new Map();
-            data.forEach(person=>{
-                flagMap.set(person.uid, false);
-            });
-            this.setState({
-                data: data,
-                flagMap: flagMap
-            });
-        })
-        .catch(error => {console.log(error)});
+        this.getCohortData();
+    }
+
+    componentDidUpdate() {
+        this.getCohortData();
     }
 
     // Helper function for sorting

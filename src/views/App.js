@@ -24,7 +24,6 @@ import Sidenav from '../components/Sidenav';
 export default function App() {
   const user = useContext(UserContext);
   const isLoggedIn = user.state.user ? 'true' : '';
-  console.log(user);
   return (
     <Router>
       <div className="page-container">

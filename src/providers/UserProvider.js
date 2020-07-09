@@ -16,7 +16,7 @@ class UserProvider extends Component {
               .then(querySnapshot=>{
                   return querySnapshot.docs.map(doc =>{
                       var new_doc = doc.data();
-                      new_doc.uid = doc.uid;
+                      new_doc.uid = doc.id;
                       return new_doc;
                     });
               })

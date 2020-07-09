@@ -35,7 +35,7 @@ class CaseloadPage extends React.Component {
     
   }
 
-  componentDidUpdate() {
+  getCohortData = () => {
     if (this.context.state.selectedCohort && this.state.lastCohort !== this.context.state.selectedCohort){
       console.log("updating");
       db.collection("student_counselors").doc(this.context.state.selectedCohort).collection("students")
@@ -57,9 +57,15 @@ class CaseloadPage extends React.Component {
             });
         })
         .catch(error => {console.log(error)});
+      }
+  }
 
-    }
+  componentDidMount() {
+    this.getCohortData();
+  }
 
+  componentDidUpdate() {
+    this.getCohortData();
   }
 
   cellEditingStopped(e) {
@@ -73,7 +79,15 @@ class CaseloadPage extends React.Component {
       .doc(uid)
       .set(data);
     } else {
-      console.log(e);
+      db.collection("student_counselors").doc(this.context.state.selectedCohort).collection("students")
+      .add(e.data)
+      .then(response=>{
+        e.data.uid = response.id;
+        var new_data = [...this.state.data];
+        new_data.push({});
+        console.log(new_data);
+        this.setState({data: new_data})
+      });
     }
 
 
@@ -82,6 +96,7 @@ class CaseloadPage extends React.Component {
   changeSearchString = (e) => {
     this.setState({searchString: e.target.value});
   }
+
 
   render(){
     return (
@@ -99,8 +114,7 @@ class CaseloadPage extends React.Component {
             quickFilterText={this.state.searchString}
             onCellEditingStopped={(e) => this.cellEditingStopped(e)}
             columnDefs={this.fields}
-            rowData={this.state.data}>
-          </AgGridReact>
+            rowData={this.state.data}/>
         </div>
       </div>
     );

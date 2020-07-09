@@ -10,7 +10,8 @@ const paths = {
 	"/caseload_management": "Caseload Management",
 	"/college_list": "College List",
 	"/notes": 'Notes',
-	"/schedule": "Schedule"
+	"/schedule": "Schedule",
+	"/profiles": ""
 }
 
 class Header extends React.Component{
@@ -18,6 +19,13 @@ class Header extends React.Component{
 	constructor(props){
 		super(props);
 		this.pathname = window.location.pathname;
+		this.state = {selectedCohort: typeof this.context !== "undefined" ? this.context.state.selectedCohort : null}
+	}
+
+	changeSelected = (e) => {
+		console.log(e.target.value);
+		this.context.changeSelectedCohort(e);
+		this.setState({selectedCohort: e.target.value});
 	}
 
 	render() {
@@ -26,7 +34,7 @@ class Header extends React.Component{
 			<div className="header">
 				<div className="header-acc">
 					{this.props.isLoggedIn ? <SignOutBtn/>: null}
-					<select class="header-select" defaultValue={this.context.state.selectedCohort} onChange={this.context.changeSelectedCohort}>
+					<select class="header-select" value={this.state.selectedCohort} onChange={this.changeSelected}>
 						{this.context.state.cohorts.map((cohort, index)=>{
 							return <option key={index} className="header-option" value={cohort.uid}>{cohort.name}</option>
 						})}
