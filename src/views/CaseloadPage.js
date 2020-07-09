@@ -10,11 +10,13 @@ import {UserContext} from '../providers/UserProvider';
 
 
 class CaseloadPage extends React.Component {
+  static contextType = UserContext;
   constructor(props){
     super(props);
     this.state = ({
       searchString: "",
-      data: []
+      data: [],
+      lastCohort: null
     });
     this.fields = [
       {field: "id", headerName: "ID", width: "70"},
@@ -33,8 +35,10 @@ class CaseloadPage extends React.Component {
     
   }
 
-  componentDidMount() {
-    db.collection("student_counselors").doc("Vt4H50TQklsch0mJNGBM").collection("students")
+  componentDidUpdate() {
+    if (this.context.state.selectedCohort && this.state.lastCohort !== this.context.state.selectedCohort){
+      console.log("updating");
+      db.collection("student_counselors").doc(this.context.state.selectedCohort).collection("students")
         .get()
         .then(querySnapshot => {
         // array of student objects
@@ -48,12 +52,14 @@ class CaseloadPage extends React.Component {
         .then(data => {
             data.push({});
             this.setState({
-                data: data
+                data: data,
+                lastCohort: this.context.state.selectedCohort
             });
         })
         .catch(error => {console.log(error)});
 
-    
+    }
+
   }
 
   cellEditingStopped(e) {
@@ -63,7 +69,7 @@ class CaseloadPage extends React.Component {
       var data = Object.assign({}, e.data);
       var uid = data.uid;
       delete data.uid;
-      db.collection("student_counselors").doc("Vt4H50TQklsch0mJNGBM").collection("students")
+      db.collection("student_counselors").doc(this.context.state.selectedCohort).collection("students")
       .doc(uid)
       .set(data);
     } else {

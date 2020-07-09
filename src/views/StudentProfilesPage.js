@@ -11,6 +11,7 @@ import filter_icon from "../assets/filter_icon.png";
 import sorted_ascend from "../assets/sorted_ascend.png";
 import sorted_descend from "../assets/sorted_descend.png";
 import unsorted_icon from "../assets/unsorted_icon.png";
+import {UserContext} from '../providers/UserProvider';
 
 class StudentProfilesPage extends React.Component{
     constructor(props){
@@ -35,7 +36,7 @@ class StudentProfilesPage extends React.Component{
     }
 
     componentDidMount() {
-        db.collection("student_counselors").doc("Vt4H50TQklsch0mJNGBM").collection("students")
+        db.collection("student_counselors").doc(this.context.state.selectedCohort).collection("students")
         .get()
         .then(querySnapshot => {
         // array of student objects
