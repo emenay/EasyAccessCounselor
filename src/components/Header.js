@@ -4,16 +4,6 @@ import '../css/components.css';
 import SignOutBtn from './SignOutBtn';
 import {UserContext} from '../providers/UserProvider';
 
-const paths = {
-	"/": "Easy Access",
-	"/account": "Account",
-	"/caseload_management": "Caseload Management",
-	"/college_list": "College List",
-	"/notes": 'Notes',
-	"/schedule": "Schedule",
-	"/profiles": ""
-}
-
 class Header extends React.Component{
 	static contextType = UserContext;
 	constructor(props){
@@ -30,7 +20,7 @@ class Header extends React.Component{
 		if (this.props.isLoggedIn) {
 			return (
 			<div className="header">
-			<select class="header-select" value={this.state.selectedCohort} onChange={this.changeSelected}>
+			<select className="header-select" value={this.state.selectedCohort ? this.state.selectedCohort : ""} onChange={this.changeSelected}>
 				{this.context.state.cohorts.map((cohort, index)=>{
 					return <option key={index} className="header-option" value={cohort.uid}>{cohort.name}</option>
 				})}

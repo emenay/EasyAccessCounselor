@@ -24,7 +24,8 @@ class CollegeListPage extends React.Component {
     ];
   }
   render(){
-    return <MainDataView fields={this.fields}/>
+    //return <MainDataView fields={this.fields}/>
+    return <p>Coming soon</p>
   }
 }
 

@@ -46,6 +46,7 @@
 	color: var(--primary-color)
 }
 
+
 .nav-list {
 	display: flex;
 	flex-direction: column;
