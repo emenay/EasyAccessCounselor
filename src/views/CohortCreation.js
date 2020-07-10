@@ -2,6 +2,46 @@ import {db, auth} from '../firebase/firebase.js';
 import React from 'react';
 import '../css/CohortCreation.css';
 
+class FileUploadSelection extends React.Component {
+    constructor(props){
+        super(props);
+        this.state = {fileName: null}
+    }
+
+    preventDefault = e => e.preventDefault();
+
+    componentDidMount() {
+        window.addEventListener("dragover", this.preventDefault);
+        window.addEventListener("drop", this.preventDefault);
+    }
+
+    componentWillUnmount() {
+        window.removeEventListener("dragover", this.preventDefault);
+        window.removeEventListener("drop", this.preventDefault);
+    }
+    onChange = (e) => {
+        console.log(e.target.files[0]);
+        this.setState({fileName: e.target.files[0].name})
+    }
+
+    handleDrop = (e) => {
+        console.log("here");
+        if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+            console.log(e.dataTransfer.files[0]);
+            this.setState({fileName: e.dataTransfer.files[0].name});
+        }
+    }
+    render(){
+        return (
+            <div className="file-upload-wrapper">
+                <p>Upload your student data.</p>
+                <div className="uploadbox" onDrop={this.handleDrop}>{this.state.fileName ? this.state.fileName : "Drag and drop file."}</div>
+                <input type="file" name="file" onChange={this.onChange} />
+            </div>
+        );
+    }
+}
+
 class DataEntrySelection extends React.Component {
     constructor(props){
         super(props);
@@ -17,7 +57,7 @@ class DataEntrySelection extends React.Component {
                 window.location.href = window.location.origin + "/caseload_management";
                 break;
             case "upload":
-                this.props.changePanel(<p>new</p>);
+                this.props.changePanel(<FileUploadSelection />);
                 break;
             default:
                 console.log("None selected!");
@@ -54,7 +94,9 @@ class CohortCreation extends React.Component {
 
     render(){
         return (
-            this.state.selectedPanel
+            <div className="cohort-creation-content">
+                {this.state.selectedPanel}
+            </div>
         );
     }
 }
