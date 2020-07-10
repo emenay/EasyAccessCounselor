@@ -5,8 +5,10 @@ import '../css/Dashboard.css';
 import DashboardPanel from '../components/dashboard/DashboardPanel';
 import StudentCard from '../components/dashboard/StudentCard';
 import AddStudentsModal from '../components/addStudents/AddStudentsModal';
+import {UserContext} from '../providers/UserProvider';
 
 class Dashboard extends React.Component {
+  static contextType = UserContext;
   constructor() {
     super();
     this.state = {
@@ -18,7 +20,7 @@ class Dashboard extends React.Component {
   }
 
   async componentDidMount() {
-    let query = await db.collection("students").where("cuid", "==", this.props.cuid).get();
+    let query = await db.collection("students").where("cuid", "==", this.context.state.user.uid).get();
     this.setState({data: query.docs.map(doc => doc.data())});
   }
 

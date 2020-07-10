@@ -13,11 +13,13 @@ import logo from '../assets/logo.svg';
 
 const loggedInItems =  [
   { name: 'home', label: 'Home', path: '' },
-  { name: 'account', label: 'Account', path: 'account' },
+  { name: 'account', label: 'Account', path: 'account'},
   { name: 'profiles', label: 'Student Profiles', path: 'profiles' },
   { name: 'caseload', label: 'Caseload Management', path: 'caseload_management' },
   { name: 'college_list', label: 'College List', path: 'college_list' },
-  { name: 'schedule', label: 'Schedule', path: 'schedule' }
+  { name: 'application_process', label: 'Application Process', path: 'application_process'},
+  { name: 'settings', label: 'Settings', path: 'settings'},
+  { name: 'cohortcreation', label: 'Cohort Creation', path: 'cohortcreation' }
 ]
 
 const loggedOutItems = [
@@ -68,7 +70,7 @@ function Sidenav(props) {
                 </Link>
               ))}
             </div>
-            { props.isLoggedIn ? signOutBtn : signInBtn }
+            { props.isLoggedIn ? null : signInBtn }
           </List>
         </div>
       </Slide>

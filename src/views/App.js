@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState, createContext } from 'react';
 
 import { 
   BrowserRouter as Router,
@@ -15,7 +15,7 @@ import Dashboard from './Dashboard';
 import Account from './AccountPage';
 import Caseload from './CaseloadPage';
 import CollegeList from './CollegeListPage';
-import Schedule from './SchedulePage';
+import CohortCreation from './CohortCreation';
 import Notes from './NotesPage';
 import StudentProfilesPage from './StudentProfilesPage';
 import Header from '../components/Header';
@@ -23,7 +23,7 @@ import Sidenav from '../components/Sidenav';
 
 export default function App() {
   const user = useContext(UserContext);
-  const isLoggedIn = user ? 'true' : '';
+  const isLoggedIn = user.state.user ? 'true' : '';
   return (
     <Router>
       <div className="page-container">
@@ -32,31 +32,31 @@ export default function App() {
           <Switch>
             <Route path="/account">
               <Header isLoggedIn={isLoggedIn}/>
-              { user ? <Account /> : <Login /> }
+              { user.state.user ? <Account /> : <Login /> }
             </Route>
             <Route path="/profiles">
               <Header isLoggedIn={isLoggedIn}/>
-              { user ? <StudentProfilesPage /> : <Login /> }
+              { user.state.user ? <StudentProfilesPage /> : <Login /> }
             </Route>
             <Route path="/caseload_management">
               <Header isLoggedIn={isLoggedIn}/>
-              { user ? <Caseload cuid={user.uid}/> : <Login /> }
+              { user.state.user ? <Caseload cuid={user.uid}/> : <Login /> }
             </Route>
             <Route path="/college_list">
               <Header isLoggedIn={isLoggedIn}/>
-              { user ? <CollegeList /> : <Login /> }
+              { user.state.user ? <CollegeList /> : <Login /> }
             </Route>
             <Route path="/notes">
               <Header isLoggedIn={isLoggedIn}/>
-              { user ? <Notes /> : <Login /> }
+              { user.state.user ? <Notes /> : <Login /> }
             </Route>
-            <Route path="/schedule">
+            <Route path="/cohortcreation">
               <Header isLoggedIn={isLoggedIn}/>
-              { user ? <Schedule /> : <Login /> }
+              { user.state.user ? <CohortCreation /> : <Login /> }
             </Route>
             <Route path="/">
               <Header isLoggedIn={isLoggedIn}/>
-              { user ? <Dashboard cuid={user.uid} /> : <HomeDefault /> }
+              { user.state.user ? <Dashboard cuid={user.uid} /> : <HomeDefault /> }
             </Route>
           </Switch>
         </div>

@@ -2,36 +2,35 @@ import React from 'react';
 import '../css/components.css';
 
 import SignOutBtn from './SignOutBtn';
+import {UserContext} from '../providers/UserProvider';
 
-const paths = {
-	"/": "Easy Access",
-	"/account": "Account",
-	"/caseload_management": "Caseload Management",
-	"/college_list": "College List",
-	"/notes": 'Notes',
-	"/schedule": "Schedule"
-}
-
-function Header(props) {
-	const pathname = window.location.pathname;
-
-	let signout;
-	if (props.isLoggedIn) {
-		signout = <SignOutBtn/>;
-	} else {
-		signout = null;
+class Header extends React.Component{
+	static contextType = UserContext;
+	constructor(props){
+		super(props);
+		this.state = {selectedCohort: typeof this.context !== "undefined" ? this.context.state.selectedCohort : null}
 	}
 
-  return (
-		<div className="header">
-			<div className="header-acc">
-				{ signout }
-			</div>
-			<div className="header-title">
-				{paths[pathname]}
-			</div>
-		</div>
-  )
+	changeSelected = (e) => {
+		this.context.changeSelectedCohort(e);
+		this.setState({selectedCohort: e.target.value});
+	}
+
+	render() {
+		if (this.props.isLoggedIn) {
+			return (
+			<div className="header">
+			<select className="header-select" value={this.state.selectedCohort ? this.state.selectedCohort : ""} onChange={this.changeSelected}>
+				{this.context.state.cohorts.map((cohort, index)=>{
+					return <option key={index} className="header-option" value={cohort.uid}>{cohort.name}</option>
+				})}
+			</select>
+			<SignOutBtn/>
+		</div>);
+		}
+		return <div className="header"/>
+
+	}
 }
 
 export default Header;

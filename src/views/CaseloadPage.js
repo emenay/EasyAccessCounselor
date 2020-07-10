@@ -6,14 +6,17 @@ import '../css/CaseloadPage.css';
 import {db} from '../firebase/firebase.js';
 import '../css/searchBar.css';
 import '../css/CaseloadPage.css';
+import {UserContext} from '../providers/UserProvider';
 
 
 class CaseloadPage extends React.Component {
+  static contextType = UserContext;
   constructor(props){
     super(props);
     this.state = ({
       searchString: "",
-      data: []
+      data: [],
+      lastCohort: null
     });
     this.fields = [
       {field: "id", headerName: "ID", width: "70"},
@@ -32,8 +35,10 @@ class CaseloadPage extends React.Component {
     
   }
 
-  componentDidMount() {
-    db.collection("student_counselors").doc("Vt4H50TQklsch0mJNGBM").collection("students")
+  getCohortData = () => {
+    if (this.context.state.selectedCohort && this.state.lastCohort !== this.context.state.selectedCohort){
+      console.log("updating");
+      db.collection("student_counselors").doc(this.context.state.selectedCohort).collection("students")
         .get()
         .then(querySnapshot => {
         // array of student objects
@@ -47,12 +52,20 @@ class CaseloadPage extends React.Component {
         .then(data => {
             data.push({});
             this.setState({
-                data: data
+                data: data,
+                lastCohort: this.context.state.selectedCohort
             });
         })
         .catch(error => {console.log(error)});
+      }
+  }
 
-    
+  componentDidMount() {
+    this.getCohortData();
+  }
+
+  componentDidUpdate() {
+    this.getCohortData();
   }
 
   cellEditingStopped(e) {
@@ -62,11 +75,19 @@ class CaseloadPage extends React.Component {
       var data = Object.assign({}, e.data);
       var uid = data.uid;
       delete data.uid;
-      db.collection("student_counselors").doc("Vt4H50TQklsch0mJNGBM").collection("students")
+      db.collection("student_counselors").doc(this.context.state.selectedCohort).collection("students")
       .doc(uid)
       .set(data);
     } else {
-      console.log(e);
+      db.collection("student_counselors").doc(this.context.state.selectedCohort).collection("students")
+      .add(e.data)
+      .then(response=>{
+        e.data.uid = response.id;
+        var new_data = [...this.state.data];
+        new_data.push({});
+        console.log(new_data);
+        this.setState({data: new_data})
+      });
     }
 
 
@@ -75,6 +96,7 @@ class CaseloadPage extends React.Component {
   changeSearchString = (e) => {
     this.setState({searchString: e.target.value});
   }
+
 
   render(){
     return (
@@ -92,8 +114,7 @@ class CaseloadPage extends React.Component {
             quickFilterText={this.state.searchString}
             onCellEditingStopped={(e) => this.cellEditingStopped(e)}
             columnDefs={this.fields}
-            rowData={this.state.data}>
-          </AgGridReact>
+            rowData={this.state.data}/>
         </div>
       </div>
     );
