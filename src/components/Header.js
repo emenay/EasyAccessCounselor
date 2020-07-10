@@ -22,27 +22,23 @@ class Header extends React.Component{
 	}
 
 	changeSelected = (e) => {
-		console.log(e.target.value);
 		this.context.changeSelectedCohort(e);
 		this.setState({selectedCohort: e.target.value});
 	}
 
 	render() {
-		return (
+		if (this.props.isLoggedIn) {
+			return (
 			<div className="header">
-				<div className="header-acc">
-					{this.props.isLoggedIn ? <SignOutBtn/>: null}
-					<select class="header-select" value={this.state.selectedCohort} onChange={this.changeSelected}>
-						{this.context.state.cohorts.map((cohort, index)=>{
-							return <option key={index} className="header-option" value={cohort.uid}>{cohort.name}</option>
-						})}
-					</select>
-				</div>
-				<div className="header-title">
-					{paths[window.location.pathname]}
-				</div>
-			</div>
-	  );
+			<select class="header-select" value={this.state.selectedCohort} onChange={this.changeSelected}>
+				{this.context.state.cohorts.map((cohort, index)=>{
+					return <option key={index} className="header-option" value={cohort.uid}>{cohort.name}</option>
+				})}
+			</select>
+			<SignOutBtn/>
+		</div>);
+		}
+		return <div className="header"/>
 
 	}
 }
