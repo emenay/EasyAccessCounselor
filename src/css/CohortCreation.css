@@ -21,18 +21,21 @@
 
 .select-entry-btn {
     border: none;
+    display: inline-block;
     text-decoration: none;
-    background: #8CC1DC;
+    background: #3298CB;
     color: #ffffff;
     font-family: sans-serif;
     font-size: 1rem;
     cursor: pointer;
-    width: 60px;
-    min-height: 40px;
+    width: 70px;
+    min-height: 50px;
+    line-height: 50px;
+    text-align: center;
 }
 
-.entry-active {
-    background: #3298CB;
+.inactive {
+    background: #8CC1DC;
 }
 
 .rad-select-group {
@@ -45,4 +48,44 @@
     width: 30px;
     height: 20px;
     margin-right: 10px;
+}
+
+
+.uploadbox {
+    border: 1px black solid;
+    border-radius: 2px;
+    width: 100%;
+    min-height: 60px;
+    line-height: 60px;
+    padding-left: 10px;
+}
+
+.uploadinput {
+    display: none;
+}
+
+.file-upload-buttons {
+    display: flex;
+    justify-content: space-between;
+}
+
+.fields-view {
+    width: 100%;
+    height: 400px;
+    overflow-y: auto;
+    border: 1px black solid;
+}
+
+.field-titles {
+    width: 80%;
+    margin: auto;
+    display: flex;
+    justify-content: space-between;
+}
+
+.field-select {
+    width: 80%;
+    margin: auto;
+    display: flex;
+    justify-content: space-between;
 }
