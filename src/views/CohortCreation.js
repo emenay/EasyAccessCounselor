@@ -1,10 +1,11 @@
 import React from 'react';
 import '../css/CohortCreation.css';
+import readXlsxFile from 'read-excel-file';
 
 class FileUploadSelection extends React.Component {
     constructor(props){
         super(props);
-        this.state = {fileName: null, file: null}
+        this.state = {fileName: null, data: null}
     }
 
     preventDefault = e => e.preventDefault();
@@ -19,13 +20,15 @@ class FileUploadSelection extends React.Component {
         window.removeEventListener("drop", this.preventDefault);
     }
 
-    handleFile = (file) => {
+    handleFile = (data) => {
+
+        /*
         let fileType = file.name.split('.').pop();
         if (!["xls", "xlsv", "csv"].includes(fileType)){
             alert('File must be .xls, .xlsv, or .csv');
         } else {
-            this.setState({fileName: file.name, file: file});
-        }
+            this.setState({fileName: file.name, data: data});
+        }*/
     }
 
     onChange = (e) => {
@@ -38,7 +41,17 @@ class FileUploadSelection extends React.Component {
         }
     }
 
+    excelChange = (e) => {
+        let name = e.target.files[0].name
+        readXlsxFile(e.target.files[0]).then((rows)=>{
+            this.setState({fileName: name, data: rows});
+        });
+    }
+
     onSubmit = () => {
+        this.props.setData(this.state.data);
+        this.props.changePanel("fieldMatching");
+        /*
         if (this.state.file){
             let fileReader = new FileReader();
             console.log("reading");
@@ -47,8 +60,8 @@ class FileUploadSelection extends React.Component {
                 this.props.setData(event.target.result);
                 this.props.changePanel("fieldMatching");
             });
-            fileReader.readAsText(this.state.file);
-        }
+            fileReader.readAsText(this.state.file);*/
+    
     }
     render(){
         return (
@@ -56,9 +69,9 @@ class FileUploadSelection extends React.Component {
                 <p>Upload your student data.</p>
                 <div className="uploadbox" onDrop={this.handleDrop}>{this.state.fileName ? this.state.fileName : "Drag and drop file."}</div>
                 <div className="file-upload-buttons">
-                    <input className="uploadinput" id="file" type="file" name="file" accept=".csv, .xlsx, .xls" onChange={this.onChange} />
+                    <input className="uploadinput" id="file" type="file" name="file" accept=".csv, .xlsx, .xls" onChange={this.excelChange} />
                     <label htmlFor="file" className="select-entry-btn">Browse</label>
-                    <button className={"select-entry-btn" + (this.state.file ? "": " inactive")} onClick={this.onSubmit}>Upload</button>
+                    <button className={"select-entry-btn" + (this.state.fileName ? "": " inactive")} onClick={this.onSubmit}>Upload</button>
                 </div>
             </div>
         );
@@ -109,51 +122,51 @@ class FieldMatches extends React.Component {
     constructor(props){
         super(props);
         let fieldsMap = new Map();
-        this.props.data.split('\n')[0].split(',').forEach(field=>fieldsMap.set(field, "None"));
+        this.props.data[0].forEach(field=>fieldsMap.set(field, "None"));
         this.state = {
             fieldsMap: fieldsMap
         };
         this.fields = {
-        "UniqueID": "id",
-        "First Name": "firstName",
-        "Last Name": "lastName",
-        "Date of Birth": "dob",
-        "Ethnicity": "ethnicity",
-        "Gender": "gender",
-        "GPA": "gpa",
-        "Class Rank": "classRank",
-        "SAT": "sat",
-        "ACT": "act",
-        "Student Email": "studentEmail",
-        "Student Email 2": "studentEmail2",
-        "Student Phone": "studentPhone",
-        "Parent Email": "parentEmail",
-        "Parent Email 2": "parentEmail2",
-        "Parent Phone": "parentPhone",
-        "Parent Phone 2": "parentPhone2",
-        "Student Address": "studentAddress",
-        "Total Meetings": "totalMeetings",
-        "Individual Meetings": "individualMeetings",
-        "Group Meetings": "groupMeetings",
-        "Event Meetings": "eventMeetings",
-        "State": "state",
-        "Zipcode": "zipcode",
-        "EFC": "efc",
-        "Field of Study/Major 1": "major",
-        "Field of Study/Major 2": "major2",
-        "Safety Colleges": "safetyColleges",
-        "Target Colleges": "targetColleges",
-        "Reach Colleges": "reachColleges",
-        "Counselor Additions": "additions",
-        "Want to Attend (Region)": "region",
-        "College Size": "collegeSize",
-        "College Setting": "collegeSetting",
-        "College Diversity (% URM)": "collegeDiversity",
-        "College Diversity (Types)": "collegeDiversityTypes",
-        "Religion": "religion",
-        "Military/ROTC": "rotc",
-        "Athletics": "athletics"
-    }
+            "UniqueID": "id",
+            "First Name": "firstName",
+            "Last Name": "lastName",
+            "Date of Birth": "dob",
+            "Ethnicity": "ethnicity",
+            "Gender": "gender",
+            "GPA": "gpa",
+            "Class Rank": "classRank",
+            "SAT": "sat",
+            "ACT": "act",
+            "Student Email": "studentEmail",
+            "Student Email 2": "studentEmail2",
+            "Student Phone": "studentPhone",
+            "Parent Email": "parentEmail",
+            "Parent Email 2": "parentEmail2",
+            "Parent Phone": "parentPhone",
+            "Parent Phone 2": "parentPhone2",
+            "Student Address": "studentAddress",
+            "Total Meetings": "totalMeetings",
+            "Individual Meetings": "individualMeetings",
+            "Group Meetings": "groupMeetings",
+            "Event Meetings": "eventMeetings",
+            "State": "state",
+            "Zipcode": "zipcode",
+            "EFC": "efc",
+            "Field of Study/Major 1": "major",
+            "Field of Study/Major 2": "major2",
+            "Safety Colleges": "safetyColleges",
+            "Target Colleges": "targetColleges",
+            "Reach Colleges": "reachColleges",
+            "Counselor Additions": "additions",
+            "Want to Attend (Region)": "region",
+            "College Size": "collegeSize",
+            "College Setting": "collegeSetting",
+            "College Diversity (% URM)": "collegeDiversity",
+            "College Diversity (Types)": "collegeDiversityTypes",
+            "Religion": "religion",
+            "Military/ROTC": "rotc",
+            "Athletics": "athletics"
+        }
     }
 
     selectField = (e, field) => {
@@ -161,6 +174,10 @@ class FieldMatches extends React.Component {
         new_fields.set(field[0], e.target.value);
         this.setState({fieldsMap: new_fields});
 
+    }
+
+    startUpload = () => {
+        Array.from(this.state.fieldsMap).forEach(entry=>console.log(entry[0] + ": " + entry[1]));
     }
 
     render(){
@@ -185,7 +202,8 @@ class FieldMatches extends React.Component {
                         </div>
                         );
                     })}
-                </div>        
+                </div> 
+                <button className="select-entry-btn" onClick={this.startUpload}>Upload</button>      
             </div>
         );
     }
