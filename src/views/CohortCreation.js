@@ -5,7 +5,7 @@ import readXlsxFile from 'read-excel-file';
 class FileUploadSelection extends React.Component {
     constructor(props){
         super(props);
-        this.state = {fileName: null, data: null}
+        this.state = {fileName: null, data: null, dragOver: false}
     }
 
     preventDefault = e => e.preventDefault();
@@ -20,15 +20,20 @@ class FileUploadSelection extends React.Component {
         window.removeEventListener("drop", this.preventDefault);
     }
 
-    handleFile = (data) => {
-
-        /*
-        let fileType = file.name.split('.').pop();
-        if (!["xls", "xlsv", "csv"].includes(fileType)){
-            alert('File must be .xls, .xlsv, or .csv');
-        } else {
-            this.setState({fileName: file.name, data: data});
-        }*/
+    handleFile = (file) => {
+        switch (file.name.split('.').pop()){
+            case 'xlsx':
+                readXlsxFile(file).then((rows)=>{
+                    this.setState({fileName: file.name, data: rows});
+                })
+                .catch(error=>console.log(error));
+                break;
+            case 'csv':
+                alert('.csv not added yet');
+                break;
+            default:
+                alert('File must be .xlsx or .csv');
+        }
     }
 
     onChange = (e) => {
@@ -36,40 +41,39 @@ class FileUploadSelection extends React.Component {
     }
 
     handleDrop = (e) => {
+        this.setState({dragOver: false});
         if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
             this.handleFile(e.dataTransfer.files[0]);
         }
     }
 
-    excelChange = (e) => {
-        let name = e.target.files[0].name
-        readXlsxFile(e.target.files[0]).then((rows)=>{
-            this.setState({fileName: name, data: rows});
-        });
-    }
 
     onSubmit = () => {
-        this.props.setData(this.state.data);
-        this.props.changePanel("fieldMatching");
-        /*
-        if (this.state.file){
-            let fileReader = new FileReader();
-            console.log("reading");
-            fileReader.addEventListener('load', (event)=> {
-                console.log(event.target.result);
-                this.props.setData(event.target.result);
-                this.props.changePanel("fieldMatching");
-            });
-            fileReader.readAsText(this.state.file);*/
-    
+        if (this.state.data){
+            this.props.setData(this.state.data);
+            this.props.changePanel("fieldMatching");
+        }
     }
+
+    onDragEnter = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        this.setState({dragOver: true});
+    }
+
+    onDragLeave = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        this.setState({dragOver: false});
+    }
+    
     render(){
         return (
             <div className="file-upload-wrapper">
-                <p>Upload your student data.</p>
-                <div className="uploadbox" onDrop={this.handleDrop}>{this.state.fileName ? this.state.fileName : "Drag and drop file."}</div>
+                <p className="file-upload-title">Upload your student data.</p>
+                <div className={"uploadbox" + (this.state.dragOver ? " upload-drag": "")} onDragEnter={this.onDragEnter} onDragLeave={this.onDragLeave} onDrop={this.handleDrop}>{this.state.fileName ? this.state.fileName : "Drag and drop file."}</div>
                 <div className="file-upload-buttons">
-                    <input className="uploadinput" id="file" type="file" name="file" accept=".csv, .xlsx, .xls" onChange={this.excelChange} />
+                    <input className="uploadinput" id="file" type="file" name="file" accept=".csv, .xlsx" onChange={this.onChange} />
                     <label htmlFor="file" className="select-entry-btn">Browse</label>
                     <button className={"select-entry-btn" + (this.state.fileName ? "": " inactive")} onClick={this.onSubmit}>Upload</button>
                 </div>
@@ -183,7 +187,7 @@ class FieldMatches extends React.Component {
     render(){
         return (
             <div>
-                <p>Match your upload's fields with the fields in the Easy Access database, or create a new field</p>
+                <p className="fields-description"><span>Match</span> your upload's fields with the fields in the Easy Access database, or <span>create</span> a new field.</p>
                 <div className="field-titles">
                     <p>Upload's Field</p>
                     <p>Easy Access Field</p>
@@ -193,7 +197,7 @@ class FieldMatches extends React.Component {
                         return(
                         <div key={field[0]} className="field-select">
                             <p>{field[0]}</p>
-                            <select value={field[1]} onChange={e=>this.selectField(e, field)}>
+                            <select className="select-dropdown" value={field[1]} onChange={e=>this.selectField(e, field)}>
                                 <option value="None">Select Option</option>
                                 {Object.entries(this.fields).map(val=>{
                                     return <option key={val[1] + field} value={val[1]}>{val[0]}</option>
@@ -203,7 +207,7 @@ class FieldMatches extends React.Component {
                         );
                     })}
                 </div> 
-                <button className="select-entry-btn" onClick={this.startUpload}>Upload</button>      
+                <button className="select-entry-btn upload-position" onClick={this.startUpload}>Upload</button>      
             </div>
         );
     }
