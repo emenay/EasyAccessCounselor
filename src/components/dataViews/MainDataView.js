@@ -1,8 +1,6 @@
 import React from 'react';
 // import ReactDOM from 'react-dom';
 import * as data2 from '../../data_caseload_management.json';
-import {BlockView} from "./BlockView";
-import {GridView} from "./GridView";
 import {TableView} from "./TableView";
 import '../../css/StudentProfilesPage.css';
 import '../../css/CaseloadPage.css';

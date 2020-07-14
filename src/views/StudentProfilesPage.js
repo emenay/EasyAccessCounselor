@@ -1,6 +1,7 @@
 import React from 'react';
 import {GridView} from "../components/dataViews/GridView.js";
 import {DropdownSortMenu} from "../components/dataViews/MainDataView.js";
+import { Slider } from '@material-ui/core';
 import "../css/StudentProfilesPage.css";
 import "../css/searchBar.css";
 import StudentDetailsModal from '../components/StudentDetailsModal.js';
@@ -8,10 +9,74 @@ import black_flag from "../assets/black_flag.png";
 import orange_flag from "../assets/orange_flag.png";
 import {db} from "../firebase/firebase";
 import filter_icon from "../assets/filter_icon.png";
+import filter_outline from "../assets/filter_outline.png";
 import sorted_ascend from "../assets/sorted_ascend.png";
 import sorted_descend from "../assets/sorted_descend.png";
 import unsorted_icon from "../assets/unsorted_icon.png";
 import {UserContext} from '../providers/UserProvider';
+
+export class DropdownFilterMenu extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = { 
+          collapsed: true,
+          openedSubmenu: null,
+          smPosition: 0
+        };
+    }
+  
+    handleToggle = (event) => {
+        event.stopPropagation();
+        this.setState({ collapsed: !this.state.collapsed });
+    }
+  
+    handleBlur = (event) => {
+        if (event.relatedTarget === null) this.setState({ collapsed: true, openedSubmenu: null });
+    }
+
+    changeSubmenu = (index, name) => {
+      this.setState({openedSubmenu: name, smPosition: index});
+    }
+
+    handleChange = (e, value) =>{
+        this.props.changeEvent(this.state.openedSubmenu, value);
+    }
+
+    displaySubmenu = () => {
+      return (<div className="dropdown-submenu" style={{top: (this.state.smPosition + 1) * 32.5 + 12 + "px", width: "300px"}} role="menu">
+          <Slider
+            value={Object.keys(this.props.filters).length > 0 ? this.props.filters[this.state.openedSubmenu.name].values : [this.state.openedSubmenu.low, this.state.openedSubmenu.high]}
+            max={4}
+            onChange={this.handleChange}
+            valueLabelDisplay="auto"
+            aria-labelledby="range-slider"
+            />
+      </div>);
+    }
+
+  
+    render() {
+        return(
+            <div className={"dropdown" + (this.state.collapsed ? "" : " is-active")} tabIndex="0" onBlur={this.handleBlur}>
+                <div className="dropdown-trigger">
+                    <button className="dropdown-btn" aria-haspopup="true" aria-controls="dropdown-menu" onClick={this.handleToggle}>
+                      <img className="filter-icon" src={this.props.icon} alt="filter icon" />
+                    </button>
+                </div>
+                <div className="dropdown-menu" id="dropdown-menu" role="menu">
+                    <div className="dropdown-content" id="sort-options">
+                      {this.props.fields.map((field, index) => {
+                        return <a key={index} className={"dropdown-item" + (this.state.selected === field.name ? " is-active": "")} onMouseOver={()=>this.changeSubmenu(index, field)}>{field.displayName + "   \u25B7"}</a>
+                      })}
+                    </div>
+                </div>
+                {this.state.openedSubmenu !== null && this.displaySubmenu()}
+                
+            </div>
+        );
+    }
+  }
+
 
 class StudentProfilesPage extends React.Component{
     static contextType = UserContext;
@@ -24,11 +89,15 @@ class StudentProfilesPage extends React.Component{
             {name: "firstName", displayName: "First Name", smitem: ["A to Z", "Z to A"]},
             {name: "lastName", displayName: "Last Name", smitem: ["A to Z", "Z to A"]}
         ]
+        this.filterFields = [
+            {name: "gpa", displayName: "GPA", type: "number", low: 0, high: 4}
+        ]
         this.state = {
             data: [],
             selectedCard: null,
             sortField: "uid",
             sortReverse: false,
+            filters: {},
             searchString: "",
             flagMap: new Map(),
             flagToggle: false,
@@ -39,7 +108,6 @@ class StudentProfilesPage extends React.Component{
 
     getCohortData = () => {
         if (this.context.state && this.state.lastCohort !== this.context.state.selectedCohort){
-            console.log("getting cohor data");
             db.collection("student_counselors").doc(this.context.state.selectedCohort).collection("students")
             .get()
             .then(querySnapshot => {
@@ -52,8 +120,6 @@ class StudentProfilesPage extends React.Component{
             
             })
             .then(data => {
-                console.log(data);
-                console.log(this.context.state.selectedCohort);
                 let flagMap = new Map();
                 data.forEach(person=>{
                     flagMap.set(person.uid, false);
@@ -130,6 +196,12 @@ class StudentProfilesPage extends React.Component{
         this.setState({selectedCard: null});
     }
 
+    changeFilter = (field, values) => {
+        var new_filter = Object.assign(this.state.filters, {});
+        new_filter[field.name] = {type: field.type, values: values};
+        this.setState({filters: new_filter});
+    }
+
     render(){
         let data = this.state.data;
         data = this.state.flagToggle ? data.filter(person => {return this.state.flagMap.get(person.uid)}) : data;
@@ -141,10 +213,20 @@ class StudentProfilesPage extends React.Component{
                 return false;
             });
         }
+        data = data.filter(person => {
+            for (const [field, filterInfo] of Object.entries(this.state.filters)) {
+                if (filterInfo.type === "number"){
+                    return person[field] >= filterInfo.values[0] && person[field] <= filterInfo.values[1];
+                }
+                
+            }
+            return true;
+        });
         return <div className="profiles-content">
             <div className="profiles-header">
                 <input type="text" id="myInput" onKeyUp={this.changeSearchString} placeholder="Search for Students.." />
                 <button className="flag-button" onClick={this.flagToggle}><img className="flag-image" alt="Select flagged fields icon" src={this.state.flagToggle? orange_flag : black_flag} /></button>
+                <DropdownFilterMenu fields={this.filterFields} changeEvent={this.changeFilter} filters={this.state.filters} icon={Object.keys(this.state.filters).length === 0 ? filter_outline : filter_icon} />
                 <DropdownSortMenu fields={this.sortFields} changeEvent={this.changeSort} icon={this.state.sortIcon}/>
             </div>
             {this.state.selectedCard && <StudentDetailsModal exitModal={this.exitModal} info={this.state.selectedCard} />}
