@@ -15,13 +15,17 @@ import sorted_descend from "../assets/sorted_descend.png";
 import unsorted_icon from "../assets/unsorted_icon.png";
 import {UserContext} from '../providers/UserProvider';
 
+
 export class DropdownFilterMenu extends React.Component {
     constructor(props) {
         super(props);
+        let checkFilters = new Map();
+        props.fields.forEach(filter=>checkFilters.set(filter, false));
         this.state = { 
           collapsed: true,
           openedSubmenu: null,
-          smPosition: 0
+          smPosition: 0,
+          checkFilters: checkFilters
         };
     }
   
@@ -39,14 +43,33 @@ export class DropdownFilterMenu extends React.Component {
     }
 
     handleChange = (e, value) =>{
-        this.props.changeEvent(this.state.openedSubmenu, value);
+        if (this.state.checkFilters.get(this.state.openedSubmenu.name)){
+            this.props.changeEvent(this.state.openedSubmenu, value);
+        }
+    }
+
+    changeChecked = () => {
+        let isChecked = this.state.checkFilters.get(this.state.openedSubmenu.name);
+        if (isChecked){
+            // Delete field from parent
+            this.props.deleteFilter(this.state.openedSubmenu.name);
+        } else {
+
+        }
+        var new_map = new Map(this.state.checkFilters);
+        new_map.set(this.state.openedSubmenu.name, !this.state.checkFilters.get(this.state.openedSubmenu.name))
+        this.setState({checkFilters: new_map});
     }
 
     displaySubmenu = () => {
+        console.log(this.state.checkFilters);
       return (<div className="dropdown-submenu" style={{top: (this.state.smPosition + 1) * 32.5 + 12 + "px", width: "300px"}} role="menu">
+          <input type="checkbox" onClick={this.changeChecked} checked={this.state.checkFilters.get(this.state.openedSubmenu.name)} id={this.state.openedSubmenu.name} name={this.state.openedSubmenu.name} />
+          <label for={this.state.openedSubmenu.name}>{this.state.openedSubmenu.name}</label>
           <Slider
             value={Object.keys(this.props.filters).length > 0 ? this.props.filters[this.state.openedSubmenu.name].values : [this.state.openedSubmenu.low, this.state.openedSubmenu.high]}
-            max={4}
+            max={this.state.openedSubmenu.high}
+            step={0.01}
             onChange={this.handleChange}
             valueLabelDisplay="auto"
             aria-labelledby="range-slider"
@@ -90,7 +113,7 @@ class StudentProfilesPage extends React.Component{
             {name: "lastName", displayName: "Last Name", smitem: ["A to Z", "Z to A"]}
         ]
         this.filterFields = [
-            {name: "gpa", displayName: "GPA", type: "number", low: 0, high: 4}
+            {name: "gpa", displayName: "GPA", type: "number", low: 0.00, high: 4.00}
         ]
         this.state = {
             data: [],
@@ -202,6 +225,12 @@ class StudentProfilesPage extends React.Component{
         this.setState({filters: new_filter});
     }
 
+    deleteFilter = (name) => {
+        var new_filter = Object.assign(this.state.filters, {});
+        delete new_filter[name];
+        this.setState({filters: new_filter});
+    }
+
     render(){
         let data = this.state.data;
         data = this.state.flagToggle ? data.filter(person => {return this.state.flagMap.get(person.uid)}) : data;
@@ -226,7 +255,7 @@ class StudentProfilesPage extends React.Component{
             <div className="profiles-header">
                 <input type="text" id="myInput" onKeyUp={this.changeSearchString} placeholder="Search for Students.." />
                 <button className="flag-button" onClick={this.flagToggle}><img className="flag-image" alt="Select flagged fields icon" src={this.state.flagToggle? orange_flag : black_flag} /></button>
-                <DropdownFilterMenu fields={this.filterFields} changeEvent={this.changeFilter} filters={this.state.filters} icon={Object.keys(this.state.filters).length === 0 ? filter_outline : filter_icon} />
+                <DropdownFilterMenu fields={this.filterFields} deleteFilter={this.deleteFilter} changeEvent={this.changeFilter} filters={this.state.filters} icon={Object.keys(this.state.filters).length === 0 ? filter_outline : filter_icon} />
                 <DropdownSortMenu fields={this.sortFields} changeEvent={this.changeSort} icon={this.state.sortIcon}/>
             </div>
             {this.state.selectedCard && <StudentDetailsModal exitModal={this.exitModal} info={this.state.selectedCard} />}
