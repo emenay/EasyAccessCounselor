@@ -20,7 +20,13 @@ export class DropdownFilterMenu extends React.Component {
     constructor(props) {
         super(props);
         let checkFilters = new Map();
-        props.fields.forEach(filter=>checkFilters.set(filter, false));
+        this.marks = new Map();
+        props.fields.forEach(field=>{
+            checkFilters.set(field.name, false);
+            if (field.type === "number") {
+                this.marks.set(field.name, [{value: field.low, label: field.low}, {value: field.high, label: field.high}]);
+            }
+        });
         this.state = { 
           collapsed: true,
           openedSubmenu: null,
@@ -62,19 +68,30 @@ export class DropdownFilterMenu extends React.Component {
     }
 
     displaySubmenu = () => {
-        console.log(this.state.checkFilters);
-      return (<div className="dropdown-submenu" style={{top: (this.state.smPosition + 1) * 32.5 + 12 + "px", width: "300px"}} role="menu">
-          <input type="checkbox" onClick={this.changeChecked} checked={this.state.checkFilters.get(this.state.openedSubmenu.name)} id={this.state.openedSubmenu.name} name={this.state.openedSubmenu.name} />
-          <label for={this.state.openedSubmenu.name}>{this.state.openedSubmenu.name}</label>
-          <Slider
-            value={Object.keys(this.props.filters).length > 0 ? this.props.filters[this.state.openedSubmenu.name].values : [this.state.openedSubmenu.low, this.state.openedSubmenu.high]}
-            max={this.state.openedSubmenu.high}
-            step={0.01}
-            onChange={this.handleChange}
-            valueLabelDisplay="auto"
-            aria-labelledby="range-slider"
+        if (this.state.openedSubmenu.type === "number"){
+            return (<div className="dropdown-submenu" style={{top: (this.state.smPosition + 1) * 32.5 + 12 + "px", width: "300px"}} role="menu">
+            <label className="check-label" forhtml={this.state.openedSubmenu.name}>
+                <input type="checkbox" onChange={this.changeChecked} checked={this.state.checkFilters.get(this.state.openedSubmenu.name)} id={this.state.openedSubmenu.name} name={this.state.openedSubmenu.name} />{this.state.openedSubmenu.displayName}
+            </label>
+            <Slider
+                value={this.state.openedSubmenu.name in this.props.filters > 0 ? this.props.filters[this.state.openedSubmenu.name].values : [this.state.openedSubmenu.low, this.state.openedSubmenu.high]}
+                max={this.state.openedSubmenu.high}
+                min={this.state.openedSubmenu.low}
+                step={this.state.openedSubmenu.step}
+                marks={this.marks.get(this.state.openedSubmenu.name)}
+                onChange={this.handleChange}
+                valueLabelDisplay="auto"
+                aria-labelledby="range-slider"
             />
-      </div>);
+            </div>);
+        } else {
+            return (<div className="dropdown-submenu" style={{top: (this.state.smPosition + 1) * 32.5 + 12 + "px", width: "300px"}} role="menu">
+            <label className="check-label" forHTML={this.state.openedSubmenu.name}>
+                <input type="checkbox" onClick={this.changeChecked} checked={this.state.checkFilters.get(this.state.openedSubmenu.name)} id={this.state.openedSubmenu.name} name={this.state.openedSubmenu.name} />{this.state.openedSubmenu.displayName}
+            </label>
+            </div>);
+        }
+      
     }
 
   
@@ -113,7 +130,9 @@ class StudentProfilesPage extends React.Component{
             {name: "lastName", displayName: "Last Name", smitem: ["A to Z", "Z to A"]}
         ]
         this.filterFields = [
-            {name: "gpa", displayName: "GPA", type: "number", low: 0.00, high: 4.00}
+            {name: "gpa", displayName: "GPA", type: "number", step: 0.01, low: 0.00, high: 4.00},
+            {name: "sat", displayName: "SAT", type: "number", step: 1, low: 0, high: 1600},
+            {name: "act", displayName: "ACT", type: "number", step: 1, low: 0, high: 36}
         ]
         this.state = {
             data: [],
@@ -125,7 +144,8 @@ class StudentProfilesPage extends React.Component{
             flagMap: new Map(),
             flagToggle: false,
             sortIcon: unsorted_icon,
-            lastCohort: null
+            lastCohort: null,
+            filterGroupItems: {"gender": new Set(), "race": new Set(), "major": new Set()}
         }
     }
 
@@ -144,13 +164,18 @@ class StudentProfilesPage extends React.Component{
             })
             .then(data => {
                 let flagMap = new Map();
+                let filterGroupItems = Object.assign(this.state.filterGroupItems, {});
                 data.forEach(person=>{
                     flagMap.set(person.uid, false);
+                    for (const field in filterGroupItems){
+                        if (person[field] !== undefined) filterGroupItems[field].add(person[field]);
+                    }
                 });
                 this.setState({
                     data: data,
                     flagMap: flagMap,
-                    lastCohort: this.context.state.selectedCohort
+                    lastCohort: this.context.state.selectedCohort,
+                    filterGroupItems: filterGroupItems
                 });
             })
             .catch(error => {console.log(error)});
@@ -245,7 +270,7 @@ class StudentProfilesPage extends React.Component{
         data = data.filter(person => {
             for (const [field, filterInfo] of Object.entries(this.state.filters)) {
                 if (filterInfo.type === "number"){
-                    return person[field] >= filterInfo.values[0] && person[field] <= filterInfo.values[1];
+                    if (typeof person[field] === "undefined" || person[field] > filterInfo.values[1] || person[field] < filterInfo.values[0]) return false;
                 }
                 
             }
@@ -255,7 +280,7 @@ class StudentProfilesPage extends React.Component{
             <div className="profiles-header">
                 <input type="text" id="myInput" onKeyUp={this.changeSearchString} placeholder="Search for Students.." />
                 <button className="flag-button" onClick={this.flagToggle}><img className="flag-image" alt="Select flagged fields icon" src={this.state.flagToggle? orange_flag : black_flag} /></button>
-                <DropdownFilterMenu fields={this.filterFields} deleteFilter={this.deleteFilter} changeEvent={this.changeFilter} filters={this.state.filters} icon={Object.keys(this.state.filters).length === 0 ? filter_outline : filter_icon} />
+                <DropdownFilterMenu fields={this.filterFields} filterGroupItems={this.state.filterGroupItems} deleteFilter={this.deleteFilter} changeEvent={this.changeFilter} filters={this.state.filters} icon={Object.keys(this.state.filters).length === 0 ? filter_outline : filter_icon} />
                 <DropdownSortMenu fields={this.sortFields} changeEvent={this.changeSort} icon={this.state.sortIcon}/>
             </div>
             {this.state.selectedCard && <StudentDetailsModal exitModal={this.exitModal} info={this.state.selectedCard} />}
