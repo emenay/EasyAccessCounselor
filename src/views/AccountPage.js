@@ -30,6 +30,11 @@ const AccountPage = () => {
         cohort: "unc",
         studentID: "1231251"
       })}}>Generate cohort Code</button>
+      <button  onClick = {() => {db.collection("student_counselors").doc("0afNvlnMvt2QlCTzwwb9")
+      .collection("fields").doc("customFields").set({
+        randomNewField: "",
+        anotherNewField: ""
+      })}}>Add Field</button>
     </div>
   ) 
 };
