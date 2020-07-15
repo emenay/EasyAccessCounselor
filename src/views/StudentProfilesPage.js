@@ -54,18 +54,40 @@ export class DropdownFilterMenu extends React.Component {
         }
     }
 
-    changeChecked = () => {
+    changeChecked = (e) => {
         let isChecked = this.state.checkFilters.get(this.state.openedSubmenu.name);
         if (isChecked){
             // Delete field from parent
-            this.props.deleteFilter(this.state.openedSubmenu.name);
-        } else {
-
-        }
+            this.props.deleteFilter(this.state.openedSubmenu, e.target.value);
+        } 
         var new_map = new Map(this.state.checkFilters);
         new_map.set(this.state.openedSubmenu.name, !this.state.checkFilters.get(this.state.openedSubmenu.name))
         this.setState({checkFilters: new_map});
     }
+
+    changedGroupCheck = (e)=>{
+        let isChecked = this.state.openedSubmenu.name in this.props.filters && this.props.filters[this.state.openedSubmenu.name].values.has(e.target.value);
+        if (isChecked){
+            this.props.deleteFilter(this.state.openedSubmenu, e.target.value);
+        } else {
+            this.props.changeEvent(this.state.openedSubmenu, e.target.value);
+        }
+    }
+
+    filterGroupsHelper = () =>{
+        if (typeof this.props.filterGroupItems[this.state.openedSubmenu.name] === "undefined" || this.props.filterGroupItems[this.state.openedSubmenu.name].size === 0){
+            return <p>No Groups</p>
+        } else {
+            return (
+            Array.from(this.props.filterGroupItems[this.state.openedSubmenu.name]).map(filter_item=>{
+                return(
+                <label className="check-label" forhtml={filter_item} key={filter_item}>
+                    <input type="checkbox" onChange={this.changedGroupCheck} checked={this.state.openedSubmenu.name in this.props.filters ? this.props.filters[this.state.openedSubmenu.name].values.has(filter_item) : false} id={filter_item} name={filter_item} value={filter_item} />{filter_item}
+                </label>);
+            }));
+        }
+    }
+
 
     displaySubmenu = () => {
         if (this.state.openedSubmenu.type === "number"){
@@ -86,9 +108,7 @@ export class DropdownFilterMenu extends React.Component {
             </div>);
         } else {
             return (<div className="dropdown-submenu" style={{top: (this.state.smPosition + 1) * 32.5 + 12 + "px", width: "300px"}} role="menu">
-            <label className="check-label" forHTML={this.state.openedSubmenu.name}>
-                <input type="checkbox" onClick={this.changeChecked} checked={this.state.checkFilters.get(this.state.openedSubmenu.name)} id={this.state.openedSubmenu.name} name={this.state.openedSubmenu.name} />{this.state.openedSubmenu.displayName}
-            </label>
+            {this.filterGroupsHelper()}
             </div>);
         }
       
@@ -132,7 +152,11 @@ class StudentProfilesPage extends React.Component{
         this.filterFields = [
             {name: "gpa", displayName: "GPA", type: "number", step: 0.01, low: 0.00, high: 4.00},
             {name: "sat", displayName: "SAT", type: "number", step: 1, low: 0, high: 1600},
-            {name: "act", displayName: "ACT", type: "number", step: 1, low: 0, high: 36}
+            {name: "act", displayName: "ACT", type: "number", step: 1, low: 0, high: 36},
+            {name: "race", displayName: "Race", type:"group"},
+            {name: "gender", displayName: "Gender", type:"group"},
+            {name: "major", displayName: "Major", type:"group"},
+            {name: "schools", displayName: "Schools", type:"group"}
         ]
         this.state = {
             data: [],
@@ -246,13 +270,27 @@ class StudentProfilesPage extends React.Component{
 
     changeFilter = (field, values) => {
         var new_filter = Object.assign(this.state.filters, {});
-        new_filter[field.name] = {type: field.type, values: values};
+        
+        if (field.type === "number") {
+            new_filter[field.name] = {type: field.type, values: values};
+        } else {
+            if (typeof new_filter[field.name] === "undefined") {
+                new_filter[field.name] = {type: field.type, values: new Set([values])}
+            } else {
+                new_filter[field.name] = {type: field.type, values: new_filter[field.name].values.add(values)}
+            }
+        }
         this.setState({filters: new_filter});
     }
 
-    deleteFilter = (name) => {
+    deleteFilter = (field, value) => {
         var new_filter = Object.assign(this.state.filters, {});
-        delete new_filter[name];
+        if (field.type === "number") {
+            delete new_filter[field.name];
+        } else {
+            new_filter[field.name].values.delete(value);
+            if (new_filter[field.name].values.size === 0) delete new_filter[field.name];
+        }
         this.setState({filters: new_filter});
     }
 
@@ -269,13 +307,18 @@ class StudentProfilesPage extends React.Component{
         }
         data = data.filter(person => {
             for (const [field, filterInfo] of Object.entries(this.state.filters)) {
+                if (typeof person[field] === "undefined") return false;
                 if (filterInfo.type === "number"){
-                    if (typeof person[field] === "undefined" || person[field] > filterInfo.values[1] || person[field] < filterInfo.values[0]) return false;
+                    if (person[field] > filterInfo.values[1] || person[field] < filterInfo.values[0]) return false;
+                } else {
+
+                    if (!filterInfo.values.has(person[field])) return false; 
                 }
                 
             }
             return true;
         });
+
         return <div className="profiles-content">
             <div className="profiles-header">
                 <input type="text" id="myInput" onKeyUp={this.changeSearchString} placeholder="Search for Students.." />
