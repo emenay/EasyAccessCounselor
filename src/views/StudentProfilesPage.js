@@ -49,7 +49,7 @@ class StudentProfilesPage extends React.Component{
                     ent.uid = doc.id;
                     return ent;
                 });
-            
+                
             })
             .then(data => {
                 console.log(data);
