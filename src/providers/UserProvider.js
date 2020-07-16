@@ -16,14 +16,15 @@ class UserProvider extends Component {
               .then(querySnapshot=>{
                   return querySnapshot.docs.map(doc =>{
                       var new_doc = doc.data();
-                      new_doc.uid = doc.id;
+                      new_doc.id = doc.id;
+                      console.log(new_doc);
                       return new_doc;
                     });
               })
               .then(data=>this.setState({
                   user: user,
                   cohorts: data,
-                  selectedCohort: this.state.selectedCohort ? this.state.selectedCohort : data.length > 0 ?  data[0].uid : null
+                  selectedCohort: this.state.selectedCohort ? this.state.selectedCohort : data.length > 0 ?  data[0].id : null
                 }));
           } else {
               this.setState({
@@ -36,6 +37,12 @@ class UserProvider extends Component {
 
     changeSelectedCohort = (e) =>{
         this.setState({selectedCohort: e.target.value});
+    }
+
+    addCohort = (cohortName, cohortID) => {
+        var new_cohorts = this.state.cohorts.slice();
+        new_cohorts.push({name: cohortName, id: cohortID});
+        this.setState({cohorts: new_cohorts, selectedCohort: cohortID});
     }
 
     componentDidMount = () => {
@@ -53,7 +60,7 @@ class UserProvider extends Component {
 
     render() {
         return(
-            <UserContext.Provider value={{state:this.state, changeSelectedCohort: this.changeSelectedCohort}}>
+            <UserContext.Provider value={{state:this.state, addCohort: this.addCohort, changeSelectedCohort: this.changeSelectedCohort}}>
                 {this.props.children}
             </UserContext.Provider>
         )

@@ -141,6 +141,7 @@ class StudentProfilesPage extends React.Component{
                 return false;
             });
         }
+  
         return <div className="profiles-content">
             <div className="profiles-header">
                 <input type="text" id="myInput" onKeyUp={this.changeSearchString} placeholder="Search for Students.." />
