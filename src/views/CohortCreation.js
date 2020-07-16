@@ -1,6 +1,7 @@
 import React from 'react';
 import '../css/CohortCreation.css';
 import readXlsxFile from 'read-excel-file';
+import { db } from '../firebase/firebase';
 
 class FileUploadSelection extends React.Component {
     constructor(props){
@@ -181,7 +182,19 @@ class FieldMatches extends React.Component {
     }
 
     startUpload = () => {
-        Array.from(this.state.fieldsMap).forEach(entry=>console.log(entry[0] + ": " + entry[1]));
+        for (var i = 1; i < this.props.data.length; i++){
+            var myobj = {};
+            var counter = 0;
+            Array.from(this.state.fieldsMap).forEach(entry=>
+                {
+                    myobj[entry[1]] = this.props.data[i][counter];
+                    counter = counter + 1;
+                }
+            );
+            db.collection("student_counselors").doc("cohortcode").collection("students").add(myobj);
+        }
+        
+        
     }
 
     render(){
@@ -227,9 +240,26 @@ class CohortCreation extends React.Component {
         }
     }
 
+    
+
     changePanel = (panel) => {
         this.setState({selectedPanel: panel});
     }
+
+    // componentDidMount = () => {
+    //     db.auth().onAuthStateChanged(function(user) {
+    //         if (user) {
+    //             db.collection("cities").get().then(function(querySnapshot) {
+    //                 querySnapshot.forEach(function(doc) {
+    //                     // doc.data() is never undefined for query doc snapshots
+    //                     console.log(doc.id, " => ", doc.data());
+    //                 });
+    //             });
+    //         } else {
+    //           // No user is signed in.
+    //         }
+    //     });
+    // }
     
     setData = data => {this.setState({data: data}); this.panels.fieldMatching=<FieldMatches data={data} changePanel={this.changePanel}/>};
 
