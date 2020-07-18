@@ -150,8 +150,8 @@ class StudentProfilesPage extends React.Component{
             {name: "lastName", displayName: "Last Name", smitem: ["A to Z", "Z to A"]}
         ]
         this.filterFields = [
-            {name: "gpa", displayName: "GPA", type: "number", step: 0.01, low: 0.00, high: 4.00},
-            {name: "sat", displayName: "SAT", type: "number", step: 1, low: 0, high: 1600},
+            {name: "gpa", displayName: "GPA", type: "number", step: 0.05, low: 0.00, high: 4.00},
+            {name: "sat", displayName: "SAT", type: "number", step: 10, low: 0, high: 1600},
             {name: "act", displayName: "ACT", type: "number", step: 1, low: 0, high: 36},
             {name: "race", displayName: "Race", type:"group"},
             {name: "gender", displayName: "Gender", type:"group"},
@@ -305,6 +305,7 @@ class StudentProfilesPage extends React.Component{
                 return false;
             });
         }
+        // TODO: Make this data filtering more efficient
         data = data.filter(person => {
             for (const [field, filterInfo] of Object.entries(this.state.filters)) {
                 if (typeof person[field] === "undefined") return false;
