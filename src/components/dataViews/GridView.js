@@ -22,7 +22,7 @@ export function GridView(props) {
                 <p className="card-title scard-detail">{person.firstName + " " + person.lastName}</p>
                 <p className="scard-detail">{generateField("", person.info)}</p>
                 <p className="scard-detail">{generateField("GPA: ", person.gpa)}</p>
-                <p className="scard-detail">{generateField("SAT: ", person.SAT)}</p>
+                <p className="scard-detail">{generateField("SAT: ", person.sat)}</p>
                 <div className="flag-wrapper">
                   <p className="scard-detail">{generateField("Major: ", person.major)}</p>
                   <img src={props.flags.get(person.uid)? orange_flag : black_flag} onClick={(e)=>{props.clickFlag(person.uid); e.stopPropagation();}} className="flag" alt="Flag"/>
