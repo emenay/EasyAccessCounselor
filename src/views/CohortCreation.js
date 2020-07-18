@@ -142,6 +142,7 @@ class FieldMatches extends React.Component {
             "Class Rank": "classRank",
             "SAT": "sat",
             "ACT": "act",
+            "Goal": "goal",
             "Student Email": "studentEmail",
             "Student Email 2": "studentEmail2",
             "Student Phone": "studentPhone",
