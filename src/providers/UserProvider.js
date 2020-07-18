@@ -1,5 +1,6 @@
 import React, { Component, createContext } from "react";
 import { db, auth } from '../firebase/firebase.js';
+import firebase from 'firebase/app';
 
 export const UserContext = createContext({ user: null, selectedCohort: null, cohorts: [] });
 
@@ -12,20 +13,26 @@ class UserProvider extends Component {
 
     userUpdate = (user) => {
         if (user) {
-            db.collection("student_counselors").where("counselor", "==", user.uid).get()
-              .then(querySnapshot=>{
-                  return querySnapshot.docs.map(doc =>{
-                      var new_doc = doc.data();
-                      new_doc.id = doc.id;
-                      console.log(new_doc);
-                      return new_doc;
-                    });
-              })
-              .then(data=>this.setState({
-                  user: user,
-                  cohorts: data,
-                  selectedCohort: this.state.selectedCohort ? this.state.selectedCohort : data.length > 0 ?  data[0].id : null
-                }));
+            db.collection("counselors").doc(user.uid).get()
+            .then(querySnapshot=> {
+                return querySnapshot.data().cohorts;
+                })
+            .then(cohorts=>{
+                console.log(cohorts);
+                db.collection("student_counselors").where(firebase.firestore.FieldPath.documentId(), "in", cohorts).get()
+                .then(querySnapshot=>{
+                    return querySnapshot.docs.map(doc =>{
+                        var new_doc = doc.data();
+                        new_doc.id = doc.id;
+                        return new_doc;
+                      });
+                })
+                .then(data=>this.setState({
+                    user: user,
+                    cohorts: data,
+                    selectedCohort: this.state.selectedCohort ? this.state.selectedCohort : data.length > 0 ?  data[0].id : null
+                  }));
+            });
           } else {
               this.setState({
                 user: null,
