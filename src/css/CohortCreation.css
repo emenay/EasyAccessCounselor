@@ -1,6 +1,7 @@
 .cohort-creation-content {
     width: 40%;
     margin: auto;
+    position: relative;
 }
 
 .select-entry-type {
@@ -21,18 +22,21 @@
 
 .select-entry-btn {
     border: none;
+    display: inline-block;
     text-decoration: none;
-    background: #8CC1DC;
+    background: #3298CB;
     color: #ffffff;
     font-family: sans-serif;
     font-size: 1rem;
     cursor: pointer;
-    width: 60px;
-    min-height: 40px;
+    width: 70px;
+    min-height: 50px;
+    line-height: 50px;
+    text-align: center;
 }
 
-.entry-active {
-    background: #3298CB;
+.inactive {
+    background: #8CC1DC;
 }
 
 .rad-select-group {
@@ -45,4 +49,89 @@
     width: 30px;
     height: 20px;
     margin-right: 10px;
+}
+
+
+.uploadbox {
+    outline: 1px black solid;
+    border-radius: 4px;
+    width: 100%;
+    line-height: 60px;
+    padding-left: 10px;
+    margin: 7% 0;
+    font-size: 1.3vw;
+}
+
+.uploadinput {
+    display: none;
+}
+
+.file-upload-buttons {
+    display: flex;
+    justify-content: space-between;
+}
+
+.file-upload-title {
+    text-align: center;
+    font-size: 1.3vw;
+    color: #3298CB;
+}
+
+.fields-view {
+    width: 100%;
+    height: 300px;
+    overflow-y: auto;
+    border: 1px black solid;
+    margin-bottom: 5%;
+}
+
+.field-titles {
+    width: 80%;
+    margin: auto;
+    display: flex;
+    justify-content: space-between;
+    color: #3298CB;
+}
+
+.fields-description {
+    font-size: 1.3vw;
+    margin-bottom: 5%;
+}
+
+.fields-description > span {
+    color: #3298CB;
+}
+
+.field-titles > p {
+    font-size: 1.3vw;
+}
+
+.select-dropdown {
+    width: 10vw;
+}
+
+.field-select {
+    width: 80%;
+    margin: auto;
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+    font-size: 1.05vw;
+}
+
+.field-select > p {
+    padding: 2px 5px;
+    border: 1px solid #707070;
+    width: 10vw;
+    color: #3298CB;
+}
+
+
+.upload-position {
+    position: absolute;
+    right: 0px;
+}
+
+.upload-drag {
+    outline: 3px solid #3298CB;
 }

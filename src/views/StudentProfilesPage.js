@@ -184,7 +184,7 @@ class StudentProfilesPage extends React.Component{
                     ent.uid = doc.id;
                     return ent;
                 });
-            
+                
             })
             .then(data => {
                 let flagMap = new Map();
