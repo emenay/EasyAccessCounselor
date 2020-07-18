@@ -19,16 +19,16 @@ class CaseloadPage extends React.Component {
       lastCohort: null
     });
     this.fields = [
-      {field: "id", headerName: "ID", width: "70"},
+      {field: "id", headerName: "ID", editable: true, valueParser: this.numberType, width: "70"},
       {field: "firstName", headerName: "First Name", sortable: true, filter: true, editable: true, resizable: true},
       {field: 'lastName', headerName: 'Last Name', sortable: true, filter: true, editable: true, resizable: true},
       {field: "gpa", headerName: 'GPA', sortable: true, editable: true, valueParser: this.numberType, filter: 'agNumberColumnFilter', resizable: true},
       {field: "classRank", headerName: 'Class Rank', sortable: true, valueParser: this.numberType, editable: true, filter: 'agNumberColumnFilter', resizable: true},
       {field: "safetyColleges", headerName: 'Safety', sortable: true, filter: true, editable: true, resizable: true},
       {field: "reachColleges", headerName: 'Reach', sortable: true, editable: true, filter: true, resizable: true},
-      {field: "individualMeetings", headerName: 'Ind Mtng', sortable: true, filter: true, editable: true, resizable: true},
-      {field: "groupMeetingsr", headerName: 'Group Mtngs', sortable: true, filter: true, editable: true, resizable: true},
-      {field: "totalMeetings", headerName: 'Total Mtngs', sortable: true, filter: true, editable: true, resizable: true}
+      {field: "individualMeetings", headerName: 'Ind Mtng', valueParser:this.numberType, sortable: true, filter: 'agNumberColumnFilter', editable: true, resizable: true},
+      {field: "groupMeetingsr", headerName: 'Group Mtngs', valueParser:this.numberType, sortable: true, filter: 'agNumberColumnFilter', editable: true, resizable: true},
+      {field: "totalMeetings", headerName: 'Total Mtngs', valueParser:this.numberType, sortable: true, filter: 'agNumberColumnFilter', editable: true, resizable: true}
     ];
     
   }
