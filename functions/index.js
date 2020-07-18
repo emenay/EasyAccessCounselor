@@ -33,7 +33,7 @@ const copyStudent = (snap, context) => {
 // Deletes a student's profile under a counselor if the student is deleted from the Students collection
 const deleteStudent = (snap, context) => {
   const { uid, cuid } = snap.data();
-
+  
   if (cuid) {
     const studentProfile = db.collection('counselors').doc(cuid).collection('students').doc(uid);
     if (studentProfile) {
@@ -44,6 +44,18 @@ const deleteStudent = (snap, context) => {
   }
 }
 
+
+const emailCode = (snap, context) => {  
+    const { email } = snap.data();
+    db.collection('mail').add({
+    to: email,
+    message: {
+      subject: 'Hello from Firebase!',
+      html: 'This is an <code>HTML</code> email body.: ' + 
+       ' ' + context.params.cohortCode,
+    },
+  })
+}
 // TODO: Delete after creating "Reassign Counselor" functionality
 
 // const updateStudent = (change, context) => {
@@ -77,7 +89,8 @@ const deleteStudent = (snap, context) => {
 
 module.exports = {
   onCreateStudent: functions.firestore.document('students/{studentId}').onCreate(copyStudent),
-  onDeleteStudent: functions.firestore.document('students/{studentId}').onDelete(deleteStudent)
+  onDeleteStudent: functions.firestore.document('students/{studentId}').onDelete(deleteStudent),
+  onEmailCode: functions.firestore.document('cohortCode/{cohortCode}').onCreate(emailCode)
 };
 
   // onUpdateStudent: functions.firestore.document('students/{studentId}').onUpdate(updateStudent)
