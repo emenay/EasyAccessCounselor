@@ -1,29 +1,32 @@
 import React from 'react';
 import edit_symbol from '../assets/edit_symbol.png';
 import profile_avatar from '../assets/profile_avatar.png';
+import black_flag from "../assets/black_flag.png";
+import orange_flag from "../assets/orange_flag.png";
 
 class GeneralInformationPanel extends React.Component {
     render() {
         let info = this.props.info;
+        console.log(info);
         return <div className="geninfo-panel">
             <div className="geninfo-row1">
                 <div className="geninfo-col1">
-                    <p><span>Date of Birth: </span>--</p>
-                    <p><span>Ethnicity: </span>--</p>
-                    <p><span>Gender: </span>--</p>
-                    <p><span>Race </span>--</p>
-                    <p><span>GPA: </span>--</p>
-                    <p><span>Class Rank: </span>--</p>
-                    <p><span>SAT Score: </span>{info.Testing}</p>
-                    <p><span>ACT Score: </span>--</p>
+                    <p><span>Date of Birth: </span>{info.dob}</p>
+                    <p><span>Ethnicity: </span>{info.ethnicity}</p>
+                    <p><span>Gender: </span>{info.gender}</p>
+                    <p><span>Race: </span>{info.race}</p>
+                    <p><span>GPA: </span>{info.gpa}</p>
+                    <p><span>Class Rank: </span>{info.classRank}</p>
+                    <p><span>SAT Score: </span>{info.sat}</p>
+                    <p><span>ACT Score: </span>{info.act}</p>
                 </div>
                 <div className="geninfo-col2">
-                    <p><span>Parent Email: </span>goodparent@gmail.com</p>
-                    <p><span>Parent Email 2: </span>--</p>
-                    <p><span>Parent Phone: </span>--</p>
-                    <p><span>Parent Phone 2: </span>--</p>
-                    <p><span>Student Email: </span>goodstudent@gmail.com</p>
-                    <p><span>Student Phone: </span>--</p>
+                    <p><span>Parent Email: </span>{info.parentEmail}</p>
+                    <p><span>Parent Email 2: </span>{info.parentEmail2}</p>
+                    <p><span>Parent Phone: </span>{info.parentPhone}</p>
+                    <p><span>Parent Phone 2: </span>{info.parentPhone2}</p>
+                    <p><span>Student Email: </span>{info.studentEmail}</p>
+                    <p><span>Student Phone: </span>{info.studentPhone}</p>
                 </div>
                 <div className="geninfo-col3">
                     <img className="studentdetails-avatar" alt="avatar icon" src={profile_avatar}/>
@@ -71,7 +74,11 @@ class StudentDetailsModal extends React.Component {
                         <p className="tab-text">{name}</p>
                     </div>
                 })}
-                <p className="studentdetails-title">{this.props.info.firstName + " " + this.props.info.lastName}</p>
+                <div className="studentdetails-titleflag">
+                    <p className="studentdetails-title">{this.props.info.firstName + " " + this.props.info.lastName}</p>
+                    {this.props.flagged ? <img className="studentdetails-flag" src={orange_flag} alt="flagged icon"/> : null}
+                </div>
+                <p className="studentdetails-goal">{"Goal: " + (typeof this.props.info.goal === "undefined" ? "--" : this.props.info.goal)}</p>
                 <div className="studentdetails-innerbackground"/>
                 <div className="studentdetails-content">
                     {this.whichPanel(this.state.selectedTab)}
