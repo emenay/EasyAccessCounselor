@@ -18,7 +18,6 @@ class UserProvider extends Component {
                 return querySnapshot.data().cohorts;
                 })
             .then(cohorts=>{
-                console.log(cohorts);
                 db.collection("student_counselors").where(firebase.firestore.FieldPath.documentId(), "in", cohorts).get()
                 .then(querySnapshot=>{
                     return querySnapshot.docs.map(doc =>{
@@ -31,8 +30,10 @@ class UserProvider extends Component {
                     user: user,
                     cohorts: data,
                     selectedCohort: this.state.selectedCohort ? this.state.selectedCohort : data.length > 0 ?  data[0].id : null
-                  }));
-            });
+                  }))
+                  .catch(error=>{console.log(error)});
+            })
+            .catch(error=>{console.log(error)});
           } else {
               this.setState({
                 user: null,
