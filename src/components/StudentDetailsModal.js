@@ -8,7 +8,18 @@ class ApplicationProcessPanel extends React.Component {
         let info = this.props.info;
         return(
             <div className="appproc-panel">
-                
+                <div className="appproc-col">
+                    <p>hello</p>
+                </div>
+                <div className="appproc-col">
+                    <b>Financial Aid</b>
+                    <p><span>App Fee Waiver: </span>{info.appFeeWaiver}</p>
+                    <p><span>FAFSA Status: </span>{info.fafsaStatus}</p>
+                    <p><span>FAFSA Verification: </span>{info.fafsaVerification}</p>
+                    <p><span>Financial Aid Award Letters: </span>{info.financialAidAwardLetters}</p>
+                    <p><span>Financial Aid Appeal: </span>{info.financialAidAppeal}</p>
+                    <p><span>CSS Profile: </span>{info.cssProfile}</p>
+                </div>
             </div>
         );
     }
@@ -66,6 +77,8 @@ class StudentDetailsModal extends React.Component {
         switch(tab){
             case 'General Information':
                 return <GeneralInformationPanel info={this.props.info} isEditing={this.state.isEditing}/>
+            case 'Application Process':
+                return <ApplicationProcessPanel info={this.props.info} isEditing={this.state.isEditing}/>
             default:
                 return <p>Hello world</p>
         }

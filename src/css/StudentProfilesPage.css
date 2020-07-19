@@ -305,6 +305,10 @@
     flex-direction: row;
 }
 
+.appproc-col {
+    width: 50%;
+}
+
 #root {
     width: auto;
     margin: auto;
