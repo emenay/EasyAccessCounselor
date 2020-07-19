@@ -5,8 +5,8 @@ import { Slider } from '@material-ui/core';
 import "../css/StudentProfilesPage.css";
 import "../css/searchBar.css";
 import StudentDetailsModal from '../components/StudentDetailsModal.js';
-import black_flag from "../assets/black_flag.png";
 import orange_flag from "../assets/orange_flag.png";
+import unflagged from "../assets/unflagged.png";
 import {db} from "../firebase/firebase";
 import filter_icon from "../assets/filter_icon.png";
 import filter_outline from "../assets/filter_outline.png";
@@ -334,7 +334,7 @@ class StudentProfilesPage extends React.Component{
         return <div className="profiles-content">
             <div className="profiles-header">
                 <input type="text" id="myInput" onKeyUp={this.changeSearchString} placeholder="Search for Students.." />
-                <button className="flag-button" onClick={this.flagToggle}><img className="flag-image" alt="Select flagged fields icon" src={this.state.flagToggle? orange_flag : black_flag} /></button>
+                <button className="flag-button" onClick={this.flagToggle}><img className="flag-image" alt="Select flagged fields icon" src={this.state.flagToggle? orange_flag : unflagged} /></button>
                 <DropdownFilterMenu fields={this.filterFields} filterGroupItems={this.state.filterGroupItems} deleteFilter={this.deleteFilter} changeEvent={this.changeFilter} filters={this.state.filters} icon={Object.keys(this.state.filters).length === 0 ? filter_outline : filter_icon} />
                 <DropdownSortMenu fields={this.sortFields} changeEvent={this.changeSort} icon={this.state.sortIcon}/>
             </div>
