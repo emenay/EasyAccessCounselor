@@ -297,6 +297,14 @@
     text-align: right;
 }
 
+/* application process panel css */
+
+.appproc-panel {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+}
+
 #root {
     width: auto;
     margin: auto;

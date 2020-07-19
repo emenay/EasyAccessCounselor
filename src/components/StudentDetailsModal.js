@@ -1,13 +1,22 @@
 import React from 'react';
 import edit_symbol from '../assets/edit_symbol.png';
 import profile_avatar from '../assets/profile_avatar.png';
-import black_flag from "../assets/black_flag.png";
 import orange_flag from "../assets/orange_flag.png";
+
+class ApplicationProcessPanel extends React.Component {
+    render() {
+        let info = this.props.info;
+        return(
+            <div className="appproc-panel">
+                
+            </div>
+        );
+    }
+}
 
 class GeneralInformationPanel extends React.Component {
     render() {
         let info = this.props.info;
-        console.log(info);
         return <div className="geninfo-panel">
             <div className="geninfo-row1">
                 <div className="geninfo-col1">
