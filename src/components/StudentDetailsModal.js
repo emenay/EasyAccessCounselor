@@ -9,7 +9,39 @@ class ApplicationProcessPanel extends React.Component {
         return(
             <div className="appproc-panel">
                 <div className="appproc-col">
-                    <p>hello</p>
+                    <div className="app-group">
+                        <b>Pre-Application</b>
+                        <p><span>Visits: </span>{info.visits}</p>
+                        <p>Balanced College List</p>
+                    </div>
+                    <div className="app-group">
+                        <div className="app-circle"></div>
+                        <b>Application Checklist</b>
+                        <p><span>Early Applications: </span>{info.earlyApplications}</p>
+                        <p><span>Regular Applications: </span>{info.regularApplications}</p>
+                        <p><span>Essays: </span>{info.essays}</p>
+                        <p><span>Testing: </span>{info.testing}</p>
+                        <p><span>Counselor Recommendations: </span>{info.counselorRecommendations}</p>
+                        <p><span>Teacher Recommendations: </span>{info.resume}</p>
+                    </div>
+                    <div className="app-group">
+                        <b>Post-Application</b>
+                        <p><span>Results: </span>{info.results}</p>
+                        <p><span>Admitted Schools: </span>{info.admittedSchools}</p>
+                        <p><span>Rejected Schools: </span>{info.rejectedSchools}</p>
+                        <p><span>Waitlisted Schools: </span>{info.waitlistedSchools}</p>
+                        <p><span>Student Decision: </span>{info.decision}</p>
+                    </div>
+                    <div className="app-group">
+                        <b>Post-Decision Checklist</b>
+                        <p><span>Deposit: </span>{info.deposit}</p>
+                        <p><span>Orientation: </span>{info.orientation}</p>
+                        <p><span>Summer Programs: </span>{info.summerPrograms}</p>
+                        <p><span>Housing: </span>{info.housing}</p>
+                    </div>
+                    <div className="app-group">
+                        <b>Graduation!</b>
+                    </div>
                 </div>
                 <div className="appproc-col">
                     <b>Financial Aid</b>
