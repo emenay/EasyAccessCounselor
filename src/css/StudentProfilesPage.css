@@ -307,6 +307,16 @@
 
 .appproc-col {
     width: 50%;
+    margin-left: 20px;
+    overflow-x: wrap;
+}
+
+.appproc-col p {
+    font-size: 18px;
+}
+
+.appproc-col b {
+    font-size: 18px;
 }
 
 .app-circle {
@@ -316,8 +326,10 @@
     width: 30px;
     height: 30px;
     border-radius: 15px;
+    border: 3px solid #68A9CB;
     background-color: #3298CB;
 }
+
 
 .app-group {
     position: relative;
