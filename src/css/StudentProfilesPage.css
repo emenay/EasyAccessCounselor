@@ -178,15 +178,13 @@
     bottom: 5px;
     right: 5px;
     background-image: url('../assets/edit_symbol.png');
-    width: 39px;
-    height: 52px;
+    background-size: 100% 100%;
+    width: 35px;
+    height: 45px;
     background-color:  #fefefe;
     border: none;
 }
 
-.studentdetails-editbutton:hover {
-    border: 0.5px solid #3298CB;
-}
 
 .studentdetails-tab {
     position: absolute;
@@ -207,7 +205,7 @@
 }
 
 .studentdetails-tab:hover {
-    height: 50px;
+    height: 45px;
 }
 
 .tab-text {
@@ -218,7 +216,7 @@
 }
 
 .tab-selected {
-    height: 50px;
+    height: 45px;
     border-bottom: 0px solid black;
 }
 
@@ -289,8 +287,9 @@
     font-size: 20px;
 }
 
-.panel-text span {
+.geninfo-panel span {
     font-weight: bold;
+    font-size: 18px;
 }
 
 .geninfo-col3 {
@@ -303,6 +302,7 @@
     width: 100%;
     display: flex;
     flex-direction: row;
+    position: relative;
 }
 
 .appproc-col {

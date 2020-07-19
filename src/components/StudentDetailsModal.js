@@ -1,70 +1,70 @@
-import React from 'react';
+import React, {useState} from 'react';
 import edit_symbol from '../assets/edit_symbol.png';
 import profile_avatar from '../assets/profile_avatar.png';
 import orange_flag from "../assets/orange_flag.png";
 
-class ApplicationProcessPanel extends React.Component {
-    render() {
-        let info = this.props.info;
-        return(
-            <div className="appproc-panel">
-                <div className="appproc-col">
-                    <div className="app-group">
-                        <div className="app-circle" />
-                        <b>Pre-Application</b>
-                        <p><span>Visits: </span>{info.visits}</p>
-                        <p>Balanced College List</p>
-                    </div>
-                    <div className="app-group">
-                        <div className="app-circle" />
-                        <b>Application Checklist</b>
-                        <p><span>Early Applications: </span>{info.earlyApplications}</p>
-                        <p><span>Regular Applications: </span>{info.regularApplications}</p>
-                        <p><span>Essays: </span>{info.essays}</p>
-                        <p><span>Testing: </span>{info.testing}</p>
-                        <p><span>Counselor Recommendations: </span>{info.counselorRecommendations}</p>
-                        <p><span>Teacher Recommendations: </span>{info.resume}</p>
-                    </div>
-                    <div className="app-group">
-                        <div className="app-circle" />
-                        <b>Post-Application</b>
-                        <p><span>Results: </span>{info.results}</p>
-                        <p><span>Admitted Schools: </span>{info.admittedSchools}</p>
-                        <p><span>Rejected Schools: </span>{info.rejectedSchools}</p>
-                        <p><span>Waitlisted Schools: </span>{info.waitlistedSchools}</p>
-                        <p><span>Student Decision: </span>{info.decision}</p>
-                    </div>
-                    <div className="app-group">
-                        <div className="app-circle" />
-                        <b>Post-Decision Checklist</b>
-                        <p><span>Deposit: </span>{info.deposit}</p>
-                        <p><span>Orientation: </span>{info.orientation}</p>
-                        <p><span>Summer Programs: </span>{info.summerPrograms}</p>
-                        <p><span>Housing: </span>{info.housing}</p>
-                    </div>
-                    <div className="app-group" style={{borderLeft: "0px"}}>
-                        <div className="app-circle" />
-                        <b>Graduation!</b>
-                    </div>
+function ApplicationProcessPanel(props) {
+    const [editing, changeEditing] = useState(false);
+    let info = props.info
+    return(
+        <div className="appproc-panel">
+            <div className="appproc-col">
+                <div className="app-group">
+                    <div className="app-circle" />
+                    <b>Pre-Application</b>
+                    <p><span>Visits: </span>{info.visits}</p>
+                    <p>Balanced College List</p>
                 </div>
-                <div className="appproc-col">
-                    <b>Financial Aid</b>
-                    <p><span>App Fee Waiver: </span>{info.appFeeWaiver}</p>
-                    <p><span>FAFSA Status: </span>{info.fafsaStatus}</p>
-                    <p><span>FAFSA Verification: </span>{info.fafsaVerification}</p>
-                    <p><span>Financial Aid Award Letters: </span>{info.financialAidAwardLetters}</p>
-                    <p><span>Financial Aid Appeal: </span>{info.financialAidAppeal}</p>
-                    <p><span>CSS Profile: </span>{info.cssProfile}</p>
+                <div className="app-group">
+                    <div className="app-circle" />
+                    <b>Application Checklist</b>
+                    <p><span>Early Applications: </span>{info.earlyApplications}</p>
+                    <p><span>Regular Applications: </span>{info.regularApplications}</p>
+                    <p><span>Essays: </span>{info.essays}</p>
+                    <p><span>Testing: </span>{info.testing}</p>
+                    <p><span>Counselor Recommendations: </span>{info.counselorRecommendations}</p>
+                    <p><span>Teacher Recommendations: </span>{info.resume}</p>
+                </div>
+                <div className="app-group">
+                    <div className="app-circle" />
+                    <b>Post-Application</b>
+                    <p><span>Results: </span>{info.results}</p>
+                    <p><span>Admitted Schools: </span>{info.admittedSchools}</p>
+                    <p><span>Rejected Schools: </span>{info.rejectedSchools}</p>
+                    <p><span>Waitlisted Schools: </span>{info.waitlistedSchools}</p>
+                    <p><span>Student Decision: </span>{info.decision}</p>
+                </div>
+                <div className="app-group">
+                    <div className="app-circle" />
+                    <b>Post-Decision Checklist</b>
+                    <p><span>Deposit: </span>{info.deposit}</p>
+                    <p><span>Orientation: </span>{info.orientation}</p>
+                    <p><span>Summer Programs: </span>{info.summerPrograms}</p>
+                    <p><span>Housing: </span>{info.housing}</p>
+                </div>
+                <div className="app-group" style={{borderLeft: "0px"}}>
+                    <div className="app-circle" />
+                    <b>Graduation!</b>
                 </div>
             </div>
-        );
-    }
+            <div className="appproc-col">
+                <b>Financial Aid</b>
+                <p><span>App Fee Waiver: </span>{info.appFeeWaiver}</p>
+                <p><span>FAFSA Status: </span>{info.fafsaStatus}</p>
+                <p><span>FAFSA Verification: </span>{info.fafsaVerification}</p>
+                <p><span>Financial Aid Award Letters: </span>{info.financialAidAwardLetters}</p>
+                <p><span>Financial Aid Appeal: </span>{info.financialAidAppeal}</p>
+                <p><span>CSS Profile: </span>{info.cssProfile}</p>
+            </div>
+            <button className="studentdetails-editbutton" onClick={()=>changeEditing(!editing)}/>
+        </div>
+    );
 }
 
-class GeneralInformationPanel extends React.Component {
-    render() {
-        let info = this.props.info;
-        return <div className="geninfo-panel">
+function GeneralInformationPanel(props) {
+    const [editing, changeEditing] = useState(false);
+    let info = props.info;
+    return <div className="geninfo-panel">
             <div className="geninfo-row1">
                 <div className="geninfo-col1">
                     <p><span>Date of Birth: </span>{info.dob}</p>
@@ -90,9 +90,9 @@ class GeneralInformationPanel extends React.Component {
                 </div>
             </div>
             <p><span>Counselor Notes: </span>{info["Latest Note"]}</p>
-            {this.props.isEditing ? <p>EDITING</p> : null}
+            {editing ? <p>EDITING</p> : null}
+            <button className="studentdetails-editbutton" onClick={()=>changeEditing(!editing)}/>
         </div>
-    }
 }
 
 class StudentDetailsModal extends React.Component {
@@ -100,28 +100,23 @@ class StudentDetailsModal extends React.Component {
         super(props);
         this.tabs = ["General Information", "Caseload Management", "College List", "Application Process"];
         this.state = {
-            selectedTab: "General Information",
-            isEditing: false
+            selectedTab: "General Information"
         }
     }
 
     changeTab = (tab) => {
-        this.setState({selectedTab: tab})
+        this.setState({selectedTab: tab});
     }
 
     whichPanel = (tab) => {
         switch(tab){
             case 'General Information':
-                return <GeneralInformationPanel info={this.props.info} isEditing={this.state.isEditing}/>
+                return <GeneralInformationPanel info={this.props.info}/>
             case 'Application Process':
-                return <ApplicationProcessPanel info={this.props.info} isEditing={this.state.isEditing}/>
+                return <ApplicationProcessPanel info={this.props.info}/>
             default:
                 return <p>Hello world</p>
         }
-    }
-
-    editToggle = () => {
-        this.setState({isEditing: !this.state.isEditing});
     }
 
     render(){
@@ -140,7 +135,6 @@ class StudentDetailsModal extends React.Component {
                 <div className="studentdetails-innerbackground"/>
                 <div className="studentdetails-content">
                     {this.whichPanel(this.state.selectedTab)}
-                    <button className="studentdetails-editbutton" onClick={this.editToggle}/>
                 </div>
             </div>
         </div>
