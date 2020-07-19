@@ -165,7 +165,7 @@ class StudentProfilesPage extends React.Component{
             sortReverse: false,
             filters: {},
             searchString: "",
-            flagMap: new Map(),
+            flagSet: new Set(),
             flagToggle: false,
             sortIcon: unsorted_icon,
             lastCohort: null,
@@ -187,17 +187,17 @@ class StudentProfilesPage extends React.Component{
                 
             })
             .then(data => {
-                let flagMap = new Map();
+                let flagSet = new Set();
                 let filterGroupItems = Object.assign(this.state.filterGroupItems, {});
                 data.forEach(person=>{
-                    flagMap.set(person.uid, false);
+                    if (person.flagged === true) flagSet.add(person.uid);
                     for (const field in filterGroupItems){
                         if (person[field] !== undefined) filterGroupItems[field].add(person[field]);
                     }
                 });
                 this.setState({
                     data: data,
-                    flagMap: flagMap,
+                    flagSet: flagSet,
                     lastCohort: this.context.state.selectedCohort,
                     filterGroupItems: filterGroupItems
                 });
@@ -257,7 +257,18 @@ class StudentProfilesPage extends React.Component{
     }
 
     clickFlag = (id) => {
-        this.setState({flagMap: this.state.flagMap.set(id, !this.state.flagMap.get(id))});
+        if (this.state.flagSet.has(id)) {
+            var new_set = new Set(this.state.flagSet);
+            new_set.delete(id);
+            this.setState({flagSet: new_set});
+        } else {
+            this.setState({flagSet: this.state.flagSet.add(id)})
+        }
+
+        if (this.context.state.user) {
+            db.collection("student_counselors").doc(this.context.state.selectedCohort).collection("students").doc(id)
+            .update({flagged: this.state.flagSet.has(id)});
+        }
     }
 
     flagToggle = () => {
@@ -296,7 +307,7 @@ class StudentProfilesPage extends React.Component{
 
     render(){
         let data = this.state.data;
-        data = this.state.flagToggle ? data.filter(person => {return this.state.flagMap.get(person.uid)}) : data;
+        data = this.state.flagToggle ? data.filter(person => {return this.state.flagSet.has(person.uid)}) : data;
         if (this.state.searchString !== "") {
             data = data.filter(person=>{
                 if ((person.firstName && person.firstName.toLowerCase().slice(0, this.state.searchString.length) === this.state.searchString.toLowerCase()) || (person.lastName && person.lastName.toLowerCase().slice(0, this.state.searchString.length) === this.state.searchString.toLowerCase())){
@@ -327,8 +338,8 @@ class StudentProfilesPage extends React.Component{
                 <DropdownFilterMenu fields={this.filterFields} filterGroupItems={this.state.filterGroupItems} deleteFilter={this.deleteFilter} changeEvent={this.changeFilter} filters={this.state.filters} icon={Object.keys(this.state.filters).length === 0 ? filter_outline : filter_icon} />
                 <DropdownSortMenu fields={this.sortFields} changeEvent={this.changeSort} icon={this.state.sortIcon}/>
             </div>
-            {this.state.selectedCard && <StudentDetailsModal flagged={this.state.flagMap.get(this.state.selectedCard.uid)} exitModal={this.exitModal} info={this.state.selectedCard} />}
-            <GridView data={data} clickCard={this.clickCard} clickFlag={this.clickFlag} flags={this.state.flagMap}/>
+            {this.state.selectedCard && <StudentDetailsModal flagged={this.state.flagSet.has(this.state.selectedCard.uid)} exitModal={this.exitModal} info={this.state.selectedCard} />}
+            <GridView data={data} clickCard={this.clickCard} clickFlag={this.clickFlag} flags={this.state.flagSet}/>
         </div>
     }
 }
