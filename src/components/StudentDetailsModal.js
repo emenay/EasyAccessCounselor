@@ -10,12 +10,13 @@ class ApplicationProcessPanel extends React.Component {
             <div className="appproc-panel">
                 <div className="appproc-col">
                     <div className="app-group">
+                        <div className="app-circle" />
                         <b>Pre-Application</b>
                         <p><span>Visits: </span>{info.visits}</p>
                         <p>Balanced College List</p>
                     </div>
                     <div className="app-group">
-                        <div className="app-circle"></div>
+                        <div className="app-circle" />
                         <b>Application Checklist</b>
                         <p><span>Early Applications: </span>{info.earlyApplications}</p>
                         <p><span>Regular Applications: </span>{info.regularApplications}</p>
@@ -25,6 +26,7 @@ class ApplicationProcessPanel extends React.Component {
                         <p><span>Teacher Recommendations: </span>{info.resume}</p>
                     </div>
                     <div className="app-group">
+                        <div className="app-circle" />
                         <b>Post-Application</b>
                         <p><span>Results: </span>{info.results}</p>
                         <p><span>Admitted Schools: </span>{info.admittedSchools}</p>
@@ -33,13 +35,15 @@ class ApplicationProcessPanel extends React.Component {
                         <p><span>Student Decision: </span>{info.decision}</p>
                     </div>
                     <div className="app-group">
+                        <div className="app-circle" />
                         <b>Post-Decision Checklist</b>
                         <p><span>Deposit: </span>{info.deposit}</p>
                         <p><span>Orientation: </span>{info.orientation}</p>
                         <p><span>Summer Programs: </span>{info.summerPrograms}</p>
                         <p><span>Housing: </span>{info.housing}</p>
                     </div>
-                    <div className="app-group">
+                    <div className="app-group" style={{borderLeft: "0px"}}>
+                        <div className="app-circle" />
                         <b>Graduation!</b>
                     </div>
                 </div>
