@@ -10,6 +10,40 @@ function meetingsNumber(person, field) {
     return Number(person[field]);
 }
 
+function CollegeListPanel(props){
+    const [editing, changeEditing] = useState(false);
+    let info = props.info;
+    return (
+        <div className="college-panel">
+            <div className="college-side">
+                <b>College Information</b>
+                <p><span>Field of Study 1: </span>{info.major}</p>
+                <p><span>Field of Study 2: </span>{info.major2}</p>
+                <p><span>Region: </span>{info.region}</p>
+                <p><span>College Size: </span>{info.collegeSize}</p>
+                <p><span>College Setting: </span>{info.collegeSetting}</p>
+                <p><span>College Diversity (% URM:) </span>{info.collegeDiversity}</p>
+                <p><span>College Diversity (Type): </span>{info.collegeDiversityTypes}</p>
+                <p><span>Religion: </span>{info.religion}</p>
+                <p><span>Military/ROTC: </span>{info.rotc}</p>
+                <p><span>Athletics: </span>{info.athletics}</p>
+            </div>
+            <div className="college-side">
+                <b>Student Information</b>
+                <p><span>State: </span>{info.state}</p>
+                <p><span>Zip: </span>{info.zipcode}</p>
+                <p><span>GPA: </span>{info.gpa}</p>
+                <p><span>Class Rank: </span>{info.classRank}</p>
+                <p><span>ACT: </span>{info.act}</p>
+                <p><span>SAT: </span>{info.sat}</p>
+                <p><span>EFC: </span>{info.efc}</p>
+                <p><span>Ability to Pay Mismatch: </span>{info.payMismatch}</p>
+            </div>
+            <button className="studentdetails-editbutton" onClick={()=>changeEditing(!editing)}/>
+        </div>
+    );
+}
+
 /* Note: I'm using many grids instead of one because we'll later have to loop through all a person's notes */
 
 function CaseloadManagementPanel(props) {
@@ -161,6 +195,8 @@ class StudentDetailsModal extends React.Component {
                 return <ApplicationProcessPanel info={this.props.info}/>
             case 'Caseload Management':
                 return <CaseloadManagementPanel info={this.props.info}/>
+            case 'College List':
+                return <CollegeListPanel info={this.props.info}/>
             default:
                 return <p>Hello world</p>
         }
