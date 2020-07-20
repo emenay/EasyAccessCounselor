@@ -16,7 +16,7 @@ class Header extends React.Component{
 		if (this.context.state.cohorts.length === 0) {
 			return(
 				<select className="header-select" value={"No Cohorts"} onChange={this.changeSelected}>
-					<option className="header-option" value="No Cohorts" hidden="true">No Cohorts</option>
+					<option className="header-option" value="No Cohorts" hidden={true}>No Cohorts</option>
 				</select>);
 
 		} else {
