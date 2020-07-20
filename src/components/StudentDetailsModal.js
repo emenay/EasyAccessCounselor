@@ -3,6 +3,46 @@ import edit_symbol from '../assets/edit_symbol.png';
 import profile_avatar from '../assets/profile_avatar.png';
 import orange_flag from "../assets/orange_flag.png";
 
+function meetingsNumber(person, field) {
+    if (typeof person[field] === "undefined"){
+        return 0;
+    }
+    return Number(person[field]);
+}
+
+/* Note: I'm using many grids instead of one because we'll later have to loop through all a person's notes */
+
+function CaseloadManagementPanel(props) {
+    const [editing, changeEditing] = useState(false);
+    const [text, changeText] = useState("");
+    let info = props.info;
+    return (
+        <div className="caseload-panel">
+            <div className="caseload-meetingsnum">
+                <p>Meetings:</p>
+                <p>{"Individual - " + meetingsNumber(info, "individualMeetings")}</p>
+                <p>{"Event - " + meetingsNumber(info, "eventMeetings")}</p>
+                <p>{"Group - " + meetingsNumber(info, "groupMeetings")}</p>
+                <p>{"Total - " + (meetingsNumber(info, "individualMeetings") + meetingsNumber(info, "eventMeetings") + meetingsNumber(info, "groupMeetings"))}</p>
+            </div>
+            <div className="caseload-noteitem">
+                <p>Date of Meeting</p>
+                <p>Type of Meeting</p>
+                <p>Notes</p>
+            </div>
+            <div className="caseload-noteitem">
+                <p className="caseload-notedate">7/1/20</p>
+                <select value="group" className="caseload-notetype">
+                    <option value="individual">Individual</option>
+                    <option value="group">Group</option>
+                    <option value="event">Event</option>
+                </select>
+                <textarea className="caseload-notetext" value={text} onChange={e=>changeText(e.target.value)} />
+            </div>
+        </div>
+    );
+}
+
 function ApplicationProcessPanel(props) {
     const [editing, changeEditing] = useState(false);
     let info = props.info
@@ -114,6 +154,8 @@ class StudentDetailsModal extends React.Component {
                 return <GeneralInformationPanel info={this.props.info}/>
             case 'Application Process':
                 return <ApplicationProcessPanel info={this.props.info}/>
+            case 'Caseload Management':
+                return <CaseloadManagementPanel info={this.props.info}/>
             default:
                 return <p>Hello world</p>
         }

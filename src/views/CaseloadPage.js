@@ -27,8 +27,8 @@ class CaseloadPage extends React.Component {
       {field: "safetyColleges", headerName: 'Safety', sortable: true, filter: true, editable: true, resizable: true},
       {field: "reachColleges", headerName: 'Reach', sortable: true, editable: true, filter: true, resizable: true},
       {field: "individualMeetings", headerName: 'Ind Mtng', valueParser:this.numberType, sortable: true, filter: 'agNumberColumnFilter', editable: true, resizable: true},
-      {field: "groupMeetingsr", headerName: 'Group Mtngs', valueParser:this.numberType, sortable: true, filter: 'agNumberColumnFilter', editable: true, resizable: true},
-      {field: "totalMeetings", headerName: 'Total Mtngs', valueParser:this.numberType, sortable: true, filter: 'agNumberColumnFilter', editable: true, resizable: true}
+      {field: "groupMeetings", headerName: 'Group Mtngs', valueParser:this.numberType, sortable: true, filter: 'agNumberColumnFilter', editable: true, resizable: true},
+      {field: "eventMeetings", headerName: 'Event Mtngs', valueParser:this.numberType, sortable: true, filter: 'agNumberColumnFilter', editable: true, resizable: true}
     ];
     
   }
