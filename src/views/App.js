@@ -15,6 +15,7 @@ import Dashboard from './Dashboard';
 import Account from './AccountPage';
 import Caseload from './CaseloadPage';
 import CollegeList from './CollegeListPage';
+import Settings from './SettingsPage';
 import CohortCreation from './CohortCreation';
 import Notes from './NotesPage';
 import StudentProfilesPage from './StudentProfilesPage';
@@ -49,6 +50,10 @@ export default function App() {
             <Route path="/notes">
               <Header isLoggedIn={isLoggedIn}/>
               { user.state.user ? <Notes /> : <Login /> }
+            </Route>
+            <Route path="/settings">
+              <Header isLoggedIn={isLoggedIn}/>
+              { user.state.user ? <Settings currentUser={user} /> : <Login /> }
             </Route>
             <Route path="/cohortcreation">
               <Header isLoggedIn={isLoggedIn}/>
