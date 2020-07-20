@@ -4,25 +4,6 @@ import * as firebase from 'firebase/app';
 import {auth, db} from "../firebase/firebase";
 import '../css/SettingsPage.css';
 
-/*
-const AccountPage = () => {
-    const user = useContext(UserContext);
-    const {displayName, email} = user;
-    return (
-      <div >
-          <div>
-          <h2 >{displayName}</h2>
-          <h3 >{email}</h3>
-          <button  onClick = {() => {auth.signOut()}}>Sign out</button>
-          </div>
-        <button  onClick = {() => {db.collection("cohortCode").add({
-          cohort: "unc",
-          studentID: "1231251"
-        })}}>Generate cohort Code</button>
-      </div>
-    ) 
-  };*/
-
 class SettingsPage extends React.Component {
     constructor(props){
         super(props);
