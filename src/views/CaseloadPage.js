@@ -80,7 +80,7 @@ class CaseloadPage extends React.Component {
       delete data.uid;
       db.collection("student_counselors").doc(this.context.state.selectedCohort).collection("students")
       .doc(uid)
-      .set(data);
+      .update(data);
     } else {
       db.collection("student_counselors").doc(this.context.state.selectedCohort).collection("students")
       .add(e.data)
