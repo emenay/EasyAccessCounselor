@@ -43,6 +43,11 @@ function CaseloadManagementPanel(props) {
     );
 }
 
+function editSelection(isEditing, title, field, info){
+    if (isEditing) return <p><span>{title + ": "}</span><input type="text" /></p>
+    return <p><span>{title + ": "}</span>{info[field]}</p>
+}
+
 function ApplicationProcessPanel(props) {
     const [editing, changeEditing] = useState(false);
     let info = props.info

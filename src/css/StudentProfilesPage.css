@@ -40,6 +40,9 @@
     background: white;
 }
 .flag {
+    position: absolute;
+    top: 8px;
+    right: 8px;
     width: 30px;
     height: 30px;
 }
@@ -117,7 +120,7 @@
 
 .scard-detail {
     line-height: 1.6;
-    font-size: 17px;
+    font-size: 16px;
     font-family: "Open Sans";
 }
 
@@ -408,12 +411,13 @@
 }
 
 .card-title {
-    font-size: 28px;
+    font-size: 26px;
 }
 
 
 .card {
     border-radius: 5px;
+    position: relative;
     min-height: 200px!important;
     background-color:  #3298CB!important;
     -webkit-transition: background-color 150ms linear;

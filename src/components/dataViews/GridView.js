@@ -18,13 +18,12 @@ export function GridView(props) {
           <div className="card" key={person.uid} onClick={()=>props.clickCard(person)}>
               <div className="scard-content">
                 <p className="card-title scard-detail">{person.firstName + " " + person.lastName}</p>
-                <p className="scard-detail">{generateField("", person.info)}</p>
+                <p className="scard-detail">{generateField("", person.schools)}</p>
+                <p className="scard-detail">{generateField("Major: ", person.major)}</p>
                 <p className="scard-detail">{generateField("GPA: ", person.gpa)}</p>
                 <p className="scard-detail">{generateField("SAT: ", person.sat)}</p>
-                <div className="flag-wrapper">
-                  <p className="scard-detail">{generateField("Major: ", person.major)}</p>
-                  <img src={props.flags.has(person.uid)? orange_flag : unflagged} onClick={(e)=>{props.clickFlag(person.uid); e.stopPropagation();}} className="flag" alt="Flag"/>
-                </div>
+                <p className="scard-detail">{generateField("ACT: ", person.act)}</p>
+                <img src={props.flags.has(person.uid)? orange_flag : unflagged} onClick={(e)=>{props.clickFlag(person.uid); e.stopPropagation();}} className="flag" alt="Flag"/>
               </div>
           </div>
         )}
