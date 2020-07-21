@@ -12,35 +12,23 @@ class UserProvider extends Component {
     };
 
     userUpdate = (user) => {
+        this.setState({user: user});
         if (user) {
-            db.collection("counselors").doc(user.uid).get()
-            .then(querySnapshot=> {
-                return querySnapshot.data().cohorts;
-                })
-            .then(cohorts=>{
-                if (typeof cohorts !== "undefined"){
-                    db.collection("student_counselors").where(firebase.firestore.FieldPath.documentId(), "in", cohorts).get()
-                    .then(querySnapshot=>{
-                        return querySnapshot.docs.map(doc =>{
-                            var new_doc = doc.data();
-                            new_doc.id = doc.id;
-                            return new_doc;
-                        });
-                    })
-                    .then(data=>this.setState({
-                        user: user,
-                        cohorts: data,
-                        selectedCohort: this.state.selectedCohort ? this.state.selectedCohort : data.length > 0 ?  data[0].id : null
-                    }))
-                    .catch(error=>{console.log(error)});
-                } else {
-                    this.setState({user: user});
-                }
+            db.collection("student_counselors").where("counselor", "==", user.uid).get()
+            .then(querySnapshot=>{
+                return querySnapshot.docs.map(doc =>{
+                    var new_doc = doc.data();
+                    new_doc.uid = doc.id;
+                    return new_doc;
+                  });
             })
-            .catch(error=>{console.log(error)});
+            .then(data=>this.setState({
+                cohorts: data,
+                selectedCohort: this.state.selectedCohort ? this.state.selectedCohort : data.length > 0 ?  data[0].uid : null
+              }))
+            .catch(error=>{console.log(error); this.setState({user: user})});
           } else {
               this.setState({
-                user: null,
                 selectedCohort: null,
                 cohorts: []
             });

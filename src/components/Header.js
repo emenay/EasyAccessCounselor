@@ -23,7 +23,7 @@ class Header extends React.Component{
 			return(
 			<select className="header-select" value={this.context.state.selectedCohort ? this.context.state.selectedCohort : ""} onChange={this.changeSelected}>
 			{this.context.state.cohorts.map((cohort, index)=>{
-				return <option key={index} className="header-option" value={cohort.id}>{cohort.name}</option>
+				return <option key={index} className="header-option" value={cohort.uid}>{cohort.name}</option>
 			})}
 			</select>);
 		}
