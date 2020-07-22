@@ -1,13 +1,25 @@
-import React, {useState} from 'react';
+import React, {useState, useContext} from 'react';
 import edit_symbol from '../assets/edit_symbol.png';
 import profile_avatar from '../assets/profile_avatar.png';
 import orange_flag from "../assets/orange_flag.png";
+import {db} from '../firebase/firebase';
+import {UserContext} from '../providers/UserProvider';
+import firebase from 'firebase/app';
 
 function meetingsNumber(person, field) {
     if (typeof person[field] === "undefined"){
         return 0;
     }
     return Number(person[field]);
+}
+
+function uploadNote(date, type, text, personId, cohortId) {
+    if (cohortId) {
+        db.collection("student_counselors").doc(cohortId)
+        .collection("students").doc(personId)
+        .update({notes: firebase.firestore.FieldValue.arrayUnion({date: new Date(date), type: type, text: text})})
+        .catch(error=>console.log(error));
+    }
 }
 
 function CollegeListPanel(props){
@@ -47,9 +59,13 @@ function CollegeListPanel(props){
 /* Note: I'm using many grids instead of one because we'll later have to loop through all a person's notes */
 
 function CaseloadManagementPanel(props) {
-    const [editing, changeEditing] = useState(false);
-    const [text, changeText] = useState("");
     let info = props.info;
+    const context = useContext(UserContext);
+    const [noteType, changeNoteType] = useState("Individual");
+    const [text, changeText] = useState("");
+    const [date, changeDate] = useState(new Date().toISOString().slice(0, 10));
+    const [notes, changeNotes] = useState(info.notes.sort((a, b)=>{return b.date.seconds - a.date.seconds}));
+
     return (
         <div className="caseload-panel">
             <div className="caseload-meetingsnum">
@@ -65,14 +81,26 @@ function CaseloadManagementPanel(props) {
                 <p>Notes</p>
             </div>
             <div className="caseload-noteitem">
-                <p className="caseload-notedate">7/1/20</p>
-                <select value="group" className="caseload-notetype">
-                    <option value="individual">Individual</option>
-                    <option value="group">Group</option>
-                    <option value="event">Event</option>
+                <input type="date" className="caseload-enterdate" value={date} onChange={e=>(changeDate(e.target.value))} />
+                <select value={noteType} className="caseload-notetype" onChange={e=>changeNoteType(e.target.value)}>
+                    <option value="Individual">Individual</option>
+                    <option value="Group">Group</option>
+                    <option value="Event">Event</option>
                 </select>
-                <textarea className="caseload-notetext" value={text} onChange={e=>changeText(e.target.value)} />
+                <div>
+                    <textarea className="caseload-notetext" value={text} onChange={e=>changeText(e.target.value)} />
+                    <button className="caseload-savebutton" onClick={()=>uploadNote(date, noteType, text, info.uid, context.state.selectedCohort)}>Save</button>
+                </div>
             </div>
+            {notes.map((note, index)=>{
+                return(
+                <div className="caseload-noteitem" key={index}>
+                    <p className="caseload-textitem">{note.date.toDate().toISOString().slice(0,10)}</p>
+                    <p className="caseload-textitem">{note.type}</p>
+                    <p className="caseload-textitem itemhoverable">{note.text}</p>
+                </div>
+                );
+            })}
         </div>
     );
 }

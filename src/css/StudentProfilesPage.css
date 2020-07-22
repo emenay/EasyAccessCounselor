@@ -367,18 +367,43 @@
 }
 
 .caseload-notetype {
-    height: 28px;
+    height: 34px;
 }
 
-.caseload-notedate {
-    border: 1px solid gray;
+.caseload-textitem {
+    outline: 1px solid gray;
     height: 28px;
     padding-left: 3px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    cursor: pointer;
+}
+
+.itemhoverable:hover {
+    outline: 2px solid black;
+}
+
+.caseload-enterdate {
+    height: 30px;
 }
 
 .caseload-notetext {
     width: 100%;
     height: 60px;
+}
+
+.caseload-savebutton {
+    background: #3298CB 0% 0% no-repeat padding-box;
+    border-radius: 5px;
+    font-size: 15px;
+    cursor: pointer;
+    border: none;
+    text-decoration: none;
+    outline: none;
+    opacity: 1;
+    color: white;
+    width: 20%;
 }
 
 /* College List Panel */
