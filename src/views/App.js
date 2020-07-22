@@ -21,7 +21,6 @@ import Notes from './NotesPage';
 import StudentProfilesPage from './StudentProfilesPage';
 import Header from '../components/Header';
 import Sidenav from '../components/Sidenav';
-import CohortCreation2 from './CohortCreation2';
 export default function App() {
   const user = useContext(UserContext);
   const isLoggedIn = user.state.user ? 'true' : '';
@@ -61,7 +60,7 @@ export default function App() {
             </Route>
             <Route path="/cohortcreation2">
               <Header isLoggedIn={isLoggedIn}/>
-              { user.state.user ? <CohortCreation2 /> : <Login /> }
+              { user.state.user ? <CohortCreation /> : <Login /> }
             </Route>
             <Route path="/">
               <Header isLoggedIn={isLoggedIn}/>
