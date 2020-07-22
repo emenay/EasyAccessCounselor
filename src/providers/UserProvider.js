@@ -1,5 +1,6 @@
 import React, { Component, createContext } from "react";
 import { db, auth } from '../firebase/firebase.js';
+import firebase from 'firebase/app';
 
 export const UserContext = createContext({ user: null, selectedCohort: null, cohorts: [] });
 
@@ -12,19 +13,27 @@ class UserProvider extends Component {
 
     userUpdate = (user) => {
         if (user) {
-            db.collection("student_counselors").where("counselor", "==", user.uid).get()
-              .then(querySnapshot=>{
-                  return querySnapshot.docs.map(doc =>{
-                      var new_doc = doc.data();
-                      new_doc.uid = doc.id;
-                      return new_doc;
-                    });
-              })
-              .then(data=>this.setState({
-                  user: user,
-                  cohorts: data,
-                  selectedCohort: this.state.selectedCohort ? this.state.selectedCohort : data.length > 0 ?  data[0].uid : null
-                }));
+            db.collection("counselors").doc(user.uid).get()
+            .then(querySnapshot=> {
+                return querySnapshot.data().cohorts;
+                })
+            .then(cohorts=>{
+                db.collection("student_counselors").where(firebase.firestore.FieldPath.documentId(), "in", cohorts).get()
+                .then(querySnapshot=>{
+                    return querySnapshot.docs.map(doc =>{
+                        var new_doc = doc.data();
+                        new_doc.id = doc.id;
+                        return new_doc;
+                      });
+                })
+                .then(data=>this.setState({
+                    user: user,
+                    cohorts: data,
+                    selectedCohort: this.state.selectedCohort ? this.state.selectedCohort : data.length > 0 ?  data[0].id : null
+                  }))
+                  .catch(error=>{console.log(error)});
+            })
+            .catch(error=>{console.log(error)});
           } else {
               this.setState({
                 user: null,
@@ -36,6 +45,12 @@ class UserProvider extends Component {
 
     changeSelectedCohort = (e) =>{
         this.setState({selectedCohort: e.target.value});
+    }
+
+    addCohort = (cohortName, cohortID) => {
+        var new_cohorts = this.state.cohorts.slice();
+        new_cohorts.push({name: cohortName, id: cohortID});
+        this.setState({cohorts: new_cohorts, selectedCohort: cohortID});
     }
 
     componentDidMount = () => {
@@ -53,7 +68,7 @@ class UserProvider extends Component {
 
     render() {
         return(
-            <UserContext.Provider value={{state:this.state, changeSelectedCohort: this.changeSelectedCohort}}>
+            <UserContext.Provider value={{state:this.state, addCohort: this.addCohort, changeSelectedCohort: this.changeSelectedCohort}}>
                 {this.props.children}
             </UserContext.Provider>
         )

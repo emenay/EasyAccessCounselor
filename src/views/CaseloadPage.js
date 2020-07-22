@@ -19,25 +19,28 @@ class CaseloadPage extends React.Component {
       lastCohort: null
     });
     this.fields = [
-      {field: "id", headerName: "ID", width: "70"},
+      {field: "id", headerName: "ID", editable: true, valueParser: this.numberType, width: "70"},
       {field: "firstName", headerName: "First Name", sortable: true, filter: true, editable: true, resizable: true},
       {field: 'lastName', headerName: 'Last Name', sortable: true, filter: true, editable: true, resizable: true},
-      {field: "Meetings", headerName: 'Meetings', sortable: true, editable: true, filter: 'agNumberColumnFilter', resizable: true},
-      {field: "Tasks", headerName: 'Tasks', sortable: true, editable: true, filter: 'agNumberColumnFilter', resizable: true},
-      {field: "Visit", headerName: 'Visit', sortable: true, filter: true, editable: true, resizable: true},
-      {field: "Testing", headerName: 'Testing', sortable: true, editable: true, filter: 'agNumberColumnFilter', resizable: true},
-      {field: "List", headerName: 'List', sortable: true, filter: true, editable: true, resizable: true},
-      {field: "Fee Waiver", headerName: 'Fee Waiver', sortable: true, filter: true, editable: true, resizable: true},
-      {field: "Early Apps", headerName: 'Early Apps', sortable: true, filter: true, editable: true, resizable: true},
-      {field: "Essay", headerName: 'Essay', sortable: true, filter: true, editable: true, resizable: true},
-      {field: "Teacher Recs", headerName: 'Teacher Recs', sortable: true, filter: true, editable: true, resizable: true}
+      {field: "gpa", headerName: 'GPA', sortable: true, editable: true, valueParser: this.numberType, filter: 'agNumberColumnFilter', resizable: true},
+      {field: "classRank", headerName: 'Class Rank', sortable: true, valueParser: this.numberType, editable: true, filter: 'agNumberColumnFilter', resizable: true},
+      {field: "safetyColleges", headerName: 'Safety', sortable: true, filter: true, editable: true, resizable: true},
+      {field: "reachColleges", headerName: 'Reach', sortable: true, editable: true, filter: true, resizable: true},
+      {field: "individualMeetings", headerName: 'Ind Mtng', valueParser:this.numberType, sortable: true, filter: 'agNumberColumnFilter', editable: true, resizable: true},
+      {field: "groupMeetingsr", headerName: 'Group Mtngs', valueParser:this.numberType, sortable: true, filter: 'agNumberColumnFilter', editable: true, resizable: true},
+      {field: "totalMeetings", headerName: 'Total Mtngs', valueParser:this.numberType, sortable: true, filter: 'agNumberColumnFilter', editable: true, resizable: true}
     ];
     
   }
 
+  numberType = (params) => {
+    let num = Number(params.newValue);
+    if (isNaN(num)) return 0;
+    return num;
+  }
+
   getCohortData = () => {
     if (this.context.state.selectedCohort && this.state.lastCohort !== this.context.state.selectedCohort){
-      console.log("updating");
       db.collection("student_counselors").doc(this.context.state.selectedCohort).collection("students")
         .get()
         .then(querySnapshot => {
@@ -71,7 +74,7 @@ class CaseloadPage extends React.Component {
   cellEditingStopped(e) {
     // TODO: where updating the database will occur
     if (e.data.uid) {
-      console.log("here");
+      console.log(e.data);
       var data = Object.assign({}, e.data);
       var uid = data.uid;
       delete data.uid;
@@ -85,7 +88,6 @@ class CaseloadPage extends React.Component {
         e.data.uid = response.id;
         var new_data = [...this.state.data];
         new_data.push({});
-        console.log(new_data);
         this.setState({data: new_data})
       });
     }
