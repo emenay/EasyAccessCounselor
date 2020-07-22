@@ -345,15 +345,17 @@
 /* Caseload css */
 
 .caseload-meetingsnum {
-    width: 90%;
+    width: 100%;
     margin: auto;
     display: flex;
     justify-content: space-between;
     margin-bottom: 30px;
+    background-color: #3298CB;
 }
 
 .caseload-panel p {
     font-size: 18px;
+    color: white;
 }
 
 .caseload-noteitem {
@@ -367,7 +369,6 @@
 }
 
 .caseload-notetype {
-<<<<<<< HEAD
     height: 34px;
 }
 
@@ -383,19 +384,11 @@
 
 .itemhoverable:hover {
     outline: 2px solid black;
+    cursor: pointer;
 }
 
 .caseload-enterdate {
     height: 30px;
-=======
-    height: 28px;
-}
-
-.caseload-notedate {
-    border: 1px solid gray;
-    height: 28px;
-    padding-left: 3px;
->>>>>>> 0548eb6c2b7c66b1c3ff3e5923ac936e442ed171
 }
 
 .caseload-notetext {
@@ -403,12 +396,16 @@
     height: 60px;
 }
 
-<<<<<<< HEAD
+.viewingNote {
+    white-space: normal;
+    text-overflow: clip;
+    height: auto;
+}
+
 .caseload-savebutton {
     background: #3298CB 0% 0% no-repeat padding-box;
     border-radius: 5px;
     font-size: 15px;
-    cursor: pointer;
     border: none;
     text-decoration: none;
     outline: none;
@@ -417,8 +414,6 @@
     width: 20%;
 }
 
-=======
->>>>>>> 0548eb6c2b7c66b1c3ff3e5923ac936e442ed171
 /* College List Panel */
 
 .college-side {
