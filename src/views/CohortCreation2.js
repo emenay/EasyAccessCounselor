@@ -2,15 +2,6 @@ import React from 'react';
 import '../css/CohortCreation.css';
 import readXlsxFile from 'read-excel-file';
 import {auth, db} from "../firebase/firebase";
-import  { useState } from "react";
-import { Button, Form, Group, FormControl, FormLabel } from "react-bootstrap";
-import "./Account.css";
-import { UserContext } from "../providers/UserProvider";
-import { useContext } from "react";
-import { Redirect } from "react-router-dom";
-import * as Constants from "./helper";
-import firebase from "firebase/app";
-import "firebase/auth";
 import {
     BrowserRouter as Router,
     Switch,
@@ -18,112 +9,13 @@ import {
     Link,
     useParams
   } from "react-router-dom";
-
+import  { useState } from "react";
+import { Button, Form, Group, FormControl, FormLabel } from "react-bootstrap";
+import "./Account.css";
+import { UserContext } from "../providers/UserProvider";
+import { useContext } from "react";
 
 import { withRouter } from 'react-router-dom';
-
-// export default function Login() {
-//   const [cohort, setCohort] = useState("");
-//   const user = useContext(UserContext);
-//   const {displayName, email} = user;
-//   var cohortCode;
-//   function validateForm() {
-//     return cohort.length > 0;
-//   }
-
-//   function handleSubmit(event) {
-//     event.preventDefault();
-//   }
-
-//   return (
-//     <div className="Login">
-//       <form onSubmit={handleSubmit}>
-//         <Form.Group controlId="text" bsSize="large">
-//           <FormLabel>Create a new Cohort</FormLabel>
-//           <br/>
-//           <FormControl
-//             autoFocus
-//             type="text"
-//             placeholder="Name your Cohort"
-//             value={cohort}
-//             onChange={e => setCohort(e.target.value)}
-//           />
-//         </Form.Group>
-       
-//         <Link to="/netflix">Upload Data</Link>
-//         <Route path="/:id" children={<Child />} />
-
-//       </form>
-//       <div>
-//         <h2 >{displayName}</h2>
-//         <h3 >{email}</h3>
-//         {/* <button  onClick = {() => {auth.signOut()}}>Sign out</button> */}
-//         </div>
-//       <button  id = "cohortCode" onClick = {() => {db.collection("cohortCode").add({
-//         cohort: "unc",
-//         studentID: "1231251"
-//       }).then(function(docRef) {
-//         cohortCode = docRef.id;
-//         // this.props.history.push({
-//         //     pathname: '/cohortcreation2',
-//         //     data: "data" // your data array of objects
-//         //   })
-//         console.log("Document written with ID: ", docRef.id);
-//     })
-//     .catch(function(error) {
-//         console.error("Error adding document: ", error);
-//     });}}>Generate cohort Code</button>
-
-
-//     </div>
-//   );
-// }
-
-
-
-
-
-
-
-class Login extends React.Component {
-    constructor(props){
-        super(props);
-        
-    }
-    render(){
-        return (
-            <div className="Login">
-                <div>hi</div>
-              {/* <form>
-                <Form.Group controlId="text" bsSize="large">
-                  <FormLabel>Create a new Cohort</FormLabel>
-                  <br/>
-                  <FormControl
-                    autoFocus
-                    type="text"
-                    placeholder="Name your Cohort"
-                    // value={cohort}
-                    // onChange={e => setCohort(e.target.value)}
-                  />
-                </Form.Group>
-               
-                <Link to="/netflix">Upload Data</Link>
-        
-              </form> */}
-              <div>
-                {/* <h2 >{displayName}</h2> */}
-                {/* <h3 >{email}</h3> */}
-                {/* <button  onClick = {() => {auth.signOut()}}>Sign out</button> */}
-                </div>
-              
-        
-        
-            </div>
-          );
-    }
-      
-
-}
 
 class FileUploadSelection extends React.Component {
     constructor(props){
@@ -264,7 +156,6 @@ class FieldMatches extends React.Component {
             "Class Rank": "classRank",
             "SAT": "sat",
             "ACT": "act",
-            "Goal": "goal",
             "Student Email": "studentEmail",
             "Student Email 2": "studentEmail2",
             "Student Phone": "studentPhone",
@@ -305,41 +196,17 @@ class FieldMatches extends React.Component {
     }
 
     startUpload = () => {
-        var props = this.props;
-        var state = this.state;
-        var counselor = firebase.auth().currentUser.uid;
-        var code;
-        db.collection("cohortCode").add({
-            cohort: "unc",
-            studentID: "1231251"
-          }).then(function(docRef) {
-            code = docRef.id;
-            // db.collection('counselors').doc(counselor).update( {
-            //     cohort: db.FieldValue.arrayUnion(docRef.id)
-            //  });
-            for (var i = 1; i < props.data.length; i++){
-                var myobj = {};
-                var counter = 0;
-                Array.from(state.fieldsMap).forEach(entry=>
-                    {
-                        myobj[entry[1]] = props.data[i][counter];
-                        counter = counter + 1;
-                    }
-                );
-                console.log(code);
-                db.collection("student_counselors").doc(code).collection("students").add(myobj);
-            }
-
-            var name = document.getElementById("name").value;
-            console.log(name);
-            
-            db.collection("student_counselors").doc(docRef.id).set({name:name,counselor:counselor});
-            // db.collection("counselors").doc(counselor).update({})
-        })
-        .catch(function(error) {
-            console.error("Error adding document: ", error);
-        });
-        
+        for (var i = 1; i < this.props.data.length; i++){
+            var myobj = {};
+            var counter = 0;
+            Array.from(this.state.fieldsMap).forEach(entry=>
+                {
+                    myobj[entry[1]] = this.props.data[i][counter];
+                    counter = counter + 1;
+                }
+            );
+            db.collection("student_counselors").doc("cohortcode").collection("students").add(myobj);
+        }
         
         
     }
@@ -386,7 +253,6 @@ class CohortCreation extends React.Component {
             data: null 
         };
         this.panels = {
-            "login": <Login data={this.state.data} changePanel={this.changePanel}/>,
             "dataEntry": <DataEntrySelection changePanel={this.changePanel}/>,
             "fileUpload": <FileUploadSelection changePanel={this.changePanel} setData={this.setData}/>,
             "fieldMatching": <FieldMatches data={this.state.data} changePanel={this.changePanel}/>
@@ -408,12 +274,9 @@ class CohortCreation extends React.Component {
         // console.log(data);
         return (
             <div className="cohort-creation-content">
-                <div>Enter Cohort Name</div>
-                <input id ="name"></input>
-                <br></br>
-                <br></br>
                 {this.panels[this.state.selectedPanel]}
-                
+
+
                 
             </div>
         );
