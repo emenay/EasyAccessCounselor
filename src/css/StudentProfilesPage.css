@@ -152,6 +152,17 @@
     background: #0E1030 0% 0% no-repeat padding-box;
 }
 
+.studentdetails-content::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+    background-color: white; /* or add it to the track */
+}
+
+.studentdetails-content::-webkit-scrollbar-thumb {
+    background: gray; 
+    border-radius: 20px
+}
+
 .studentdetails-content {
     position: absolute;
     background-color: #fefefe;
@@ -164,6 +175,11 @@
     margin: auto;
     overflow-y: auto;
     border: 1px solid #888;
+}
+
+.caseloadContents {
+    border: 0;
+    padding: 0;
 }
 
 .studentdetails-tab-wrapper {
@@ -349,22 +365,26 @@
     margin: auto;
     display: flex;
     justify-content: space-between;
-    margin-bottom: 30px;
     background-color: #3298CB;
+    color: white;
+    padding: 15px 5%;
+}
+
+.caseload-meetingsnum > p {
+    font-size: 20px!important;
 }
 
 .caseload-panel p {
     font-size: 18px;
-    color: white;
 }
 
 .caseload-noteitem {
     display: grid;
-    column-gap: 13%;
+    column-gap: 10%;
     width: 90%;
     margin: auto;
     margin-bottom: 20px;
-    grid-template-columns: 17% 17% 40%;
+    grid-template-columns: 20% 20% 40%;
 
 }
 
@@ -380,6 +400,10 @@
     overflow: hidden;
     text-overflow: ellipsis;
     cursor: pointer;
+}
+
+.itemhoverable {
+    font-size: 16px!important;
 }
 
 .itemhoverable:hover {
@@ -412,6 +436,10 @@
     opacity: 1;
     color: white;
     width: 20%;
+}
+
+.caseload-maincontent {
+    padding: 20px;
 }
 
 /* College List Panel */
@@ -488,6 +516,8 @@
     margin: 20px auto;
     overflow: hidden;
 }
+
+
 
 span.clear { 
     clear: left; 

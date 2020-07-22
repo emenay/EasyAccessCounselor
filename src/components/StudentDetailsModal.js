@@ -71,7 +71,6 @@ function CaseloadManagementPanel(props) {
     const [date, changeDate] = useState(new Date().toISOString().slice(0, 10));
     const [notes, addNotes] = useReducer(arrayReducer, typeof info.notes === "undefined" ? [] : info.notes.sort((a, b)=>{return b.date.seconds - a.date.seconds}));
     const [noteViewed, changeNoteViewed] = useState(null);
-    console.log(noteViewed);
     return (
         <div className="caseload-panel">
             <div className="caseload-meetingsnum">
@@ -81,36 +80,38 @@ function CaseloadManagementPanel(props) {
                 <p>{"Group - " + meetingsNumber(info, "groupMeetings")}</p>
                 <p>{"Total - " + (meetingsNumber(info, "individualMeetings") + meetingsNumber(info, "eventMeetings") + meetingsNumber(info, "groupMeetings"))}</p>
             </div>
-            <div className="caseload-noteitem">
-                <p>Date of Meeting</p>
-                <p>Type of Meeting</p>
-                <p>Notes</p>
-            </div>
-            <div className="caseload-noteitem">
-                <input type="date" className="caseload-enterdate" value={date} onChange={e=>(changeDate(e.target.value))} />
-                <select value={noteType} className="caseload-notetype" onChange={e=>changeNoteType(e.target.value)}>
-                    <option value="Individual">Individual</option>
-                    <option value="Group">Group</option>
-                    <option value="Event">Event</option>
-                </select>
-                <div>
-                    <textarea className="caseload-notetext" value={text} onChange={e=>changeText(e.target.value)} />
-                    <button className="caseload-savebutton" onClick={()=>{uploadNote(date, noteType, text, info.uid, context.state.selectedCohort); 
-                        addNotes({date: date, type: noteType, text: text});
-                        changeText("");
-                        changeDate(new Date().toISOString().slice(0, 10));
-                    }}>Save</button>
+            <div className="caseload-maincontent">
+                <div className="caseload-noteitem">
+                    <p>Date of Meeting</p>
+                    <p>Type of Meeting</p>
+                    <p>Notes</p>
                 </div>
-            </div>
-            {notes.map((note, index)=>{
-                return(
-                <div className="caseload-noteitem" key={index}>
-                    <p className="caseload-textitem">{typeof note.date === "string" ? note.date : note.date.toDate().toISOString().slice(0,10)}</p>
-                    <p className="caseload-textitem">{note.type}</p>
-                    <p className={"caseload-textitem itemhoverable" + (noteViewed === note ? " viewingNote" : "")} onClick={()=>{noteViewed===note ? changeNoteViewed(null) : changeNoteViewed(note)}}>{note.text}</p>
+                <div className="caseload-noteitem">
+                    <input type="date" className="caseload-enterdate" value={date} onChange={e=>(changeDate(e.target.value))} />
+                    <select value={noteType} className="caseload-notetype" onChange={e=>changeNoteType(e.target.value)}>
+                        <option value="Individual">Individual</option>
+                        <option value="Group">Group</option>
+                        <option value="Event">Event</option>
+                    </select>
+                    <div>
+                        <textarea className="caseload-notetext" value={text} onChange={e=>changeText(e.target.value)} />
+                        <button className="caseload-savebutton" onClick={()=>{uploadNote(date, noteType, text, info.uid, context.state.selectedCohort); 
+                            addNotes({date: date, type: noteType, text: text});
+                            changeText("");
+                            changeDate(new Date().toISOString().slice(0, 10));
+                        }}>Save</button>
+                    </div>
                 </div>
-                );
-            })}
+                {notes.map((note, index)=>{
+                    return(
+                    <div className="caseload-noteitem" key={index}>
+                        <p className="caseload-textitem">{typeof note.date === "string" ? note.date : note.date.toDate().toISOString().slice(0,10)}</p>
+                        <p className="caseload-textitem">{note.type}</p>
+                        <p className={"caseload-textitem itemhoverable" + (noteViewed === note ? " viewingNote" : "")} onClick={()=>{noteViewed===note ? changeNoteViewed(null) : changeNoteViewed(note)}}>{note.text}</p>
+                    </div>
+                    );
+                })}
+            </div>
         </div>
     );
 }
@@ -254,7 +255,7 @@ class StudentDetailsModal extends React.Component {
                 </div>
                 <p className="studentdetails-goal">{"Goal: " + (typeof this.props.info.goal === "undefined" ? "--" : this.props.info.goal)}</p>
                 <div className="studentdetails-innerbackground"/>
-                <div className="studentdetails-content">
+                <div className={"studentdetails-content" + (this.state.selectedTab === "Caseload Management" ? " caseloadContents" : "")}>
                     {this.whichPanel(this.state.selectedTab)}
                 </div>
             </div>
