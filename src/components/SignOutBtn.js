@@ -7,7 +7,7 @@ import Button from '@material-ui/core/Button';
 
 function SignOut() {
   return (
-    <Button onClick={signOut}>
+    <Button style={{width: "100px"}} onClick={signOut}>
       Sign Out
     </Button>
   )

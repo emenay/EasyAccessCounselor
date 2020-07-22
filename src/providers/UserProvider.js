@@ -42,6 +42,7 @@ class UserProvider extends Component {
     addCohort = (cohortName, cohortID) => {
         var new_cohorts = this.state.cohorts.slice();
         new_cohorts.push({name: cohortName, id: cohortID});
+        console.log(cohortID);
         this.setState({cohorts: new_cohorts, selectedCohort: cohortID});
     }
 

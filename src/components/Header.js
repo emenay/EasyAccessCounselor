@@ -34,7 +34,7 @@ class Header extends React.Component{
 			return (
 			<div className="header">
 			{this.displayHelper()}
-			<SignOutBtn/>
+			<SignOutBtn style={{width: "50px"}}/>
 		</div>);
 		}
 		return <div className="header"/>

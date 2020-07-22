@@ -5,16 +5,7 @@ import {auth, db} from "../firebase/firebase";
 import "./Account.css";
 import firebase from "firebase/app";
 import "firebase/auth";
-import {
-    BrowserRouter as Router,
-    Switch,
-    Route,
-    Link,
-    useParams
-  } from "react-router-dom";
-
-
-import { withRouter } from 'react-router-dom';
+import {UserContext} from '../providers/UserProvider';
 
 // export default function Login() {
 //   const [cohort, setCohort] = useState("");
@@ -240,6 +231,7 @@ class DataEntrySelection extends React.Component {
 }
 
 class FieldMatches extends React.Component {
+    static contextType = UserContext;
     constructor(props){
         super(props);
         let fieldsMap = new Map();
@@ -329,7 +321,10 @@ class FieldMatches extends React.Component {
             
             db.collection("student_counselors").doc(docRef.id).set({name:name,counselor:counselor});
             // db.collection("counselors").doc(counselor).update({})
+            return [name, code];
+
         })
+        .then(([name, code]) => this.context.addCohort(name, code))
         .catch(function(error) {
             console.error("Error adding document: ", error);
         });
