@@ -31,10 +31,6 @@ export default function App() {
         <Sidenav isLoggedIn={isLoggedIn}/>
         <div className="page-content">
           <Switch>
-            <Route path="/account">
-              <Header isLoggedIn={isLoggedIn}/>
-              { user.state.user ? <Account /> : <Login /> }
-            </Route>
             <Route path="/profiles">
               <Header isLoggedIn={isLoggedIn}/>
               { user.state.user ? <StudentProfilesPage /> : <Login /> }
@@ -42,14 +38,6 @@ export default function App() {
             <Route path="/caseload_management">
               <Header isLoggedIn={isLoggedIn}/>
               { user.state.user ? <Caseload cuid={user.uid}/> : <Login /> }
-            </Route>
-            <Route path="/college_list">
-              <Header isLoggedIn={isLoggedIn}/>
-              { user.state.user ? <CollegeList /> : <Login /> }
-            </Route>
-            <Route path="/notes">
-              <Header isLoggedIn={isLoggedIn}/>
-              { user.state.user ? <Notes /> : <Login /> }
             </Route>
             <Route path="/settings">
               <Header isLoggedIn={isLoggedIn}/>
