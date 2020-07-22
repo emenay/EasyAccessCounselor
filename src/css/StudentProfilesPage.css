@@ -367,6 +367,7 @@
 }
 
 .caseload-notetype {
+<<<<<<< HEAD
     height: 34px;
 }
 
@@ -386,6 +387,15 @@
 
 .caseload-enterdate {
     height: 30px;
+=======
+    height: 28px;
+}
+
+.caseload-notedate {
+    border: 1px solid gray;
+    height: 28px;
+    padding-left: 3px;
+>>>>>>> 0548eb6c2b7c66b1c3ff3e5923ac936e442ed171
 }
 
 .caseload-notetext {
@@ -393,6 +403,7 @@
     height: 60px;
 }
 
+<<<<<<< HEAD
 .caseload-savebutton {
     background: #3298CB 0% 0% no-repeat padding-box;
     border-radius: 5px;
@@ -406,6 +417,8 @@
     width: 20%;
 }
 
+=======
+>>>>>>> 0548eb6c2b7c66b1c3ff3e5923ac936e442ed171
 /* College List Panel */
 
 .college-side {

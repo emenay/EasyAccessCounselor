@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import React, {useState, useContext} from 'react';
 import edit_symbol from '../assets/edit_symbol.png';
 import profile_avatar from '../assets/profile_avatar.png';
@@ -5,6 +6,12 @@ import orange_flag from "../assets/orange_flag.png";
 import {db} from '../firebase/firebase';
 import {UserContext} from '../providers/UserProvider';
 import firebase from 'firebase/app';
+=======
+import React, {useState} from 'react';
+import edit_symbol from '../assets/edit_symbol.png';
+import profile_avatar from '../assets/profile_avatar.png';
+import orange_flag from "../assets/orange_flag.png";
+>>>>>>> 0548eb6c2b7c66b1c3ff3e5923ac936e442ed171
 
 function meetingsNumber(person, field) {
     if (typeof person[field] === "undefined"){
@@ -13,6 +20,7 @@ function meetingsNumber(person, field) {
     return Number(person[field]);
 }
 
+<<<<<<< HEAD
 function uploadNote(date, type, text, personId, cohortId) {
     if (cohortId) {
         db.collection("student_counselors").doc(cohortId)
@@ -22,6 +30,8 @@ function uploadNote(date, type, text, personId, cohortId) {
     }
 }
 
+=======
+>>>>>>> 0548eb6c2b7c66b1c3ff3e5923ac936e442ed171
 function CollegeListPanel(props){
     const [editing, changeEditing] = useState(false);
     let info = props.info;
@@ -59,6 +69,7 @@ function CollegeListPanel(props){
 /* Note: I'm using many grids instead of one because we'll later have to loop through all a person's notes */
 
 function CaseloadManagementPanel(props) {
+<<<<<<< HEAD
     let info = props.info;
     const context = useContext(UserContext);
     const [noteType, changeNoteType] = useState("Individual");
@@ -66,6 +77,11 @@ function CaseloadManagementPanel(props) {
     const [date, changeDate] = useState(new Date().toISOString().slice(0, 10));
     const [notes, changeNotes] = useState(info.notes.sort((a, b)=>{return b.date.seconds - a.date.seconds}));
 
+=======
+    const [editing, changeEditing] = useState(false);
+    const [text, changeText] = useState("");
+    let info = props.info;
+>>>>>>> 0548eb6c2b7c66b1c3ff3e5923ac936e442ed171
     return (
         <div className="caseload-panel">
             <div className="caseload-meetingsnum">
@@ -81,6 +97,7 @@ function CaseloadManagementPanel(props) {
                 <p>Notes</p>
             </div>
             <div className="caseload-noteitem">
+<<<<<<< HEAD
                 <input type="date" className="caseload-enterdate" value={date} onChange={e=>(changeDate(e.target.value))} />
                 <select value={noteType} className="caseload-notetype" onChange={e=>changeNoteType(e.target.value)}>
                     <option value="Individual">Individual</option>
@@ -101,6 +118,16 @@ function CaseloadManagementPanel(props) {
                 </div>
                 );
             })}
+=======
+                <p className="caseload-notedate">7/1/20</p>
+                <select value="group" className="caseload-notetype">
+                    <option value="individual">Individual</option>
+                    <option value="group">Group</option>
+                    <option value="event">Event</option>
+                </select>
+                <textarea className="caseload-notetext" value={text} onChange={e=>changeText(e.target.value)} />
+            </div>
+>>>>>>> 0548eb6c2b7c66b1c3ff3e5923ac936e442ed171
         </div>
     );
 }
