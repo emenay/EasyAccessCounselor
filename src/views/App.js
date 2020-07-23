@@ -56,7 +56,7 @@ export default function App() {
             </Route>
             <Route path="/">
               <Header isLoggedIn={isLoggedIn}/>
-              { user.state.user ? <Dashboard cuid={user.uid} /> : <HomeDefault /> }
+              { user.state.user ? <StudentProfilesPage /> : <Login /> }
             </Route>
           </Switch>
         </div>
