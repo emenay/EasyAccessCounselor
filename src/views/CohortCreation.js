@@ -422,8 +422,8 @@ class CohortCreation extends React.Component {
         // console.log(data);
         return (
             <div className="cohort-creation-content">
-                <div>Enter Cohort Name</div>
-                <input id ="name" onChange={this.nameChange}></input>
+                <p className="name-description"><span>Create a New Cohort</span></p>
+                <input id="name" onChange={this.nameChange} placeholder="Enter Cohort Name"></input>
                 <br></br>
                 <br></br>
                 {this.panels[this.state.selectedPanel]}

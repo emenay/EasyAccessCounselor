@@ -1,5 +1,5 @@
 .cohort-creation-content {
-    width: 40%;
+    width: 50%;
     margin: auto;
     position: relative;
 }
@@ -17,7 +17,9 @@
 }
 
 .select-entry-type > p {
-    font-size: 10px;
+    font-size: 14px;
+    text-align: left;
+    margin-bottom: 8px;
 }
 
 .select-entry-btn {
@@ -29,10 +31,10 @@
     background: #3298CB;
     color: #ffffff;
     font-family: sans-serif;
-    font-size: 1rem;
+    font-size: 20px;
     cursor: pointer;
-    width: 70px;
-    height: 50px;
+    width: 100px;
+    height: 40px;
     text-align: center;
 }
 
@@ -135,4 +137,17 @@
 
 .upload-drag {
     outline: 3px solid #3298CB;
+}
+
+.name-description {
+    font-size: 1.3vw;
+    color: #3298CB;
+}
+
+#name {
+    width: 80%;
+    align-self: left;
+    margin-bottom: 3%;
+    height: 40px;
+    font-size: 20px;
 }
