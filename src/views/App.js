@@ -1,12 +1,13 @@
 import React, { useContext, useState, createContext } from 'react';
 
 import { 
-  BrowserRouter as Router,
+  Router,
   Switch,
   Route
 } from "react-router-dom";
 
 import { UserContext } from "../providers/UserProvider";
+import { createBrowserHistory } from 'history';
 
 import '../css/App.css';
 import Login from './LoginPage';
@@ -21,11 +22,14 @@ import Notes from './NotesPage';
 import StudentProfilesPage from './StudentProfilesPage';
 import Header from '../components/Header';
 import Sidenav from '../components/Sidenav';
+
+export const history = createBrowserHistory();
+
 export default function App() {
   const user = useContext(UserContext);
   const isLoggedIn = user.state.user ? 'true' : '';
   return (
-    <Router>
+    <Router history={history}>
       <div className="page-container">
         <Sidenav isLoggedIn={isLoggedIn}/>
         <div className="page-content">

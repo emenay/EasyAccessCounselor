@@ -6,6 +6,8 @@ import "./Account.css";
 import firebase from "firebase/app";
 import "firebase/auth";
 import {UserContext} from '../providers/UserProvider';
+import { Link } from 'react-router-dom';
+import {history} from './App';
 
 // export default function Login() {
 //   const [cohort, setCohort] = useState("");
@@ -191,6 +193,7 @@ class FileUploadSelection extends React.Component {
 }
 
 class DataEntrySelection extends React.Component {
+    static contextType = UserContext;
     constructor(props){
         super(props);
         this.state = {selectedState: null}
@@ -202,7 +205,20 @@ class DataEntrySelection extends React.Component {
     onSubmit = ()=> {
         switch(this.state.selectedState){
             case "manual":
-                window.location.href = window.location.origin + "/caseload_management";
+                let name = this.props.name();
+                
+                db.collection("cohortCode").add({
+                    cohort: "unc",
+                    studentID: "1231251"
+                  }).then(function(docRef) {
+                    
+                    db.collection("student_counselors").doc(docRef.id).set({name:name,counselor:firebase.auth().currentUser.uid});
+                    // db.collection("counselors").doc(counselor).update({})
+                    return [name, docRef.id];
+        
+                })
+                .then(([name, code]) => {this.context.addCohort(name, code); history.push('/caseload_management')})
+                
                 break;
             case "upload":
                 this.props.changePanel("fileUpload");
@@ -324,7 +340,7 @@ class FieldMatches extends React.Component {
             return [name, code];
 
         })
-        .then(([name, code]) => this.context.addCohort(name, code))
+        .then(([name, code]) => {this.context.addCohort(name, code); history.push('/caseload_management')})
         .catch(function(error) {
             console.error("Error adding document: ", error);
         });
@@ -372,14 +388,23 @@ class CohortCreation extends React.Component {
         // const { data } = this.props.location.data;
         this.state = {
             selectedPanel: "dataEntry",
-            data: null 
+            data: null,
+            name: ""
         };
         this.panels = {
             "login": <Login data={this.state.data} changePanel={this.changePanel}/>,
-            "dataEntry": <DataEntrySelection changePanel={this.changePanel}/>,
+            "dataEntry": <DataEntrySelection changePanel={this.changePanel} name={this.getName}/>,
             "fileUpload": <FileUploadSelection changePanel={this.changePanel} setData={this.setData}/>,
             "fieldMatching": <FieldMatches data={this.state.data} changePanel={this.changePanel}/>
         }
+    }
+
+    nameChange = (e) => {
+        this.setState({name: e.target.value});
+    }
+
+    getName = () => {
+        return this.state.name;
     }
 
     changePanel = (panel) => {
@@ -398,7 +423,7 @@ class CohortCreation extends React.Component {
         return (
             <div className="cohort-creation-content">
                 <div>Enter Cohort Name</div>
-                <input id ="name"></input>
+                <input id ="name" onChange={this.nameChange}></input>
                 <br></br>
                 <br></br>
                 {this.panels[this.state.selectedPanel]}
