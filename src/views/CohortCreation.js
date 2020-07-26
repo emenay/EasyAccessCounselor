@@ -206,6 +206,10 @@ class DataEntrySelection extends React.Component {
         switch(this.state.selectedState){
             case "manual":
                 let name = this.props.name();
+                if (name === "" || name === null) {
+                    alert("You must enter a name for the cohort!");
+                    return;
+                }
                 
                 db.collection("cohortCode").add({
                     cohort: "unc",
@@ -307,6 +311,11 @@ class FieldMatches extends React.Component {
     }
 
     startUpload = () => {
+        var name = document.getElementById("name").value;
+        if (name === "" || name === null) {
+            alert("You must enter a name for the cohort!");
+            return;
+        }
         var props = this.props;
         var state = this.state;
         var counselor = firebase.auth().currentUser.uid;
@@ -331,9 +340,6 @@ class FieldMatches extends React.Component {
                 console.log(code);
                 db.collection("student_counselors").doc(code).collection("students").add(myobj);
             }
-
-            var name = document.getElementById("name").value;
-            console.log(name);
             
             db.collection("student_counselors").doc(docRef.id).set({name:name,counselor:counselor});
             // db.collection("counselors").doc(counselor).update({})
