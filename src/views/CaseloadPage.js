@@ -20,17 +20,52 @@ class CaseloadPage extends React.Component {
     });
     this.fields = [
       {field: "id", headerName: "ID", editable: true, valueParser: this.numberType, width: "70"},
-      {field: "firstName", headerName: "First Name", sortable: true, filter: true, editable: true, resizable: true},
-      {field: 'lastName', headerName: 'Last Name', sortable: true, filter: true, editable: true, resizable: true},
-      {field: "gpa", headerName: 'GPA', sortable: true, editable: true, valueParser: this.numberType, filter: 'agNumberColumnFilter', resizable: true},
-      {field: "classRank", headerName: 'Class Rank', sortable: true, valueParser: this.numberType, editable: true, filter: 'agNumberColumnFilter', resizable: true},
-      {field: "safetyColleges", headerName: 'Safety', sortable: true, filter: true, editable: true, resizable: true},
-      {field: "reachColleges", headerName: 'Reach', sortable: true, editable: true, filter: true, resizable: true},
-      {field: "individualMeetings", headerName: 'Ind Mtng', valueParser:this.numberType, sortable: true, filter: 'agNumberColumnFilter', editable: true, resizable: true},
-      {field: "groupMeetings", headerName: 'Group Mtngs', valueParser:this.numberType, sortable: true, filter: 'agNumberColumnFilter', editable: true, resizable: true},
-      {field: "eventMeetings", headerName: 'Event Mtngs', valueParser:this.numberType, sortable: true, filter: 'agNumberColumnFilter', editable: true, resizable: true}
+      {field: "firstName", headerName: "First Name", sortable: true, comparator: this.comparator, filter: true, editable: true, resizable: true},
+      {field: 'lastName', headerName: 'Last Name', sortable: true, comparator: this.comparator, filter: true, editable: true, resizable: true},
+      {field: "gpa", headerName: 'GPA', comparator: this.numComparator, sortable: true, editable: true, valueParser: this.numberType, filter: 'agNumberColumnFilter', resizable: true},
+      {field: "classRank", headerName: 'Class Rank', comparator:  this.numComparator, sortable: true, valueParser: this.numberType, editable: true, filter: 'agNumberColumnFilter', resizable: true},
+      {field: "safetyColleges", headerName: 'Safety', comparator: this.comparator, sortable: true, filter: true, editable: true, resizable: true},
+      {field: "reachColleges", headerName: 'Reach', comparator: this.comparator, sortable: true, editable: true, filter: true, resizable: true},
+      {field: "individualMeetings", headerName: 'Ind Mtng', comparator:  this.numComparator, valueParser:this.numberType, sortable: true, filter: 'agNumberColumnFilter', editable: true, resizable: true},
+      {field: "groupMeetings", headerName: 'Group Mtngs', comparator:  this.numComparator, valueParser:this.numberType, sortable: true, filter: 'agNumberColumnFilter', editable: true, resizable: true},
+      {field: "eventMeetings", headerName: 'Event Mtngs', comparator:  this.numComparator, valueParser:this.numberType, sortable: true, filter: 'agNumberColumnFilter', editable: true, resizable: true}
     ];
     
+  }
+
+  numComparator = (a, b, aNode, bNode, isInverted) => {
+    let inverter = isInverted ? -1 : 1;
+    let aVal = Number(a);
+    let bVal = Number(b);
+
+    if (aNode.data.uid === undefined){
+      return 1 * inverter;
+    }else if (bNode.data.uid === undefined) {
+      return -1 * inverter;
+    } 
+    if(isNaN(aVal)) {
+      if (isNaN(bVal)) return 0;
+      return -1;
+    }
+    if(isNaN(bVal)) return 1;
+    return aVal-bVal;
+  }
+
+  comparator = (aVal, bVal, aNode, bNode, isInverted) => {
+    let inverter = isInverted ? -1 : 1;
+
+    if (aNode.data.uid === undefined){
+      return 1 * inverter;
+    }else if (bNode.data.uid === undefined) {
+      return -1 * inverter;
+    } 
+    if(aVal === undefined) {
+      if (bVal === undefined) return 0;
+      return -1;
+    }
+    if(bVal === undefined) return 1;
+    if (aVal === bVal) return 0;
+    return aVal < bVal ? -1 : 1;
   }
 
   numberType = (params) => {
@@ -53,7 +88,7 @@ class CaseloadPage extends React.Component {
          
         })
         .then(data => {
-            data.push({});
+          data.push({});
             this.setState({
                 data: data,
                 lastCohort: this.context.state.selectedCohort
@@ -74,7 +109,6 @@ class CaseloadPage extends React.Component {
   cellEditingStopped(e) {
     // TODO: where updating the database will occur
     if (e.data.uid) {
-      console.log(e.data);
       var data = Object.assign({}, e.data);
       var uid = data.uid;
       delete data.uid;
@@ -82,14 +116,16 @@ class CaseloadPage extends React.Component {
       .doc(uid)
       .update(data);
     } else {
-      db.collection("student_counselors").doc(this.context.state.selectedCohort).collection("students")
-      .add(e.data)
-      .then(response=>{
-        e.data.uid = response.id;
-        var new_data = [...this.state.data];
-        new_data.push({});
-        this.setState({data: new_data})
-      });
+      if (e.value !== undefined && e.value !== ""){
+        db.collection("student_counselors").doc(this.context.state.selectedCohort).collection("students")
+        .add(e.data)
+        .then(response=>{
+          e.data.uid = response.id;
+          var new_data = [...this.state.data];
+          new_data.push({});
+          this.setState({data: new_data})
+        });
+      }
     }
 
 
