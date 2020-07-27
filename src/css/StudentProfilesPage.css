@@ -525,6 +525,10 @@ span.clear {
     display: block; 
 }
 
+.check-label {
+    width: min-content;
+}
+
 .check-label > input {
     margin-right: 10px;
 }
