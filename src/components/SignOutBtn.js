@@ -3,9 +3,13 @@ import '../css/components.css';
 
 import { signOut } from '../firebase/firebase';
 
+import Button from '@material-ui/core/Button';
+
 function SignOut() {
   return (
-    <button className='signout' onClick={signOut} />
+    <Button style={{width: "100px"}} onClick={signOut}>
+      Sign Out
+    </Button>
   )
 }
 
