@@ -5,8 +5,11 @@
 }
 
 .sidenav-container {
-	display: flex;
-	flex-direction: row
+	border-right: 1px solid black;
+	position: sticky;
+	top: 90px;
+	height: calc(100vh - 90px);
+	width: 20%;
 }
 
 .sidenav {
@@ -14,17 +17,39 @@
 	width: 220px;
 	max-width: 280px;
 	text-decoration: none;
-	text-align: center
+	text-align: center;
+}
+
+.signout {
+    background-image: url('../assets/logout.png');
+    background-size: 100% 100%;
+    width: 35px;
+    height: 50px;
+    background-color:  #fefefe;
+	border: none;
+	margin-left: 10px;
+	outline: none;
 }
 
 
 .header {
 	width: 100%;
+	height: 90px;
+	position: sticky;
+	top: 0;
+	z-index: 1000;
+	background-color: white;
 	display: flex;
-	justify-content: flex-end;
-	margin-bottom: 40px;
-	margin-top: 30px;
+	justify-content: space-between;
+	padding-bottom: 10px;
+	padding-top: 10px;
 	padding-right: 30px;
+	border-bottom: 1px solid black;
+}
+
+.header-section {
+	display: flex;
+	align-items: center;
 }
 
 .header-select {
@@ -43,14 +68,15 @@
 	text-align: center;
 	height: 120px;
 	font-size: 50px;
-	color: var(--primary-color)
+	color: var(--primary-color);
 }
 
 
 .nav-list {
 	display: flex;
 	flex-direction: column;
-	justify-content: space-around
+	justify-content: space-around;
+	padding: 10px 10px;
 }
 
 .nav-button {
