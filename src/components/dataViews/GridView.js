@@ -3,7 +3,7 @@ import unflagged from '../../assets/unflagged.png';
 import orange_flag from "../../assets/orange_flag.png";
 
 function generateField(name, dataField) {
-  if (typeof(dataField) === "undefined") {
+  if (dataField===null || typeof(dataField) === "undefined") {
     return name; 
     
   }
