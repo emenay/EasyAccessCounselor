@@ -4,7 +4,7 @@ import orange_flag from "../../assets/orange_flag.png";
 
 function generateField(name, dataField) {
   if (typeof(dataField) === "undefined") {
-    return name + "Not Available"; 
+    return name; 
     
   }
   return name + dataField;
@@ -18,7 +18,7 @@ export function GridView(props) {
           <div className="card" key={person.uid} onClick={()=>props.clickCard(person)}>
               <div className="scard-content">
                 <p className="card-title scard-detail">{person.firstName + " " + person.lastName}</p>
-                <p className="scard-detail">{generateField("", person.schools)}</p>
+                <p className="scard-detail">{generateField("Schools: ", person.schools)}</p>
                 <p className="scard-detail">{generateField("Major: ", person.major)}</p>
                 <p className="scard-detail">{generateField("GPA: ", person.gpa)}</p>
                 <p className="scard-detail">{generateField("SAT: ", person.sat)}</p>

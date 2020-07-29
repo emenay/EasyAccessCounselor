@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 
 import { List, ListItem, ListItemText, Slide, IconButton } from '@material-ui/core';
 
@@ -46,19 +46,19 @@ function Sidenav(props) {
     items = loggedOutItems;
   }
 
+  let location = useLocation().pathname.substring(1);
+
   return (
     <div className="sidenav-container">
       <Slide direction="right" in={isMenuOpen} mountOnEnter unmountOnExit>
         <List style={{width: "100%"}} disablePadding dense className="nav-list">
-            <div>
               {items.map(({label, name, path, ...rest}) => (
                 <Link className="nav-button" to={path} key={name}>
-                  <ListItem selected={window.location.pathname.substring(1)===path} style={{height: 50}} button {...rest}>
-                    <ListItemText style={{fontSize: "30px"}}>{label}</ListItemText>
+                  <ListItem style={{height: 50}} button {...rest}>
+                    <p className={"sidenav-p" + (location===path ? " path-selected" : "")}>{label}</p>
                   </ListItem>
                 </Link>
               ))}
-            </div>
             { props.isLoggedIn ? null : signInBtn }
           </List>
       </Slide>

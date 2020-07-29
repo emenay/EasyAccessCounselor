@@ -30,6 +30,7 @@ export default function App() {
         
         <div className="page-content">
         <Sidenav isLoggedIn={isLoggedIn}/>
+          <div className="view-content">
           <Switch>
             <Route path="/profiles">
               { user.state.user ? <StudentProfilesPage /> : <Login /> }
@@ -50,6 +51,7 @@ export default function App() {
               { user.state.user ? <StudentProfilesPage /> : <Login /> }
             </Route>
           </Switch>
+          </div>
         </div>
       </div>
     </Router>
