@@ -46,5 +46,13 @@
 }
 
 .ag-theme-alpine .ag-icon {
-    font-size: 30px
+    font-size: 24px
+}
+
+.ag-header-icon.ag-header-cell-menu-button {
+    opacity: 1 !important;
+}
+
+.ag-header-cell-resize {
+    opacity: 0;
 }
