@@ -1,6 +1,9 @@
 import React from 'react';
 import '../css/components.css';
 
+import ea_icon from '../assets/ea_logo.png';
+import wordmark from '../assets/wordmark.png';
+
 import SignOutBtn from './SignOutBtn';
 import {UserContext} from '../providers/UserProvider';
 
@@ -30,14 +33,17 @@ class Header extends React.Component{
 	}
 
 	render() {
-		if (this.props.isLoggedIn) {
-			return (
-			<div className="header">
-			{this.displayHelper()}
-			<SignOutBtn style={{width: "50px"}}/>
+		return (
+		<div className="header">
+			<div className="header-section">
+				<img src={ea_icon} alt='Easy Access Icon' />
+				<img src={wordmark} alt='Easy Access Title'/>
+			</div>
+			<div className="header-section">
+				{this.props.isLoggedIn && this.displayHelper()}
+				{this.props.isLoggedIn && <SignOutBtn/>}
+			</div>
 		</div>);
-		}
-		return <div className="header"/>
 
 	}
 }
