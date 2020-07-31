@@ -518,10 +518,13 @@
 }
 
 
-
 span.clear { 
     clear: left; 
     display: block; 
+}
+
+.check-label {
+    width: min-content;
 }
 
 .check-label > input {
