@@ -17,7 +17,7 @@ export function GridView(props) {
         {props.data.map(person =>
           <div className="card" key={person.uid} onClick={()=>props.clickCard(person)}>
               <div className="scard-content">
-                <p className="card-title scard-detail">{person.firstName + " " + person.lastName}</p>
+                <p className="card-title scard-detail">{(person.firstName !== undefined ? person.firstName + " " : "") + (person.lastName !== undefined ? person.lastName + " " : "")}</p>
                 <p className="scard-detail">{generateField("Schools: ", person.schools)}</p>
                 <p className="scard-detail">{generateField("Major: ", person.major)}</p>
                 <p className="scard-detail">{generateField("GPA: ", person.gpa)}</p>
