@@ -41,7 +41,7 @@ export class DropdownFilterMenu extends React.Component {
     }
   
     handleBlur = (event) => {
-        if (event.relatedTarget === null) this.setState({ collapsed: true, openedSubmenu: null });
+        if (event.relatedTarget === null || event.relatedTarget.className !== "filter-checkbox") this.setState({ collapsed: true, openedSubmenu: null });
     }
 
     changeSubmenu = (index, name) => {
@@ -82,7 +82,7 @@ export class DropdownFilterMenu extends React.Component {
             Array.from(this.props.filterGroupItems[this.state.openedSubmenu.name]).map(filter_item=>{
                 return(
                 <label className="check-label" forhtml={filter_item} key={filter_item}>
-                    <input type="checkbox" onChange={this.changedGroupCheck} checked={this.state.openedSubmenu.name in this.props.filters ? this.props.filters[this.state.openedSubmenu.name].values.has(filter_item) : false} id={filter_item} name={filter_item} value={filter_item} />{filter_item}
+                    <input className="filter-checkbox" type="checkbox" onChange={this.changedGroupCheck} checked={this.state.openedSubmenu.name in this.props.filters ? this.props.filters[this.state.openedSubmenu.name].values.has(filter_item) : false} id={filter_item} name={filter_item} value={filter_item} />{filter_item}
                 </label>);
             }));
         }
@@ -93,7 +93,7 @@ export class DropdownFilterMenu extends React.Component {
         if (this.state.openedSubmenu.type === "number"){
             return (<div className="dropdown-submenu" style={{top: (this.state.smPosition + 1) * 32.5 + 12 + "px", width: "300px"}} role="menu">
             <label className="check-label" forhtml={this.state.openedSubmenu.name}>
-                <input type="checkbox" onChange={this.changeChecked} checked={this.state.checkFilters.get(this.state.openedSubmenu.name)} id={this.state.openedSubmenu.name} name={this.state.openedSubmenu.name} />{this.state.openedSubmenu.displayName}
+                <input className="filter-checkbox" type="checkbox" onChange={this.changeChecked} checked={this.state.checkFilters.get(this.state.openedSubmenu.name)} id={this.state.openedSubmenu.name} name={this.state.openedSubmenu.name} />{this.state.openedSubmenu.displayName}
             </label>
             <Slider
                 value={this.state.openedSubmenu.name in this.props.filters > 0 ? this.props.filters[this.state.openedSubmenu.name].values : [this.state.openedSubmenu.low, this.state.openedSubmenu.high]}
@@ -143,9 +143,9 @@ class StudentProfilesPage extends React.Component{
     constructor(props){
         super(props);
         this.sortFields = [
-            {name: "SAT", displayName: "SAT", smitem: ["Low to High", "High to Low"]},
+            {name: "sat", displayName: "SAT", smitem: ["Low to High", "High to Low"]},
             {name: "gpa", displayName: "GPA", smitem: ["Low to High", "High to Low"]},
-            {name: "ACT", displayName: "ACT", smitem: ["Low to High", "High to Low"]},
+            {name: "act", displayName: "ACT", smitem: ["Low to High", "High to Low"]},
             {name: "firstName", displayName: "First Name", smitem: ["A to Z", "Z to A"]},
             {name: "lastName", displayName: "Last Name", smitem: ["A to Z", "Z to A"]}
         ]

@@ -1,6 +1,5 @@
 import React from 'react';
 // import ReactDOM from 'react-dom';
-import * as data2 from '../../data_caseload_management.json';
 import {TableView} from "./TableView";
 import '../../css/StudentProfilesPage.css';
 import '../../css/CaseloadPage.css';
@@ -312,8 +311,8 @@ export class DropdownSortMenu extends React.Component {
     constructor(props) {
       super(props);
       this.state = {
-        currentData: data2,
-        originalData: data2,
+        currentData: [],
+        originalData: [],
         view: 'table_view',
         sortState: "id"
       }
@@ -374,7 +373,7 @@ export class DropdownSortMenu extends React.Component {
         <div>
           <div>
             <div className="field has-addons">
-              {inputSearch(data2)}
+              {inputSearch([])}
             </div>
             <div className="tabs is-centered" id="tabs">
               <ul id="navigation">
@@ -387,7 +386,7 @@ export class DropdownSortMenu extends React.Component {
           <div id="render_view">
             {
              {
-               'table_view': <TableView data={data2} fields={this.props.fields} />
+               'table_view': <TableView data={[]} fields={this.props.fields} />
              }[this.state.view]
             }
           </div>
@@ -397,7 +396,3 @@ export class DropdownSortMenu extends React.Component {
   }
   
 export default MainDataView;
-
-/* 
-'grid_view': <GridView data={data2.default}/>,
-               'block_view': <BlockView data={this.state.currentData} />*/

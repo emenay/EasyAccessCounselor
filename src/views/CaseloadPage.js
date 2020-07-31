@@ -14,11 +14,13 @@ class CaseloadPage extends React.Component {
   constructor(props){
     super(props);
     this.state = ({
+      rowsSelected: false,
       searchString: "",
       data: [],
       lastCohort: null
     });
     this.fields = [
+      {width: "50", checkboxSelection: true, cellStyle: params => {return {backgroundColor: "white", borderTop: "0", borderBottom: "0"}}},
       {field: "id", headerName: "ID", editable: true, valueParser: this.numberType, width: "70"},
       {field: "firstName", headerName: "First Name", sortable: true, comparator: this.comparator, filter: true, editable: true, resizable: true},
       {field: 'lastName', headerName: 'Last Name', sortable: true, comparator: this.comparator, filter: true, editable: true, resizable: true},
@@ -113,8 +115,8 @@ class CaseloadPage extends React.Component {
       var uid = data.uid;
       delete data.uid;
       db.collection("student_counselors").doc(this.context.state.selectedCohort).collection("students")
-      .doc(uid)
-      .update(data);
+        .doc(uid)
+        .update(data);
     } else {
       if (e.value !== undefined && e.value !== ""){
         db.collection("student_counselors").doc(this.context.state.selectedCohort).collection("students")
@@ -122,11 +124,23 @@ class CaseloadPage extends React.Component {
         .then(response=>{
           e.data.uid = response.id;
           var new_data = [...this.state.data];
-          new_data.push({});
-          this.setState({data: new_data})
+          this.gridApi.applyTransaction({add: [{}]})
         });
       }
     }
+
+
+  }
+
+  deleteRows = () => {
+    var selectedRows = this.gridApi.getSelectedRows().filter(row=>{return !(row.uid===undefined)});
+    console.log(selectedRows);
+    var batch = db.batch();
+    selectedRows.forEach(row=>batch.delete(db.collection("student_counselors").doc(this.context.state.selectedCohort).collection("students").doc(row.uid)));
+    batch.commit().then(()=>{
+        this.gridApi.applyTransaction({ remove: selectedRows });
+      }
+    );
 
 
   }
@@ -136,11 +150,17 @@ class CaseloadPage extends React.Component {
   }
 
 
+  onSelectionChanged = (e) => {
+    e.api.getSelectedNodes().length===0 ? (this.state.rowsSelected && this.setState({rowsSelected: false})) : (!this.state.rowsSelected && this.setState({rowsSelected: true}));
+  }
+
+
   render(){
     return (
       <div className="caseload-content">
         <div className="profiles-header">
           <input type="text" id="myInput" onKeyUp={this.changeSearchString} placeholder="Search Table..." />
+          <button className="delete-button" onClick={this.deleteRows}>Delete Rows</button>
         </div>
                   
         <div
@@ -149,10 +169,13 @@ class CaseloadPage extends React.Component {
           height: '600px',
           width: '100%' }}>
           <AgGridReact
+            onGridReady={ params => this.gridApi = params.api}
             quickFilterText={this.state.searchString}
             onCellEditingStopped={(e) => this.cellEditingStopped(e)}
             columnDefs={this.fields}
-            rowData={this.state.data}/>
+            rowData={this.state.data}
+            rowSelection="multiple"
+            onSelectionChanged={this.onSelectionChanged}/>
         </div>
       </div>
     );
@@ -160,21 +183,3 @@ class CaseloadPage extends React.Component {
 }
 
 export default CaseloadPage;
-
-/*
-
-<table id="caseload-table">
-            <thead>
-              {this.fields.map(field => {
-                return <th className="caseload-headcell">{field}</th>;
-              })}
-
-            </thead>
-            <tbody>
-            <tr>
-              <td className="tableCell" ><input className="inputCell" type="text" defaultValue="Hi" onChange={this.getContent}/></td>
-            </tr>
-            </tbody>
-          </table>
-
-*/

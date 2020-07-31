@@ -30,9 +30,10 @@ export default function App() {
   const isLoggedIn = user.state.user ? 'true' : '';
   return (
     <Router history={history}>
-      <div className="page-container">
-        <Sidenav isLoggedIn={isLoggedIn}/>
+      <div className="page-container">        
         <div className="page-content">
+        <Sidenav isLoggedIn={isLoggedIn}/>
+          <div className="view-content">
           <Switch>
             <Route path="/profiles">
               <Header isLoggedIn={isLoggedIn}/>
@@ -59,6 +60,7 @@ export default function App() {
               { user.state.user ? <StudentProfilesPage /> : <Login /> }
             </Route>
           </Switch>
+          </div>
         </div>
       </div>
     </Router>
