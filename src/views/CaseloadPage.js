@@ -17,6 +17,7 @@ class CaseloadPage extends React.Component {
       rowsSelected: false,
       searchString: "",
       data: [],
+      undoRows: [],
       lastCohort: null
     });
     this.fields = [
@@ -133,15 +134,30 @@ class CaseloadPage extends React.Component {
   }
 
   deleteRows = () => {
-    var selectedRows = this.gridApi.getSelectedRows().filter(row=>{return !(row.uid===undefined)});
+    if (window.confirm("Are you sure you want to delete these rows?")){
+      var selectedRows = this.gridApi.getSelectedRows().filter(row=>{return !(row.uid===undefined)});
+      var batch = db.batch();
+      selectedRows.forEach(row=>batch.delete(db.collection("student_counselors").doc(this.context.state.selectedCohort).collection("students").doc(row.uid)));
+      batch.commit().then(()=>{
+          this.gridApi.applyTransaction({ remove: selectedRows });
+          this.setState({rowsSelected: false, undoRows: selectedRows});
+        }
+      );
+    }
+  }
+
+  undoDelete = () => {
+    var displayedRows = this.gridApi.getModel().rowsToDisplay;
+    var node = displayedRows[displayedRows.length - 1];
     var batch = db.batch();
-    selectedRows.forEach(row=>batch.delete(db.collection("student_counselors").doc(this.context.state.selectedCohort).collection("students").doc(row.uid)));
-    batch.commit().then(()=>{
-        this.gridApi.applyTransaction({ remove: selectedRows });
-      }
-    );
-
-
+    this.state.undoRows.forEach(row=>batch.set(db.collection("student_counselors").doc(this.context.state.selectedCohort).collection("students").doc(row.uid), row));
+      batch.commit().then(()=>{
+          this.gridApi.applyTransaction({remove: [node.data]});
+          this.gridApi.applyTransaction({ add: this.state.undoRows });
+          this.gridApi.applyTransaction({add: [{}]});
+          this.setState({undoRows: []});
+        }
+      );
   }
 
   changeSearchString = (e) => {
@@ -159,7 +175,8 @@ class CaseloadPage extends React.Component {
       <div className="caseload-content">
         <div className="profiles-header">
           <input type="text" id="myInput" onKeyUp={this.changeSearchString} placeholder="Search Table..." />
-          <button className="delete-button" onClick={this.deleteRows}>Delete Rows</button>
+          {this.state.rowsSelected && <button className="delete-button" onClick={this.deleteRows}>Delete Rows</button>}
+          {this.state.undoRows.length > 0 && <button className="delete-button" onClick={this.undoDelete}>undo Delete</button>}
         </div>
                   
         <div
