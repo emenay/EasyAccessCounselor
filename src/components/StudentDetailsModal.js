@@ -1,4 +1,4 @@
-import React, {useState, useContext, useReducer} from 'react';
+import React, {useState, useContext, useEffect} from 'react';
 import edit_symbol from '../assets/edit_symbol.png';
 import profile_avatar from '../assets/profile_avatar.png';
 import orange_flag from "../assets/orange_flag.png";
@@ -57,19 +57,20 @@ function CollegeListPanel(props){
 }
 
 /* Note: I'm using many grids instead of one because we'll later have to loop through all a person's notes */
-function arrayReducer(array, val) {
+/*function arrayReducer(array, val) {
     var new_arr = array.slice();
     new_arr.unshift(val);
     return new_arr;
-}
+}*/
 
-function CaseloadManagementPanel(props) {
+
+function NotesPanel(props) {
     let info = props.info;
     const context = useContext(UserContext);
     const [noteType, changeNoteType] = useState("Individual");
     const [text, changeText] = useState("");
     const [date, changeDate] = useState(new Date().toISOString().slice(0, 10));
-    const [notes, addNotes] = useReducer(arrayReducer, typeof info.notes === "undefined" ? [] : info.notes.sort((a, b)=>{return b.date.seconds - a.date.seconds}));
+    const [notes, setNotes] = useState(info.notes === undefined ? [] : info.notes.reverse());
     const [noteViewed, changeNoteViewed] = useState(null);
     return (
         <div className="caseload-panel">
@@ -95,8 +96,10 @@ function CaseloadManagementPanel(props) {
                     </select>
                     <div>
                         <textarea className="caseload-notetext" value={text} onChange={e=>changeText(e.target.value)} />
-                        <button className="caseload-savebutton" onClick={()=>{uploadNote(date, noteType, text, info.uid, context.state.selectedCohort); 
-                            addNotes({date: date, type: noteType, text: text});
+                        <button className="caseload-savebutton" onClick={()=>{
+                            //uploadNote(date, noteType, text, info.uid, context.state.selectedCohort); 
+                            //addNotes({date: date, type: noteType, text: text});
+                            info.notes.unshift({date: date, type: noteType, text: text});
                             changeText("");
                             changeDate(new Date().toISOString().slice(0, 10));
                         }}>Save</button>
@@ -216,7 +219,7 @@ function GeneralInformationPanel(props) {
 class StudentDetailsModal extends React.Component {
     constructor(props) {
         super(props);
-        this.tabs = ["General Information", "Caseload Management", "College List", "Application Process"];
+        this.tabs = ["General Information", "Notes", "College List", "Application Process"];
         this.state = {
             selectedTab: "General Information"
         }
@@ -232,8 +235,8 @@ class StudentDetailsModal extends React.Component {
                 return <GeneralInformationPanel info={this.props.info}/>
             case 'Application Process':
                 return <ApplicationProcessPanel info={this.props.info}/>
-            case 'Caseload Management':
-                return <CaseloadManagementPanel info={this.props.info}/>
+            case 'Notes':
+                return <NotesPanel info={this.props.info}/>
             case 'College List':
                 return <CollegeListPanel info={this.props.info}/>
             default:
@@ -255,7 +258,7 @@ class StudentDetailsModal extends React.Component {
                 </div>
                 <p className="studentdetails-goal">{"Goal: " + (typeof this.props.info.goal === "undefined" ? "--" : this.props.info.goal)}</p>
                 <div className="studentdetails-innerbackground"/>
-                <div className={"studentdetails-content" + (this.state.selectedTab === "Caseload Management" ? " caseloadContents" : "")}>
+                <div className={"studentdetails-content" + (this.state.selectedTab === "Notes" ? " caseloadContents" : "")}>
                     {this.whichPanel(this.state.selectedTab)}
                 </div>
             </div>

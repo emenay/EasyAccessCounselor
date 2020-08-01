@@ -134,7 +134,6 @@ class CaseloadPage extends React.Component {
 
   deleteRows = () => {
     var selectedRows = this.gridApi.getSelectedRows().filter(row=>{return !(row.uid===undefined)});
-    console.log(selectedRows);
     var batch = db.batch();
     selectedRows.forEach(row=>batch.delete(db.collection("student_counselors").doc(this.context.state.selectedCohort).collection("students").doc(row.uid)));
     batch.commit().then(()=>{
@@ -175,7 +174,8 @@ class CaseloadPage extends React.Component {
             columnDefs={this.fields}
             rowData={this.state.data}
             rowSelection="multiple"
-            onSelectionChanged={this.onSelectionChanged}/>
+            onSelectionChanged={this.onSelectionChanged}
+            suppressRowClickSelection={true}/>
         </div>
       </div>
     );
