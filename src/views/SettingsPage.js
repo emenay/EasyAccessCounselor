@@ -12,22 +12,26 @@ class SettingsPage extends React.Component {
         super(props);
         this.state = ({
             userEmail: '',
-            userName: '',
-            cohortName: '',
-            cohortCode: '',
-            cohortLink: '',
+            cohortName: ''
         });
     }
-    //this.context.state.cohorts.find(o => o.uid == this.context.state.selectedCohort)
+    /*this.context.state.cohorts.find(o => o.uid == this.context.state.selectedCohort)
     getUserData = () => {
-        var name = this.context.state.cohorts.find(o => o.uid == this.context.state.selectedCohort);
         this.setState({
-            userEmail: auth.currentUser.email,
-            cohortURL: "",
+            userEmail: ,
+            cohortName: this.context.state.cohorts.find(o => o.uid == this.context.state.selectedCohort)
         });
     }
     componentDidMount() {
         this.getUserData();
+    }*/
+
+    deleteCohort = () => {
+        if (this.context.state !== null && window.confirm("Are you sure you want to delete this cohort?")){
+            db.collection("student_counselors").doc(this.context.state.selectedCohort).delete()
+            .then(result=>this.context.deleteCohort(this.context.state.selectedCohort));
+        
+        }
     }
 
 
@@ -37,29 +41,30 @@ class SettingsPage extends React.Component {
                 <div class="formBlock">
                     <p>Cohort Settings</p>
                     <label>Cohort Name
-                <input class="inputLabel" type="text" value={this.context.state.cohortName}/>
+                        <input class="inputLabel" type="text" value={this.context.state.selectedCohort===null ? "" : this.context.state.cohorts.find(o => o.uid == this.context.state.selectedCohort).name}/>
                     </label>
                     <label>Cohort Code
-                <input class="inputLabel" type="text" value={this.context.state.selectedCohort ? this.context.state.selectedCohort : ''} />
+                        <input class="inputLabel" type="text" value={this.context.state.selectedCohort ? this.context.state.selectedCohort : ''} />
                     </label>
                     <label>Cohort Link
-                <a href={"http://" + window.location.hostname + "/verify/" + this.context.state.selectedCohort}>{"http://" + window.location.hostname + "/verify/" + this.context.state.selectedCohort}</a>
+                        <input class="inputLabel" type="text" value={"http://" + window.location.hostname + "/verify/" + this.context.state.selectedCohort}/>
                     </label>
+                    <button className="delete_cohort_btn" onClick={this.deleteCohort}>Delete this cohort</button>
                 </div>
                 <div class="formBlock">
                     <p>Account Settings</p>
                     <p id="updateStatus"></p>
                     <label>Email
-                <input class="inputLabel" id="email" type="text" placeholder={this.state.userEmail} />
+                        <input class="inputLabel" id="email" type="text" placeholder={this.context.state !== null ? this.context.state.user.email : ""} />
                     </label>
                     <label>Current Password
-                <input class="inputLabel" id="oldPass" type="password" placeholder="Current Password" />
+                        <input class="inputLabel" id="oldPass" type="password" placeholder="Current Password" />
                     </label>
                     <label>Enter New Password
-                <input class="inputLabel" id="newPass" type="password" placeholder="New Password" />
+                        <input class="inputLabel" id="newPass" type="password" placeholder="New Password" />
                     </label>
                     <label>Confirm New Password
-                <input class="inputLabel" id="confirmNewPass" type="password" placeholder="Confirm New Password" />
+                        <input class="inputLabel" id="confirmNewPass" type="password" placeholder="Confirm New Password" />
                     </label>
                     <button onClick={() => {
                         var newPass = document.getElementById("newPass").value;

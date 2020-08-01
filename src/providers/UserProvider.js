@@ -46,6 +46,11 @@ class UserProvider extends Component {
         console.log(this.state);
     }
 
+    deleteCohort = (cohortID) => {
+        let new_cohorts = this.state.cohorts.filter(cohort=>cohort.uid !== cohortID);
+        this.setState({cohorts: new_cohorts, selectedCohort: (new_cohorts.length > 0 ? new_cohorts[0].uid : null)});
+    }
+
     componentDidMount = () => {
         this._isMounted = true;
         auth.onAuthStateChanged(userAuth => {
@@ -61,7 +66,7 @@ class UserProvider extends Component {
 
     render() {
         return(
-            <UserContext.Provider value={{state:this.state, addCohort: this.addCohort, changeSelectedCohort: this.changeSelectedCohort}}>
+            <UserContext.Provider value={{state:this.state, deleteCohort: this.deleteCohort, addCohort: this.addCohort, changeSelectedCohort: this.changeSelectedCohort}}>
                 {this.props.children}
             </UserContext.Provider>
         )
