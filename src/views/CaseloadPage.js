@@ -7,6 +7,7 @@ import {db} from '../firebase/firebase.js';
 import '../css/searchBar.css';
 import '../css/CaseloadPage.css';
 import {UserContext} from '../providers/UserProvider';
+import firebase from 'firebase/app';
 
 
 class CaseloadPage extends React.Component {
@@ -18,20 +19,28 @@ class CaseloadPage extends React.Component {
       searchString: "",
       data: [],
       undoRows: [],
-      lastCohort: null
+      lastCohort: null,
+      addedFields: []
     });
     this.fields = [
       {width: "50", checkboxSelection: true, cellStyle: params => {return {backgroundColor: "white", borderTop: "0", borderBottom: "0"}}},
       {field: "id", headerName: "ID", editable: true, valueParser: this.numberType, width: "70"},
       {field: "firstName", headerName: "First Name", sortable: true, comparator: this.comparator, filter: true, editable: true, resizable: true},
       {field: 'lastName', headerName: 'Last Name', sortable: true, comparator: this.comparator, filter: true, editable: true, resizable: true},
+      {field: 'goal', headerName: 'Goal', sortable: true, comparator: this.comparator, filter: true, editable: true, resizable: true},
       {field: "gpa", headerName: 'GPA', comparator: this.numComparator, sortable: true, editable: true, valueParser: this.numberType, filter: 'agNumberColumnFilter', resizable: true},
+      {field: "sat", headerName: 'SAT', comparator: this.numComparator, sortable: true, editable: true, valueParser: this.numberType, filter: 'agNumberColumnFilter', resizable: true},
+      {field: "act", headerName: 'ACT', comparator: this.numComparator, sortable: true, editable: true, valueParser: this.numberType, filter: 'agNumberColumnFilter', resizable: true},
       {field: "classRank", headerName: 'Class Rank', comparator:  this.numComparator, sortable: true, valueParser: this.numberType, editable: true, filter: 'agNumberColumnFilter', resizable: true},
-      {field: "safetyColleges", headerName: 'Safety', comparator: this.comparator, sortable: true, filter: true, editable: true, resizable: true},
-      {field: "reachColleges", headerName: 'Reach', comparator: this.comparator, sortable: true, editable: true, filter: true, resizable: true},
-      {field: "individualMeetings", headerName: 'Ind Mtng', comparator:  this.numComparator, valueParser:this.numberType, sortable: true, filter: 'agNumberColumnFilter', editable: true, resizable: true},
-      {field: "groupMeetings", headerName: 'Group Mtngs', comparator:  this.numComparator, valueParser:this.numberType, sortable: true, filter: 'agNumberColumnFilter', editable: true, resizable: true},
-      {field: "eventMeetings", headerName: 'Event Mtngs', comparator:  this.numComparator, valueParser:this.numberType, sortable: true, filter: 'agNumberColumnFilter', editable: true, resizable: true}
+      {field: "efc", headerName: 'EFC', comparator:  this.numComparator, sortable: true, valueParser: this.numberType, editable: true, filter: 'agNumberColumnFilter', resizable: true},
+      {field: "payMismatch", headerName: 'Ability to Pay Mismatch', comparator: this.comparator, sortable: true, filter: true, editable: true, resizable: true},
+      {field: "major", headerName: 'Major 1', comparator: this.comparator, sortable: true, filter: true, editable: true, resizable: true},
+      {field: "major2", headerName: 'Major 2', comparator: this.comparator, sortable: true, filter: true, editable: true, resizable: true},
+      {field: "safetyColleges", headerName: 'Safety Colleges', comparator: this.comparator, sortable: true, filter: true, editable: true, resizable: true},
+      {field: "targetColleges", headerName: 'Target Colleges', comparator: this.comparator, sortable: true, filter: true, editable: true, resizable: true},
+      {field: "reachColleges", headerName: 'Reach Colleges', comparator: this.comparator, sortable: true, editable: true, filter: true, resizable: true},
+      {field: "additions", headerName: 'Counselor Additions', comparator: this.comparator, sortable: true, editable: true, filter: true, resizable: true}
+      
     ];
     
   }
@@ -78,6 +87,7 @@ class CaseloadPage extends React.Component {
   }
 
   getCohortData = () => {
+    // Could probably improve the double query into one, hacking one to get working
     if (this.context.state.selectedCohort && this.state.lastCohort !== this.context.state.selectedCohort){
       db.collection("student_counselors").doc(this.context.state.selectedCohort).collection("students")
         .get()
@@ -92,10 +102,15 @@ class CaseloadPage extends React.Component {
         })
         .then(data => {
           data.push({});
+          db.collection("student_counselors").doc(this.context.state.selectedCohort).get()
+          .then(result=>{
+            console.log(result.data());
             this.setState({
-                data: data,
-                lastCohort: this.context.state.selectedCohort
+              data: data,
+              lastCohort: this.context.state.selectedCohort,
+              addedFields: (result.data().addedFields !== undefined ? result.data().addedFields.map(field=> {return {field: field, headerName: field, comparator: this.comparator, sortable: true, editable: true, filter: true, resizable: true}}) : [])
             });
+          })
         })
         .catch(error => {console.log(error)});
       }
@@ -169,6 +184,22 @@ class CaseloadPage extends React.Component {
     e.api.getSelectedNodes().length===0 ? (this.state.rowsSelected && this.setState({rowsSelected: false})) : (!this.state.rowsSelected && this.setState({rowsSelected: true}));
   }
 
+  addField = (e) => {
+    if (this.context.state.selectedCohort) {
+      console.log("here");
+      let fieldName =  window.prompt("What would you like to name your field?");
+      if (fieldName) {
+        db.collection("student_counselors").doc(this.context.state.selectedCohort)
+        .update({addedFields: firebase.firestore.FieldValue.arrayUnion(fieldName)})
+        .then(result=>{
+          this.setState({addedFields: this.state.addedFields.concat([{field: fieldName, headerName: fieldName, comparator: this.comparator, sortable: true, editable: true, filter: true, resizable: true}])});
+          this.gridApi.setColumnDefs(this.fields.concat(this.state.addedFields));
+        })
+        .catch(error=>console.log(error));
+      }
+    }
+  }
+
 
   render(){
     return (
@@ -177,6 +208,7 @@ class CaseloadPage extends React.Component {
           <input type="text" id="myInput" onKeyUp={this.changeSearchString} placeholder="Search Table..." />
           {this.state.rowsSelected && <button className="delete-button" onClick={this.deleteRows}>Delete Rows</button>}
           {this.state.undoRows.length > 0 && <button className="delete-button" onClick={this.undoDelete}>undo Delete</button>}
+          <button className="delete-button" onClick={this.addField}>Add a custom field</button>
         </div>
                   
         <div
@@ -188,7 +220,7 @@ class CaseloadPage extends React.Component {
             onGridReady={ params => this.gridApi = params.api}
             quickFilterText={this.state.searchString}
             onCellEditingStopped={(e) => this.cellEditingStopped(e)}
-            columnDefs={this.fields}
+            columnDefs={this.fields.concat(this.state.addedFields)}
             rowData={this.state.data}
             rowSelection="multiple"
             onSelectionChanged={this.onSelectionChanged}

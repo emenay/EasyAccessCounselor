@@ -286,6 +286,7 @@ class FieldMatches extends React.Component {
             "State": "state",
             "Zipcode": "zipcode",
             "EFC": "efc",
+            "Ability to Pay Mismatch": "payMismatch",
             "Field of Study/Major 1": "major",
             "Field of Study/Major 2": "major2",
             "Safety Colleges": "safetyColleges",
@@ -307,7 +308,6 @@ class FieldMatches extends React.Component {
         let new_fields = new Map(this.state.fieldsMap);
         new_fields.set(field[0], e.target.value);
         this.setState({fieldsMap: new_fields});
-
     }
 
     startUpload = () => {
@@ -320,6 +320,8 @@ class FieldMatches extends React.Component {
         var state = this.state;
         var counselor = firebase.auth().currentUser.uid;
         var code;
+        var addedFields = new Set();
+        // This needs to be refactored for batch writes, also no idea what they were going for with cohortCode
         db.collection("cohortCode").add({
             cohort: "unc",
             studentID: "1231251"
@@ -333,15 +335,21 @@ class FieldMatches extends React.Component {
                 var counter = 0;
                 Array.from(state.fieldsMap).forEach(entry=>
                     {
-                        myobj[entry[1]] = props.data[i][counter];
-                        counter = counter + 1;
+                        if (entry[1] !== "None"){
+                            if (entry[1] === "Add Field"){
+                                myobj[entry[0]] = props.data[i][counter];
+                                addedFields.add(entry[0]);
+                            } else {
+                                myobj[entry[1]] = props.data[i][counter];
+                            }
+                            counter = counter + 1;
+                        }
                     }
                 );
-                console.log(code);
                 db.collection("student_counselors").doc(code).collection("students").add(myobj);
             }
             
-            db.collection("student_counselors").doc(docRef.id).set({name:name,counselor:counselor});
+            db.collection("student_counselors").doc(docRef.id).set({name:name, counselor:counselor, addedFields: Array.from(addedFields)});
             // db.collection("counselors").doc(counselor).update({})
             return [name, code];
 
@@ -356,6 +364,7 @@ class FieldMatches extends React.Component {
     }
 
     render(){
+        console.log(this.state.fieldsMap);
         return (
             <div>
                 <p className="fields-description"><span>Match</span> your upload's fields with the fields in the Easy Access database, or <span>create</span> a new field.</p>
@@ -370,6 +379,7 @@ class FieldMatches extends React.Component {
                             <p>{field[0]}</p>
                             <select className="select-dropdown" value={field[1]} onChange={e=>this.selectField(e, field)}>
                                 <option value="None">Select Option</option>
+                                <option value="Add Field">Add as custom field</option>
                                 {Object.entries(this.fields).map(val=>{
                                     return <option key={val[1] + field} value={val[1]}>{val[0]}</option>
                                 })}
