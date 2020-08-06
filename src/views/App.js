@@ -17,6 +17,7 @@ import CohortCreation from './CohortCreation';
 import StudentProfilesPage from './StudentProfilesPage';
 import Header from '../components/Header';
 import Sidenav from '../components/Sidenav';
+import Signup from './SignupPage';
 
 export const history = createBrowserHistory();
 
@@ -49,6 +50,9 @@ export default function App() {
             </Route>
             <Route path="/login">
               <Login />
+            </Route>
+            <Route path="/signup">
+              <Signup />
             </Route>
             <Route path="/">
               { user.state.user ? <StudentProfilesPage /> : <Login /> }

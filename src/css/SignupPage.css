@@ -1,0 +1,10 @@
+.signup-container {
+    width: 100%;
+    height: calc(100% - 80px);
+}
+
+.signup-content {
+    width: 40%;
+    margin: auto;
+    display: grid;
+}
