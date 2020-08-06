@@ -5,7 +5,16 @@ import ea_icon from '../assets/ea_logo.png';
 import wordmark from '../assets/wordmark.png';
 
 import SignOutBtn from './SignOutBtn';
+import login from '../assets/login.png';
+import signup from '../assets/signup.png';
 import {UserContext} from '../providers/UserProvider';
+import {history} from '../views/App';
+
+function LinkButton(props) {
+	return(
+		<button className="link-button" style={{backgroundImage: `url(${props.image})`}} onClick={()=>history.push(props.path)} />
+	);
+}
 
 class Header extends React.Component{
 	static contextType = UserContext;
@@ -40,8 +49,8 @@ class Header extends React.Component{
 				<img src={wordmark} alt='Easy Access Title'/>
 			</div>
 			<div className="header-section">
-				{this.props.isLoggedIn && this.displayHelper()}
-				{this.props.isLoggedIn && <SignOutBtn/>}
+				{this.props.isLoggedIn ? this.displayHelper() : <LinkButton image={login} path='/login'/>}
+				{this.props.isLoggedIn ? <SignOutBtn/> :  <LinkButton image={signup} path='/signup'/>}
 			</div>
 		</div>);
 

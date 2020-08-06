@@ -28,9 +28,9 @@ export default function App() {
       <div className="page-container">
       <Header isLoggedIn={isLoggedIn}/>
         
-        <div className="page-content">
-        <Sidenav isLoggedIn={isLoggedIn}/>
-          <div className="view-content">
+        <div className={user.state.user ? "page-content" : 'page-content-nosignin'}>
+        {user.state.user && <Sidenav isLoggedIn={isLoggedIn}/>}
+          <div className={user.state.user ? "view-content" : 'page-content-nosignin'}>
           <Switch>
             <Route path="/profiles">
               { user.state.user ? <StudentProfilesPage /> : <Login /> }
@@ -46,6 +46,9 @@ export default function App() {
             </Route>
             <Route path="/cohortcreation2">
               { user.state.user ? <CohortCreation /> : <Login /> }
+            </Route>
+            <Route path="/login">
+              <Login />
             </Route>
             <Route path="/">
               { user.state.user ? <StudentProfilesPage /> : <Login /> }

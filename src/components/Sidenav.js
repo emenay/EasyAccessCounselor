@@ -9,7 +9,7 @@ import MenuOpenIcon from '@material-ui/icons/MenuOpen';
 import '../css/components.css';
 
 import { signOut } from '../firebase/firebase';
-import logo from '../assets/logo.svg';
+
 
 const loggedInItems =  [
   { name: 'profiles', label: 'Student Profiles', path: 'profiles' },
@@ -63,7 +63,6 @@ function Sidenav(props) {
                   </ListItem>
                 </Link>
               ))}
-            { props.isLoggedIn ? null : signInBtn }
           </List>
       </Slide>
     </div>

@@ -13,6 +13,15 @@
 	padding-top: 10%;
 }
 
+.link-button {
+	width: 167px;
+	height: 49px;
+	background-size: 100% 100%;
+	background-color: white;
+	outline: none;
+	border: none;
+	margin-right: 20px;
+}
 
 .sidenav-p {
 	font-size: 1.55vw;
