@@ -9,6 +9,7 @@ import login from '../assets/login.png';
 import signup from '../assets/signup.png';
 import {UserContext} from '../providers/UserProvider';
 import {history} from '../views/App';
+import {db} from '../firebase/firebase';
 
 function LinkButton(props) {
 	return(
@@ -21,6 +22,7 @@ class Header extends React.Component{
 
 	changeSelected = (e) => {
 		this.context.changeSelectedCohort(e);
+		db.collection('counselors').doc(this.context.state.user.uid).update({selectedCohort: e.target.value});
 		this.setState({selectedCohort: e.target.value});
 	}
 

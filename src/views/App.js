@@ -3,7 +3,8 @@ import React, { useContext, useState, createContext } from 'react';
 import { 
   Router,
   Switch,
-  Route
+  Route,
+  Redirect
 } from "react-router-dom";
 
 import { UserContext } from "../providers/UserProvider";
@@ -34,28 +35,28 @@ export default function App() {
           <div className={user.state.user ? "view-content" : 'page-content-nosignin'}>
           <Switch>
             <Route path="/profiles">
-              { user.state.user ? <StudentProfilesPage /> : <Login /> }
+              { user.state.user ? <StudentProfilesPage /> : <Redirect to='/login' /> }
             </Route>
             <Route path="/caseload_management">
-              { user.state.user ? <Caseload cuid={user.uid}/> : <Login /> }
+              { user.state.user ? <Caseload cuid={user.uid}/> : <Redirect to='/login' /> }
             </Route>
             <Route path="/settings">
-              { user.state.user ? <Settings currentUser={user} /> : <Login /> }
+              { user.state.user ? <Settings currentUser={user} /> : <Redirect to='/login' /> }
             </Route>
             <Route path="/cohortcreation">
-              { user.state.user ? <CohortCreation /> : <Login /> }
+              { user.state.user ? <CohortCreation /> : <Redirect to='/login' /> }
             </Route>
             <Route path="/cohortcreation2">
-              { user.state.user ? <CohortCreation /> : <Login /> }
+              { user.state.user ? <CohortCreation /> : <Redirect to='/login' />}
             </Route>
             <Route path="/login">
-              <Login />
+            { user.state.user ? <Redirect to='/caseload_management' /> : <Login /> }
             </Route>
             <Route path="/signup">
-              <Signup />
+            { user.state.user ? <Redirect to='/caseload_management' /> : <Signup /> }
             </Route>
             <Route path="/">
-              { user.state.user ? <StudentProfilesPage /> : <Login /> }
+              { user.state.user ? <Caseload /> : <Login /> }
             </Route>
           </Switch>
           </div>

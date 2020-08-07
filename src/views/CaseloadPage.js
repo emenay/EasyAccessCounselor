@@ -42,6 +42,20 @@ class CaseloadPage extends React.Component {
       {field: "additions", headerName: 'Counselor Additions', comparator: this.comparator, sortable: true, editable: true, filter: true, resizable: true}
       
     ];
+
+    this.customHeader = (
+      '<div class="ag-cell-label-container" role="presentation">' +
+      '  <span ref="eMenu" class="ag-header-icon ag-header-cell-menu-button"></span>' +
+      '  <div ref="eLabel" class="ag-header-cell-label" role="presentation">' +
+      '    <span ref="eText" class="ag-header-cell-text" role="columnheader"></span>' +
+      '    <span ref="eSortOrder" class="ag-header-icon ag-sort-order" ></span>' +
+      '    <span ref="eSortAsc" class="ag-header-icon ag-sort-ascending-icon" ></span>' +
+      '    <span ref="eSortDesc" class="ag-header-icon ag-sort-descending-icon" ></span>' +
+      '    <span ref="eSortNone" class="ag-header-icon ag-sort-none-icon" ></span>' +
+      '    <span ref="eFilter" class="ag-header-icon ag-filter-icon"></span>' +
+      '  </div>' +
+      '</div>'
+    )
     
   }
 
@@ -108,7 +122,10 @@ class CaseloadPage extends React.Component {
             this.setState({
               data: data,
               lastCohort: this.context.state.selectedCohort,
-              addedFields: (result.data().addedFields !== undefined ? result.data().addedFields.map(field=> {return {field: field, headerName: field, comparator: this.comparator, sortable: true, editable: true, filter: true, resizable: true}}) : [])
+              addedFields: (result.data().addedFields !== undefined ? result.data().addedFields.map(field=> {return {field: field, headerName: field, comparator: this.comparator, sortable: true, editable: true, filter: true, resizable: true, headerComponentParams: {
+                template: this.customHeader
+                 
+            }}}) : [])
             });
           })
         })
@@ -146,6 +163,12 @@ class CaseloadPage extends React.Component {
     }
 
 
+  }
+
+  // IMPORTANT NOTE: Only deletes the listing in the cohort, does not delete the column data for users
+  deleteColumn = (e) => {
+    console.log("here");
+    console.log(e);
   }
 
   deleteRows = () => {
@@ -186,7 +209,6 @@ class CaseloadPage extends React.Component {
 
   addField = (e) => {
     if (this.context.state.selectedCohort) {
-      console.log("here");
       let fieldName =  window.prompt("What would you like to name your field?");
       if (fieldName) {
         db.collection("student_counselors").doc(this.context.state.selectedCohort)

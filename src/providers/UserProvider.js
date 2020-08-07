@@ -1,6 +1,5 @@
 import React, { Component, createContext } from "react";
 import { db, auth } from '../firebase/firebase.js';
-import firebase from 'firebase/app';
 
 export const UserContext = createContext({ user: null, selectedCohort: null, cohorts: [] });
 
@@ -11,9 +10,11 @@ class UserProvider extends Component {
         cohorts: []
     };
 
-    userUpdate = (user) => {
+    userUpdate = async (user) => {
         this.setState({user: user});
         if (user) {
+            let userDetails = await db.collection('counselors').doc(user.uid).get();
+            let cohort = userDetails.data().selectedCohort;
             db.collection("student_counselors").where("counselor", "==", user.uid).get()
             .then(querySnapshot=>{
                 return querySnapshot.docs.map(doc =>{
@@ -24,9 +25,9 @@ class UserProvider extends Component {
             })
             .then(data=>this.setState({
                 cohorts: data,
-                selectedCohort: this.state.selectedCohort ? this.state.selectedCohort : data.length > 0 ?  data[0].uid : null
+                selectedCohort: this.state.selectedCohort ? this.state.selectedCohort : (cohort !== undefined ? cohort: (data.length > 0 ?  data[0].uid : null))
               }))
-            .catch(error=>{console.log(error); this.setState({user: user})});
+            .catch(error=>{console.log(error)});
           } else {
               this.setState({
                 selectedCohort: null,

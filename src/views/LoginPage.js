@@ -1,11 +1,21 @@
 import React, {useState} from 'react';
 import '../css/LoginPage.css';
 
-import { auth} from '../firebase/firebase';
+import {auth} from '../firebase/firebase';
+import {history} from './App';
 
 function login(email, password){
-  console.log("here");
-  auth.signInWithEmailAndPassword(email, password).catch(error=>window.alert(error));
+  auth.signInWithEmailAndPassword(email, password)
+  .then(result => history.push('caseload_management'))
+  .catch(error => window.alert(error));
+}
+
+function resetPassword(email) {
+  auth.sendPasswordResetEmail(email).then(function() {
+    window.alert("Email sent to your address");
+  }).catch(function(error) {
+    window.alert(error);
+  });
 }
 
 function LoginPage(prop) {
@@ -25,6 +35,7 @@ function LoginPage(prop) {
               <input type='text' placeholder='Email' value={email} onChange={e=>setEmail(e.target.value)}/>
               <input type='password' placeholder='Password' value={password} onChange={e=>setPassword(e.target.value)}/>
               <button className='login-button' onClick={()=>login(email, password)}>Login</button>
+              <p className='password-reset' onClick={e=>resetPassword(email)}>Forgot your password?</p>
             </div>
           </div>
         </div>
@@ -32,19 +43,5 @@ function LoginPage(prop) {
       );
 }
 
-/*
-class LoginPage extends React.Component {
-  render() {
-    return (
-    <div>
-      <div className="LoginBoxContainer">
-        <div className="LoginBox">
-          <StyledFirebaseAuth uiConfig={uiConfig} firebaseAuth={auth}/>
-        </div>
-      </div>
-    </div>
-    );
-  }
-}*/
 
 export default LoginPage;
