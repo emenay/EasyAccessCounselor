@@ -70,8 +70,13 @@ function NotesPanel(props) {
     const [noteType, changeNoteType] = useState("Individual");
     const [text, changeText] = useState("");
     const [date, changeDate] = useState(new Date().toISOString().slice(0, 10));
-    const [notes, setNotes] = useState(info.notes === undefined ? [] : info.notes.reverse());
+    const [notes, setNotes] = useState([]);
     const [noteViewed, changeNoteViewed] = useState(null);
+
+    useEffect(()=>{
+        setNotes(info.notes === undefined ? [] : info.notes.reverse());
+    }, []);
+
     return (
         <div className="caseload-panel">
             <div className="caseload-meetingsnum">
