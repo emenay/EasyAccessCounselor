@@ -33,11 +33,10 @@ function SignupPage(prop) {
   const [last, setLast] = useState('');
 
     return (
-      <div>
         <div className="signup-container">
           <div className="signup-content">
-            <p className='detail-text'>Email</p>
-            <input type='text' placeholder="Email" onChange={e=>setEmail(e.target.value)} />
+            <p className='detail-text full-width'>Email</p>
+            <input className='full-width' type='text' placeholder="Email" onChange={e=>setEmail(e.target.value)} />
             <div className="name-section">
                 <p className='detail-text'>First Name</p>
                 <input type='text' placeholder="First Name" onChange={e=>setFirst(e.target.value)} />
@@ -46,12 +45,11 @@ function SignupPage(prop) {
                 <p className='detail-text'>Last Name</p>
                 <input type='text' placeholder="Last Name" onChange={e=>setLast(e.target.value)} />
             </div>
-            <p className='detail-text'>Password</p>
-            <input type='password' placeholder="Password" onChange={e=>setPassword(e.target.value)} />
-            <input type='password' placeholder="Confirm Password" onChange={e=>setConf(e.target.value)} />
-            <button onClick={()=>signupClick(email, password, confPassword, first, last)} >Sign up</button>
+            <p className='detail-text full-width'>Password</p>
+            <input className="full-width" type='password' placeholder="Password" onChange={e=>setPassword(e.target.value)} />
+            <input className="full-width" type='password' placeholder="Confirm Password" onChange={e=>setConf(e.target.value)} />
+            <button className="signup-btn" onClick={()=>signupClick(email, password, confPassword, first, last)} >Sign up</button>
           </div>
-        </div>
       </div>
       );
 }

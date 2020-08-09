@@ -1,10 +1,38 @@
 .signup-container {
     width: 100%;
     height: calc(100% - 80px);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    overflow: auto;
 }
 
 .signup-content {
-    width: 40%;
+    width: 35%;
     margin: auto;
     display: grid;
+    column-gap: 20px;
+    grid-template-columns: 50% 50%;
+}
+
+.signup-content input {
+    width: 100%;
+    height: 22px;
+    margin-bottom: 20px;
+}
+
+.signup-content p {
+    font-size: 16px;
+    color: #3298CB;
+    text-align: left;
+}
+
+.full-width {
+    grid-column: 1 / 3;
+}
+
+.signup-btn {
+    grid-column: 2;
+    width: 100%;
+    font-size: 20px;
 }
