@@ -49,7 +49,12 @@ html, body, #root {
   grid-template-columns: 20% 80%;
 }
 
-.page-content-nosignin{
+.page-content-nosignin {
+  height: calc(100% - 80px);
+  width: 100%;
+}
+
+.page-content-nosignin1{
   width: 100%;
   height: 100%;
 }

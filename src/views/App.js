@@ -32,7 +32,7 @@ export default function App() {
         
         <div className={user.state.user ? "page-content" : 'page-content-nosignin'}>
         {user.state.user && <Sidenav isLoggedIn={isLoggedIn}/>}
-          <div className={user.state.user ? "view-content" : 'page-content-nosignin'}>
+          <div className={user.state.user ? "view-content" : 'page-content-nosignin1'}>
           <Switch>
             <Route path="/profiles">
               { user.state.user ? <StudentProfilesPage /> : <Redirect to='/login' /> }

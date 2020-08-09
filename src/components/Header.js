@@ -3,8 +3,7 @@ import '../css/components.css';
 
 import ea_icon from '../assets/ea_logo.png';
 import wordmark from '../assets/wordmark.png';
-
-import SignOutBtn from './SignOutBtn';
+import { signOut } from '../firebase/firebase';
 import login from '../assets/login.png';
 import signup from '../assets/signup.png';
 import {UserContext} from '../providers/UserProvider';
@@ -52,7 +51,7 @@ class Header extends React.Component{
 			</div>
 			<div className="header-section">
 				{this.props.isLoggedIn ? this.displayHelper() : <LinkButton image={login} path='/login'/>}
-				{this.props.isLoggedIn ? <SignOutBtn/> :  <LinkButton image={signup} path='/signup'/>}
+				{this.props.isLoggedIn ? <button className="signout" onClick={signOut}/> :  <LinkButton image={signup} path='/signup'/>}
 			</div>
 		</div>);
 

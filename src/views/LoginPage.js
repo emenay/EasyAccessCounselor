@@ -24,21 +24,19 @@ function LoginPage(prop) {
 
     return (
       <div className='background'>
-        <div className="LoginBoxContainer">
           <div className="login-content">
             <div className='login-tabs'>
-              <div className='login-tab'>Counselor Login</div>
-              <div className='login-tab'>Student Login</div>
+              <div className='login-tab selected'><p>Counselor Login</p></div>
+              <div className='login-tab' onClick={()=>window.alert("Student Login Coming Soon!")}><p>Student Login</p></div>
             </div>
             <div className='login-body'>
-              <p>Welcome</p>
+              <p className="welcome-text">Welcome!</p>
               <input type='text' placeholder='Email' value={email} onChange={e=>setEmail(e.target.value)}/>
               <input type='password' placeholder='Password' value={password} onChange={e=>setPassword(e.target.value)}/>
               <button className='login-button' onClick={()=>login(email, password)}>Login</button>
               <p className='password-reset' onClick={e=>resetPassword(email)}>Forgot your password?</p>
             </div>
           </div>
-        </div>
       </div>
       );
 }

@@ -1,13 +1,12 @@
-.LoginBoxContainer {
-    width: 40%;
-    margin: auto;
-    height: 100%;
-}
+
 
 .login-content {
+    width: 45%;
     display: flex;
     flex-direction: column;
-    height: 100%;
+    min-height: 300px;
+    height: 70%;
+    margin: auto;
 }
 
 .login-tabs {
@@ -21,33 +20,65 @@
     border-top-left-radius: 15px;
     border-top-right-radius: 15px;
     background-color: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
     height: 100%;
-    width: 30%;    
-    border: 1px solid #707070;
+    width: 43%;    
+    border-bottom: 1px solid #707070;
+    cursor: pointer;
+}
+
+.selected {
+    border-bottom: 0;
+}
+
+.login-tab p {
+    font-size: 20px;
+    color: #3298CB;
 }
 
 .login-body {
     background-color: white;
     border-bottom-left-radius: 20px;
     border-bottom-right-radius: 20px;
-    height: 50%;
+    height: 100%;
     width: 100%;
     display: flex;
     flex-direction: column;
     justify-content: space-evenly;
     padding: 10px 70px;
-    border-right: 1px solid #707070;
-    border-left: 1px solid #707070;
-    border-bottom: 1px solid #707070;
+}
+
+.login-button {
+    width: 100%;
+    max-width: 100%;
+    font-size: 24px;
+    text-align: center;
+    color: white;
+    display: inline-block;
 }
 
 .background {
     background: linear-gradient(299deg, #3298CB 0%, #1D5977 44%, #194C66 100%);
     width: 100%;
     height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
 
 .password-reset {
     text-decoration: underline;
     cursor: pointer;
+}
+
+.welcome-text {
+    text-align: left;
+    font-size: 24px;
+    color: #3298CB;
+}
+
+.input {
+    width: 100%;
 }
