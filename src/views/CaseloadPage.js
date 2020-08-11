@@ -8,6 +8,13 @@ import '../css/searchBar.css';
 import '../css/CaseloadPage.css';
 import {UserContext} from '../providers/UserProvider';
 import firebase from 'firebase/app';
+import trash from '../assets/trash.png';
+import undo from '../assets/undo.png';
+import plus from '../assets/plus.png';
+
+function IconButton(props){
+  return <button className="icon_button" style={{backgroundImage: "url(" + props.url + ")"}} onClick={props.clickMethod}/>
+}
 
 
 class CaseloadPage extends React.Component {
@@ -43,6 +50,7 @@ class CaseloadPage extends React.Component {
       
     ];
 
+    // implement for deletion dropdown on header TODO
     this.customHeader = (
       '<div class="ag-cell-label-container" role="presentation">' +
       '  <span ref="eMenu" class="ag-header-icon ag-header-cell-menu-button"></span>' +
@@ -223,14 +231,15 @@ class CaseloadPage extends React.Component {
   }
 
 
+  // plus from https://icons8.com/icons/set/plus
   render(){
     return (
       <div className="caseload-content">
         <div className="profiles-header">
           <input type="text" id="myInput" onKeyUp={this.changeSearchString} placeholder="Search Table..." />
-          {this.state.rowsSelected && <button className="delete-button" onClick={this.deleteRows}>Delete Rows</button>}
-          {this.state.undoRows.length > 0 && <button className="delete-button" onClick={this.undoDelete}>undo Delete</button>}
-          <button className="delete-button" onClick={this.addField}>Add a custom field</button>
+          {this.state.rowsSelected && <IconButton url={trash} clickMethod={this.deleteRows} />}
+          {this.state.undoRows.length > 0 && <IconButton url={undo} clickMethod={this.undoDelete} />}
+          <IconButton url={plus} clickMethod={this.addField} />
         </div>
                   
         <div
