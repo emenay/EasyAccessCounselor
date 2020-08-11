@@ -1,5 +1,6 @@
 import React, { Component, createContext } from "react";
 import { db, auth } from '../firebase/firebase.js';
+import Cookies from 'js-cookie';
 
 export const UserContext = createContext({ user: null, selectedCohort: null, cohorts: [] });
 
@@ -26,7 +27,7 @@ class UserProvider extends Component {
             })
             .then(data=>this.setState({
                 cohorts: data,
-                selectedCohort: this.state.selectedCohort ? this.state.selectedCohort : (data.length > 0 ?  data[0].uid : null)
+                selectedCohort: this.cohortSelector(data)
               }))
             .catch(error=>{console.log(error)});
           } else {
@@ -37,7 +38,24 @@ class UserProvider extends Component {
           }
     }
 
+    // Helper method for choosing which cohort to select
+
+    cohortSelector = (data) => {
+        if (this.state.selectedCohort) return this.state.selectedCohort;
+
+        if (Cookies.get('cohort') !== undefined) {
+            return Cookies.get('cohort');
+        }
+
+        if (data.length > 0) {
+            Cookies.set("cohort", data[0].uid, {expires: 100});
+            return data[0].uid;
+        }
+        return null;
+    }
+
     changeSelectedCohort = (e) =>{
+        Cookies.set("cohort", e.target.value, {expires: 100});
         this.setState({selectedCohort: e.target.value});
     }
 

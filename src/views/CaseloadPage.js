@@ -126,7 +126,6 @@ class CaseloadPage extends React.Component {
           data.push({});
           db.collection("student_counselors").doc(this.context.state.selectedCohort).get()
           .then(result=>{
-            console.log(result.data());
             this.setState({
               data: data,
               lastCohort: this.context.state.selectedCohort,

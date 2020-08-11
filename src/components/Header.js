@@ -21,7 +21,6 @@ class Header extends React.Component{
 
 	changeSelected = (e) => {
 		this.context.changeSelectedCohort(e);
-		db.collection('counselors').doc(this.context.state.user.uid).update({selectedCohort: e.target.value});
 		this.setState({selectedCohort: e.target.value});
 	}
 
