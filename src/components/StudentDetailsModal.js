@@ -102,9 +102,13 @@ function NotesPanel(props) {
                     <div>
                         <textarea className="caseload-notetext" value={text} onChange={e=>changeText(e.target.value)} />
                         <button className="caseload-savebutton" onClick={()=>{
-                            //uploadNote(date, noteType, text, info.uid, context.state.selectedCohort); 
-                            //addNotes({date: date, type: noteType, text: text});
-                            info.notes.unshift({date: date, type: noteType, text: text});
+                            uploadNote(date, noteType, text, info.uid, context.state.selectedCohort); 
+                            if (info.notes === undefined) {
+                                info.notes = [{date: date, type: noteType, text: text}];
+                                setNotes(info.notes);
+                            }else {
+                                info.notes.unshift({date: date, type: noteType, text: text});
+                            }
                             changeText("");
                             changeDate(new Date().toISOString().slice(0, 10));
                         }}>Save</button>
