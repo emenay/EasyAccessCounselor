@@ -16,7 +16,6 @@ function IconButton(props){
   return <button className="icon_button" style={{backgroundImage: "url(" + props.url + ")"}} onClick={props.clickMethod}/>
 }
 
-
 class CaseloadPage extends React.Component {
   static contextType = UserContext;
   constructor(props){
@@ -29,6 +28,7 @@ class CaseloadPage extends React.Component {
       lastCohort: null,
       addedFields: []
     });
+    // Each object is a column, passed to constructor for Ag-grid
     this.fields = [
       {width: "50", checkboxSelection: true, cellStyle: params => {return {backgroundColor: "white", borderTop: "0", borderBottom: "0"}}},
       {field: "id", headerName: "ID", editable: true, valueParser: this.numberType, width: "70"},
@@ -67,6 +67,7 @@ class CaseloadPage extends React.Component {
     
   }
 
+  // Comparator for sorting numbers, ensuring blank fields and mistakes are lowest and that empty entry field stays at bottom
   numComparator = (a, b, aNode, bNode, isInverted) => {
     let inverter = isInverted ? -1 : 1;
     let aVal = Number(a);
@@ -85,6 +86,7 @@ class CaseloadPage extends React.Component {
     return aVal-bVal;
   }
 
+  // String comparator, ensures blank row for new row stays at bottom
   comparator = (aVal, bVal, aNode, bNode, isInverted) => {
     let inverter = isInverted ? -1 : 1;
 
@@ -102,12 +104,14 @@ class CaseloadPage extends React.Component {
     return aVal < bVal ? -1 : 1;
   }
 
+  // Displays number fields as a number
   numberType = (params) => {
     let num = Number(params.newValue);
     if (isNaN(num)) return 0;
     return num;
   }
 
+  // Querying data from db
   getCohortData = () => {
     // Could probably improve the double query into one, hacking one to get working
     if (this.context.state.selectedCohort && this.state.lastCohort !== this.context.state.selectedCohort){
@@ -124,6 +128,8 @@ class CaseloadPage extends React.Component {
         })
         .then(data => {
           data.push({});
+          // Query for getting the added fields
+          // Could actually just use this query and get the students from the returned collection? TODO
           db.collection("student_counselors").doc(this.context.state.selectedCohort).get()
           .then(result=>{
             this.setState({
@@ -148,6 +154,7 @@ class CaseloadPage extends React.Component {
     this.getCohortData();
   }
 
+  // Handler for saving data to DB and adding new student when lowest row is edited
   cellEditingStopped(e) {
     // TODO: where updating the database will occur
     if (e.data.uid) {
@@ -172,12 +179,13 @@ class CaseloadPage extends React.Component {
 
   }
 
-  // IMPORTANT NOTE: Only deletes the listing in the cohort, does not delete the column data for users
+  // TODO: Delete a field implementation
   deleteColumn = (e) => {
     console.log("here");
     console.log(e);
   }
 
+  // Deletes selected rows using Ag-grid api
   deleteRows = () => {
     if (window.confirm("Are you sure you want to delete these rows?")){
       var selectedRows = this.gridApi.getSelectedRows().filter(row=>{return !(row.uid===undefined)});
@@ -191,6 +199,7 @@ class CaseloadPage extends React.Component {
     }
   }
 
+  // Undo delete based on saved data from delet under state.undoRows
   undoDelete = () => {
     var displayedRows = this.gridApi.getModel().rowsToDisplay;
     var node = displayedRows[displayedRows.length - 1];
@@ -209,11 +218,12 @@ class CaseloadPage extends React.Component {
     this.setState({searchString: e.target.value});
   }
 
-
+  // Handler for changing the rowsSelected value in the state
   onSelectionChanged = (e) => {
     e.api.getSelectedNodes().length===0 ? (this.state.rowsSelected && this.setState({rowsSelected: false})) : (!this.state.rowsSelected && this.setState({rowsSelected: true}));
   }
 
+  // Function for adding a field to grid and database
   addField = (e) => {
     if (this.context.state.selectedCohort) {
       let fieldName =  window.prompt("What would you like to name your field?");

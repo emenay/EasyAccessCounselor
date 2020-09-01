@@ -20,11 +20,15 @@ import Header from '../components/Header';
 import Sidenav from '../components/Sidenav';
 import Signup from './SignupPage';
 
+// history allows us to change pages by pushing to history
 export const history = createBrowserHistory();
 
+// This controls client side routing, Google react-dom-router for details
 export default function App() {
   const user = useContext(UserContext);
   const isLoggedIn = user.state.user ? 'true' : '';
+
+  // Routing could be cleaned up
   return (
     <Router history={history}>
       <div className="page-container">

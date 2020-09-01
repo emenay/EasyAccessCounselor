@@ -6,22 +6,10 @@ import {db} from '../firebase/firebase';
 import {UserContext} from '../providers/UserProvider';
 import firebase from 'firebase/app';
 
-function meetingsNumber(person, field) {
-    if (typeof person[field] === "undefined"){
-        return 0;
-    }
-    return Number(person[field]);
-}
+// File controls popups for student profiles page
+// Each tab in the popup is a component "panel" displayed by the StudentDetailsModal
 
-function uploadNote(date, type, text, personId, cohortId) {
-    if (cohortId) {
-        db.collection("student_counselors").doc(cohortId)
-        .collection("students").doc(personId)
-        .update({notes: firebase.firestore.FieldValue.arrayUnion({date: new Date(date), type: type, text: text})})
-        .catch(error=>console.log(error));
-    }
-}
-
+// Fairly static panel displaying info on college list
 function CollegeListPanel(props){
     const [editing, changeEditing] = useState(false);
     let info = props.info;
@@ -56,14 +44,25 @@ function CollegeListPanel(props){
     );
 }
 
-/* Note: I'm using many grids instead of one because we'll later have to loop through all a person's notes */
-/*function arrayReducer(array, val) {
-    var new_arr = array.slice();
-    new_arr.unshift(val);
-    return new_arr;
-}*/
+// Helper for formating number of meetings
+function meetingsNumber(person, field) {
+    if (typeof person[field] === "undefined"){
+        return 0;
+    }
+    return Number(person[field]);
+}
 
+// Uploads a note based on note data
+function uploadNote(date, type, text, personId, cohortId) {
+    if (cohortId) {
+        db.collection("student_counselors").doc(cohortId)
+        .collection("students").doc(personId)
+        .update({notes: firebase.firestore.FieldValue.arrayUnion({date: new Date(date), type: type, text: text})})
+        .catch(error=>console.log(error));
+    }
+}
 
+// Panel allows user to upload notes
 function NotesPanel(props) {
     let info = props.info;
     const context = useContext(UserContext);
@@ -128,11 +127,7 @@ function NotesPanel(props) {
     );
 }
 
-function editSelection(isEditing, title, field, info){
-    if (isEditing) return <p><span>{title + ": "}</span><input type="text" /></p>
-    return <p><span>{title + ": "}</span>{info[field]}</p>
-}
-
+// Static panel for viewing Application Process
 function ApplicationProcessPanel(props) {
     const [editing, changeEditing] = useState(false);
     let info = props.info
@@ -191,6 +186,7 @@ function ApplicationProcessPanel(props) {
     );
 }
 
+// static panel for general info
 function GeneralInformationPanel(props) {
     const [editing, changeEditing] = useState(false);
     let info = props.info;
@@ -225,6 +221,8 @@ function GeneralInformationPanel(props) {
         </div>
 }
 
+// Component handles backround css, tab switching
+// Info = person object
 class StudentDetailsModal extends React.Component {
     constructor(props) {
         super(props);
@@ -252,7 +250,7 @@ class StudentDetailsModal extends React.Component {
                 return <p>Hello world</p>
         }
     }
-
+    // Display of a specific tab is based on which is the current selectedTab
     render(){
         return <div className="studentdetails-modal" onClick={this.props.exitModal}>
             <div className="studentdetails-background" onClick={(e)=> e.stopPropagation()}>

@@ -1,6 +1,8 @@
 import React from 'react';
 import MainDataView from '../components/dataViews/MainDataView';
 
+// Previously implemented with MainDataView
+// Likely can be deleted/look at new implementation since past implementation was early in dev cycle
 class NotesPage extends React.Component {
   constructor(props){
     super(props);

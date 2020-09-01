@@ -2,12 +2,18 @@ import React from 'react';
 import '../css/CohortCreation.css';
 import readXlsxFile from 'read-excel-file';
 import {auth, db} from "../firebase/firebase";
-import "./Account.css";
+import "../css/Account.css";
 import firebase from "firebase/app";
 import "firebase/auth";
 import {UserContext} from '../providers/UserProvider';
 import { Link } from 'react-router-dom';
 import {history} from './App';
+
+/*
+    This file is messy because it was worked on by multiple people.
+    The login portions can likely be deleted, I'm leaving them here now for posterity
+
+*/
 
 // export default function Login() {
 //   const [cohort, setCohort] = useState("");
@@ -75,7 +81,6 @@ import {history} from './App';
 class Login extends React.Component {
     constructor(props){
         super(props);
-        
     }
     render(){
         return (
@@ -112,6 +117,7 @@ class Login extends React.Component {
 
 }
 
+// Component for selecting which file to upload
 class FileUploadSelection extends React.Component {
     constructor(props){
         super(props);
@@ -120,6 +126,7 @@ class FileUploadSelection extends React.Component {
 
     preventDefault = e => e.preventDefault();
 
+    // Listeners necessary for dragging events
     componentDidMount() {
         window.addEventListener("dragover", this.preventDefault);
         window.addEventListener("drop", this.preventDefault);
@@ -130,6 +137,8 @@ class FileUploadSelection extends React.Component {
         window.removeEventListener("drop", this.preventDefault);
     }
 
+    // Determines which file type to parse
+    // TODO: implement csv
     handleFile = (file) => {
         switch (file.name.split('.').pop()){
             case 'xlsx':
@@ -146,9 +155,11 @@ class FileUploadSelection extends React.Component {
         }
     }
 
+    // Called when file is selected by user
     onChange = (e) => {
         this.handleFile(e.target.files[0]);
     }
+
 
     handleDrop = (e) => {
         this.setState({dragOver: false});
@@ -157,7 +168,7 @@ class FileUploadSelection extends React.Component {
         }
     }
 
-
+    // Sets data to what was uploaded and moves to field matching panel
     onSubmit = () => {
         if (this.state.data){
             this.props.setData(this.state.data);
@@ -165,6 +176,8 @@ class FileUploadSelection extends React.Component {
         }
     }
 
+    // Two functions for handling drag events over upload box
+    // dragOver used to render if user dragging over the uploadbox
     onDragEnter = (e) => {
         e.preventDefault();
         e.stopPropagation();
@@ -192,6 +205,11 @@ class FileUploadSelection extends React.Component {
     }
 }
 
+
+/*
+    Initial panel selected
+    For use in deciding if manual or upload
+*/
 class DataEntrySelection extends React.Component {
     static contextType = UserContext;
     constructor(props){
@@ -211,13 +229,14 @@ class DataEntrySelection extends React.Component {
                     return;
                 }
                 
+                // Upload the cohort
+                // TODO: CohortCode unneccessary?????
                 db.collection("cohortCode").add({
                     cohort: "unc",
                     studentID: "1231251"
                   }).then(function(docRef) {
                     
                     db.collection("student_counselors").doc(docRef.id).set({name:name,counselor:firebase.auth().currentUser.uid});
-                    // db.collection("counselors").doc(counselor).update({})
                     return [name, docRef.id];
         
                 })
@@ -250,11 +269,13 @@ class DataEntrySelection extends React.Component {
     }
 }
 
+// Component for matching db fields to upload fields
+// TODO: Don't show a field in dropdown if already selected by another field
 class FieldMatches extends React.Component {
     static contextType = UserContext;
     constructor(props){
         super(props);
-        let fieldsMap = new Map();
+        let fieldsMap = new Map(); // Map for upload file fields to fields from dropdown
         this.props.data[0].forEach(field=>fieldsMap.set(field, "None"));
         this.state = {
             fieldsMap: fieldsMap
@@ -304,6 +325,7 @@ class FieldMatches extends React.Component {
         }
     }
 
+    // Called when an upload field is selected
     selectField = (e, field) => {
         let new_fields = new Map(this.state.fieldsMap);
         new_fields.set(field[0], e.target.value);
@@ -321,6 +343,7 @@ class FieldMatches extends React.Component {
         var counselor = firebase.auth().currentUser.uid;
         var code;
         var addedFields = new Set();
+
         // This needs to be refactored for batch writes, also no idea what they were going for with cohortCode
         db.collection("cohortCode").add({
             cohort: "unc",
@@ -364,7 +387,6 @@ class FieldMatches extends React.Component {
     }
 
     render(){
-        console.log(this.state.fieldsMap);
         return (
             <div>
                 <p className="fields-description"><span>Match</span> your upload's fields with the fields in the Easy Access database, or <span>create</span> a new field.</p>
@@ -395,12 +417,14 @@ class FieldMatches extends React.Component {
 }
 
 
-
+/*
+    This is the main component for the cohort creation page.
+    It works by selecting which component to display from its panels object
+*/
 class CohortCreation extends React.Component {
 
     constructor(props){
         super(props);
-        console.log(props.location);
         // const { data } = this.props.location.data;
         this.state = {
             selectedPanel: "dataEntry",
@@ -415,27 +439,27 @@ class CohortCreation extends React.Component {
         }
     }
 
+    // Called when name input changed
     nameChange = (e) => {
         this.setState({name: e.target.value});
     }
 
+    // ????
     getName = () => {
         return this.state.name;
     }
 
+    // Simple function for changing panel to a selected panel
     changePanel = (panel) => {
         this.setState({selectedPanel: panel});
     }
     
+    // ??????
     setData = data => {this.setState({data: data}); this.panels.fieldMatching=<FieldMatches data={data} changePanel={this.changePanel}/>};
-
-    
-
 
     render(){
         
-        var num = this.props.location;
-        // console.log(data);
+        var num = this.props.location;;
         return (
             <div className="cohort-creation-content">
                 <p className="name-description"><span>Create a New Cohort</span></p>
@@ -443,8 +467,7 @@ class CohortCreation extends React.Component {
                 <br></br>
                 <br></br>
                 {this.panels[this.state.selectedPanel]}
-                
-                
+                  
             </div>
         );
     }

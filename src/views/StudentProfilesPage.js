@@ -1,7 +1,7 @@
 import React from 'react';
 import {GridView} from "../components/dataViews/GridView.js";
-import {DropdownSortMenu} from "../components/dataViews/MainDataView.js";
-import { Slider } from '@material-ui/core';
+import DropdownSortMenu from "../components/DropdownSortMenu";
+import DropdownFilterMenu from '../components/DropdownFilterMenu';
 import "../css/StudentProfilesPage.css";
 import "../css/searchBar.css";
 import StudentDetailsModal from '../components/StudentDetailsModal.js';
@@ -16,132 +16,11 @@ import unsorted_icon from "../assets/unsorted_icon.png";
 import {UserContext} from '../providers/UserProvider';
 
 
-export class DropdownFilterMenu extends React.Component {
-    constructor(props) {
-        super(props);
-        let checkFilters = new Map();
-        this.marks = new Map();
-        props.fields.forEach(field=>{
-            checkFilters.set(field.name, false);
-            if (field.type === "number") {
-                this.marks.set(field.name, [{value: field.low, label: field.low}, {value: field.high, label: field.high}]);
-            }
-        });
-        this.state = { 
-          collapsed: true,
-          openedSubmenu: null,
-          smPosition: 0,
-          checkFilters: checkFilters
-        };
-    }
-  
-    handleToggle = (event) => {
-        event.stopPropagation();
-        this.setState({ collapsed: !this.state.collapsed });
-    }
-  
-    handleBlur = (event) => {
-        if (event.relatedTarget === null || event.relatedTarget.className !== "filter-checkbox") this.setState({ collapsed: true, openedSubmenu: null });
-    }
-
-    changeSubmenu = (index, name) => {
-      this.setState({openedSubmenu: name, smPosition: index});
-    }
-
-    handleChange = (e, value) =>{
-        if (this.state.checkFilters.get(this.state.openedSubmenu.name)){
-            this.props.changeEvent(this.state.openedSubmenu, value);
-        }
-    }
-
-    changeChecked = (e) => {
-        let isChecked = this.state.checkFilters.get(this.state.openedSubmenu.name);
-        if (isChecked){
-            // Delete field from parent
-            this.props.deleteFilter(this.state.openedSubmenu, e.target.value);
-        } 
-        var new_map = new Map(this.state.checkFilters);
-        new_map.set(this.state.openedSubmenu.name, !this.state.checkFilters.get(this.state.openedSubmenu.name))
-        this.setState({checkFilters: new_map});
-    }
-
-    changedGroupCheck = (e)=>{
-        let isChecked = this.state.openedSubmenu.name in this.props.filters && this.props.filters[this.state.openedSubmenu.name].values.has(e.target.value);
-        if (isChecked){
-            this.props.deleteFilter(this.state.openedSubmenu, e.target.value);
-        } else {
-            this.props.changeEvent(this.state.openedSubmenu, e.target.value);
-        }
-    }
-
-    filterGroupsHelper = () =>{
-        if (typeof this.props.filterGroupItems[this.state.openedSubmenu.name] === "undefined" || this.props.filterGroupItems[this.state.openedSubmenu.name].size === 0){
-            return <p>No Groups</p>
-        } else {
-            return (
-            Array.from(this.props.filterGroupItems[this.state.openedSubmenu.name]).map(filter_item=>{
-                return(
-                <label className="check-label" forhtml={filter_item} key={filter_item}>
-                    <input className="filter-checkbox" type="checkbox" onChange={this.changedGroupCheck} checked={this.state.openedSubmenu.name in this.props.filters ? this.props.filters[this.state.openedSubmenu.name].values.has(filter_item) : false} id={filter_item} name={filter_item} value={filter_item} />{filter_item}
-                </label>);
-            }));
-        }
-    }
-
-
-    displaySubmenu = () => {
-        if (this.state.openedSubmenu.type === "number"){
-            return (<div className="dropdown-submenu" style={{top: (this.state.smPosition + 1) * 32.5 + 12 + "px", width: "300px"}} role="menu">
-            <label className="check-label" forhtml={this.state.openedSubmenu.name}>
-                <input className="filter-checkbox" type="checkbox" onChange={this.changeChecked} checked={this.state.checkFilters.get(this.state.openedSubmenu.name)} id={this.state.openedSubmenu.name} name={this.state.openedSubmenu.name} />{this.state.openedSubmenu.displayName}
-            </label>
-            <Slider
-                value={this.state.openedSubmenu.name in this.props.filters > 0 ? this.props.filters[this.state.openedSubmenu.name].values : [this.state.openedSubmenu.low, this.state.openedSubmenu.high]}
-                max={this.state.openedSubmenu.high}
-                min={this.state.openedSubmenu.low}
-                step={this.state.openedSubmenu.step}
-                marks={this.marks.get(this.state.openedSubmenu.name)}
-                onChange={this.handleChange}
-                valueLabelDisplay="auto"
-                aria-labelledby="range-slider"
-            />
-            </div>);
-        } else {
-            return (<div className="dropdown-submenu" style={{top: (this.state.smPosition + 1) * 32.5 + 12 + "px", width: "300px"}} role="menu">
-            {this.filterGroupsHelper()}
-            </div>);
-        }
-      
-    }
-
-  
-    render() {
-        return(
-            <div className={"dropdown" + (this.state.collapsed ? "" : " is-active")} tabIndex="0" onBlur={this.handleBlur}>
-                <div className="dropdown-trigger">
-                    <button className="dropdown-btn" aria-haspopup="true" aria-controls="dropdown-menu" onClick={this.handleToggle}>
-                      <img className="filter-icon" src={this.props.icon} alt="filter icon" />
-                    </button>
-                </div>
-                <div className="dropdown-menu" id="dropdown-menu" role="menu">
-                    <div className="dropdown-content" id="sort-options">
-                      {this.props.fields.map((field, index) => {
-                        return <a key={index} className={"dropdown-item" + (this.state.selected === field.name ? " is-active": "")} onMouseOver={()=>this.changeSubmenu(index, field)}>{field.displayName + "   \u25B7"}</a>
-                      })}
-                    </div>
-                </div>
-                {this.state.openedSubmenu !== null && this.displaySubmenu()}
-                
-            </div>
-        );
-    }
-  }
-
-
 class StudentProfilesPage extends React.Component{
     static contextType = UserContext;
     constructor(props){
         super(props);
+        // Array of objects representing sort fields
         this.sortFields = [
             {name: "sat", displayName: "SAT", smitem: ["Low to High", "High to Low"]},
             {name: "gpa", displayName: "GPA", smitem: ["Low to High", "High to Low"]},
@@ -149,6 +28,7 @@ class StudentProfilesPage extends React.Component{
             {name: "firstName", displayName: "First Name", smitem: ["A to Z", "Z to A"]},
             {name: "lastName", displayName: "Last Name", smitem: ["A to Z", "Z to A"]}
         ]
+        // Array of objects representing filter fields
         this.filterFields = [
             {name: "gpa", displayName: "GPA", type: "number", step: 0.05, low: 0.00, high: 4.00},
             {name: "sat", displayName: "SAT", type: "number", step: 10, low: 0, high: 1600},
@@ -159,20 +39,21 @@ class StudentProfilesPage extends React.Component{
             {name: "schools", displayName: "Schools", type:"group"}
         ]
         this.state = {
-            data: [],
-            selectedCard: null,
-            sortField: "uid",
+            data: [], // array of student objects to be returned by db
+            selectedCard: null, // object for student details of selected student, null if none selected
+            sortField: "uid", // which field to be sorted by
             sortReverse: false,
-            filters: {},
+            filters: {}, // filters: object mapping field to a set of values to be filtered by
             searchString: "",
-            flagSet: new Set(),
-            flagToggle: false,
+            flagSet: new Set(), // Set of uids for students flagged
+            flagToggle: false, // True if only viewing flagged student
             sortIcon: unsorted_icon,
-            lastCohort: null,
-            filterGroupItems: {"gender": new Set(), "race": new Set(), "major": new Set()}
+            lastCohort: null, // Used to not repeatedly load same cohort when cohort switched/reloaded
+            filterGroupItems: {"gender": new Set(), "race": new Set(), "major": new Set()} //Each group filter has a set of fields to be filtered by
         }
     }
 
+    // Retrieve data from database
     getCohortData = () => {
         if (this.context.state && this.state.lastCohort !== this.context.state.selectedCohort){
             db.collection("student_counselors").doc(this.context.state.selectedCohort).collection("students")
@@ -180,6 +61,7 @@ class StudentProfilesPage extends React.Component{
             .then(querySnapshot => {
             // array of student objects
                 return querySnapshot.docs.map(doc => {
+                    // Adding id to doc data
                     var ent = doc.data();
                     ent.uid = doc.id;
                     return ent;
@@ -190,7 +72,9 @@ class StudentProfilesPage extends React.Component{
                 let flagSet = new Set();
                 let filterGroupItems = Object.assign(this.state.filterGroupItems, {});
                 data.forEach(person=>{
+                    // Checking to see if flagged
                     if (person.flagged === true) flagSet.add(person.uid);
+                    // Add option to filter if not previously seen
                     for (const field in filterGroupItems){
                         if (person[field] !== undefined) filterGroupItems[field].add(person[field]);
                     }
@@ -239,6 +123,7 @@ class StudentProfilesPage extends React.Component{
         }
     }
 
+    // Function to change sort based on field and if revers necessary
     changeSort = (field, isReverse) => {
         let data = this.state.data;
         // ONLY SORT WHEN NECESSARY
@@ -248,15 +133,18 @@ class StudentProfilesPage extends React.Component{
         this.setState({data: data, sortField: field, sortReverse: isReverse, sortIcon: isReverse ? sorted_ascend : sorted_descend});
     }
 
+    // Set search string when changed
     changeSearchString = (event) => {
         this.setState({searchString: event.target.value});
     }
 
+    // Change selected card when clicked
     clickCard = (person) => {
         this.setState({selectedCard: person});
     }
 
     clickFlag = (id) => {
+        // Update flagSet to reflect change
         if (this.state.flagSet.has(id)) {
             var new_set = new Set(this.state.flagSet);
             new_set.delete(id);
@@ -264,21 +152,25 @@ class StudentProfilesPage extends React.Component{
         } else {
             this.setState({flagSet: this.state.flagSet.add(id)})
         }
-
+        // Update database to reflect change
         if (this.context.state.user) {
             db.collection("student_counselors").doc(this.context.state.selectedCohort).collection("students").doc(id)
             .update({flagged: this.state.flagSet.has(id)});
         }
     }
 
+    // Changes if flag toggled
     flagToggle = () => {
         this.setState({flagToggle: !this.state.flagToggle});
     }
 
+    // Called when clicking out of the student information popup modal, allows exit
     exitModal = () => {
         this.setState({selectedCard: null});
     }
 
+    // Called when filter fields changed by dropdown filter
+    // filters: object mapping field to a set of values to be filtered by
     changeFilter = (field, values) => {
         var new_filter = Object.assign(this.state.filters, {});
         
@@ -294,6 +186,7 @@ class StudentProfilesPage extends React.Component{
         this.setState({filters: new_filter});
     }
 
+    // Deleting a specific filter value
     deleteFilter = (field, value) => {
         var new_filter = Object.assign(this.state.filters, {});
         if (field.type === "number") {
