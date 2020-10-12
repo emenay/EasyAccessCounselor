@@ -19,6 +19,7 @@ import StudentProfilesPage from './StudentProfilesPage';
 import Header from '../components/Header';
 import Sidenav from '../components/Sidenav';
 import Signup from './SignupPage';
+import Signup2 from './SignupPage2';
 
 // history allows us to change pages by pushing to history
 export const history = createBrowserHistory();
@@ -26,6 +27,8 @@ export const history = createBrowserHistory();
 // This controls client side routing, Google react-dom-router for details
 export default function App() {
   const user = useContext(UserContext);
+  // tanner, I have isPickingAccount always set to true right now
+  const isPickingAccount = 'true';
   const isLoggedIn = user.state.user ? 'true' : '';
 
   // Routing could be cleaned up
@@ -35,7 +38,8 @@ export default function App() {
       <Header isLoggedIn={isLoggedIn}/>
         
         <div className={user.state.user ? "page-content" : 'page-content-nosignin'}>
-        {user.state.user && <Sidenav isLoggedIn={isLoggedIn}/>}
+        {/* tanner, when I delete isLoggedIn={isLoggedIn}, the sidebar content changes but does not go away, maybe you can continue to explore to see how to disable sidebar */}
+        {user.state.user && <Sidenav isLoggedIn={isLoggedIn} isPickingAccount={isPickingAccount}/>}
           <div className={user.state.user ? "view-content" : 'page-content-nosignin1'}>
           <Switch>
             <Route path="/profiles">
@@ -58,6 +62,9 @@ export default function App() {
             </Route>
             <Route path="/signup">
             { user.state.user ? <Redirect to='/caseload_management' /> : <Signup /> }
+            </Route>
+            <Route path="/signup2">
+            { user.state.user ? <Signup2 /> : <Signup /> }
             </Route>
             <Route path="/">
               { user.state.user ? <Caseload /> : <Login /> }

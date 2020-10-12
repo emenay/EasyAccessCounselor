@@ -44,7 +44,11 @@ function Sidenav(props) {
     </Link>
 
   let items;
-  if (props.isLoggedIn) {
+  // tanner
+  // this doesn't work right now but it may be that we can use something like this to disable the sidenav when picking the account type
+  if (props.isPickingAccount) {
+    items = loggedOutItems;
+  } else if (props.isLoggedIn) {
     items = loggedInItems;
   } else {
     items = loggedOutItems;
