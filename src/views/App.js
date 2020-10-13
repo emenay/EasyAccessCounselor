@@ -20,6 +20,7 @@ import Header from '../components/Header';
 import Sidenav from '../components/Sidenav';
 import Signup from './SignupPage';
 import Signup2 from './SignupPage2';
+import AccountType from './AccountTypePage';
 
 // history allows us to change pages by pushing to history
 export const history = createBrowserHistory();
@@ -61,10 +62,10 @@ export default function App() {
             { user.state.user ? <Redirect to='/caseload_management' /> : <Login /> }
             </Route>
             <Route path="/signup">
-            { user.state.user ? <Redirect to='/caseload_management' /> : <Signup /> }
+            { user.state.user ? <Redirect to='/AccountType' /> : <Signup /> }
             </Route>
-            <Route path="/signup2">
-            { user.state.user ? <Signup2 /> : <Signup /> }
+            <Route path="/AccountType">
+            { user.state.user ? <AccountType /> : <Signup /> }
             </Route>
             <Route path="/">
               { user.state.user ? <Caseload /> : <Login /> }
@@ -76,3 +77,4 @@ export default function App() {
     </Router>
   );
 }
+

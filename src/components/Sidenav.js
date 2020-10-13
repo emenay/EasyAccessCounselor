@@ -22,6 +22,7 @@ const loggedOutItems = [
   { name: 'home', label: 'Home', path: '' }
 ]
 
+
 function Sidenav(props) {
   const [isMenuOpen, setIsMenuOpen] = React.useState(true);
 
@@ -43,16 +44,16 @@ function Sidenav(props) {
       </ListItem>
     </Link>
 
-  let items;
+  let items = loggedInItems;
   // tanner
   // this doesn't work right now but it may be that we can use something like this to disable the sidenav when picking the account type
-  if (props.isPickingAccount) {
-    items = loggedOutItems;
-  } else if (props.isLoggedIn) {
-    items = loggedInItems;
-  } else {
-    items = loggedOutItems;
-  }
+  // if (props.isPickingAccount) {
+  //   items = loggedOutItems;
+  // } else if (props.isLoggedIn) {
+  //   items = loggedInItems;
+  // } else {
+  //   items = loggedOutItems;
+  // }
 
   let location = useLocation().pathname.substring(1);
 

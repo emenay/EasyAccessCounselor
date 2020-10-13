@@ -15,7 +15,7 @@ async function proceedClick(email, password, confPassword, first, last){
             // tanner,
             // I changed the line below from /cohort_creation to /signup2
             // this seems to control where it takes you after signing up
-            history.push('/signup2');
+            history.push('/AccountType');
             await result.user.updateProfile({
                     firstName: first,
                     lastName: last
