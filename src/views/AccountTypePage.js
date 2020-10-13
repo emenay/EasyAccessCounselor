@@ -26,7 +26,7 @@ class AccountTypeComponent extends React.Component {
 
     render() {
         return(
-            <div className="tempMain">
+            <div className="typeContainer">
                 <div className="typeHeader">
                     <h3>{this.content.header}</h3>
                 </div>
@@ -45,24 +45,41 @@ class AccountTypeComponent extends React.Component {
 }
 
 function setType(type) {
-    // Set account type to given type, either free, counselor, or school
     switch(type) {
         case 'free':
+            // TODO: set user type to free
             history.push("/cohortcreation");
             if (document.getElementsByClassName("sidenav-container").length === 1) {
                 document.getElementsByClassName("sidenav-container")[0].style.display = "initial";
             }
+
+            if (document.getElementsByClassName("header-select").length === 1) {
+                document.getElementsByClassName("header-select")[0].style.display = "initial";
+            }
             break;
         case 'counselor':
+            // TODO: set user type to counselor
+            history.push("/PaymentPortal");
             break;
         case 'school':
+            // TODO: set user type to schoo
+            history.push("/PaymentPortal");
             break;
         default:
-            // no idea what to put here
+            // TODO: Figure out what should go here
+            break;
     }
 }
 
 function AccountTypePage() {
+
+    if (document.getElementsByClassName("sidenav-container").length === 1) {
+        document.getElementsByClassName("sidenav-container")[0].style.display = "none";
+    }
+    
+    if (document.getElementsByClassName("header-select").length === 1) {
+        document.getElementsByClassName("header-select")[0].style.display = "none";
+    }
 
     const freeProps = {
         name: "Free Version",
@@ -102,10 +119,6 @@ function AccountTypePage() {
             "Space Holder 2..."
         ],
         primaryColor: [255, 100, 0] // Should be orange
-    }
-
-    if (document.getElementsByClassName("sidenav-container").length === 1) {
-        document.getElementsByClassName("sidenav-container")[0].style.display = "none";
     }
 
     return(

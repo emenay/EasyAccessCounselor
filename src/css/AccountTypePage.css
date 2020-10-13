@@ -7,6 +7,11 @@
     overflow: auto;
 }
 
+/*
+TODO: A lot of these style elements aren't used and should removed,
+the file was originally a copy of another style sheet
+*/
+
 .signup-content {
     width: 35%;
     margin: auto;
@@ -48,7 +53,7 @@
     padding-right: 10%;
 }
 
-.tempMain {
+.typeContainer {
     display: flex;
     flex-direction: column;
     background-color: transparent;
