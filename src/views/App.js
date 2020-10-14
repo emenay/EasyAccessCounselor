@@ -25,6 +25,7 @@ import PaymentPortal from './PaymentPortal';
 import BillingAddress from './BillingAddressPage';
 import PaymentSummary from './PaymentSummaryPage';
 import Receipt from './ReceiptPage';
+import BillingPage from './BillingPage';
 
 // history allows us to change pages by pushing to history
 export const history = createBrowserHistory();
@@ -72,16 +73,19 @@ export default function App() {
             { user.state.user ? <AccountType /> : <Redirect to='/signup' /> }
             </Route>
             <Route path="/PaymentPortal">
-              { user.state.user ? <PaymentPortal/> : <Redirect to='/login' />}
+              { user.state.user ? <PaymentPortal /> : <Redirect to='/login' />}
+            </Route>
+            <Route path="/billing">
+              { user.state.user ? <BillingPage /> : <BillingPage />}
             </Route>
             <Route path="/billingaddress">
-            { user.state.user ? <BillingAddress/> : <Redirect to='/login' />}
+            { user.state.user ? <BillingAddress /> : <Redirect to='/login' />}
             </Route>
             <Route path="/paymentsummary">
-            { user.state.user ? <PaymentSummary/> : <Redirect to='/login' />}
+            { user.state.user ? <PaymentSummary /> : <Redirect to='/login' />}
             </Route>
             <Route path="/receipt">
-            { user.state.user ? <Receipt/> : <Redirect to='/login' />}
+            { user.state.user ? <Receipt /> : <Redirect to='/login' />}
             </Route>
             <Route path="/">
               { user.state.user ? <Caseload /> : <Login /> }
