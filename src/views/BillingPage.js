@@ -26,12 +26,12 @@ class BillingPage extends React.Component {
         this.getUserData();
     }*/
 
-    deleteCohort = () => {
-        if (this.context.state !== null && window.confirm("Are you sure you want to delete this cohort?")){
-            db.collection("student_counselors").doc(this.context.state.selectedCohort).delete()
-            .then(result=>this.context.deleteCohort(this.context.state.selectedCohort));
+    editBillingInfo = () => {
+        // if (this.context.state !== null && window.confirm("Are you sure you want to delete this cohort?")){
+        //     db.collection("student_counselors").doc(this.context.state.selectedCohort).delete()
+        //     .then(result=>this.context.deleteCohort(this.context.state.selectedCohort));
         
-        }
+        // }
     }
 
 
@@ -41,41 +41,42 @@ class BillingPage extends React.Component {
                 <h1 id="billingHeader">Billing Information</h1>
                 <div class="formBlock">
                     <div class="billingRow">
-                        <h3>Cardholder name</h3>
+                        <h3 className="rowPrefix">Cardholder Name</h3>
+                        <input class="inputLabel" id="email" type="text" placeholder={this.context.state !== null ? this.context.state.user.email : ""} />
                         {/* insert stripe component here */}
                     </div>
                     <div class="billingRow">
-                        <h3>Card Number</h3>
+                        <h3 className="rowPrefix">Card Number</h3>
                         {/* insert stripe component here */}
                     </div>
                     <div class="billingRow">
-                        <h3>Expiration Date</h3>
+                        <h3 className="rowPrefix">Expiration Date</h3>
                         {/* insert stripe component here */}
                     </div>
                     <div class="billingRow">
-                        <h3>Security Code</h3>
+                        <h3 className="rowPrefix">Security Code</h3>
                         {/* insert stripe component here */}
                     </div>
                 </div>
                 <div class="formBlock">
                     <div class="billingRow">
-                        <h3>Billing Address</h3>
+                        <h3 className="rowPrefix">Billing Address</h3>
                         {/* insert stripe component here */}
                     </div>
                     <div class="billingRow">
-                        <h3>City</h3>
+                        <h3 className="rowPrefix">City</h3>
                         {/* insert stripe component here */}
                     </div>
                     <div class="billingRow">
-                        <h3>State</h3>
+                        <h3 className="rowPrefix">State</h3>
                         {/* insert stripe component here */}
                     </div>
                     <div class="billingRow">
-                        <h3>Zipcode</h3>
+                        <h3 className="rowPrefix">Zipcode</h3>
                         {/* insert stripe component here */}
                     </div>
                 </div>
-                <button id="editBilling">Edit Billing Information</button>
+                <button id="editBilling" onClick={()=>this.editBillingInfo()}>Edit Billing Information</button>
             </div>
         );
     }

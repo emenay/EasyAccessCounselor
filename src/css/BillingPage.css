@@ -1,18 +1,9 @@
 
 
-label {
-    display: flex;
-  flex-direction: row;
-  justify-content: flex-end;
-  text-align: right;
-  width: 400px;
-  line-height: 26px;
-  margin-bottom: 10px;
-  margin-left: 0;
-  }
-
-  input{
-      padding: 15px;
+  .inputLabel {
+      padding: 0;
+      border-style: none;
+      text-decoration: none;
   }
 
   .formBlock{
@@ -27,7 +18,12 @@ label {
   .billingRow {
     display: flex;
     flex-direction: row;
+    align-items: end;
     margin-top: 3vh;
+  }
+
+  .rowPrefix {
+    
   }
 
   #billingContainer {
