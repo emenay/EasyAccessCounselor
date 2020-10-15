@@ -1,5 +1,8 @@
 import React from 'react';
+import ReactDOM from 'react-dom';
+import ReactDOMServer from 'react-dom/server';
 import { AgGridReact } from 'ag-grid-react';
+import Select from 'react-select';
 import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
 import '../css/CaseloadPage.css';
@@ -11,9 +14,77 @@ import firebase from 'firebase/app';
 import trash from '../assets/trash.png';
 import undo from '../assets/undo.png';
 import plus from '../assets/plus.png';
+import download from '../assets/essentials_icons/svg/download.svg'
+import download_filled from '../assets/essentials_filled/svg/download.svg'
+import add from '../assets/essentials_icons/svg/add.svg'
+import close_btn from '../assets/essentials_icons/svg/multiply.svg'
 
-function IconButton(props){
-  return <button className="icon_button" style={{backgroundImage: "url(" + props.url + ")"}} onClick={props.clickMethod}/>
+function IconButton(props) {
+  return <button className={props.class} style={{backgroundImage: "url(" + props.url + ")"}} onClick={props.clickMethod}/>
+}
+
+function DownloadPopUp(props) {
+  //TODO: pass row filters and column lables as props from the main view
+  return <div className={props.class}> 
+    <div className="download-popup-content">
+      <div id='popup-header' value='Download Caseload Data'>
+        <div></div>
+        <span>Download Caseload Data</span>
+        <span className="close">
+          <img src={close_btn} alt='close-download-popup'></img>
+        </span>
+      </div>
+      <div id='popup-body'>
+        <div id='download-options'>
+          <span>Apply Additional Filters</span>
+          <SelectBox className={'popup-column-filter'} placeholder={'Select Column Options...'} filterOptions={props.columnOptions}/>
+          <SelectBox className={'popup-row-filter'} placeholder={'Select Row Options...'} filterOptions={props.rowOptions}/>
+          <input className ='search_box' type="text" id="popup-name-input" placeholder="Give your file a name..." />
+        </div>
+        <div id='download-preview'>
+        </div>
+      </div>
+      <div id='popup-footer'>
+        <div id='download-btn' onClick={props.clickMethod}>
+          Download 
+        </div>
+        <div id='cancel-btn'>
+          Cancel
+        </div>
+      </div>
+    </div>
+  </div> 
+}
+
+
+class SelectBox extends React.Component {
+  constructor(props){
+    super(props)
+    this.filterOptions = props.filterOptions;
+  }
+  state = {
+    selectedOption: null,
+  };
+
+  handleChange = selectedOption => {
+    this.setState({ selectedOption });
+    console.log(`Option selected:`, selectedOption);
+  };
+
+  render() {
+    const { selectedOption } = this.state;
+    return (
+      <Select
+        isMulti
+        name="colors"
+        options={this.filterOptions}
+        className={this.props.className}
+        placeholder={this.props.placeholder}
+        value={selectedOption}
+        onChange={this.handleChange}
+      />
+    );
+  }
 }
 
 class CaseloadPage extends React.Component {
@@ -28,6 +99,9 @@ class CaseloadPage extends React.Component {
       lastCohort: null,
       addedFields: []
     });
+    // Bind this in order to access AgGrid properties from download-popup
+    this.onBtnDownload = this.onBtnDownload.bind(this);
+    this.downloadData = this.downloadData.bind(this);
     // Each object is a column, passed to constructor for Ag-grid
     this.fields = [
       {width: "50", checkboxSelection: true, cellStyle: params => {return {backgroundColor: "white", borderTop: "0", borderBottom: "0"}}},
@@ -49,7 +123,6 @@ class CaseloadPage extends React.Component {
       {field: "additions", headerName: 'Counselor Additions', comparator: this.comparator, sortable: true, editable: true, filter: true, resizable: true}
       
     ];
-
     // implement for deletion dropdown on header TODO
     this.customHeader = (
       '<div class="ag-cell-label-container" role="presentation">' +
@@ -64,7 +137,8 @@ class CaseloadPage extends React.Component {
       '  </div>' +
       '</div>'
     )
-    
+    this.columnOptions = [];
+    this.rowOptions = [];
   }
 
   // Comparator for sorting numbers, ensuring blank fields and mistakes are lowest and that empty entry field stays at bottom
@@ -112,6 +186,7 @@ class CaseloadPage extends React.Component {
   }
 
   // Querying data from db
+  // Individual column parameters are constructed upon cohort data retrieval 
   getCohortData = () => {
     // Could probably improve the double query into one, hacking one to get working
     if (this.context.state.selectedCohort && this.state.lastCohort !== this.context.state.selectedCohort){
@@ -176,7 +251,6 @@ class CaseloadPage extends React.Component {
       }
     }
 
-
   }
 
   // TODO: Delete a field implementation
@@ -239,25 +313,52 @@ class CaseloadPage extends React.Component {
     }
   }
 
+  // Function for downloading data from the grid view
+  onBtnDownload(e) {
+    var inputName = document.getElementById('popup-name-input').value;
+    var name = inputName != '' ? inputName : 'caseload'
+    var params = {fileName: name};
+    this.gridApi.exportDataAsCsv(params)
+  }
+
+  getColumnNames() {
+    var columns = this.fields.concat(this.addedFields)
+    var colNames = [];
+    colNames.forEach((col)=>{
+      var field = col.field;
+      var option = {
+        'label': field[0].toUpperCase() + field.substring(1),
+        'value': field
+      }
+      colNames.push(option);
+    });
+    return colNames;
+  }
 
   // plus from https://icons8.com/icons/set/plus
+  // TODO: create a tool tip for the download button when no data is selected
   render(){
     return (
       <div className="caseload-content">
-        <div className="profiles-header">
-          <input type="text" id="myInput" onKeyUp={this.changeSearchString} placeholder="Search Table..." />
-          {this.state.rowsSelected && <IconButton url={trash} clickMethod={this.deleteRows} />}
-          {this.state.undoRows.length > 0 && <IconButton url={undo} clickMethod={this.undoDelete} />}
-          <IconButton url={plus} clickMethod={this.addField} />
-        </div>
-                  
+        <DownloadPopUp class={'download-popup'} clickMethod={this.onBtnDownload} columnOptions={this.columnOptions} rowOptions={this.rowOptions}/>
+        <div className="caseload-header">
+          <input className ='search_box' type="text" id="myInput" onKeyUp={this.changeSearchString} placeholder="Search Table..." />
+          {this.state.rowsSelected && <IconButton url={trash} clickMethod={this.deleteRows} class={'icon_button'}/>}             
+          {this.state.undoRows.length > 0 && <IconButton url={undo} clickMethod={this.undoDelete} class={'icon_button'}/>}
+          <IconButton url={add} clickMethod={this.addField} class={'icon_button'}/>
+          {this.state.rowsSelected ? <IconButton url={download_filled} clickMethod={this.downloadData} class={'right_icon_button'}/> :
+                                      <IconButton url={download} clickMethod={this.downloadData} class={'right_icon_button'} />}
+        </div>       
         <div
           className="ag-theme-alpine"
           style={{
           height: '600px',
           width: '100%' }}>
           <AgGridReact
-            onGridReady={ params => this.gridApi = params.api}
+            onGridReady={ (params) => {
+              this.gridApi = params.api;
+              this.gridColumnApi = params.columnApi;
+            }}
             quickFilterText={this.state.searchString}
             onCellEditingStopped={(e) => this.cellEditingStopped(e)}
             columnDefs={this.fields.concat(this.state.addedFields)}
@@ -269,6 +370,29 @@ class CaseloadPage extends React.Component {
       </div>
     );
   }
+
+  downloadData(){
+    var popup = document.querySelector('.download-popup');
+    popup.style.display = 'block';
+    this.columnOptions = this.getColumnNames(); 
+    console.log(this.columnOptions);
+    
+    const closeBtn = document.querySelector('.close');
+    const cancelBtn = document.querySelector('#cancel-btn')
+
+    closeBtn.addEventListener('click', () => {
+      // container.parentNode.removeChild(popup)
+      popup.style.display = 'none';
+      document.getElementsByClassName('page-container')[0].style.filter = 'blur(0px) grayscale(0%)'
+    });
+
+    cancelBtn.addEventListener('click', () => {
+      // container.parentNode.removeChild(popup)
+      popup.style.display = 'none';
+      document.getElementsByClassName('page-container')[0].style.filter = 'blur(0px) grayscale(0%)'
+    });
+  }
+
 }
 
 export default CaseloadPage;
