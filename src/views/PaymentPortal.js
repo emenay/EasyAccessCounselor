@@ -1,9 +1,11 @@
 import React, {useState} from 'react';
 import '../css/AccountTypePage.css';
+import '../css/SignupPage.css';
 import {UserContext} from '../providers/UserProvider';
 
 import {auth} from '../firebase/firebase';
 import {history} from './App';
+import StripeCard from './StripeCard';
 
 class paymentPortalComponent extends React.Component {
     render() {
@@ -40,11 +42,12 @@ function PaymentPortalPage() {
     }
 
     return(
-        <div className="payContainer">
-            <h1>This is where the payment portal goes</h1>
-            <paymentPortalComponent/>
-            <button className="paySubmit" onClick={()=>submitPayment()}>Submit Payment</button>
+        <div>
+            <StripeCard />
+            <button className="signup-btn" onClick={()=>submitPayment()} >Confirm</button>
         </div>
+        
+        
     )
 }
 
