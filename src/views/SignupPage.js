@@ -4,7 +4,7 @@ import '../css/SignupPage.css';
 import { auth} from '../firebase/firebase';
 import {history} from './App';
 
-async function signupClick(email, password, confPassword, first, last){
+async function proceedClick(email, password, confPassword, first, last){
     if (password !== confPassword) {
         window.alert("Passwords don't match")
     } else if (first === '' || last === '') {
@@ -12,7 +12,10 @@ async function signupClick(email, password, confPassword, first, last){
     } else {
         try {
             let result = await auth.createUserWithEmailAndPassword(email, password);
-            history.push('/cohortcreation');
+            // tanner,
+            // I changed the line below from /cohort_creation to /signup2
+            // this seems to control where it takes you after signing up
+            history.push('/AccountType');
             await result.user.updateProfile({
                     firstName: first,
                     lastName: last
@@ -26,6 +29,9 @@ async function signupClick(email, password, confPassword, first, last){
 }
 
 function SignupPage(prop) {
+    // tanner,
+    // useState() is a hook: https://reactjs.org/docs/hooks-state.html 
+    // https://serverless-stack.com/chapters/understanding-react-hooks.html
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confPassword, setConf] = useState('');
@@ -48,7 +54,7 @@ function SignupPage(prop) {
             <p className='detail-text full-width'>Password</p>
             <input className="full-width" type='password' placeholder="Password" onChange={e=>setPassword(e.target.value)} />
             <input className="full-width" type='password' placeholder="Confirm Password" onChange={e=>setConf(e.target.value)} />
-            <button className="signup-btn" onClick={()=>signupClick(email, password, confPassword, first, last)} >Sign up</button>
+            <button className="signup-btn" onClick={()=>proceedClick(email, password, confPassword, first, last)} >Proceed</button>
           </div>
       </div>
       );
