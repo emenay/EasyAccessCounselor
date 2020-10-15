@@ -1,0 +1,66 @@
+
+
+label {
+    display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  text-align: right;
+  width: 400px;
+  line-height: 26px;
+  margin-bottom: 10px;
+  margin-left: 0;
+  }
+
+  input{
+      padding: 15px;
+  }
+
+  .formBlock{
+    display: flex;
+    flex-direction: column;
+    align-items: left;
+    justify-content: left;
+    margin-bottom: 4vh;
+    color:  #3298CB;
+  }
+
+  .billingRow {
+    display: flex;
+    flex-direction: row;
+    margin-top: 3vh;
+  }
+
+  #billingContainer {
+    display: flex;
+    flex-direction: column;
+  }
+
+  #updateStatus {
+      color: green;
+      margin-left: 200px;
+  }
+
+  #editBilling {
+    text-decoration: none;
+    border-style: none;
+    background-color: transparent;
+    color:  #3298CB;
+    text-align: right;
+  }
+
+  #editBilling:hover {
+    cursor: pointer;
+  }
+
+  #billingContainer {
+    display: flex;
+    flex-direction: column;
+    justify-content: left;
+    align-items: left;
+  }
+
+  #billingHeader {
+    font-size: 200%;
+    color:  #3298CB;
+    text-align: left;
+  }
