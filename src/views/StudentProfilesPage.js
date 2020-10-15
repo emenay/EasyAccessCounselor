@@ -5,15 +5,22 @@ import DropdownFilterMenu from '../components/DropdownFilterMenu';
 import "../css/StudentProfilesPage.css";
 import "../css/searchBar.css";
 import StudentDetailsModal from '../components/StudentDetailsModal.js';
-import orange_flag from "../assets/orange_flag.png";
-import unflagged from "../assets/unflagged.png";
 import {db} from "../firebase/firebase";
-import filter_icon from "../assets/filter_icon.png";
-import filter_outline from "../assets/filter_outline.png";
 import sorted_ascend from "../assets/sorted_ascend.png";
 import sorted_descend from "../assets/sorted_descend.png";
 import unsorted_icon from "../assets/unsorted_icon.png";
 import {UserContext} from '../providers/UserProvider';
+// New Icon Imports 
+import filter_outline from "../assets/essentials_icons/svg/controls-4.svg"
+import filter_icon from "../assets/essentials_filled/svg/controls-4-filled.svg"
+import unflagged from "../assets/essentials_icons/svg/flag-3.svg";
+import orange_flag from "../assets/essentials_filled/svg/flag-3-filled.svg";
+
+// OLD Icon Imports
+// import filter_outline from "../assets/filter_outline.png";
+// import filter_icon from "../assets/filter_icon.png";
+// import unflagged from "../assets/unflagged.png";
+// import orange_flag from "../assets/orange_flag.png";
 
 
 class StudentProfilesPage extends React.Component{
