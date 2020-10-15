@@ -76,7 +76,7 @@ export default function App() {
               { user.state.user ? <PaymentPortal /> : <Redirect to='/login' />}
             </Route>
             <Route path="/billing">
-              { user.state.user ? <BillingPage /> : <BillingPage />}
+              { user.state.user ? <BillingPage /> : <Redirect to='/login' />}
             </Route>
             <Route path="/billingaddress">
             { user.state.user ? <BillingAddress /> : <Redirect to='/login' />}
