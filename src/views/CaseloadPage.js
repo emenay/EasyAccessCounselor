@@ -19,13 +19,26 @@ import download_filled from '../assets/essentials_filled/svg/download.svg'
 import add from '../assets/essentials_icons/svg/add.svg'
 import close_btn from '../assets/essentials_icons/svg/multiply.svg'
 
+//TODO: 
+// Issue 1: Added fields don't seem to be populated on load of CaseloadPage between states
+// - Discovered: custom field shows up in ag-grid but is not present in the fields or addedFields property of CaseloadPage instance
+// Issue 2: As custom fields are added, those changes needed to be reflected in the filter options passed as props to DownloadPopUp 
+//          on its initial render
+// Issue 3: If the download window is opened while a cell in the grid is being edited, the grid overlay will appear above DownloadPopUp
+
 function IconButton(props) {
   return <button className={props.class} style={{backgroundImage: "url(" + props.url + ")"}} onClick={props.clickMethod}/>
 }
 
-function DownloadPopUp(props) {
-  //TODO: pass row filters and column lables as props from the main view
-  return <div className={props.class}> 
+class DownloadPopUp extends React.Component {
+  constructor(props) {
+    super(props);
+    this.columnOptions = React.createRef();
+  }
+  state = {};
+
+  render() {
+    return <div className={this.props.class}> 
     <div className="download-popup-content">
       <div id='popup-header' value='Download Caseload Data'>
         <div></div>
@@ -37,15 +50,15 @@ function DownloadPopUp(props) {
       <div id='popup-body'>
         <div id='download-options'>
           <span>Apply Additional Filters</span>
-          <SelectBox className={'popup-column-filter'} placeholder={'Select Column Options...'} filterOptions={props.columnOptions}/>
-          <SelectBox className={'popup-row-filter'} placeholder={'Select Row Options...'} filterOptions={props.rowOptions}/>
+          <SelectBox ref={this.columnOptions} className={'popup-column-filter'} placeholder={'Select Column Options...'} filterOptions={this.props.columnOptions} onColumnOptionChange={this.props.onColumnOptionChange}/>
+          <SelectBox className={'popup-row-filter'} placeholder={'Select Row Options...'} filterOptions={this.props.rowOptions} onColumnOptionChange={this.props.onColumnOptionChange}/>
           <input className ='search_box' type="text" id="popup-name-input" placeholder="Give your file a name..." />
         </div>
         <div id='download-preview'>
         </div>
       </div>
       <div id='popup-footer'>
-        <div id='download-btn' onClick={props.clickMethod}>
+        <div id='download-btn' onClick={this.props.clickMethod}>
           Download 
         </div>
         <div id='cancel-btn'>
@@ -54,34 +67,58 @@ function DownloadPopUp(props) {
       </div>
     </div>
   </div> 
+  }
 }
 
-
+// React-Select Component 
 class SelectBox extends React.Component {
   constructor(props){
     super(props)
-    this.filterOptions = props.filterOptions;
+    // this.filterOptions = props.filterOptions;
+    this.handleChange = this.handleChange.bind(this);
   }
   state = {
     selectedOption: null,
+    filterOptions: null,
   };
 
+  customStyles = {
+    valueContainer: (provided, state) => ({
+      ...provided,
+      textOverflow: "ellipsis",
+      maxWidth: "90%",
+      whiteSpace: "nowrap",
+      overflow: "hidden",
+    })
+  };
+
+  updateFilterOptions = () => {
+    this.setState({
+      filterOptions: this.props.filterOptions()
+    })
+  }
   handleChange = selectedOption => {
     this.setState({ selectedOption });
-    console.log(`Option selected:`, selectedOption);
+    this.props.onColumnOptionChange(selectedOption)
+    // console.log(`Option selected:`, selectedOption);
   };
 
   render() {
     const { selectedOption } = this.state;
+    const { filterOptions } = this.state;
+
+    const downloadColumns = this.props.downloadColumns;
     return (
       <Select
         isMulti
         name="colors"
-        options={this.filterOptions}
+        // options={this.props.filterOptions}
+        options={filterOptions}
         className={this.props.className}
         placeholder={this.props.placeholder}
         value={selectedOption}
         onChange={this.handleChange}
+        styles={this.customStyles}
       />
     );
   }
@@ -97,11 +134,15 @@ class CaseloadPage extends React.Component {
       data: [],
       undoRows: [],
       lastCohort: null,
-      addedFields: []
+      addedFields: [],
+      columns: [],
+      downloadColumns: [],
     });
-    // Bind this in order to access AgGrid properties from download-popup
+    // Bind in order to access AgGrid properties from download-popup
     this.onBtnDownload = this.onBtnDownload.bind(this);
     this.downloadData = this.downloadData.bind(this);
+    this.handleColumnOptionChange = this.handleColumnOptionChange.bind(this);
+    this.getColumnNames = this.getColumnNames.bind(this);
     // Each object is a column, passed to constructor for Ag-grid
     this.fields = [
       {width: "50", checkboxSelection: true, cellStyle: params => {return {backgroundColor: "white", borderTop: "0", borderBottom: "0"}}},
@@ -121,7 +162,6 @@ class CaseloadPage extends React.Component {
       {field: "targetColleges", headerName: 'Target Colleges', comparator: this.comparator, sortable: true, filter: true, editable: true, resizable: true},
       {field: "reachColleges", headerName: 'Reach Colleges', comparator: this.comparator, sortable: true, editable: true, filter: true, resizable: true},
       {field: "additions", headerName: 'Counselor Additions', comparator: this.comparator, sortable: true, editable: true, filter: true, resizable: true}
-      
     ];
     // implement for deletion dropdown on header TODO
     this.customHeader = (
@@ -139,8 +179,13 @@ class CaseloadPage extends React.Component {
     )
     this.columnOptions = [];
     this.rowOptions = [];
+    this.downloadPopUp = React.createRef();
   }
 
+  // Function for handling selection of column filter options in download popup
+  handleColumnOptionChange(downloadColumns) {
+    this.setState({downloadColumns})
+  }
   // Comparator for sorting numbers, ensuring blank fields and mistakes are lowest and that empty entry field stays at bottom
   numComparator = (a, b, aNode, bNode, isInverted) => {
     let inverter = isInverted ? -1 : 1;
@@ -317,30 +362,47 @@ class CaseloadPage extends React.Component {
   onBtnDownload(e) {
     var inputName = document.getElementById('popup-name-input').value;
     var name = inputName != '' ? inputName : 'caseload'
-    var params = {fileName: name};
+    var selectedCols = this.state.downloadColumns;
+    var colIdList = [];
+    selectedCols.forEach((col) => {
+      colIdList.push(col.value);
+    })
+    var params = colIdList.length > 0 ? {fileName: name, columnKeys: colIdList} : 
+                                        {fileName: name};
     this.gridApi.exportDataAsCsv(params)
   }
 
   getColumnNames() {
-    var columns = this.fields.concat(this.addedFields)
+    // var columns = this.addedFields != undefined ? this.fields.concat(this.addedFields) : this.fields;
+    var columns = this.gridColumnApi.getAllColumns();
+    // console.log(otherCols);
     var colNames = [];
-    colNames.forEach((col)=>{
-      var field = col.field;
+    var rowSelect = true; 
+    columns.forEach((col)=>{
+      if (rowSelect){ //Skips over column that represents row select
+        rowSelect = false;
+        return;
+      }  
+      var header = col.colDef.headerName;
+      var id = col.colId;
       var option = {
-        'label': field[0].toUpperCase() + field.substring(1),
-        'value': field
+        'label': header,
+        'value': id
       }
       colNames.push(option);
     });
+    // console.log(colNames);
     return colNames;
   }
 
   // plus from https://icons8.com/icons/set/plus
-  // TODO: create a tool tip for the download button when no data is selected
+  // TODO: (1) create a tool tip for the download button when no data is selected
+  //       (2) bind CaseloadPage to DownloadPopup for more flexibility with ag Grid
   render(){
+    const downloadColumns = this.state.downloadColumns;
     return (
       <div className="caseload-content">
-        <DownloadPopUp class={'download-popup'} clickMethod={this.onBtnDownload} columnOptions={this.columnOptions} rowOptions={this.rowOptions}/>
+        <DownloadPopUp ref={this.downloadPopUp} class={'download-popup'} clickMethod={this.onBtnDownload} columnOptions={this.getColumnNames} rowOptions={this.rowOptions} onColumnOptionChange={this.handleColumnOptionChange}/>
         <div className="caseload-header">
           <input className ='search_box' type="text" id="myInput" onKeyUp={this.changeSearchString} placeholder="Search Table..." />
           {this.state.rowsSelected && <IconButton url={trash} clickMethod={this.deleteRows} class={'icon_button'}/>}             
@@ -375,7 +437,8 @@ class CaseloadPage extends React.Component {
     var popup = document.querySelector('.download-popup');
     popup.style.display = 'block';
     this.columnOptions = this.getColumnNames(); 
-    console.log(this.columnOptions);
+    // Update the options for the react select column options component when the download window opens
+    this.downloadPopUp.current.columnOptions.current.updateFilterOptions();
     
     const closeBtn = document.querySelector('.close');
     const cancelBtn = document.querySelector('#cancel-btn')
