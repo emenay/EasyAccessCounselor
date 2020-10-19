@@ -5,6 +5,7 @@ import orange_flag from "../assets/orange_flag.png";
 import {db} from '../firebase/firebase';
 import {UserContext} from '../providers/UserProvider';
 import firebase from 'firebase/app';
+import close_btn from '../assets/essentials_icons/svg/multiply.svg'
 
 // File controls popups for student profiles page
 // Each tab in the popup is a component "panel" displayed by the StudentDetailsModal
@@ -127,6 +128,65 @@ function NotesPanel(props) {
     );
 }
 
+function deleteField(field) {
+    // remove field from view
+}
+
+function getDeleteButton(field) {
+    return(
+        <button className={field + "dlt"} onClick={()=>deleteField(field)}>
+             <img src={close_btn} alt='close-download-popup'></img>
+        </button>
+    )
+}
+
+function showEdit() {
+    const context = useContext(UserContext);
+    db.collection("student_counselors").doc(context.state.selectedCohort).collection("shownzspFields")
+    .get()
+    .then(
+
+    ).catch(
+        
+    )
+    /*
+    -pull shownSPFields from db
+    -Prepend delete button to every field in generalInfo (via
+    looping through everything in shownSPFields)
+    -Hide edit button
+    -Add save changes button and cancel button
+    -Add "Add list item button"
+    
+    -Delete button: 
+        1. refreshes view based to not show deleted field
+        2. Prepares new replacement "shownSPFields" object that
+        no longer includes the deleted field
+    -Add list item button:
+        1. Append new component to generalInfo that is a drop down of fields
+        that exist within the database
+        2. Prepend delete button behind hte drop down
+        3. Grey out "add list item" button
+        4. Upon selection of field, display the new field where the drop down
+        was, prepare replacement "shownSPFields" boject with the new field, 
+        un-grey out the add list item button
+    -Save changes:
+        call hideEdit(replacement shownSPFields)
+    -Cancel button:
+        call hideEdit(null)
+    */
+}
+
+function hideEdit(shownSPFields) {
+    /*
+    1. Remove all delete buttons
+    2. Remove save changes and cancel button
+    3. Remove add list item button
+    5. Show edit button
+    6. if shownSPFields !== null then push to database
+    7. Reload generalInfo section
+    */
+}
+
 // Static panel for viewing Application Process
 function ApplicationProcessPanel(props) {
     const [editing, changeEditing] = useState(false);
@@ -189,6 +249,16 @@ function ApplicationProcessPanel(props) {
 // static panel for general info
 function GeneralInformationPanel(props) {
     const [editing, changeEditing] = useState(false);
+
+    /*
+    PLAN: Add a field for each counselor in the database, something like "showSPFields"
+    that is a list of the fields the user wants to see in the student profile view. Use
+    database for that so that edits are persistent and not just limited to the current
+    session.
+    
+    Then modify this function so that it only shows fields listed in the showSPFields
+    SEE: toggleEdit() function
+    */
     let info = props.info;
     return <div className="geninfo-panel">
             <div className="geninfo-row1">
