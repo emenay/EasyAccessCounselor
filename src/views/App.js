@@ -27,6 +27,7 @@ import PaymentSummary from './PaymentSummaryPage';
 import Receipt from './ReceiptPage';
 import BillingPage from './BillingPage';
 import StripeCard from './StripeCard';
+import StripeCheckout from './StripeCheckout';
 
 // history allows us to change pages by pushing to history
 export const history = createBrowserHistory();
