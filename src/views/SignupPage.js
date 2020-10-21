@@ -22,7 +22,7 @@ async function proceedClick(email, password, confPassword, first, last){
                     firstName: first,
                     lastName: last
             });
-            console.log(currentUser.email);
+            console.log(this.context.state.user);
 
         } catch (err) {
             window.alert(err);

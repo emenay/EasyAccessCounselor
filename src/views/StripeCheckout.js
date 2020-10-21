@@ -1,9 +1,7 @@
 import React, {useState} from 'react';
 import '../css/AccountTypePage.css';
 import {UserContext} from '../providers/UserProvider';
-
 import {auth} from '../firebase/firebase';
-import {currentUser} from '../firebase/firebase';
 import {db} from '../firebase/firebase';
 import {history} from './App';
 import { loadStripe } from '@stripe/stripe-js';
@@ -12,20 +10,12 @@ import { loadStripe } from '@stripe/stripe-js';
 const stripePromise = loadStripe('pk_test_51HbCkNKXiwGLHCkWpDi19gHbPGMLeIFUspxD6TlwmUGj6cqaYnYozd0wSdNqOy0mTJzHOjO2KoIWr9IGEGMgjZgc00zgDleSC8');
 
 
+
 class StripeCheckout extends React.Component { 
-    render() {
-        return(
-            <button role="link" onClick={handleClick}>
-                Checkout
-            </button>
-        )
-    }
-}
-
-// Checkout handler
-
-const handleClick = async (event) => {
-    // Get Stripe.js instance
+    static contextType = UserContext;
+    
+    handleClick = async () => {
+      // Get Stripe.js instance
     const stripe = await stripePromise;
 
 
@@ -38,7 +28,7 @@ const handleClick = async (event) => {
     // uses school price for now
     const docRef = await db
       .collection('customers')
-      .doc(currentUser.uid)
+      .doc(this.context.state.user.email)
       .collection('checkout_sessions')
       .add({
         price: 'price_1HeKsOKXiwGLHCkWDFSwTKes',
@@ -72,7 +62,18 @@ const handleClick = async (event) => {
     //   // error, display the localized error message to your customer
     //   // using `result.error.message`.
     // }
-  };
+    }
+
+    render() {
+        return(
+            <button role="link" onClick={this.handleClick}>
+                Checkout
+            </button>
+        )
+    }
+}
+
+
 
 
 
