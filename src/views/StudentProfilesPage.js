@@ -205,7 +205,45 @@ class StudentProfilesPage extends React.Component{
         this.setState({filters: new_filter});
     }
 
+    paywalledFeature = () => {
+        let userEmail = this.context.state.user.email;
+        this.pwf(userEmail);
+    }
+
+    pwf = (userEmail) => {
+        if (userEmail === "tebjss123@gmail.com") {
+            alert("Congratulations, you have access to this feature")
+        } else {
+            alert("This message shows when someone is trying to access " +
+            "a feature they aren't paying for")
+        }
+    }
+
     render(){
+
+        // let counselor;
+        // // alert(this.context.state.user.uid)
+        // alert(this.context.state.user.uid);
+        // counselor = db.collection("counselors").doc(this.context.state.user.uid).get()
+        // .then(querySnapshot => {
+        //     // array of student objects
+        //         if (querySnapshot.exists) {
+        //             // alert(querySnapshot.data().email);
+        //             return querySnapshot;
+        //         } else {
+        //             alert("Doesn't exist lol")
+        //         }
+        //     }
+        // ).catch((err)=>{
+        //     alert(err);
+        // });
+
+
+        let displayType = {"display": "none"}
+        let userEmail = this.context.state.user.email;
+        let userFName = this.context.state.user.firstName;
+        if (userEmail === "tebjss123@gmail.com") displayType["display"] = "initial";
+
         let data = this.state.data;
         data = this.state.flagToggle ? data.filter(person => {return this.state.flagSet.has(person.uid)}) : data;
         if (this.state.searchString !== "") {
@@ -232,6 +270,12 @@ class StudentProfilesPage extends React.Component{
         });
 
         return <div className="profiles-content">
+            <div style={displayType}>
+                {userEmail}
+                <button onClick={this.paywalledFeature}>
+                    fake button
+                </button>
+            </div>
             <div className="profiles-header">
                 <input type="text" id="myInput" onKeyUp={this.changeSearchString} placeholder="Search for Students.." />
                 <button className="flag-button" onClick={this.flagToggle}><img className="flag-image" alt="Select flagged fields icon" src={this.state.flagToggle? orange_flag : unflagged} /></button>

@@ -1,7 +1,8 @@
 import React, {useState} from 'react';
 import '../css/SignupPage.css';
+import {UserContext} from '../providers/UserProvider';
 
-import { auth} from '../firebase/firebase';
+import { db, auth} from '../firebase/firebase';
 import {history} from './App';
 
 async function proceedClick(email, password, confPassword, first, last){
