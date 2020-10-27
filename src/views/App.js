@@ -39,7 +39,7 @@ export default function App() {
   const isPickingAccount = 'true';
   const isLoggedIn = user.state.user ? 'true' : '';
 
-  const STRIPE_PUBLISHABLE_KEY= 'pk_test_51HbCkNKXiwGLHCkWpDi19gHbPGMLeIFUspxD6TlwmUGj6cqaYnYozd0wSdNqOy0mTJzHOjO2KoIWr9IGEGMgjZgc00zgDleSC8';
+  const STRIPE_PUBLISHABLE_KEY= "pk_test_51HbCkNKXiwGLHCkWpDi19gHbPGMLeIFUspxD6TlwmUGj6cqaYnYozd0wSdNqOy0mTJzHOjO2KoIWr9IGEGMgjZgc00zgDleSC8";
 
   // Routing could be cleaned up
   return (

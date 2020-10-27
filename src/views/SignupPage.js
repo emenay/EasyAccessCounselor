@@ -1,11 +1,11 @@
 import React, {useState} from 'react';
 import '../css/SignupPage.css';
-
 import { auth} from '../firebase/firebase';
 import {currentUser} from '../firebase/firebase';
 import {history} from './App';
 
 async function proceedClick(email, password, confPassword, first, last){
+    
     if (password !== confPassword) {
         window.alert("Passwords don't match")
     } else if (first === '' || last === '') {
@@ -22,7 +22,8 @@ async function proceedClick(email, password, confPassword, first, last){
                     firstName: first,
                     lastName: last
             });
-            console.log(this.context.state.user);
+            
+            
 
         } catch (err) {
             window.alert(err);

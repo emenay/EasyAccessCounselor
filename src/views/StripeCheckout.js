@@ -5,30 +5,35 @@ import {auth} from '../firebase/firebase';
 import {db} from '../firebase/firebase';
 import {history} from './App';
 import { loadStripe } from '@stripe/stripe-js';
+import {useContext} from 'react';
+
 // Make sure to call `loadStripe` outside of a component’s render to avoid
 // recreating the `Stripe` object on every render.
 const stripePromise = loadStripe('pk_test_51HbCkNKXiwGLHCkWpDi19gHbPGMLeIFUspxD6TlwmUGj6cqaYnYozd0wSdNqOy0mTJzHOjO2KoIWr9IGEGMgjZgc00zgDleSC8');
 
 
+function TestContext() {
+    // const userTest = useContext(UserContext);
+    // console.log(userTest.state.user);
+}
+
 
 class StripeCheckout extends React.Component { 
     static contextType = UserContext;
+    
+    
     
     handleClick = async () => {
       // Get Stripe.js instance
     const stripe = await stripePromise;
 
-
+    console.log(this.context.state.user);
     // Call your backend to create the Checkout Session
-    // const response = await fetch('/create-checkout-session', { method: 'POST' });
-
-    // const session = await response.json();
-
-    // lksjflksjlfkjsflkfjsklf
+    
     // uses school price for now
     const docRef = await db
       .collection('customers')
-      .doc(this.context.state.user.email)
+      .doc(this.context.state.user.uid)
       .collection('checkout_sessions')
       .add({
         price: 'price_1HeKsOKXiwGLHCkWDFSwTKes',
@@ -49,19 +54,6 @@ class StripeCheckout extends React.Component {
       }
     });
 
-
-    // sflsjlfkjslkjflkslkfjlskf
-
-    // // When the customer clicks on the button, redirect them to Checkout.
-    // const result = await stripe.redirectToCheckout({
-    //   sessionId: session.id,
-    // });
-
-    // if (result.error) {
-    //   // If `redirectToCheckout` fails due to a browser or network
-    //   // error, display the localized error message to your customer
-    //   // using `result.error.message`.
-    // }
     }
 
     render() {
