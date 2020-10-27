@@ -2,7 +2,9 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import ReactDOMServer from 'react-dom/server';
 import { AgGridReact } from 'ag-grid-react';
+import { AllCommunityModules } from '@ag-grid-community/all-modules';
 import Select from 'react-select';
+import CustomHeader from '../components/caseloadPage/customHeader.jsx';
 import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
 import '../css/CaseloadPage.css';
@@ -18,6 +20,7 @@ import download from '../assets/essentials_icons/svg/download.svg'
 import download_filled from '../assets/essentials_filled/svg/download.svg'
 import add from '../assets/essentials_icons/svg/add.svg'
 import close_btn from '../assets/essentials_icons/svg/multiply.svg'
+import {ReactComponent as menu_btn} from '../assets/essentials_icons/svg/menu-1.svg'
 
 //TODO: 
 // Issue 1: Added fields don't seem to be populated on load of CaseloadPage between states
@@ -129,6 +132,7 @@ class CaseloadPage extends React.Component {
   constructor(props){
     super(props);
     this.state = ({
+      modules: AllCommunityModules, 
       rowsSelected: false,
       searchString: "",
       data: [],
@@ -137,6 +141,7 @@ class CaseloadPage extends React.Component {
       addedFields: [],
       columns: [],
       downloadColumns: [],
+      frameworkComponents: { agColumnHeader: CustomHeader },
     });
     // Bind in order to access AgGrid properties from download-popup
     this.onBtnDownload = this.onBtnDownload.bind(this);
@@ -145,9 +150,9 @@ class CaseloadPage extends React.Component {
     this.getColumnNames = this.getColumnNames.bind(this);
     // Each object is a column, passed to constructor for Ag-grid
     this.fields = [
-      {width: "50", checkboxSelection: true, cellStyle: params => {return {backgroundColor: "white", borderTop: "0", borderBottom: "0"}}},
-      {field: "id", headerName: "ID", editable: true, valueParser: this.numberType, width: "70"},
-      {field: "firstName", headerName: "First Name", sortable: true, comparator: this.comparator, filter: true, editable: true, resizable: true},
+      {width: "50", pinned: 'left', lockPosition: true, lockPinned: true, sortable: false, checkboxSelection: true, suppressMenu: true, cellStyle: params => {return {backgroundColor: "white", borderTop: "0", borderBottom: "0"}}},
+      {field: "id", headerName: "ID", editable: true, valueParser: this.numberType, width: "70", suppressMenu: true},
+      {field: "firstName", headerName: "First Name", sortable: true, comparator: this.comparator, filter: true, editable: true, resizable: true, enableSorting: true},
       {field: 'lastName', headerName: 'Last Name', sortable: true, comparator: this.comparator, filter: true, editable: true, resizable: true},
       {field: 'goal', headerName: 'Goal', sortable: true, comparator: this.comparator, filter: true, editable: true, resizable: true},
       {field: "gpa", headerName: 'GPA', comparator: this.numComparator, sortable: true, editable: true, valueParser: this.numberType, filter: 'agNumberColumnFilter', resizable: true},
@@ -179,6 +184,7 @@ class CaseloadPage extends React.Component {
     )
     this.columnOptions = [];
     this.rowOptions = [];
+    // Reference for download popup to set column option state when new columns are added
     this.downloadPopUp = React.createRef();
   }
 
@@ -186,6 +192,7 @@ class CaseloadPage extends React.Component {
   handleColumnOptionChange(downloadColumns) {
     this.setState({downloadColumns})
   }
+
   // Comparator for sorting numbers, ensuring blank fields and mistakes are lowest and that empty entry field stays at bottom
   numComparator = (a, b, aNode, bNode, isInverted) => {
     let inverter = isInverted ? -1 : 1;
@@ -255,10 +262,11 @@ class CaseloadPage extends React.Component {
             this.setState({
               data: data,
               lastCohort: this.context.state.selectedCohort,
-              addedFields: (result.data().addedFields !== undefined ? result.data().addedFields.map(field=> {return {field: field, headerName: field, comparator: this.comparator, sortable: true, editable: true, filter: true, resizable: true, headerComponentParams: {
-                template: this.customHeader
-                 
-            }}}) : [])
+              addedFields: (result.data().addedFields !== undefined ? result.data().addedFields.map(field=> {
+                return {
+                  field: field, headerName: field, comparator: this.comparator, sortable: true, editable: true, filter: true, resizable: true, headerComponentParams: {menuIcon: menu_btn},
+                }
+            }) : [])
             });
           })
         })
@@ -395,6 +403,15 @@ class CaseloadPage extends React.Component {
     return colNames;
   }
 
+  // Autosize all columns
+  autoSizeAll = (skipHeader) => {
+    var allColumnIds = [];
+    this.gridColumnApi.getAllColumns().forEach(function (column) {
+      allColumnIds.push(column.colId);
+    });
+    this.gridColumnApi.autoSizeColumns(allColumnIds, skipHeader);
+  };
+
   // plus from https://icons8.com/icons/set/plus
   // TODO: (1) create a tool tip for the download button when no data is selected
   //       (2) bind CaseloadPage to DownloadPopup for more flexibility with ag Grid
@@ -420,14 +437,20 @@ class CaseloadPage extends React.Component {
             onGridReady={ (params) => {
               this.gridApi = params.api;
               this.gridColumnApi = params.columnApi;
+              // this.autoSizeAll(true); // Auto size all columns, skipHeader = false
             }}
+            modules={this.state.modules}
             quickFilterText={this.state.searchString}
             onCellEditingStopped={(e) => this.cellEditingStopped(e)}
             columnDefs={this.fields.concat(this.state.addedFields)}
+            defaultColDef={{editable: true, filter: true, headerComponentParams: {menuIcon: menu_btn}}}
             rowData={this.state.data}
             rowSelection="multiple"
             onSelectionChanged={this.onSelectionChanged}
-            suppressRowClickSelection={true}/>
+            suppressRowClickSelection={true}
+            frameworkComponents = {this.state.frameworkComponents}
+            suppressMenuHide={true}
+            />
         </div>
       </div>
     );

@@ -254,3 +254,65 @@
     margin-right: 10px;
 }
 
+/* ag Grid custom column Header css */
+
+.customColumnHeader {
+    display: flex;
+    flex-direction: row; 
+    justify-content: space-around;
+    align-items: center;
+}
+
+.customHeaderMenuButton {
+    float: left;
+    opacity: 1;
+    height: 20px; 
+    width: 20px;
+    text-align: center;
+    margin-right: 10px;
+}
+
+.columnMenuSvg:hover {
+    fill: white;
+}
+
+.sortAscendSvg:hover {
+    fill: white; 
+}
+
+.sortDescendSvg:hover {
+    fill: white;
+}
+
+.sortButton {
+    float: right;
+    height: 20px; 
+    width: 20px;
+    text-align: center;
+    background-color: 0; 
+    margin-left: auto;
+    margin-right: 0;
+    fill: black;
+    background: #ffffff00;
+}
+
+.clear {
+    height: 10px;
+    width: 10px;
+}
+.sortRemoveSvg {
+    fill: black;
+} 
+
+.sortRemoveSvg:hover {
+    fill: white;
+}
+.customHeaderLabel {
+    float: left;
+    margin: 0 0 0 3px;
+    font-size: 12pt;
+}
+  
+.on {
+    fill: white;
+}
