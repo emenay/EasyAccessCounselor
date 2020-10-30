@@ -296,13 +296,12 @@
 .geninfo-row1 {
     display: flex;
     flex-direction: row;
-    justify-content: space-evenly;
     margin-bottom: 15px;
 }
 
-.geninfo-row1 div {
-    width: 33.333%;
-}
+/* .geninfo-row1 div {
+    width: 66.666%;
+} */
 
 .geninfo-panel p {
     font-size: 20px;
@@ -313,7 +312,23 @@
     font-size: 18px;
 }
 
+.genInfoRow {
+    display: flex;
+    flex-direction: row;
+    justify-content: left;
+    width: 100%;
+}
+
+.genInfoRow p {
+    width: 50%;
+}
+
+.fieldsSection {
+    width: 70%;
+}
+
 .geninfo-col3 {
+    width: 30%;
     text-align: right;
 }
 

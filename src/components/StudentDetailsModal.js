@@ -186,13 +186,66 @@ function ApplicationProcessPanel(props) {
     );
 }
 
+function genInfoCol(info, fields) {
+    // just do the jsx rendering
+    console.log("made it to to genInfoCol");
+    console.log(fields);
+    let col = []
+    for (let i=0; i<fields.length; i+=2) {
+        col.push(genInfoColRow(fields[i], fields[i+1], info))
+    }
+
+    return (<div class="fieldsSection">{col}</div>)
+}
+
+function genInfoColRow(field1, field2, info) {
+    if (field2) {
+        return (
+            <div className="genInfoRow">
+                <p><span>{field1}: </span>{info[field1]}</p>
+                <p><span>{field2}: </span>{info[field2]}</p>
+            </div>
+        )
+    } else {
+        return (
+            <div className="genInfoRow">
+                <p><span>{field1}: </span>{info[field1]}</p>
+            </div>
+        )
+    }
+    
+}
+
 // static panel for general info
 function GeneralInformationPanel(props) {
     const [editing, changeEditing] = useState(false);
+    const [fieldsData, setFieldsData] = useState(false);
+    // const context = useContext(UserContext);
+    useEffect(() => {
+        db.collection("student_counselors").doc(props.cohort).get()
+        .then(resp => {
+            if (resp.data().genInfoFields) {
+                setFieldsData(resp.data().genInfoFields);
+            } else {
+                let kindaDefaultFields = Object.keys(props.info);
+                console.log(kindaDefaultFields);
+                db.collection("student_counselors").doc(props.cohort).update({
+                    genInfoFields: kindaDefaultFields
+                });
+                setFieldsData(kindaDefaultFields);
+            }
+        })
+        .catch(err => {
+            console.log(err);
+        })
+    }, [])
+
     let info = props.info;
     return <div className="geninfo-panel">
             <div className="geninfo-row1">
-                <div className="geninfo-col1">
+                {fieldsData ? genInfoCol(info, fieldsData) : ""}
+                {/* <GenInfoCol info={info} cohort={props.cohort} /> */}
+                {/* <div className="geninfo-col1">
                     <p><span>Date of Birth: </span>{info.dob}</p>
                     <p><span>Ethnicity: </span>{info.ethnicity}</p>
                     <p><span>Gender: </span>{info.gender}</p>
@@ -201,15 +254,15 @@ function GeneralInformationPanel(props) {
                     <p><span>Class Rank: </span>{info.classRank}</p>
                     <p><span>SAT Score: </span>{info.sat}</p>
                     <p><span>ACT Score: </span>{info.act}</p>
-                </div>
-                <div className="geninfo-col2">
+                </div> */}
+                {/* <div className="geninfo-col2">
                     <p><span>Parent Email: </span>{info.parentEmail}</p>
                     <p><span>Parent Email 2: </span>{info.parentEmail2}</p>
                     <p><span>Parent Phone: </span>{info.parentPhone}</p>
                     <p><span>Parent Phone 2: </span>{info.parentPhone2}</p>
                     <p><span>Student Email: </span>{info.studentEmail}</p>
                     <p><span>Student Phone: </span>{info.studentPhone}</p>
-                </div>
+                </div> */}
                 <div className="geninfo-col3">
                     <img className="studentdetails-avatar" alt="avatar icon" src={profile_avatar}/>
                     <p><span>Student ID: </span>{info.id}</p>
@@ -228,7 +281,41 @@ class StudentDetailsModal extends React.Component {
         super(props);
         this.tabs = ["General Information", "Notes", "College List", "Application Process"];
         this.state = {
-            selectedTab: "General Information"
+            selectedTab: "General Information",
+            selectedCohort: this.props.cohort
+        }
+
+        // const context = useContext(UserContext);
+        // db.collection("student_counselors").doc(this.props.cohort).get()
+        // .then(response => {
+        //     const fields = response.data().genInfoFields[0];
+        //     this.setState({
+        //         genInfoFields: fields
+        //     });
+
+        //     // console.log(this.state.genInfoFields);
+        // })
+        // .catch(err => {
+        //     alert(err);
+        // })
+
+        db.collection("student_counselors").doc()
+    }
+
+    componentDidMount() {
+        this.getCohortData();
+    }
+
+    getCohortData = () => {
+        if (this.context.state){
+            db.collection("student_counselors").doc(this.props.selectedCohort)
+            .get()
+            .then(querySnapshot => {
+                this.setState({
+                    fields: querySnapshot.genInfoFields
+                });
+            })
+            .catch(error => {console.log(error)});
         }
     }
 
@@ -239,7 +326,7 @@ class StudentDetailsModal extends React.Component {
     whichPanel = (tab) => {
         switch(tab){
             case 'General Information':
-                return <GeneralInformationPanel info={this.props.info}/>
+                return <GeneralInformationPanel fields={this.state.fields} cohort={this.props.cohort} info={this.props.info}/>
             case 'Application Process':
                 return <ApplicationProcessPanel info={this.props.info}/>
             case 'Notes':
