@@ -56,13 +56,13 @@ export default class CustomHeader extends Component {
           >
             <Sort_ascend className={`sortAscendSvg ${this.state.descSort}`}/>
           </div>
-          <div
+          {/* <div
             onClick={this.onSortRequested.bind(this, '')}
             onTouchEnd={this.onSortRequested.bind(this, '')}
             className="sortButton clear"
           >
             <Clear_sort className={`sortRemoveSvg ${this.state.noSort}`}/>
-          </div>
+          </div> */}
         </div>
       );
     }
@@ -93,6 +93,11 @@ export default class CustomHeader extends Component {
   }
 
   onSortRequested(order, event) {
+    if(order == 'desc' && this.state.descSort == 'on') {
+      order = '';
+    } else if (order == 'asc' && this.state.ascSort == 'on') {
+      order = '';
+    }
     this.props.setSort(order, event.shiftKey);
   }
 }

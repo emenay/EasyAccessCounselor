@@ -143,11 +143,13 @@ class CaseloadPage extends React.Component {
       downloadColumns: [],
       frameworkComponents: { agColumnHeader: CustomHeader },
     });
+    
     // Bind in order to access AgGrid properties from download-popup
     this.onBtnDownload = this.onBtnDownload.bind(this);
     this.downloadData = this.downloadData.bind(this);
     this.handleColumnOptionChange = this.handleColumnOptionChange.bind(this);
     this.getColumnNames = this.getColumnNames.bind(this);
+
     // Each object is a column, passed to constructor for Ag-grid
     this.fields = [
       {width: "50", pinned: 'left', lockPosition: true, lockPinned: true, sortable: false, checkboxSelection: true, suppressMenu: true, cellStyle: params => {return {backgroundColor: "white", borderTop: "0", borderBottom: "0"}}},
@@ -168,6 +170,7 @@ class CaseloadPage extends React.Component {
       {field: "reachColleges", headerName: 'Reach Colleges', comparator: this.comparator, sortable: true, editable: true, filter: true, resizable: true},
       {field: "additions", headerName: 'Counselor Additions', comparator: this.comparator, sortable: true, editable: true, filter: true, resizable: true}
     ];
+
     // implement for deletion dropdown on header TODO
     this.customHeader = (
       '<div class="ag-cell-label-container" role="presentation">' +
@@ -184,6 +187,7 @@ class CaseloadPage extends React.Component {
     )
     this.columnOptions = [];
     this.rowOptions = [];
+
     // Reference for download popup to set column option state when new columns are added
     this.downloadPopUp = React.createRef();
   }
