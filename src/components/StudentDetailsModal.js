@@ -238,7 +238,7 @@ function GeneralInformationPanel(props) {
         .catch(err => {
             console.log(err);
         })
-    }, [])
+    }, []);
 
     let info = props.info;
     return <div className="geninfo-panel">
@@ -284,20 +284,6 @@ class StudentDetailsModal extends React.Component {
             selectedTab: "General Information",
             selectedCohort: this.props.cohort
         }
-
-        // const context = useContext(UserContext);
-        // db.collection("student_counselors").doc(this.props.cohort).get()
-        // .then(response => {
-        //     const fields = response.data().genInfoFields[0];
-        //     this.setState({
-        //         genInfoFields: fields
-        //     });
-
-        //     // console.log(this.state.genInfoFields);
-        // })
-        // .catch(err => {
-        //     alert(err);
-        // })
 
         db.collection("student_counselors").doc()
     }

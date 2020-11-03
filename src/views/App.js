@@ -34,8 +34,6 @@ export const history = createBrowserHistory();
 // This controls client side routing, Google react-dom-router for details
 export default function App() {
   const user = useContext(UserContext);
-  // tanner, I have isPickingAccount always set to true right now
-  const isPickingAccount = 'true';
   const isLoggedIn = user.state.user ? 'true' : '';
 
   const STRIPE_PUBLISHABLE_KEY= 'pk_test_51HbCkNKXiwGLHCkWpDi19gHbPGMLeIFUspxD6TlwmUGj6cqaYnYozd0wSdNqOy0mTJzHOjO2KoIWr9IGEGMgjZgc00zgDleSC8';
@@ -47,8 +45,7 @@ export default function App() {
       <Header isLoggedIn={isLoggedIn}/>
         
         <div className={user.state.user ? "page-content" : 'page-content-nosignin'}>
-        {/* tanner, when I delete isLoggedIn={isLoggedIn}, the sidebar content changes but does not go away, maybe you can continue to explore to see how to disable sidebar */}
-        {user.state.user && <Sidenav isLoggedIn={isLoggedIn} isPickingAccount={isPickingAccount}/>}
+        {user.state.user && <Sidenav isLoggedIn={isLoggedIn}/>}
           <div className={user.state.user ? "view-content" : 'page-content-nosignin1'}>
           <Switch>
             <Route path="/profiles">
