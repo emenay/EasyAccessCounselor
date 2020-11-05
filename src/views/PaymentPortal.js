@@ -6,6 +6,7 @@ import {UserContext} from '../providers/UserProvider';
 import {auth} from '../firebase/firebase';
 import {history} from './App';
 import StripeCard from './StripeCard';
+import StripeCheckout from './StripeCheckout';
 
 class paymentPortalComponent extends React.Component {
     render() {
@@ -43,7 +44,7 @@ function PaymentPortalPage() {
 
     return(
         <div>
-            <StripeCard />
+            <StripeCheckout />
             <button className="signup-btn" onClick={()=>submitPayment()} >Confirm</button>
         </div>
         

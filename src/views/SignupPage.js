@@ -1,25 +1,29 @@
 import React, {useState} from 'react';
 import '../css/SignupPage.css';
-
 import { auth} from '../firebase/firebase';
+import {currentUser} from '../firebase/firebase';
 import {history} from './App';
 
 async function proceedClick(email, password, confPassword, first, last){
+    
     if (password !== confPassword) {
         window.alert("Passwords don't match")
     } else if (first === '' || last === '') {
         window.alert("Must enter firstname and lastname");
     } else {
         try {
+            // make new user in firebase
             let result = await auth.createUserWithEmailAndPassword(email, password);
-            // tanner,
-            // I changed the line below from /cohort_creation to /signup2
-            // this seems to control where it takes you after signing up
+            // make new Stripe customer in firebase
+            // does this automatically with createStripeCustomer in index.js
+
             history.push('/AccountType');
             await result.user.updateProfile({
                     firstName: first,
                     lastName: last
             });
+            
+            
 
         } catch (err) {
             window.alert(err);
