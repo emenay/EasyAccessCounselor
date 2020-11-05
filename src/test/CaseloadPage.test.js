@@ -39,7 +39,7 @@ beforeAll(async () => {
 test("CaseloadPage shallow render correct", () => {
     // shallow() esentially uses a less complicated DOM
     const wrapper = shallow (
-        <UserContext.Provider value={user}>
+        <UserContext.Provider value={{state:user}}>
             <CaseloadPage/>
         </UserContext.Provider>  
     );
