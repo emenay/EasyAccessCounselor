@@ -32,7 +32,8 @@
     "react-select": "^3.1.0",
     "react-spreadsheet": "^0.4.46",
     "react-virtualized": "^9.21.2",
-    "read-excel-file": "^4.0.6"
+    "read-excel-file": "^4.0.6",
+    "sinon": "^9.2.1"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -56,6 +57,9 @@
     ]
   },
   "devDependencies": {
+    "enzyme": "^3.11.0",
+    "enzyme-adapter-react-16": "^1.15.5",
+    "enzyme-to-json": "^3.6.1",
     "eslint-plugin-promise": "^4.2.1"
   }
 }

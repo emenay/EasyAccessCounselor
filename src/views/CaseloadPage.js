@@ -33,7 +33,7 @@ function IconButton(props) {
   return <button className={props.class} style={{backgroundImage: "url(" + props.url + ")"}} onClick={props.clickMethod}/>
 }
 
-class DownloadPopUp extends React.Component {
+export class DownloadPopUp extends React.Component {
   constructor(props) {
     super(props);
     this.columnOptions = React.createRef();
