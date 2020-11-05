@@ -421,7 +421,6 @@ class CaseloadPage extends React.Component {
   //       (2) bind CaseloadPage to DownloadPopup for more flexibility with ag Grid
   render(){
     const downloadColumns = this.state.downloadColumns;
-    console.log(this.context);
     return (
       <div className="caseload-content">
         <DownloadPopUp ref={this.downloadPopUp} class={'download-popup'} clickMethod={this.onBtnDownload} columnOptions={this.getColumnNames} rowOptions={this.rowOptions} onColumnOptionChange={this.handleColumnOptionChange}/>

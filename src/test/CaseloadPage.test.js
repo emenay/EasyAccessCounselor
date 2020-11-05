@@ -36,20 +36,12 @@ beforeAll(async () => {
     });
 });
 
-// Test Shallow Render of Caseload Page
-// TODO: Ensure that CaseloadPage actually has access to UserProvider data
-test("CaseloadPage shallow render correct", () => {
-    // user 
-    // shallow() esentially uses a less complicated DOM
+test("CaseloadPage full DOM render correct", () => {
     const wrapper = mount (
         <UserContext.Provider value={{state:userState}}>
             <CaseloadPage/>
         </UserContext.Provider>  
     );
-    // const wrapper = shallow (
-    //     <CaseloadPage/>, {wrappingComponent: UserContext.Provider}
-    // )
-    // const provider = wrapper.getWrappingComponent();
-    // provider.setProps({ value: { state:userState }});
     expect(wrapper).toMatchSnapshot();
+    wrapper.unmount(); // Unmount dom to prevent overlap in tests that follow
 });
