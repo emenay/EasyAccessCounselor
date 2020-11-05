@@ -19,27 +19,27 @@ import { createSerializer } from "enzyme-to-json";
 
 Enzyme.configure({ adapter: new Adapter() });
 // Sign in firebase user for testing CaseloadPage functionality 
-let user
-function setUserState(user) {
+let userState;
+function setUserContext(user) {
     userState = { user: user, selectedCohort: null, cohorts: [] };
-    console.log('Firebase Test User Set');
+    console.log('Test User Context Set');
 }
 
 beforeAll(async () => {
     jest.setTimeout(10000);
     await auth.signInWithEmailAndPassword("ian.dershem@gmail.com", "kenan116");
     await auth.onAuthStateChanged((user) => {
-        setUserState(user);
+        setUserContext(user);
     });
-    user = { user: user, selectedCohort: null, cohorts: [] }
 });
 
 // Test Shallow Render of Caseload Page
 // TODO: Ensure that CaseloadPage actually has access to UserProvider data
 test("CaseloadPage shallow render correct", () => {
+    // user 
     // shallow() esentially uses a less complicated DOM
     const wrapper = shallow (
-        <UserContext.Provider value={{state:user}}>
+        <UserContext.Provider value={{state:userState}}>
             <CaseloadPage/>
         </UserContext.Provider>  
     );
