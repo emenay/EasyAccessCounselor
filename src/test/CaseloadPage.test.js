@@ -11,6 +11,7 @@ import Adapter from "enzyme-adapter-react-16";
 import { createSerializer } from "enzyme-to-json";
 
 /* TODO:
+    (*) Update userState with a selectedCohort, and cohorts to test full CaseloadPage functionality
     (1) Write a test to make sure that the download popup renders 
     (2) Write a test to make sure that the download popup columns match those in the grid
     (3) Write a test to make sure that the header component renders correctly 
@@ -20,7 +21,9 @@ import { createSerializer } from "enzyme-to-json";
 Enzyme.configure({ adapter: new Adapter() });
 // Sign in firebase user for testing CaseloadPage functionality 
 let userState;
+let user;
 function setUserContext(user) {
+    user = user;
     userState = { user: user, selectedCohort: null, cohorts: [] };
     console.log('Test User Context Set');
 }
@@ -38,10 +41,15 @@ beforeAll(async () => {
 test("CaseloadPage shallow render correct", () => {
     // user 
     // shallow() esentially uses a less complicated DOM
-    const wrapper = shallow (
+    const wrapper = mount (
         <UserContext.Provider value={{state:userState}}>
             <CaseloadPage/>
         </UserContext.Provider>  
     );
+    // const wrapper = shallow (
+    //     <CaseloadPage/>, {wrappingComponent: UserContext.Provider}
+    // )
+    // const provider = wrapper.getWrappingComponent();
+    // provider.setProps({ value: { state:userState }});
     expect(wrapper).toMatchSnapshot();
 });
