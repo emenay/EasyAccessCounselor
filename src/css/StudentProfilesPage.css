@@ -341,6 +341,7 @@
     justify-content: left;
     align-items: center;
     text-align: justify;
+    width: 100%;
 }
 
 .modalFieldElement p span {

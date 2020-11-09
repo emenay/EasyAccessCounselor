@@ -186,39 +186,37 @@ function ApplicationProcessPanel(props) {
     );
 }
 
-function genInfoCol(info, fields, editing) {
+function GenInfoCol(props) {
     // just do the jsx rendering
     console.log("made it to to genInfoCol");
-    console.log(fields);
+    console.log("fields to render: " + props.fields);
     let col = []
-    for (let i=0; i<fields.length; i+=2) {
-        col.push(genInfoColRow(fields[i], fields[i+1], info, editing))
+    for (let i=0; i<props.fields.length; i+=2) {
+        col.push(genInfoColRow(props.fields[i], props.fields[i+1], props.info, props.editing, props.removeFromPreferences))
     }
 
-    return (<div class="fieldsSection">{col}</div>)
+    return (<div className="fieldsSection">{col}</div>)
 }
 
-function genInfoColRow(field1, field2, info, editing) {
-    if (field2) {
-        return (
-            <div className="genInfoRow">
-                <ModalFieldElement field={field1} info={info[field1]} editing={editing}/>
-                <ModalFieldElement field={field2} info={info[field2]} editing={editing}/>
-            </div>
-        )
-    } else {
-        return (
-            <div className="genInfoRow">
-                <ModalFieldElement field={field1} info={info[field1]} editing={editing}/>
-            </div>
-        )
-    }
+function genInfoColRow(field1, field2, info, editing, removeFromPreferences) {
+    const processedField1 = processField(field1);
+    const processedField2 = processField(field2);
+    const info1 = info[field1];
+    const info2 = info[field2]; 
+    
+    let elts = []
+    if (processedField1) elts.push(<ModalFieldElement editing={editing} removeFromPreferences={removeFromPreferences} field={processedField1} info={info1} dbField={field1}/>);
+    if (processedField2) elts.push(<ModalFieldElement editing={editing} removeFromPreferences={removeFromPreferences} field={processedField2} info={info2} dbField={field2}/>);
+    
+    return <div className="genInfoRow">
+        {elts}
+    </div>
     
 }
 
 function ModalFieldElement(props) {
     return <div className="modalFieldElement">
-        {props.editing === true ? <a>delete button</a> : ""}
+        {props.editing === true ? <a onClick={() => props.removeFromPreferences(props.dbField)}> X </a> : ""}
         <p><span>{props.field}: </span>{props.info}</p>
     </div>
 }
@@ -232,12 +230,85 @@ function EditButtonSuite(props) {
     </div>
 }
 
+function HandleEditInit(props) {
+        return <div>
+            {props.editing === true ? 
+                <EditButtonSuite cancel={props.toggleEdit} fields={props.fieldsData}/> :
+                <button className="studentdetails-editbutton" onClick={()=> {
+                        props.toggleEdit(true)
+                    }
+                }/>
+            }
+        </div>
+}
+
+function findEltinArr(arr, elt) {
+    for (let i=0; i<arr.length; i++) {
+        if (arr[i] === elt) {
+            return i;
+        }
+    }
+
+    return -1;
+}
+
+function processField(field) {
+    switch(field) {
+        case "uid":
+            return null;
+        case "goal":
+            return null;
+        case "efc":
+            return "EFC";
+        case "firstName":
+            return "First Name";
+        case "lastName":
+            return "Last Name";
+        case "act":
+            return "ACT Score";
+        case "sat":
+            return "SAT Score";
+        case "classRank":
+            return "Class Rank";
+        case "payMismatch":
+            return "Ability to pay";
+        case "major":
+            return "Major";
+        case "major2":
+            return "Secondary Major";
+        case "gpa":
+            return "GPA";
+        case "id":
+            return "ID";
+        case "targetColleges":
+            return "Target Colleges";
+        case "reachColleges":
+            return "Reach Colleges";
+        case "safetyColleges":
+            return "Safety Colleges";
+        case "additions":
+            return "Counselor Additions";
+        case "gender":
+            return "Gender";
+        default:
+            return field;
+    }
+}
+
 // static panel for general info
 function GeneralInformationPanel(props) {
     const [editing, changeEditing] = useState(false);
     const [fieldsData, setFieldsData] = useState(false);
+    const [pullFromDataBase, setPullFromDatabase] = useState(true);
     // const context = useContext(UserContext);
     useEffect(() => {
+        refreshWithDatabase();
+        setPullFromDatabase(false);
+    }, [])
+
+    const refreshWithDatabase = () => {
+        console.log("DB refresh called");
+        console.log(props.info);
         db.collection("student_counselors").doc(props.cohort).get()
         .then(resp => {
             if (resp.data().genInfoFields) {
@@ -254,16 +325,26 @@ function GeneralInformationPanel(props) {
         .catch(err => {
             console.log(err);
         })
-    }, [])
+    }
 
     const toggleEdit = (editing) => {
         changeEditing(editing);
+        refreshWithDatabase();
+    }
+
+    const removeFromPreferences = (field) => {
+        console.log("field to delete: " + field);
+        fieldsData.splice(findEltinArr(fieldsData, field), 1);
+        let newFieldsData = [...fieldsData];
+        setFieldsData(newFieldsData);
+
+        console.log("fields data after delete: " + fieldsData);
     }
 
     let info = props.info;
     return <div className="geninfo-panel">
             <div className="geninfo-row1">
-                {fieldsData ? genInfoCol(info, fieldsData, editing) : ""}
+                {fieldsData ? <GenInfoCol info={info} fields={fieldsData} editing={editing} removeFromPreferences={removeFromPreferences} /> : ""}
                 {/* <GenInfoCol info={info} cohort={props.cohort} /> */}
                 {/* <div className="geninfo-col1">
                     <p><span>Date of Birth: </span>{info.dob}</p>
@@ -286,11 +367,10 @@ function GeneralInformationPanel(props) {
                 <div className="geninfo-col3">
                     <img className="studentdetails-avatar" alt="avatar icon" src={profile_avatar}/>
                     <p><span>Student ID: </span>{info.id}</p>
-                    {editing ? <EditButtonSuite cancel={toggleEdit}/> : <button className="studentdetails-editbutton" onClick={()=>toggleEdit(!editing)}/>}
+                    {fieldsData ? <HandleEditInit toggleEdit={toggleEdit} editing={editing} fieldsData={fieldsData} /> : ""}
                 </div>
             </div>
             <p><span>Counselor Notes: </span>{info["Latest Note"]}</p>
-            {editing ? <p>EDITING</p> : null}
         </div>
 }
 
