@@ -1,5 +1,6 @@
 import React, {useState, useContext, useEffect} from 'react';
-import edit_symbol from '../assets/edit_symbol.png';
+import edit_symbol from '../assets/essentials_icons/svg/edit-1.svg';
+import plus_symbol from "../assets/essentials_icons/svg/plus.svg";
 import profile_avatar from '../assets/profile_avatar.png';
 import orange_flag from "../assets/orange_flag.png";
 import {db} from '../firebase/firebase';
@@ -195,7 +196,9 @@ function GenInfoCol(props) {
         col.push(genInfoColRow(props.fields[i], props.fields[i+1], props.info, props.editing, props.removeFromPreferences))
     }
 
-    return (<div className="fieldsSection">{col}</div>)
+    return <div className="fieldsSection">
+            {col}
+        </div>
 }
 
 function genInfoColRow(field1, field2, info, editing, removeFromPreferences) {
@@ -221,23 +224,33 @@ function ModalFieldElement(props) {
     </div>
 }
 
+
+// TODO: Implement the ability to add new fields
+function AddFieldElt(props) {
+
+    return <div className="addFieldElt">
+
+    </div>
+}
+
 function EditButtonSuite(props) {
 
     return <div className="editButtonSuite">
-        <button>Add Item</button>
-        <button>Save Changes</button>
-        <button onClick={() => {props.cancel(false)}}>Cancel</button>
+        <button className="addFieldButton"><img src={plus_symbol} />Add Item</button>
+        <div className="saveCancelContainer">
+            <button className="save" onClick={() => {props.editExit(false, true)}}>Save Changes</button>
+            <button className="cancel" onClick={() => {props.editExit(false, false)}}>Cancel</button>
+        </div>
     </div>
 }
 
 function HandleEditInit(props) {
         return <div>
             {props.editing === true ? 
-                <EditButtonSuite cancel={props.toggleEdit} fields={props.fieldsData}/> :
-                <button className="studentdetails-editbutton" onClick={()=> {
-                        props.toggleEdit(true)
-                    }
-                }/>
+                <EditButtonSuite editExit={props.setEdit} fields={props.fieldsData}/> :
+                <button className="studentdetails-editbutton" onClick={()=> {props.setEdit(true)}}>
+                    <img src={edit_symbol} alt="edit"/>
+                </button>
             }
         </div>
 }
@@ -315,7 +328,8 @@ function GeneralInformationPanel(props) {
                 setFieldsData(resp.data().genInfoFields);
             } else {
                 let kindaDefaultFields = Object.keys(props.info);
-                console.log(kindaDefaultFields);
+                if ("uid" in kindaDefaultFields) kindaDefaultFields.splice(findEltinArr(kindaDefaultFields, "uid"), 1);
+
                 db.collection("student_counselors").doc(props.cohort).update({
                     genInfoFields: kindaDefaultFields
                 });
@@ -327,9 +341,16 @@ function GeneralInformationPanel(props) {
         })
     }
 
-    const toggleEdit = (editing) => {
+    const setEdit = (editing, saveChanges=false) => {
         changeEditing(editing);
-        refreshWithDatabase();
+
+        if (saveChanges) {
+            db.collection("student_counselors").doc(props.cohort).update({
+                genInfoFields: fieldsData
+            });
+        } else {
+            refreshWithDatabase();
+        }
     }
 
     const removeFromPreferences = (field) => {
@@ -367,7 +388,7 @@ function GeneralInformationPanel(props) {
                 <div className="geninfo-col3">
                     <img className="studentdetails-avatar" alt="avatar icon" src={profile_avatar}/>
                     <p><span>Student ID: </span>{info.id}</p>
-                    {fieldsData ? <HandleEditInit toggleEdit={toggleEdit} editing={editing} fieldsData={fieldsData} /> : ""}
+                    {fieldsData ? <HandleEditInit setEdit={setEdit} editing={editing} fieldsData={fieldsData} /> : ""}
                 </div>
             </div>
             <p><span>Counselor Notes: </span>{info["Latest Note"]}</p>

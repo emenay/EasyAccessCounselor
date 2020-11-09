@@ -198,12 +198,27 @@
     position: absolute;
     bottom: 5px;
     right: 5px;
-    background-image: url('../assets/edit_symbol.png');
-    background-size: 100% 100%;
-    width: 35px;
-    height: 45px;
-    background-color:  #fefefe;
+    width: 65px;
+    height: 65px;
     border: none;
+    margin: 10px;
+    background-color:  #fefefe;
+    border-radius: 50%;
+}
+
+.studentdetails-editbutton img {
+    height: 100%;
+    width: 100%;
+}
+
+.studentdetails-editbutton:hover {
+    /* background-image: url('../assets/edit_symbol.png'); */
+    background-color: #AD310B;
+    -webkit-transition: background-color 100ms linear;
+    -ms-transition: background-color 100ms linear;
+    transition: background-color 100ms linear;
+    background-size: 100% 100%;
+    background-color:  #dadada;
 }
 
 
@@ -353,6 +368,70 @@
 
 .modalFieldElement a {
     margin-right: 5px;
+}
+
+.addFieldButton {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    font-size: 150%;
+    color: black;
+    background-color: transparent;
+    border-style: none;
+    margin: 0px 50px 0 0; /* top right bottom left*/
+    border-radius: 3px;
+    width: 100%;
+}
+
+.addFieldButton:hover {
+    -webkit-transition: background-color 100ms linear;
+    -ms-transition: background-color 100ms linear;
+    transition: background-color 100ms linear;
+    background-color: rgb(211, 211, 211);
+}
+
+.addFieldButton img {
+    height: 4vh;
+    width: 4vh;
+    margin-right: 3%;
+}
+
+.saveCancelContainer {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+}
+
+.saveCancelContainer button {
+    margin: 5px;
+    margin-top: 10px;
+    border-style: none;
+    border-radius: 3px;
+}
+
+.save {
+    background-color: rgb(77, 165, 77);
+}
+
+.save:hover {
+    -webkit-transition: background-color 100ms linear;
+    -ms-transition: background-color 100ms linear;
+    transition: background-color 100ms linear;
+    background-color: rgb(68, 146, 68);
+}
+
+.cancel {
+    background-color: rgb(202, 70, 70);
+}
+
+.cancel:hover {
+    -webkit-transition: background-color 100ms linear;
+    -ms-transition: background-color 100ms linear;
+    transition: background-color 100ms linear;
+    background-color: rgb(165, 57, 57);
 }
 
 .geninfo-col3 {
