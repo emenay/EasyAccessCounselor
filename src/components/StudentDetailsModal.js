@@ -186,34 +186,50 @@ function ApplicationProcessPanel(props) {
     );
 }
 
-function genInfoCol(info, fields) {
+function genInfoCol(info, fields, editing) {
     // just do the jsx rendering
     console.log("made it to to genInfoCol");
     console.log(fields);
     let col = []
     for (let i=0; i<fields.length; i+=2) {
-        col.push(genInfoColRow(fields[i], fields[i+1], info))
+        col.push(genInfoColRow(fields[i], fields[i+1], info, editing))
     }
 
     return (<div class="fieldsSection">{col}</div>)
 }
 
-function genInfoColRow(field1, field2, info) {
+function genInfoColRow(field1, field2, info, editing) {
     if (field2) {
         return (
             <div className="genInfoRow">
-                <p><span>{field1}: </span>{info[field1]}</p>
-                <p><span>{field2}: </span>{info[field2]}</p>
+                <ModalFieldElement field={field1} info={info[field1]} editing={editing}/>
+                <ModalFieldElement field={field2} info={info[field2]} editing={editing}/>
             </div>
         )
     } else {
         return (
             <div className="genInfoRow">
-                <p><span>{field1}: </span>{info[field1]}</p>
+                <ModalFieldElement field={field1} info={info[field1]} editing={editing}/>
             </div>
         )
     }
     
+}
+
+function ModalFieldElement(props) {
+    return <div className="modalFieldElement">
+        {props.editing === true ? <a>delete button</a> : ""}
+        <p><span>{props.field}: </span>{props.info}</p>
+    </div>
+}
+
+function EditButtonSuite(props) {
+
+    return <div className="editButtonSuite">
+        <button>Add Item</button>
+        <button>Save Changes</button>
+        <button onClick={() => {props.cancel(false)}}>Cancel</button>
+    </div>
 }
 
 // static panel for general info
@@ -240,10 +256,14 @@ function GeneralInformationPanel(props) {
         })
     }, [])
 
+    const toggleEdit = (editing) => {
+        changeEditing(editing);
+    }
+
     let info = props.info;
     return <div className="geninfo-panel">
             <div className="geninfo-row1">
-                {fieldsData ? genInfoCol(info, fieldsData) : ""}
+                {fieldsData ? genInfoCol(info, fieldsData, editing) : ""}
                 {/* <GenInfoCol info={info} cohort={props.cohort} /> */}
                 {/* <div className="geninfo-col1">
                     <p><span>Date of Birth: </span>{info.dob}</p>
@@ -266,11 +286,11 @@ function GeneralInformationPanel(props) {
                 <div className="geninfo-col3">
                     <img className="studentdetails-avatar" alt="avatar icon" src={profile_avatar}/>
                     <p><span>Student ID: </span>{info.id}</p>
+                    {editing ? <EditButtonSuite cancel={toggleEdit}/> : <button className="studentdetails-editbutton" onClick={()=>toggleEdit(!editing)}/>}
                 </div>
             </div>
             <p><span>Counselor Notes: </span>{info["Latest Note"]}</p>
             {editing ? <p>EDITING</p> : null}
-            <button className="studentdetails-editbutton" onClick={()=>changeEditing(!editing)}/>
         </div>
 }
 

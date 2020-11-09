@@ -327,6 +327,33 @@
     width: 70%;
 }
 
+.modalFieldElement {
+    display: flex;
+    flex-direction: row;
+    width: 50%;
+    justify-content: left;
+    align-items: center;
+}
+
+.modalFieldElement p {
+    display: flex;
+    flex-direction: row;
+    justify-content: left;
+    align-items: center;
+    text-align: justify;
+}
+
+.modalFieldElement p span {
+    display: block;
+    text-align: center;
+    padding-top: 3px;
+    padding-right: 5px;
+}
+
+.modalFieldElement a {
+    margin-right: 5px;
+}
+
 .geninfo-col3 {
     width: 30%;
     text-align: right;
