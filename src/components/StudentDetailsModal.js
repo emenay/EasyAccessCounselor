@@ -1,11 +1,14 @@
 import React, {useState, useContext, useEffect} from 'react';
-import edit_symbol from '../assets/essentials_icons/svg/edit-1.svg';
+import edit_symbol from '../assets/essentials_icons/svg/edit.svg';
 import plus_symbol from "../assets/essentials_icons/svg/plus.svg";
+import minus_symbol from "../assets/essentials_icons/svg/minus.svg";
 import profile_avatar from '../assets/profile_avatar.png';
 import orange_flag from "../assets/orange_flag.png";
 import {db} from '../firebase/firebase';
 import {UserContext} from '../providers/UserProvider';
 import firebase from 'firebase/app';
+import ReactTooltip from 'react-tooltip';
+import Select from 'react-select';
 
 // File controls popups for student profiles page
 // Each tab in the popup is a component "panel" displayed by the StudentDetailsModal
@@ -188,85 +191,130 @@ function ApplicationProcessPanel(props) {
 }
 
 function GenInfoCol(props) {
-    // just do the jsx rendering
+
     console.log("made it to to genInfoCol");
     console.log("fields to render: " + props.fields);
 
-    const fields = props.fields.sort();
+    let col = [];
+    for (let i=0; i<props.fields.length; i++) {
+        const processedField = processField(props.fields[i]);
+        if (processedField) col.push(<ModalFieldElement editing={props.editing} removeFromPreferences={props.removeFromPreferences} field={processedField} info={props.info[props.fields[i]]} dbField={props.fields[i]}/>)
+    }
 
-    let col = []
-    for (let i=0; i<fields.length; i+=2) {
-        col.push(genInfoColRow(fields[i], fields[i+1], props.info, props.editing, props.removeFromPreferences))
+    let addedFieldsArr = [];
+    if (props.editing) {
+        for (let i=0; i<props.addedFields; i++) {
+            addedFieldsArr.push(<AddFieldElt addNewPreferences={props.addNewPreferences} addedFields={props.addedFields} setAddedFields={props.setAddedFields} fields={props.fields} info={props.info} />);
+        }
     }
 
     return <div className="fieldsSection">
             {col}
+            {props.editing && addedFieldsArr}
         </div>
-}
-
-function genInfoColRow(field1, field2, info, editing, removeFromPreferences) {
-    const processedField1 = processField(field1);
-    const processedField2 = processField(field2);
-    const info1 = info[field1];
-    const info2 = info[field2]; 
-    
-    let elts = []
-    if (processedField1) elts.push(<ModalFieldElement editing={editing} removeFromPreferences={removeFromPreferences} field={processedField1} info={info1} dbField={field1}/>);
-    if (processedField2) elts.push(<ModalFieldElement editing={editing} removeFromPreferences={removeFromPreferences} field={processedField2} info={info2} dbField={field2}/>);
-    
-    return <div className="genInfoRow">
-        {elts}
-    </div>
-    
 }
 
 function ModalFieldElement(props) {
     return <div className="modalFieldElement">
-        {props.editing === true ? <a onClick={() => props.removeFromPreferences(props.dbField)}> X </a> : ""}
+        {props.editing === true ? <button onClick={() => props.removeFromPreferences(props.dbField)}><img src={minus_symbol}/></button> : ""}
         <p><span>{props.field}: </span>{props.info}</p>
     </div>
 }
 
 
-// TODO: Implement the ability to add new fields
+// Element consisting of dropdown selection to allow user to add hidden fields back to
+// student profile card
 function AddFieldElt(props) {
+    const [dropdownSelected, setDropdownSelected] = useState(false);
+
+    // User should only have the option to add fields that aren't already shown
+    let shownOptions = []
+    const totalOptions = Object.keys(props.info);
+    for (let i=0; i<totalOptions.length; i++) {
+        if (findEltinArr(props.fields, totalOptions[i]) === -1) {
+            const option = {value: totalOptions[i], label: processField(totalOptions[i])}
+            shownOptions.push(option);
+        }
+    }
+
+    // Upon selection of one of the dropdown options
+    const handleChange = (selectedOption) => {
+        setDropdownSelected(selectedOption.value);
+        props.addNewPreferences(selectedOption.value);
+        props.setAddedFields(props.addedFields - 1);
+    }
 
     return <div className="addFieldElt">
-
+        <div className="dropdownContainer">
+            <Select options={shownOptions} onChange={handleChange} />
+        </div>
+        <span>:</span>
+        {dropdownSelected ? <p>{props.info[dropdownSelected]}</p> : <p>. . .</p>}
     </div>
 }
 
+
+// Helper parent component to contain buttons to display in editing mode
 function EditButtonSuite(props) {
     return <div className="editButtonSuite">
-        <button className="addFieldButton"><img src={plus_symbol} />Add Item</button>
+        <button 
+            className="addFieldButton" 
+            onClick={()=> {
+                let newVal = props.addedFields + 1;
+                props.setAddedFields(newVal);
+            }}
+        ><img src={plus_symbol} />Add Item</button>
         <div className="saveCancelContainer">
-            <button className="save" onClick={() => {props.editExit(false, true)}}>Save Changes</button>
-            <button className="cancel" onClick={() => {props.editExit(false, false)}}>Cancel</button>
+            <button 
+                className="save" 
+                onClick={() => {
+                    props.setAddedFields(0);
+                    props.editExit(false, true)
+                }}
+            >Save Changes</button>
+            <button 
+                className="cancel" 
+                onClick={() => {
+                    props.setAddedFields(0);
+                    props.editExit(false, false)
+                }}
+            >Cancel</button>
         </div>
     </div>
 }
 
+// Helper component to accomodate for call to database
 function HandleEditInit(props) {
-        return <div>
+        return <div className="editSuite">
             {props.editing === true ? 
-                <EditButtonSuite editExit={props.setEdit} fields={props.fieldsData}/> :
-                <button className="studentdetails-editbutton" onClick={()=> {props.setEdit(true)}}>
-                    <img src={edit_symbol} alt="edit"/>
-                </button>
+                <EditButtonSuite editExit={props.setEdit} fields={props.fieldsData} addedFields={props.addedFields} setAddedFields={props.setAddedFields}/> :
+                <EditButtonWithToolTip setEdit={props.setEdit}/>
             }
         </div>
 }
 
+function EditButtonWithToolTip(props) {
+    return <div>
+        <button data-tip="Customize what fields are shown" className="studentdetails-editbutton" onClick={()=> {props.setEdit(true)}}>
+            <img src={edit_symbol} alt="edit"/>
+        </button>
+        <ReactTooltip place="top" type="dark" effect="solid"/>
+    </div>
+}
+
+
+// Just a poorly implemented helper function to find the index of an element in a given array, returns -1 if not found
 function findEltinArr(arr, elt) {
     for (let i=0; i<arr.length; i++) {
-        if (arr[i] === elt) {
-            return i;
-        }
+        if (arr[i] === elt) return i;
     }
 
     return -1;
 }
 
+
+// Helper function to account for non user friendly default keys in fields object
+// Also makes sure to not display user uid or goal
 function processField(field) {
 
     if (field === "uid" || field === "goal") return null;
@@ -319,31 +367,33 @@ function processField(field) {
     return field;
 }
 
-// static panel for general info
+// Dynamic panel for general info
 function GeneralInformationPanel(props) {
     const [editing, changeEditing] = useState(false);
     const [fieldsData, setFieldsData] = useState(false);
-    const [pullFromDataBase, setPullFromDatabase] = useState(true);
-    // const context = useContext(UserContext);
+    const [addedFields, setAddedFields] = useState(0);
+
     useEffect(() => {
         refreshWithDatabase();
-        setPullFromDatabase(false);
     }, [])
 
     const refreshWithDatabase = () => {
-        console.log("DB refresh called");
-        console.log(props.info);
         db.collection("student_counselors").doc(props.cohort).get()
         .then(resp => {
             if (resp.data().genInfoFields) {
                 setFieldsData(resp.data().genInfoFields);
             } else {
+                /*
+                If it's the user's first time accessing a student profile card, set their preferences to any data that is
+                available for the selected student
+                */
                 let kindaDefaultFields = Object.keys(props.info);
                 if ("uid" in kindaDefaultFields) kindaDefaultFields.splice(findEltinArr(kindaDefaultFields, "uid"), 1);
 
                 db.collection("student_counselors").doc(props.cohort).update({
                     genInfoFields: kindaDefaultFields
                 });
+
                 setFieldsData(kindaDefaultFields);
             }
         })
@@ -352,6 +402,8 @@ function GeneralInformationPanel(props) {
         })
     }
 
+    // Function to change whether or not the user is in editing mode and whether or not
+    // to save the changes they made
     const setEdit = (editing, saveChanges=false) => {
         changeEditing(editing);
 
@@ -364,6 +416,7 @@ function GeneralInformationPanel(props) {
         }
     }
 
+    // Helper function for the delete field feature
     const removeFromPreferences = (field) => {
         console.log("field to delete: " + field);
         fieldsData.splice(findEltinArr(fieldsData, field), 1);
@@ -373,34 +426,48 @@ function GeneralInformationPanel(props) {
         console.log("fields data after delete: " + fieldsData);
     }
 
+    // Helper function for the add field feature
+    const addToPreferences = (newField) => {
+        let newFieldsData = [...fieldsData]
+        newFieldsData.push(newField);
+        setFieldsData(newFieldsData);
+    }
+
+    // Helper function to manage how many <AddFieldElt/> to display
+    const changeAddedFields = (val) => {
+        setAddedFields(val);
+    }
+
     let info = props.info;
     return <div className="geninfo-panel">
             <div className="geninfo-row1">
-                {fieldsData ? <GenInfoCol info={info} fields={fieldsData} editing={editing} removeFromPreferences={removeFromPreferences} /> : ""}
-                {/* <GenInfoCol info={info} cohort={props.cohort} /> */}
-                {/* <div className="geninfo-col1">
-                    <p><span>Date of Birth: </span>{info.dob}</p>
-                    <p><span>Ethnicity: </span>{info.ethnicity}</p>
-                    <p><span>Gender: </span>{info.gender}</p>
-                    <p><span>Race: </span>{info.race}</p>
-                    <p><span>GPA: </span>{info.gpa}</p>
-                    <p><span>Class Rank: </span>{info.classRank}</p>
-                    <p><span>SAT Score: </span>{info.sat}</p>
-                    <p><span>ACT Score: </span>{info.act}</p>
-                </div> */}
-                {/* <div className="geninfo-col2">
-                    <p><span>Parent Email: </span>{info.parentEmail}</p>
-                    <p><span>Parent Email 2: </span>{info.parentEmail2}</p>
-                    <p><span>Parent Phone: </span>{info.parentPhone}</p>
-                    <p><span>Parent Phone 2: </span>{info.parentPhone2}</p>
-                    <p><span>Student Email: </span>{info.studentEmail}</p>
-                    <p><span>Student Phone: </span>{info.studentPhone}</p>
-                </div> */}
+                {
+                    fieldsData &&
+                        <GenInfoCol 
+                            info={info} 
+                            fields={fieldsData} 
+                            editing={editing} 
+                            removeFromPreferences={removeFromPreferences} 
+                            setAddedFields={changeAddedFields}
+                            addedFields={addedFields}
+                            addNewPreferences={addToPreferences}
+                        />
+                }
                 <div className="geninfo-col3">
                     <img className="studentdetails-avatar" alt="avatar icon" src={profile_avatar}/>
                     <p><span>Student ID: </span>{info.id}</p>
                     <p><span>Name: </span>{info.firstName} {info.lastName}</p>
-                    {fieldsData ? <HandleEditInit setEdit={setEdit} editing={editing} fieldsData={fieldsData} /> : ""}
+                    {
+                        fieldsData && 
+                            <HandleEditInit 
+                                setEdit={setEdit} 
+                                editing={editing} 
+                                fieldsData={fieldsData} 
+                                setAddedFields={changeAddedFields} 
+                                addedFields={addedFields}
+                                addNewPreferences={addToPreferences}
+                            />
+                    }
                 </div>
             </div>
             <p><span>Counselor Notes: </span>{info["Latest Note"]}</p>
@@ -417,20 +484,6 @@ class StudentDetailsModal extends React.Component {
             selectedTab: "General Information",
             selectedCohort: this.props.cohort
         }
-
-        // const context = useContext(UserContext);
-        // db.collection("student_counselors").doc(this.props.cohort).get()
-        // .then(response => {
-        //     const fields = response.data().genInfoFields[0];
-        //     this.setState({
-        //         genInfoFields: fields
-        //     });
-
-        //     // console.log(this.state.genInfoFields);
-        // })
-        // .catch(err => {
-        //     alert(err);
-        // })
 
         db.collection("student_counselors").doc()
     }

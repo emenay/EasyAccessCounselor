@@ -340,14 +340,20 @@
 
 .fieldsSection {
     width: 70%;
+    height: 100%;
+    display: grid;
+    grid-template-rows: auto;
+    grid-template-columns: 50% 50%;
+    grid-column-gap: 0;
+    width: 70%;
 }
 
 .modalFieldElement {
     display: flex;
-    flex-direction: row;
-    width: 50%;
-    justify-content: left;
+    width: 100%;
+    justify-content: center;
     align-items: center;
+    padding: 5px;
 }
 
 .modalFieldElement p {
@@ -361,13 +367,40 @@
 
 .modalFieldElement p span {
     display: block;
+    width: fit-content;
     text-align: center;
     padding-top: 3px;
     padding-right: 5px;
 }
 
-.modalFieldElement a {
+.modalFieldElement button {
+    display: flex;
+    background-color: transparent;
+    border: none;
+    height: 20px;
+    width: 20px;
+    padding: 0;
     margin-right: 5px;
+    margin-top: 5px;
+    border-radius: 50%;
+    justify-content: center;
+    align-items: center;
+}
+
+.modalFieldElement button:hover {
+    -webkit-transition: background-color 100ms linear;
+    -ms-transition: background-color 100ms linear;
+    transition: background-color 100ms linear;
+    background-color: rgb(253, 91, 91);
+}
+
+.modalFieldElement button img{
+    height: 20px;
+    width: 20px;
+}
+
+.editSuite {
+    height: 10vh;
 }
 
 .addFieldButton {
@@ -432,6 +465,20 @@
     -ms-transition: background-color 100ms linear;
     transition: background-color 100ms linear;
     background-color: rgb(165, 57, 57);
+}
+
+.addFieldElt {
+    display: flex;
+    flex-direction: row;
+}
+
+.addFieldElt span {
+    padding-left: 2px;
+    padding-right: 4px;
+}
+
+.dropdownContainer {
+    width: 40%;
 }
 
 .geninfo-col3 {
