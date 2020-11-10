@@ -21,15 +21,15 @@ Testing is in need of a lot of work, there were no tests implemented prior to No
 ## Deployment
 ### By: Jeremy Venerella
 * Install the Firebase CLI tools
-* The easiest way is to run the command `npm install -g firebase-tools`
-* Other options https://firebase.google.com/docs/cli
+   * The easiest way is to run the command `npm install -g firebase-tools`
+   * Other options https://firebase.google.com/docs/cli
 * From the terminal run `firebase login` and login to the rockymoon firebase Gmail account.
 * From the terminal navigate to the GlobalCollege directory
 * If you have not already, run the command `npm run build` in the GlobalCollege directory. * * This will build a deployable project into the folder /build.
 * Now run the command `firebase init` , This will present you with the following: 
 
-* ![](https://lh3.googleusercontent.com/2oogcRZ7V-qSwjC-Mxo4-RrRgrXT8oTvOCatul-uymQlniN1_nU2S5iSCAPadjBNNj-z6tFXkYBs2xZXnZalnNRFmZlrbODFrUVN9UBok6vL3gaY6Op5zaGBVMyyP4XROnJpHjJm)
-* Use the arrow keys to move to “Hosting: ”, press space to select and enter to confirm.
+   * ![](https://lh3.googleusercontent.com/2oogcRZ7V-qSwjC-Mxo4-RrRgrXT8oTvOCatul-uymQlniN1_nU2S5iSCAPadjBNNj-z6tFXkYBs2xZXnZalnNRFmZlrbODFrUVN9UBok6vL3gaY6Op5zaGBVMyyP4XROnJpHjJm)
+   * Use the arrow keys to move to “Hosting: ”, press space to select and enter to confirm.
 * When asked what directory to use as your public directory, type `build` and hit enter. This will choose the build folder that was generated earlier.
 * You will then be prompted to configure it as a single page app. Type `y` for this option and press `enter`.
 * If asked to overwrite index.html, type `n` and press `enter`.
@@ -41,10 +41,10 @@ Testing is in need of a lot of work, there were no tests implemented prior to No
 ## Technologies Used
 * Create React App:  https://create-react-app.dev/
 * AG-grid: https://www.ag-grid.com/
-* Mostly used in the caseload management view for the ‘excel’ style grid
-* Note: the counselor portal uses the community version of AG-grid and is restricted from features of the enterprise edition of AG-grid
+   * Mostly used in the caseload management view for the ‘excel’ style grid
+   * Note: the counselor portal uses the community version of AG-grid and is restricted from features of the enterprise edition of AG-grid
 * Stripe: https://stripe.com/
-* Used for payment processing, still barebones for now but it has been fully integrated into Firebase
+   * Used for payment processing, still barebones for now but it has been fully integrated into Firebase
 * Firebase: see below to get access to the Firebase
 * See ADR’s here: https://github.com/viradsky/EasyAccessCounselor/blob/master/ADR.md
 
