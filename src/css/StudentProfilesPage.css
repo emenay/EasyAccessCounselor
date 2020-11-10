@@ -436,7 +436,8 @@
 
 .geninfo-col3 {
     width: 30%;
-    text-align: right;
+    text-align: left;
+    padding-left: 10%;
 }
 
 /* application process panel css */

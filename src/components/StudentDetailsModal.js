@@ -191,9 +191,12 @@ function GenInfoCol(props) {
     // just do the jsx rendering
     console.log("made it to to genInfoCol");
     console.log("fields to render: " + props.fields);
+
+    const fields = props.fields.sort();
+
     let col = []
-    for (let i=0; i<props.fields.length; i+=2) {
-        col.push(genInfoColRow(props.fields[i], props.fields[i+1], props.info, props.editing, props.removeFromPreferences))
+    for (let i=0; i<fields.length; i+=2) {
+        col.push(genInfoColRow(fields[i], fields[i+1], props.info, props.editing, props.removeFromPreferences))
     }
 
     return <div className="fieldsSection">
@@ -234,7 +237,6 @@ function AddFieldElt(props) {
 }
 
 function EditButtonSuite(props) {
-
     return <div className="editButtonSuite">
         <button className="addFieldButton"><img src={plus_symbol} />Add Item</button>
         <div className="saveCancelContainer">
@@ -266,46 +268,55 @@ function findEltinArr(arr, elt) {
 }
 
 function processField(field) {
-    switch(field) {
-        case "uid":
-            return null;
-        case "goal":
-            return null;
-        case "efc":
-            return "EFC";
-        case "firstName":
-            return "First Name";
-        case "lastName":
-            return "Last Name";
-        case "act":
-            return "ACT Score";
-        case "sat":
-            return "SAT Score";
-        case "classRank":
-            return "Class Rank";
-        case "payMismatch":
-            return "Ability to pay";
-        case "major":
-            return "Major";
-        case "major2":
-            return "Secondary Major";
-        case "gpa":
-            return "GPA";
-        case "id":
-            return "ID";
-        case "targetColleges":
-            return "Target Colleges";
-        case "reachColleges":
-            return "Reach Colleges";
-        case "safetyColleges":
-            return "Safety Colleges";
-        case "additions":
-            return "Counselor Additions";
-        case "gender":
-            return "Gender";
-        default:
-            return field;
+
+    if (field === "uid" || field === "goal") return null;
+
+    const fieldSwap = {
+        id  :  "UniqueID",
+        firstName  :  "First Name",
+        lastName  :  "Last Name",
+        dob  :  "Date of Birth",
+        ethnicity  :  "Ethnicity",
+        gender  :  "Gender",
+        gpa  :  "GPA",
+        classRank  :  "Class Rank",
+        sat  :  "SAT",
+        act  :  "ACT",
+        goal  :  "Goal",
+        studentEmail  :  "Student Email",
+        studentEmail2  :  "Student Email 2",
+        studentPhone  :  "Student Phone",
+        parentEmail  :  "Parent Email",
+        parentEmail2  :  "Parent Email 2",
+        parentPhone  :  "Parent Phone",
+        parentPhone2  :  "Parent Phone 2",
+        studentAddress  :  "Student Address",
+        totalMeetings  :  "Total Meetings",
+        individualMeetings  :  "Individual Meetings",
+        groupMeetings  :  "Group Meetings",
+        eventMeetings  :  "Event Meetings",
+        state  :  "State",
+        zipcode  :  "Zipcode",
+        efc  :  "EFC",
+        payMismatch  :  "Ability to Pay Mismatch",
+        major  :  "Field of Study/Major 1",
+        major2  :  "Field of Study/Major 2",
+        safetyColleges  :  "Safety Colleges",
+        targetColleges  :  "Target Colleges",
+        reachColleges  :  "Reach Colleges",
+        additions  :  "Counselor Additions",
+        region  :  "Want to Attend (Region)",
+        collegeSize  :  "College Size",
+        collegeSetting  :  "College Setting",
+        collegeDiversity  :  "College Diversity (% URM)",
+        collegeDiversityTypes  :  "College Diversity (Types)",
+        religion  :  "Religion",
+        rotc  :  "Military/ROTC",
+        athletics  :  "Athletics",
     }
+
+    if (field in fieldSwap) return fieldSwap[field];
+    return field;
 }
 
 // static panel for general info
@@ -388,6 +399,7 @@ function GeneralInformationPanel(props) {
                 <div className="geninfo-col3">
                     <img className="studentdetails-avatar" alt="avatar icon" src={profile_avatar}/>
                     <p><span>Student ID: </span>{info.id}</p>
+                    <p><span>Name: </span>{info.firstName} {info.lastName}</p>
                     {fieldsData ? <HandleEditInit setEdit={setEdit} editing={editing} fieldsData={fieldsData} /> : ""}
                 </div>
             </div>
