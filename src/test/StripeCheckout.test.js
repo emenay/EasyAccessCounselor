@@ -37,12 +37,6 @@ auth.onAuthStateChanged(uid => {
     setUid(uid);
 });
 
-// Render a React component to the DOM
-// const render = (component) => {
-//     const root = document.createElement("div");
-//     ReactDOM.render(component, root);
-//     return getQueriesForElement(root);
-// }
 
 
 test("renders button correctly", () => {
@@ -76,5 +70,44 @@ test("allows user to press button", () => {
     const input = getByText("Checkout");
     fireEvent.click(input);
 
+
     //wrapper.state("").toBe
+})
+
+
+describe('Test Button component', () => {
+    it('Test click event', () => {
+      const mockCallBack = jest.fn();
+  
+      const button = shallow((<button onClick={mockCallBack}>Ok!</button>));
+      button.find('button').simulate('click');
+      expect(mockCallBack.mock.calls.length).toEqual(1);
+    });
+  });
+
+
+describe('test button component', () => {
+    it('Test click event', () => {
+  
+      const wrapper = mount((<StripeCheckout />));
+      wrapper.find('button').simulate('click');
+      expect(wrapper.handleClick.mock.calls.length).toEqual(1);
+    });
+  });
+
+test("button redirects to Stripe", () => {
+    const { getByText, getByLabelText } = render(<StripeCheckout />); 
+
+    const input = getByText("Checkout");
+    fireEvent.click(input);
+
+    //to do
+})
+
+test("the database uses the current user", () => {
+    // to do
+})
+
+test("if there is an error it throws properly", () => {
+    // to do
 })
