@@ -79,27 +79,39 @@ export class FieldDisplayPopUp extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      hiddenFields: props.hidden,
-      visibleFields: props.visible,
-      selectedFields: [],
+      allColDefs: props.allColDefs.slice(1), // remove row select column def
+      fieldVisPref: props.fieldVisPref,
     };
-  }
-
-  onChange = (e) => {
-    console.log(e.target.id);
-  }
-
-  render() {
-    let fieldList = this.state.visibleFields != null ? this.state.visibleFields.map((field) => {
-      this.state.selectedFields.push(field.value);
+    // Define list of manageable fields and set array of selected fields; this should happen more dynamically as a function of a visible fields state in the parent
+    this.fieldList = this.state.allColDefs != null ? this.state.allColDefs.map((field) => {
       return (
-            <label key={field.value} htmlFor={field.value}>
-              <input onChange={this.onChange} type="checkbox" id={field.value} defaultChecked/> 
-              <span>{field.label}</span>
+            <label key={field.field} htmlFor={field.field}>
+              {/* Determine default checked condition of a field label */}
+              {this.state.fieldVisPref.includes(field.field) ? <input onChange={this.onChange} type="checkbox" id={field.field} defaultChecked/> : 
+                                                                    <input onChange={this.onChange} type="checkbox" id={field.field}/>}
+              <span>{field.headerName}</span>
             </label>
         );
     }) : '';
+  }
 
+  onChange = (e) => {
+    let fieldId = e.target.id;
+    this.setState((state) => {
+      let selected = !state.fieldVisPref.includes(fieldId) ? [...state.fieldVisPref, fieldId]:
+                                                                state.fieldVisPref.filter(field => field != fieldId); // Remove the field from the selected fields list if already exists
+      return {
+        fieldVisPref: selected,
+      }
+    });
+  }
+
+  onSave = () => {
+    this.props.onSave(this.state.fieldVisPref);
+    this.props.onClose();
+  }
+
+  render() {
     return (
       <div className={'field_management'}> 
         <div className="download-popup-content">
@@ -111,10 +123,10 @@ export class FieldDisplayPopUp extends React.Component {
             </span>
           </div>
           <div id='field_list'>
-            {fieldList}
+            {this.fieldList}
           </div>
           <div id='popup-footer'>
-            <div id='save-btn' onClick={this.props.onSave}>
+            <div id='save-btn' onClick={this.onSave}>
               Save
             </div>
             <div id='cancel-btn' onClick={this.props.onClose}>
@@ -198,10 +210,13 @@ class CaseloadPage extends React.Component {
       undoRows: [],
       lastCohort: null,
       addedFields: [],
+      allColDefs: [],
       columns: [],
       downloadColumns: [],
       frameworkComponents: { agColumnHeader: CustomHeader },
       fieldPopUpOpen: false,
+      visibleColumns: [],
+      fieldVisPref: [], // array to be passed to database for persistence of visible fields between sessions 
     });
     
     // Bind in order to access AgGrid properties from download-popup
@@ -209,6 +224,8 @@ class CaseloadPage extends React.Component {
     this.downloadData = this.downloadData.bind(this);
     this.handleColumnOptionChange = this.handleColumnOptionChange.bind(this);
     this.getColumnNames = this.getColumnNames.bind(this);
+    this.updateFieldFilter = this.updateFieldFilter.bind(this);
+    // this.updateAllColDefs = this.updateAllColDefs.bind(this);
 
     // Each object is a column, passed to constructor for Ag-grid
     this.fields = [
@@ -247,6 +264,7 @@ class CaseloadPage extends React.Component {
     )
     this.columnOptions = [];
     this.rowOptions = [];
+    this.state.allColDefs = this.state.allColDefs.concat(this.fields);
 
     // Reference for download popup to set column option state when new columns are added
     this.downloadPopUp = React.createRef();
@@ -323,14 +341,16 @@ class CaseloadPage extends React.Component {
           // Could actually just use this query and get the students from the returned collection? TODO
           db.collection("student_counselors").doc(this.context.state.selectedCohort).get()
           .then(result=>{
+            let addedFields = (result.data().addedFields !== undefined ? result.data().addedFields.map(field=> {
+              return {
+                field: field, headerName: field, comparator: this.comparator, sortable: true, editable: true, filter: true, resizable: true, headerComponentParams: {menuIcon: menu_btn},
+              }
+            }) : [])
             this.setState({
               data: data,
               lastCohort: this.context.state.selectedCohort,
-              addedFields: (result.data().addedFields !== undefined ? result.data().addedFields.map(field=> {
-                return {
-                  field: field, headerName: field, comparator: this.comparator, sortable: true, editable: true, filter: true, resizable: true, headerComponentParams: {menuIcon: menu_btn},
-                }
-            }) : [])
+              addedFields: addedFields,
+              allColDefs: this.state.allColDefs.concat(addedFields)
             });
           })
         })
@@ -469,9 +489,30 @@ class CaseloadPage extends React.Component {
     return colNames;
   }
 
-  hideColumn(field) {
-
+  /* Takes in an array of field id values from the FieldManagementPopUp 
+  - updates caseload page state of visibleColumns (ag-grid colDefs)
+  - updates caseload page state of fieldVisPref (associated with cohort to persist pref. between sessions)
+  */
+  updateFieldFilter(fields) {
+    let visibleColumns = this.fields.concat(this.state.addedFields);
+    visibleColumns = visibleColumns.filter((colDef) => {
+      return fields.includes(colDef.field);
+    });
+    console.log(visibleColumns);
+    this.setState({
+      visibleColumns: visibleColumns,
+      fieldVisPref: fields,
+    });
   }
+
+  // /* Catch all function to make sure that allColDefs state variable represents all default and user defined columns at any time */
+  // updateAllColDefs() {
+  //   let userDef = this.state.addedFields;
+  //   let defaultDef = this.fields;
+  //   this.setState({
+  //     allColDefs: defaultDef.concat(userDef),
+  //   });
+  // }
 
   // Autosize all columns
   autoSizeAll = () => {
@@ -490,7 +531,7 @@ class CaseloadPage extends React.Component {
     return (
       <div className="caseload-content">
         <DownloadPopUp ref={this.downloadPopUp} class={'download-popup'} clickMethod={this.onBtnDownload} columnOptions={this.getColumnNames} rowOptions={this.rowOptions} onColumnOptionChange={this.handleColumnOptionChange}/>
-        {this.state.fieldPopUpOpen ? <FieldDisplayPopUp ref={this.fieldPopUp} onSave={this.updateFieldFilter} onClose={this.displayFieldManagement.bind(this)} visible={this.getColumnNames()} hidden={null}/> : ''}
+        {this.state.fieldPopUpOpen ? <FieldDisplayPopUp ref={this.fieldPopUp} onSave={this.updateFieldFilter} onClose={this.displayFieldManagement.bind(this)} allColDefs={this.state.allColDefs} fieldVisPref={this.state.fieldVisPref}/> : ''}
         <div className="caseload-header">
           <input className ='search_box' type="text" id="myInput" onKeyUp={this.changeSearchString} placeholder="Search Table..." />
           {this.state.rowsSelected && <IconButton url={trash} clickMethod={this.deleteRows} class={'icon_button'}/>}             
@@ -513,7 +554,7 @@ class CaseloadPage extends React.Component {
             modules={this.state.modules}
             quickFilterText={this.state.searchString}
             onCellEditingStopped={(e) => this.cellEditingStopped(e)}
-            columnDefs={this.fields.concat(this.state.addedFields)}
+            columnDefs={this.state.visibleColumns.length == 0 ? this.fields.concat(this.state.addedFields) : this.state.visibleColumns}
             defaultColDef={{editable: true, filter: true, headerComponentParams: {menuIcon: menu_btn}}}
             rowData={this.state.data}
             rowSelection="multiple"
@@ -551,7 +592,6 @@ class CaseloadPage extends React.Component {
   }
 
   displayFieldManagement = () => {
-    console.log('Changing field management display type')
     this.setState(state => {
       return {
         fieldPopUpOpen: !state.fieldPopUpOpen,
