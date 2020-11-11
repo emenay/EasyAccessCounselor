@@ -27,6 +27,7 @@ import PaymentSummary from './PaymentSummaryPage';
 import Receipt from './ReceiptPage';
 import BillingPage from './BillingPage';
 import StripeCard from './StripeCard';
+import StripeCheckout from './StripeCheckout';
 
 // history allows us to change pages by pushing to history
 export const history = createBrowserHistory();
@@ -38,7 +39,7 @@ export default function App() {
   const isPickingAccount = 'true';
   const isLoggedIn = user.state.user ? 'true' : '';
 
-  const STRIPE_PUBLISHABLE_KEY= 'pk_test_51HbCkNKXiwGLHCkWpDi19gHbPGMLeIFUspxD6TlwmUGj6cqaYnYozd0wSdNqOy0mTJzHOjO2KoIWr9IGEGMgjZgc00zgDleSC8';
+  const STRIPE_PUBLISHABLE_KEY= "pk_test_51HbCkNKXiwGLHCkWpDi19gHbPGMLeIFUspxD6TlwmUGj6cqaYnYozd0wSdNqOy0mTJzHOjO2KoIWr9IGEGMgjZgc00zgDleSC8";
 
   // Routing could be cleaned up
   return (

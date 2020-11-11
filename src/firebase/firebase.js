@@ -12,4 +12,5 @@ export const signOut = () => {
 
 export const db = firebase.firestore();
 export const auth = firebase.auth();
+export const currentUser = firebase.auth().currentUser;
 export const emailAndPassword = firebase.auth.EmailAuthProvider.PROVIDER_ID;

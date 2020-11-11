@@ -5,6 +5,22 @@ admin.initializeApp();
 
 const db = admin.firestore();
 
+/*
+Stripe
+*/
+
+// TODO: Remember to set token using >> firebase functions:config:set stripe.token="SECRET_STRIPE_TOKEN_HERE"
+const stripe = require('stripe')(functions.config().stripe.token);
+
+
+exports.createStripeCustomer = functions.auth.user().onCreate(async (user) => {
+  const customer = await stripe.customers.create({ email: user.email });
+  await admin.firestore().collection('customers').doc(user.uid).set({
+    customer_id: customer.id,
+  });
+  return;
+});
+
 /**
  * Makes a copy of a student's document under their corresponding counselor
  *

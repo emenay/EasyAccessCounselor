@@ -15,6 +15,9 @@
     "ag-grid-react": "^23.2.1",
     "airtable": "^0.10.0",
     "bulma": "^0.8.2",
+    "enzyme": "^3.11.0",
+    "enzyme-adapter-react-16": "^1.15.5",
+    "enzyme-to-json": "^3.6.1",
     "firebase": "^7.13.2",
     "firebase-admin": "^9.2.0",
     "firebase-functions": "^3.11.0",
@@ -32,12 +35,14 @@
     "react-spreadsheet": "^0.4.46",
     "react-tooltip": "^4.2.10",
     "react-virtualized": "^9.21.2",
-    "read-excel-file": "^4.0.6"
+    "read-excel-file": "^4.0.6",
+    "sinon": "^9.2.1",
+    "stripe": "^8.118.0"
   },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test",
+    "test": "react-scripts test --watchAll=false --env=jsdom-fourteen",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
