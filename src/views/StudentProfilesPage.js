@@ -205,19 +205,6 @@ class StudentProfilesPage extends React.Component{
         this.setState({filters: new_filter});
     }
 
-    renderStudentCard = (flagged, exitModal, cohort, info) => {
-        db.collection("student_counselors").doc(cohort).get()
-        .then(response => {
-            let fields = response.data().genInfoFields;
-        })
-        .catch(err => {
-            alert(err);
-        })
-
-
-        return <StudentDetailsModal flagged={this.state.flagSet.has(this.state.selectedCard.uid)} exitModal={this.exitModal} cohort={this.context.state.selectedCohort} info={this.state.selectedCard} />
-    }
-
     render(){
         let data = this.state.data;
         data = this.state.flagToggle ? data.filter(person => {return this.state.flagSet.has(person.uid)}) : data;
