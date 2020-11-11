@@ -37,11 +37,24 @@ beforeAll(async () => {
 });
 
 test("CaseloadPage full DOM render correct", () => {
-    const wrapper = mount (
+    // render best for this test because lifecycle/children aren't being tested here 
+    const wrapper = render (
         <UserContext.Provider value={{state:userState}}>
             <CaseloadPage/>
         </UserContext.Provider>  
     );
     expect(wrapper).toMatchSnapshot();
-    wrapper.unmount(); // Unmount dom to prevent overlap in tests that follow
+});
+
+test("DownloadPopup renders on download button click", () => {
+    // mount best for this test because lifecycle/children (download popup) is being tested
+    const caseload = mount (
+        <UserContext.Provider value={{state:userState}}>
+            <CaseloadPage/>
+        </UserContext.Provider>  
+    );
+    expect(caseload).toMatchSnapshot();
+    const download = caseload.find('.right_icon_button').simulate('click');
+    console.log(download.debug());
+    wrapper.unmount();
 });

@@ -38,7 +38,7 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test --env=jsdom-fourteen",
+    "test": "react-scripts test --watchAll=false --env=jsdom-fourteen",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
@@ -62,5 +62,8 @@
     "enzyme-to-json": "^3.6.1",
     "eslint-plugin-promise": "^4.2.1",
     "jest-environment-jsdom-fourteen": "^1.0.1"
+  },
+  "jest": {
+    "snapshotSerializers": ["enzyme-to-json/serializer"]
   }
 }

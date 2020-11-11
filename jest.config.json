@@ -4,6 +4,7 @@
     "collectCoverage": true,
     "coverageReporters": ["lcov"],
     "coverageDirectory": "./src/test/test-coverage",
+    "snapshotSerializers": ["enzyme-to-json/serializer"],
     "coverageThreshold": {
      "global": {
      "branches": 0,

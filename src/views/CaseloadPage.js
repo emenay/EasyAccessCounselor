@@ -20,6 +20,8 @@ import download from '../assets/essentials_icons/svg/download.svg'
 import download_filled from '../assets/essentials_filled/svg/download.svg'
 import add from '../assets/essentials_icons/svg/add.svg'
 import close_btn from '../assets/essentials_icons/svg/multiply.svg'
+import filter_outline from "../assets/essentials_icons/svg/controls-4.svg"
+import filter_icon from "../assets/essentials_filled/svg/controls-4-filled.svg"
 import {ReactComponent as menu_btn} from '../assets/essentials_icons/svg/menu-1.svg'
 
 //TODO: 
@@ -73,17 +75,74 @@ export class DownloadPopUp extends React.Component {
   }
 }
 
-// React-Select Component 
+export class FieldDisplayPopUp extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      hiddenFields: props.hidden,
+      visibleFields: props.visible,
+      selectedFields: [],
+    };
+  }
+
+  onChange = (e) => {
+    console.log(e.target.id);
+  }
+
+  render() {
+    let fieldList = this.state.visibleFields != null ? this.state.visibleFields.map((field) => {
+      this.state.selectedFields.push(field.value);
+      return (
+            <label key={field.value} htmlFor={field.value}>
+              <input onChange={this.onChange} type="checkbox" id={field.value} defaultChecked/> 
+              <span>{field.label}</span>
+            </label>
+        );
+    }) : '';
+
+    return (
+      <div className={'field_management'}> 
+        <div className="download-popup-content">
+          <div id='popup-header' value='Download Caseload Data'>
+            <div></div>
+            <span>Manage Field Visibility</span>
+            <span className="close" onClick={this.props.onClose}>
+              <img src={close_btn} alt='close-download-popup'></img>
+            </span>
+          </div>
+          <div id='field_list'>
+            {fieldList}
+          </div>
+          <div id='popup-footer'>
+            <div id='save-btn' onClick={this.props.onSave}>
+              Save
+            </div>
+            <div id='cancel-btn' onClick={this.props.onClose}>
+              Cancel
+            </div>
+          </div>
+        </div>
+      </div> 
+    );
+  }
+
+}
+
+// React-Select Component for use in the DownloadPopUp
 class SelectBox extends React.Component {
   constructor(props){
     super(props)
     // this.filterOptions = props.filterOptions;
     this.handleChange = this.handleChange.bind(this);
+    this.state = {
+      selectedOption: null,
+      filterOptions: null,
+    };
   }
-  state = {
-    selectedOption: null,
-    filterOptions: null,
-  };
+  // state = {
+  //   selectedOption: null,
+  //   filterOptions: null,
+  // };
 
   customStyles = {
     valueContainer: (provided, state) => ({
@@ -100,10 +159,10 @@ class SelectBox extends React.Component {
       filterOptions: this.props.filterOptions()
     })
   }
+
   handleChange = selectedOption => {
     this.setState({ selectedOption });
     this.props.onColumnOptionChange(selectedOption)
-    // console.log(`Option selected:`, selectedOption);
   };
 
   render() {
@@ -142,6 +201,7 @@ class CaseloadPage extends React.Component {
       columns: [],
       downloadColumns: [],
       frameworkComponents: { agColumnHeader: CustomHeader },
+      fieldPopUpOpen: false,
     });
     
     // Bind in order to access AgGrid properties from download-popup
@@ -298,6 +358,8 @@ class CaseloadPage extends React.Component {
         .update(data);
     } else {
       if (e.value !== undefined && e.value !== ""){
+        console.log('Adding field');
+        console.log(e.data);
         db.collection("student_counselors").doc(this.context.state.selectedCohort).collection("students")
         .add(e.data)
         .then(response=>{
@@ -407,13 +469,17 @@ class CaseloadPage extends React.Component {
     return colNames;
   }
 
+  hideColumn(field) {
+
+  }
+
   // Autosize all columns
-  autoSizeAll = (skipHeader) => {
+  autoSizeAll = () => {
     var allColumnIds = [];
     this.gridColumnApi.getAllColumns().forEach(function (column) {
       allColumnIds.push(column.colId);
     });
-    this.gridColumnApi.autoSizeColumns(allColumnIds, skipHeader);
+    this.gridColumnApi.autoSizeColumns(allColumnIds, true);
   };
 
   // plus from https://icons8.com/icons/set/plus
@@ -424,10 +490,12 @@ class CaseloadPage extends React.Component {
     return (
       <div className="caseload-content">
         <DownloadPopUp ref={this.downloadPopUp} class={'download-popup'} clickMethod={this.onBtnDownload} columnOptions={this.getColumnNames} rowOptions={this.rowOptions} onColumnOptionChange={this.handleColumnOptionChange}/>
+        {this.state.fieldPopUpOpen ? <FieldDisplayPopUp ref={this.fieldPopUp} onSave={this.updateFieldFilter} onClose={this.displayFieldManagement.bind(this)} visible={this.getColumnNames()} hidden={null}/> : ''}
         <div className="caseload-header">
           <input className ='search_box' type="text" id="myInput" onKeyUp={this.changeSearchString} placeholder="Search Table..." />
           {this.state.rowsSelected && <IconButton url={trash} clickMethod={this.deleteRows} class={'icon_button'}/>}             
           {this.state.undoRows.length > 0 && <IconButton url={undo} clickMethod={this.undoDelete} class={'icon_button'}/>}
+          <IconButton url={filter_outline} clickMethod={this.displayFieldManagement} class={'icon_button'}></IconButton>
           <IconButton url={add} clickMethod={this.addField} class={'icon_button'}/>
           {this.state.rowsSelected ? <IconButton url={download_filled} clickMethod={this.downloadData} class={'right_icon_button'}/> :
                                       <IconButton url={download} clickMethod={this.downloadData} class={'right_icon_button'} />}
@@ -441,7 +509,6 @@ class CaseloadPage extends React.Component {
             onGridReady={ (params) => {
               this.gridApi = params.api;
               this.gridColumnApi = params.columnApi;
-              // this.autoSizeAll(true); // Auto size all columns, skipHeader = false
             }}
             modules={this.state.modules}
             quickFilterText={this.state.searchString}
@@ -480,6 +547,15 @@ class CaseloadPage extends React.Component {
       // container.parentNode.removeChild(popup)
       popup.style.display = 'none';
       document.getElementsByClassName('page-container')[0].style.filter = 'blur(0px) grayscale(0%)'
+    });
+  }
+
+  displayFieldManagement = () => {
+    console.log('Changing field management display type')
+    this.setState(state => {
+      return {
+        fieldPopUpOpen: !state.fieldPopUpOpen,
+      }
     });
   }
 
