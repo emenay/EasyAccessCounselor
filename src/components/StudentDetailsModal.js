@@ -483,17 +483,16 @@ function GeneralInformationPanel(props) {
     let info = props.info;
     return <div className="geninfo-panel">
             <div className="geninfo-row1"> {/*This is a misleading classname should be updated here and in css*/}
-                {
-                    fieldsData &&
-                        <GenInfoCol 
-                            info={info} 
-                            fields={fieldsData} 
-                            editing={editing} 
-                            removeFromPreferences={removeFromPreferences} 
-                            setAddedFields={changeAddedFields}
-                            addedFields={addedFields}
-                            addNewPreferences={addToPreferences}
-                        />
+                {fieldsData &&
+                    <GenInfoCol 
+                        info={info} 
+                        fields={fieldsData} 
+                        editing={editing} 
+                        removeFromPreferences={removeFromPreferences} 
+                        setAddedFields={changeAddedFields}
+                        addedFields={addedFields}
+                        addNewPreferences={addToPreferences}
+                    />
                 }
                 <div className="geninfo-col3"> {/*This is a misleading classname should be updated here and in css*/}
                     <img className="studentdetails-avatar" alt="avatar icon" src={profile_avatar}/>
@@ -529,23 +528,6 @@ class StudentDetailsModal extends React.Component {
         }
 
         db.collection("student_counselors").doc()
-    }
-
-    componentDidMount() {
-        this.getCohortData();
-    }
-
-    getCohortData = () => {
-        if (this.context.state){
-            db.collection("student_counselors").doc(this.props.selectedCohort)
-            .get()
-            .then(querySnapshot => {
-                this.setState({
-                    fields: querySnapshot.genInfoFields
-                });
-            })
-            .catch(error => {console.log(error)});
-        }
     }
 
     changeTab = (tab) => {
