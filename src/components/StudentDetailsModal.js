@@ -191,32 +191,44 @@ function ApplicationProcessPanel(props) {
 }
 
 function GenInfoCol(props) {
-
-    console.log("made it to to genInfoCol");
-    console.log("fields to render: " + props.fields);
-
     let col = [];
     for (let i=0; i<props.fields.length; i++) {
         const processedField = processField(props.fields[i]);
-        if (processedField) col.push(<ModalFieldElement editing={props.editing} removeFromPreferences={props.removeFromPreferences} field={processedField} info={props.info[props.fields[i]]} dbField={props.fields[i]}/>)
-    }
-
-    let addedFieldsArr = [];
-    if (props.editing) {
-        for (let i=0; i<props.addedFields; i++) {
-            addedFieldsArr.push(<AddFieldElt addNewPreferences={props.addNewPreferences} addedFields={props.addedFields} setAddedFields={props.setAddedFields} fields={props.fields} info={props.info} />);
-        }
+        if (processedField) col.push(
+            <ModalFieldElement 
+                editing={props.editing} 
+                removeFromPreferences={props.removeFromPreferences} 
+                field={processedField} 
+                info={props.info[props.fields[i]]} 
+                dbField={props.fields[i]}
+            />
+        );
     }
 
     return <div className="fieldsSection">
             {col}
-            {props.editing && addedFieldsArr}
+            {/* Only show the following element if the user is in edit mode and in the process of
+            adding a field */}
+            {props.editing && props.addedFields && 
+                <AddFieldElt 
+                    addNewPreferences={props.addNewPreferences} 
+                    addedFields={props.addedFields} 
+                    setAddedFields={props.setAddedFields} 
+                    fields={props.fields} 
+                    info={props.info} 
+                />
+            }
         </div>
 }
 
 function ModalFieldElement(props) {
     return <div className="modalFieldElement">
-        {props.editing === true ? <button onClick={() => props.removeFromPreferences(props.dbField)}><img src={minus_symbol}/></button> : ""}
+        {/* If the user is in edit mode, display button to remove this field element */}
+        {props.editing === true && 
+            <button onClick={() => props.removeFromPreferences(props.dbField)}>
+                <img src={minus_symbol}/>
+            </button>
+        }
         <p><span>{props.field}: </span>{props.info}</p>
     </div>
 }
@@ -228,22 +240,19 @@ function AddFieldElt(props) {
     const [dropdownSelected, setDropdownSelected] = useState(false);
 
     // User should only have the option to add fields that aren't already shown
-    let shownOptions = []
     const totalOptions = Object.keys(props.info);
-    for (let i=0; i<totalOptions.length; i++) {
-        if (findEltinArr(props.fields, totalOptions[i]) === -1) {
-            const option = {value: totalOptions[i], label: processField(totalOptions[i])}
-            shownOptions.push(option);
-        }
-    }
-
-    // Upon selection of one of the dropdown options
+    const shownOptions = getNonVisibleOptions(totalOptions, props.fields);
+ 
     const handleChange = (selectedOption) => {
         setDropdownSelected(selectedOption.value);
         props.addNewPreferences(selectedOption.value);
-        props.setAddedFields(props.addedFields - 1);
+        props.setAddedFields(false);
     }
 
+    /*
+    NOTE: The logic here is redundant as this element should no longer be displayed as soon as the
+    user selects an option
+    */
     return <div className="addFieldElt">
         <div className="dropdownContainer">
             <Select options={shownOptions} onChange={handleChange} />
@@ -254,28 +263,56 @@ function AddFieldElt(props) {
 }
 
 
+// Helper function that is meant to return any fields available in the student object that are not in the
+// users preferences for show fields
+function getNonVisibleOptions(totalOptions, visibleOptions) {
+    let nonVisibleOptions = []
+    for (let i=0; i<totalOptions.length; i++) {
+        const processedField = processField(totalOptions[i]);
+        if (findEltinArr(visibleOptions, totalOptions[i]) === -1 && processedField) {
+            const option = {value: totalOptions[i], label: processedField}
+            nonVisibleOptions.push(option);
+        }
+    }
+
+    return nonVisibleOptions;
+}
+
+
 // Helper parent component to contain buttons to display in editing mode
 function EditButtonSuite(props) {
+    const nonVisibleOptions = getNonVisibleOptions(Object.keys(props.info), props.fields);
+    const availableOptions = (nonVisibleOptions.length > 0);
+
     return <div className="editButtonSuite">
-        <button 
-            className="addFieldButton" 
-            onClick={()=> {
-                let newVal = props.addedFields + 1;
-                props.setAddedFields(newVal);
-            }}
-        ><img src={plus_symbol} />Add Item</button>
+        {/* We want to disable the ability to add a field if there are no more fields to add (!availableOptions)
+        or the user is already in the process of adding a field (props.addedFields) */}
+        {props.addedFields || !availableOptions ?
+            <div>
+                <button data-tip="Finish adding your other element first!" className="disabledAddFieldButton" >
+                    <img src={plus_symbol} />
+                    Add Item
+                </button> 
+                <ReactTooltip place="top" type="dark" effect="solid" />
+            </div>
+            :
+            <button className="addFieldButton" onClick={()=> {props.setAddedFields(true);}}>
+                <img src={plus_symbol} />
+                Add Item
+            </button>
+        }
         <div className="saveCancelContainer">
             <button 
                 className="save" 
                 onClick={() => {
-                    props.setAddedFields(0);
+                    props.setAddedFields(false);
                     props.editExit(false, true)
                 }}
             >Save Changes</button>
             <button 
                 className="cancel" 
                 onClick={() => {
-                    props.setAddedFields(0);
+                    props.setAddedFields(false);
                     props.editExit(false, false)
                 }}
             >Cancel</button>
@@ -287,13 +324,13 @@ function EditButtonSuite(props) {
 function HandleEditInit(props) {
         return <div className="editSuite">
             {props.editing === true ? 
-                <EditButtonSuite editExit={props.setEdit} fields={props.fieldsData} addedFields={props.addedFields} setAddedFields={props.setAddedFields}/> :
-                <EditButtonWithToolTip setEdit={props.setEdit}/>
+                <EditButtonSuite editExit={props.setEdit} info={props.info} fields={props.fieldsData} addedFields={props.addedFields} setAddedFields={props.setAddedFields}/> :
+                <ToggleEditButton setEdit={props.setEdit}/>
             }
         </div>
 }
 
-function EditButtonWithToolTip(props) {
+function ToggleEditButton(props) {
     return <div>
         <button data-tip="Customize what fields are shown" className="studentdetails-editbutton" onClick={()=> {props.setEdit(true)}}>
             <img src={edit_symbol} alt="edit"/>
@@ -303,7 +340,7 @@ function EditButtonWithToolTip(props) {
 }
 
 
-// Just a poorly implemented helper function to find the index of an element in a given array, returns -1 if not found
+// Just a poorly optimized helper function to find the index of an element in a given array, returns -1 if not found
 function findEltinArr(arr, elt) {
     for (let i=0; i<arr.length; i++) {
         if (arr[i] === elt) return i;
@@ -313,14 +350,23 @@ function findEltinArr(arr, elt) {
 }
 
 
-// Helper function to account for non user friendly default keys in fields object
-// Also makes sure to not display user uid or goal
+/*
+This function is more of a bandaid than a necessary function. It serves two purposes:
+    1. Account for data in student objects that we know shouldn't be displayed in
+       the general information tab
+    2. Account for non user-friendly key names for default student data
+*/
 function processField(field) {
+    // 1.
+    if (
+        field === "uid" || 
+        field === "goal" ||
+        field === "notes"
+        ) return null;
 
-    if (field === "uid" || field === "goal") return null;
-
+    // 2.
     const fieldSwap = {
-        id  :  "UniqueID",
+        id  :  "Unique ID",
         firstName  :  "First Name",
         lastName  :  "Last Name",
         dob  :  "Date of Birth",
@@ -369,13 +415,11 @@ function processField(field) {
 
 // Dynamic panel for general info
 function GeneralInformationPanel(props) {
-    const [editing, changeEditing] = useState(false);
-    const [fieldsData, setFieldsData] = useState(false);
-    const [addedFields, setAddedFields] = useState(0);
+    const [editing, changeEditing] = useState(false); // keeps track of whether user is in edit mode
+    const [fieldsData, setFieldsData] = useState(false); // keeps track of what fields user wants to see
+    const [addedFields, setAddedFields] = useState(false); // keeps track of whether user is in process of adding field
 
-    useEffect(() => {
-        refreshWithDatabase();
-    }, [])
+    useEffect(() => {refreshWithDatabase();}, []) // Basically, on render pull field preferences from database
 
     const refreshWithDatabase = () => {
         db.collection("student_counselors").doc(props.cohort).get()
@@ -388,22 +432,23 @@ function GeneralInformationPanel(props) {
                 available for the selected student
                 */
                 let kindaDefaultFields = Object.keys(props.info);
+                // Remove uid from default fields
                 if ("uid" in kindaDefaultFields) kindaDefaultFields.splice(findEltinArr(kindaDefaultFields, "uid"), 1);
 
+                // update database
                 db.collection("student_counselors").doc(props.cohort).update({
                     genInfoFields: kindaDefaultFields
                 });
 
-                setFieldsData(kindaDefaultFields);
+                setFieldsData(kindaDefaultFields); // update state
             }
         })
-        .catch(err => {
-            console.log(err);
-        })
+        .catch(err => {console.log(err);})
     }
 
     // Function to change whether or not the user is in editing mode and whether or not
-    // to save the changes they made
+    // to save the changes they made. Save in this case means to update the database
+    // with a new set of preferences for what fields are to be shown
     const setEdit = (editing, saveChanges=false) => {
         changeEditing(editing);
 
@@ -411,6 +456,7 @@ function GeneralInformationPanel(props) {
             db.collection("student_counselors").doc(props.cohort).update({
                 genInfoFields: fieldsData
             });
+        // No need to refresh from DB if we just updated it with local data
         } else {
             refreshWithDatabase();
         }
@@ -418,12 +464,9 @@ function GeneralInformationPanel(props) {
 
     // Helper function for the delete field feature
     const removeFromPreferences = (field) => {
-        console.log("field to delete: " + field);
         fieldsData.splice(findEltinArr(fieldsData, field), 1);
         let newFieldsData = [...fieldsData];
         setFieldsData(newFieldsData);
-
-        console.log("fields data after delete: " + fieldsData);
     }
 
     // Helper function for the add field feature
@@ -433,14 +476,13 @@ function GeneralInformationPanel(props) {
         setFieldsData(newFieldsData);
     }
 
-    // Helper function to manage how many <AddFieldElt/> to display
-    const changeAddedFields = (val) => {
-        setAddedFields(val);
-    }
+    // Helper function to change whether or not the user is in the process of adding
+    // a field.
+    const changeAddedFields = (val) => {setAddedFields(val);}
 
     let info = props.info;
     return <div className="geninfo-panel">
-            <div className="geninfo-row1">
+            <div className="geninfo-row1"> {/*This is a misleading classname should be updated here and in css*/}
                 {
                     fieldsData &&
                         <GenInfoCol 
@@ -453,23 +495,24 @@ function GeneralInformationPanel(props) {
                             addNewPreferences={addToPreferences}
                         />
                 }
-                <div className="geninfo-col3">
+                <div className="geninfo-col3"> {/*This is a misleading classname should be updated here and in css*/}
                     <img className="studentdetails-avatar" alt="avatar icon" src={profile_avatar}/>
-                    <p><span>Student ID: </span>{info.id}</p>
+                    <p><span>Unique ID: </span>{info.id}</p>
                     <p><span>Name: </span>{info.firstName} {info.lastName}</p>
-                    {
-                        fieldsData && 
-                            <HandleEditInit 
-                                setEdit={setEdit} 
-                                editing={editing} 
-                                fieldsData={fieldsData} 
-                                setAddedFields={changeAddedFields} 
-                                addedFields={addedFields}
-                                addNewPreferences={addToPreferences}
-                            />
+                    {fieldsData && 
+                        <HandleEditInit 
+                            info={info}
+                            setEdit={setEdit} 
+                            editing={editing} 
+                            fieldsData={fieldsData} 
+                            setAddedFields={changeAddedFields} 
+                            addedFields={addedFields}
+                            addNewPreferences={addToPreferences}
+                        />
                     }
                 </div>
             </div>
+            <hr class="mainFieldBreak"></hr>
             <p><span>Counselor Notes: </span>{info["Latest Note"]}</p>
         </div>
 }

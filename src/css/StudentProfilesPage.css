@@ -195,13 +195,14 @@
 }
 
 .studentdetails-editbutton {
-    position: absolute;
-    bottom: 5px;
-    right: 5px;
+    position: relative;
+    bottom: 0;
+    right: 0;
     width: 65px;
     height: 65px;
     border: none;
-    margin: 10px;
+    margin-top: 16px;
+    margin-bottom: 0;
     background-color:  #fefefe;
     border-radius: 50%;
 }
@@ -302,6 +303,7 @@
 }
 
 .geninfo-panel {
+    position: relative;
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
@@ -339,13 +341,12 @@
 }
 
 .fieldsSection {
-    width: 70%;
+    width: 75%;
     height: 100%;
     display: grid;
     grid-template-rows: auto;
     grid-template-columns: 50% 50%;
     grid-column-gap: 0;
-    width: 70%;
 }
 
 .modalFieldElement {
@@ -400,8 +401,30 @@
 }
 
 .editSuite {
-    height: 10vh;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: right;
 }
+
+.editButtonSuite {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+}
+
+.editButtonSuite>div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+
+/* .editSuite {
+    height: 10vh;
+} */
 
 .addFieldButton {
     display: flex;
@@ -412,7 +435,7 @@
     color: black;
     background-color: transparent;
     border-style: none;
-    margin: 0px 50px 0 0; /* top right bottom left*/
+    padding: 2px 0px 2px 0px; /* top right bottom left*/
     border-radius: 3px;
     width: 100%;
 }
@@ -425,8 +448,28 @@
 }
 
 .addFieldButton img {
-    height: 4vh;
-    width: 4vh;
+    height: 25px;
+    width: 25px;
+    margin-right: 3%;
+}
+
+.disabledAddFieldButton {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    font-size: 150%;
+    color: grey;
+    background-color: transparent;
+    border-style: none;
+    padding: 2px 0px 2px 0px; /* top right bottom left*/
+    border-radius: 3px;
+    width: 100%;
+}
+
+.disabledAddFieldButton img {
+    height: 25px;
+    width: 25px;
     margin-right: 3%;
 }
 
@@ -439,13 +482,13 @@
 }
 
 .saveCancelContainer button {
-    margin: 5px;
     margin-top: 10px;
     border-style: none;
     border-radius: 3px;
 }
 
 .save {
+    margin-right: 5px;
     background-color: rgb(77, 165, 77);
 }
 
@@ -457,6 +500,7 @@
 }
 
 .cancel {
+    margin-left: 5px;
     background-color: rgb(202, 70, 70);
 }
 
@@ -482,9 +526,15 @@
 }
 
 .geninfo-col3 {
-    width: 30%;
-    text-align: left;
-    padding-left: 10%;
+    width: 25%;
+    text-align: right;
+}
+
+.mainFieldBreak {
+    border: 1px solid rgb(173, 173, 173);
+    width: 90%;
+    align-self: center;
+    margin: 0;
 }
 
 /* application process panel css */
