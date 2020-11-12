@@ -2,7 +2,9 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import ReactDOMServer from 'react-dom/server';
 import { AgGridReact } from 'ag-grid-react';
+import { AllCommunityModules } from '@ag-grid-community/all-modules';
 import Select from 'react-select';
+import CustomHeader from '../components/caseloadPage/customHeader.jsx';
 import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
 import '../css/CaseloadPage.css';
@@ -18,6 +20,9 @@ import download from '../assets/essentials_icons/svg/download.svg'
 import download_filled from '../assets/essentials_filled/svg/download.svg'
 import add from '../assets/essentials_icons/svg/add.svg'
 import close_btn from '../assets/essentials_icons/svg/multiply.svg'
+import filter_outline from "../assets/essentials_icons/svg/controls-4.svg"
+import filter_icon from "../assets/essentials_filled/svg/controls-4-filled.svg"
+import {ReactComponent as menu_btn} from '../assets/essentials_icons/svg/menu-1.svg'
 
 //TODO: 
 // Issue 1: Added fields don't seem to be populated on load of CaseloadPage between states
@@ -30,7 +35,7 @@ function IconButton(props) {
   return <button className={props.class} style={{backgroundImage: "url(" + props.url + ")"}} onClick={props.clickMethod}/>
 }
 
-class DownloadPopUp extends React.Component {
+export class DownloadPopUp extends React.Component {
   constructor(props) {
     super(props);
     this.columnOptions = React.createRef();
@@ -70,17 +75,86 @@ class DownloadPopUp extends React.Component {
   }
 }
 
-// React-Select Component 
+export class FieldDisplayPopUp extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      allColDefs: props.allColDefs.slice(1), // remove row select column def
+      fieldVisPref: props.fieldVisPref,
+    };
+    // Define list of manageable fields and set array of selected fields; this should happen more dynamically as a function of a visible fields state in the parent
+    this.fieldList = this.state.allColDefs != null ? this.state.allColDefs.map((field) => {
+      return (
+            <label key={field.field} htmlFor={field.field}>
+              {/* Determine default checked condition of a field label */}
+              {this.state.fieldVisPref.includes(field.field) ? <input onChange={this.onChange} type="checkbox" id={field.field} defaultChecked/> : 
+                                                                    <input onChange={this.onChange} type="checkbox" id={field.field}/>}
+              <span>{field.headerName}</span>
+            </label>
+        );
+    }) : '';
+  }
+
+  onChange = (e) => {
+    let fieldId = e.target.id;
+    this.setState((state) => {
+      let selected = !state.fieldVisPref.includes(fieldId) ? [...state.fieldVisPref, fieldId]:
+                                                                state.fieldVisPref.filter(field => field != fieldId); // Remove the field from the selected fields list if already exists
+      return {
+        fieldVisPref: selected,
+      }
+    });
+  }
+
+  onSave = () => {
+    this.props.onSave(this.state.fieldVisPref);
+    this.props.onClose();
+  }
+
+  render() {
+    return (
+      <div className={'field_management'}> 
+        <div className="download-popup-content">
+          <div id='popup-header' value='Download Caseload Data'>
+            <div></div>
+            <span>Manage Field Visibility</span>
+            <span className="close" onClick={this.props.onClose}>
+              <img src={close_btn} alt='close-download-popup'></img>
+            </span>
+          </div>
+          <div id='field_list'>
+            {this.fieldList}
+          </div>
+          <div id='popup-footer'>
+            <div id='save-btn' onClick={this.onSave}>
+              Save
+            </div>
+            <div id='cancel-btn' onClick={this.props.onClose}>
+              Cancel
+            </div>
+          </div>
+        </div>
+      </div> 
+    );
+  }
+
+}
+
+// React-Select Component for use in the DownloadPopUp
 class SelectBox extends React.Component {
   constructor(props){
     super(props)
     // this.filterOptions = props.filterOptions;
     this.handleChange = this.handleChange.bind(this);
+    this.state = {
+      selectedOption: null,
+      filterOptions: null,
+    };
   }
-  state = {
-    selectedOption: null,
-    filterOptions: null,
-  };
+  // state = {
+  //   selectedOption: null,
+  //   filterOptions: null,
+  // };
 
   customStyles = {
     valueContainer: (provided, state) => ({
@@ -97,10 +171,10 @@ class SelectBox extends React.Component {
       filterOptions: this.props.filterOptions()
     })
   }
+
   handleChange = selectedOption => {
     this.setState({ selectedOption });
     this.props.onColumnOptionChange(selectedOption)
-    // console.log(`Option selected:`, selectedOption);
   };
 
   render() {
@@ -129,25 +203,37 @@ class CaseloadPage extends React.Component {
   constructor(props){
     super(props);
     this.state = ({
+      modules: AllCommunityModules, 
       rowsSelected: false,
       searchString: "",
       data: [],
       undoRows: [],
       lastCohort: null,
       addedFields: [],
+      allColDefs: [],
       columns: [],
       downloadColumns: [],
+      frameworkComponents: { agColumnHeader: CustomHeader },
+      fieldPopUpOpen: false,
+      visibleColumns: [],
+      fieldVisPref: [], // array to be passed to database for persistence of visible fields between sessions 
     });
+    this.rowSelectionCol = [{width: "50", pinned: 'left', lockPosition: true, lockPinned: true, sortable: false, checkboxSelection: true, suppressMenu: true, cellStyle: params => {return {backgroundColor: "white", borderTop: "0", borderBottom: "0"}}}];
+    
     // Bind in order to access AgGrid properties from download-popup
     this.onBtnDownload = this.onBtnDownload.bind(this);
     this.downloadData = this.downloadData.bind(this);
     this.handleColumnOptionChange = this.handleColumnOptionChange.bind(this);
     this.getColumnNames = this.getColumnNames.bind(this);
+    this.updateFieldFilter = this.updateFieldFilter.bind(this);
+    this.autoSizeAll = this.autoSizeAll.bind(this);
+    // this.updateAllColDefs = this.updateAllColDefs.bind(this);
+
     // Each object is a column, passed to constructor for Ag-grid
     this.fields = [
-      {width: "50", checkboxSelection: true, cellStyle: params => {return {backgroundColor: "white", borderTop: "0", borderBottom: "0"}}},
-      {field: "id", headerName: "ID", editable: true, valueParser: this.numberType, width: "70"},
-      {field: "firstName", headerName: "First Name", sortable: true, comparator: this.comparator, filter: true, editable: true, resizable: true},
+      {width: "50", pinned: 'left', lockPosition: true, lockPinned: true, sortable: false, checkboxSelection: true, suppressMenu: true, cellStyle: params => {return {backgroundColor: "white", borderTop: "0", borderBottom: "0"}}},
+      {field: "id", headerName: "ID", editable: true, valueParser: this.numberType, width: "70", suppressMenu: true},
+      {field: "firstName", headerName: "First Name", sortable: true, comparator: this.comparator, filter: true, editable: true, resizable: true, sortable: true},
       {field: 'lastName', headerName: 'Last Name', sortable: true, comparator: this.comparator, filter: true, editable: true, resizable: true},
       {field: 'goal', headerName: 'Goal', sortable: true, comparator: this.comparator, filter: true, editable: true, resizable: true},
       {field: "gpa", headerName: 'GPA', comparator: this.numComparator, sortable: true, editable: true, valueParser: this.numberType, filter: 'agNumberColumnFilter', resizable: true},
@@ -163,6 +249,7 @@ class CaseloadPage extends React.Component {
       {field: "reachColleges", headerName: 'Reach Colleges', comparator: this.comparator, sortable: true, editable: true, filter: true, resizable: true},
       {field: "additions", headerName: 'Counselor Additions', comparator: this.comparator, sortable: true, editable: true, filter: true, resizable: true}
     ];
+
     // implement for deletion dropdown on header TODO
     this.customHeader = (
       '<div class="ag-cell-label-container" role="presentation">' +
@@ -179,6 +266,9 @@ class CaseloadPage extends React.Component {
     )
     this.columnOptions = [];
     this.rowOptions = [];
+    this.state.allColDefs = this.state.allColDefs.concat(this.fields);
+
+    // Reference for download popup to set column option state when new columns are added
     this.downloadPopUp = React.createRef();
   }
 
@@ -186,6 +276,7 @@ class CaseloadPage extends React.Component {
   handleColumnOptionChange(downloadColumns) {
     this.setState({downloadColumns})
   }
+
   // Comparator for sorting numbers, ensuring blank fields and mistakes are lowest and that empty entry field stays at bottom
   numComparator = (a, b, aNode, bNode, isInverted) => {
     let inverter = isInverted ? -1 : 1;
@@ -252,13 +343,27 @@ class CaseloadPage extends React.Component {
           // Could actually just use this query and get the students from the returned collection? TODO
           db.collection("student_counselors").doc(this.context.state.selectedCohort).get()
           .then(result=>{
+            // Retrieve added fields and visible field pref if they exist. Field vis pref is all fields if not preference has been saved
+            let addedFields = (result.data().addedFields !== undefined ? result.data().addedFields.map(field=> {
+              let colWidth = ((field.toString().length * 8) + 100).toString();
+              return {
+                field: field, headerName: field, comparator: this.comparator, sortable: true, editable: true, filter: true, resizable: true, width: colWidth, headerComponentParams: {menuIcon: menu_btn},}
+            }) : [])
+            let fieldVisPref = result.data().fieldVisPref !== undefined ? result.data().fieldVisPref : this.state.allCofDefs.concat(addedFields).map(field => {
+                                                                                            return field.field;
+                                                                                          });
+            let allColDefs = this.state.allColDefs.concat(addedFields);                               
+            let visibleColumns = allColDefs.filter((colDef) => {
+              return fieldVisPref.includes(colDef.field);
+            });
+            
             this.setState({
               data: data,
               lastCohort: this.context.state.selectedCohort,
-              addedFields: (result.data().addedFields !== undefined ? result.data().addedFields.map(field=> {return {field: field, headerName: field, comparator: this.comparator, sortable: true, editable: true, filter: true, resizable: true, headerComponentParams: {
-                template: this.customHeader
-                 
-            }}}) : [])
+              addedFields: addedFields,
+              allColDefs: allColDefs, //this.state.allColDefs.concat(addedFields),
+              fieldVisPref: fieldVisPref,
+              visibleColumns: this.rowSelectionCol.concat(visibleColumns),
             });
           })
         })
@@ -286,6 +391,8 @@ class CaseloadPage extends React.Component {
         .update(data);
     } else {
       if (e.value !== undefined && e.value !== ""){
+        console.log('Adding field');
+        console.log(e.data);
         db.collection("student_counselors").doc(this.context.state.selectedCohort).collection("students")
         .add(e.data)
         .then(response=>{
@@ -395,6 +502,39 @@ class CaseloadPage extends React.Component {
     return colNames;
   }
 
+  /* Takes in an array of field id values from the FieldManagementPopUp 
+  - updates caseload page state of visibleColumns (ag-grid colDefs)
+  - updates caseload page state of fieldVisPref (associated with cohort to persist pref. between sessions)
+  */
+  updateFieldFilter(fields) {
+    let visibleColumns = this.fields.concat(this.state.addedFields);
+    visibleColumns = visibleColumns.filter((colDef) => {
+      return fields.includes(colDef.field);
+    });
+    this.setState({
+      visibleColumns: this.rowSelectionCol.concat(visibleColumns),
+      fieldVisPref: fields,
+    });
+    
+    //Update db with fields as fieldVisPref
+    if(fields) {
+      console.log(this.context.state);
+      db.collection("student_counselors").doc(this.context.state.selectedCohort)
+      .update({fieldVisPref: fields})
+      .catch(error=>console.log(error));
+    }
+    this.autoSizeAll();
+  }
+
+  // Autosize all columns
+  autoSizeAll() {
+    var allColumnIds = [];
+    this.gridColumnApi.getAllColumns().forEach(function (column) {
+      allColumnIds.push(column.colId);
+    });
+    this.gridColumnApi.autoSizeColumns(allColumnIds);
+  }
+
   // plus from https://icons8.com/icons/set/plus
   // TODO: (1) create a tool tip for the download button when no data is selected
   //       (2) bind CaseloadPage to DownloadPopup for more flexibility with ag Grid
@@ -403,10 +543,12 @@ class CaseloadPage extends React.Component {
     return (
       <div className="caseload-content">
         <DownloadPopUp ref={this.downloadPopUp} class={'download-popup'} clickMethod={this.onBtnDownload} columnOptions={this.getColumnNames} rowOptions={this.rowOptions} onColumnOptionChange={this.handleColumnOptionChange}/>
+        {this.state.fieldPopUpOpen ? <FieldDisplayPopUp ref={this.fieldPopUp} onSave={this.updateFieldFilter} onClose={this.displayFieldManagement.bind(this)} allColDefs={this.state.allColDefs} fieldVisPref={this.state.fieldVisPref}/> : ''}
         <div className="caseload-header">
           <input className ='search_box' type="text" id="myInput" onKeyUp={this.changeSearchString} placeholder="Search Table..." />
           {this.state.rowsSelected && <IconButton url={trash} clickMethod={this.deleteRows} class={'icon_button'}/>}             
           {this.state.undoRows.length > 0 && <IconButton url={undo} clickMethod={this.undoDelete} class={'icon_button'}/>}
+          <IconButton url={filter_outline} clickMethod={this.displayFieldManagement} class={'icon_button'}></IconButton>
           <IconButton url={add} clickMethod={this.addField} class={'icon_button'}/>
           {this.state.rowsSelected ? <IconButton url={download_filled} clickMethod={this.downloadData} class={'right_icon_button'}/> :
                                       <IconButton url={download} clickMethod={this.downloadData} class={'right_icon_button'} />}
@@ -421,13 +563,18 @@ class CaseloadPage extends React.Component {
               this.gridApi = params.api;
               this.gridColumnApi = params.columnApi;
             }}
+            modules={this.state.modules}
             quickFilterText={this.state.searchString}
             onCellEditingStopped={(e) => this.cellEditingStopped(e)}
-            columnDefs={this.fields.concat(this.state.addedFields)}
+            columnDefs={this.state.visibleColumns.length == 0 ? this.fields.concat(this.state.addedFields) : this.state.visibleColumns}
+            defaultColDef={{editable: true, filter: true, headerComponentParams: {menuIcon: menu_btn}}}
             rowData={this.state.data}
             rowSelection="multiple"
             onSelectionChanged={this.onSelectionChanged}
-            suppressRowClickSelection={true}/>
+            suppressRowClickSelection={true}
+            frameworkComponents = {this.state.frameworkComponents}
+            suppressMenuHide={true}
+            />
         </div>
       </div>
     );
@@ -453,6 +600,14 @@ class CaseloadPage extends React.Component {
       // container.parentNode.removeChild(popup)
       popup.style.display = 'none';
       document.getElementsByClassName('page-container')[0].style.filter = 'blur(0px) grayscale(0%)'
+    });
+  }
+
+  displayFieldManagement = () => {
+    this.setState(state => {
+      return {
+        fieldPopUpOpen: !state.fieldPopUpOpen,
+      }
     });
   }
 
