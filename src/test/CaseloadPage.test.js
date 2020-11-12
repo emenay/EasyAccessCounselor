@@ -3,7 +3,7 @@ import { expectation } from "sinon";
 import CaseloadPage from "../views/CaseloadPage";
 import UserProvider, { UserContext } from '../providers/UserProvider';
 import { DownloadPopup } from "../views/CaseloadPage"
-import customHeader from '../components/caseloadPage/customHeader.jsx'
+//import customHeader from '../components/caseloadPage/customHeader.jsx'
 import { auth } from "../firebase/firebase";
 import firebase from 'firebase/app'
 import Enzyme, { shallow, render, mount} from "enzyme";
@@ -37,24 +37,11 @@ beforeAll(async () => {
 });
 
 test("CaseloadPage full DOM render correct", () => {
-    // render best for this test because lifecycle/children aren't being tested here 
-    const wrapper = render (
+    const wrapper = mount (
         <UserContext.Provider value={{state:userState}}>
             <CaseloadPage/>
         </UserContext.Provider>  
     );
     expect(wrapper).toMatchSnapshot();
-});
-
-test("DownloadPopup renders on download button click", () => {
-    // mount best for this test because lifecycle/children (download popup) is being tested
-    const caseload = mount (
-        <UserContext.Provider value={{state:userState}}>
-            <CaseloadPage/>
-        </UserContext.Provider>  
-    );
-    expect(caseload).toMatchSnapshot();
-    const download = caseload.find('.right_icon_button').simulate('click');
-    console.log(download.debug());
-    wrapper.unmount();
+    wrapper.unmount(); // Unmount dom to prevent overlap in tests that follow
 });

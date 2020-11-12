@@ -1,5 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+<<<<<<< HEAD
 exports[`CaseloadPage full DOM render correct 1`] = `
 <div
   class="caseload-content"
@@ -2938,3 +2939,6 @@ exports[`DownloadPopup renders on download button click 1`] = `
   </div>
 </CaseloadPage>
 `;
+=======
+exports[`CaseloadPage full DOM render correct 1`] = `ReactWrapper {}`;
+>>>>>>> origin
