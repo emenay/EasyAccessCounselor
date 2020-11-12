@@ -218,6 +218,7 @@ class CaseloadPage extends React.Component {
       visibleColumns: [],
       fieldVisPref: [], // array to be passed to database for persistence of visible fields between sessions 
     });
+    this.rowSelectionCol = [{width: "50", pinned: 'left', lockPosition: true, lockPinned: true, sortable: false, checkboxSelection: true, suppressMenu: true, cellStyle: params => {return {backgroundColor: "white", borderTop: "0", borderBottom: "0"}}}];
     
     // Bind in order to access AgGrid properties from download-popup
     this.onBtnDownload = this.onBtnDownload.bind(this);
@@ -225,6 +226,7 @@ class CaseloadPage extends React.Component {
     this.handleColumnOptionChange = this.handleColumnOptionChange.bind(this);
     this.getColumnNames = this.getColumnNames.bind(this);
     this.updateFieldFilter = this.updateFieldFilter.bind(this);
+    this.autoSizeAll = this.autoSizeAll.bind(this);
     // this.updateAllColDefs = this.updateAllColDefs.bind(this);
 
     // Each object is a column, passed to constructor for Ag-grid
@@ -341,16 +343,27 @@ class CaseloadPage extends React.Component {
           // Could actually just use this query and get the students from the returned collection? TODO
           db.collection("student_counselors").doc(this.context.state.selectedCohort).get()
           .then(result=>{
+            // Retrieve added fields and visible field pref if they exist. Field vis pref is all fields if not preference has been saved
             let addedFields = (result.data().addedFields !== undefined ? result.data().addedFields.map(field=> {
+              let colWidth = ((field.toString().length * 8) + 100).toString();
               return {
-                field: field, headerName: field, comparator: this.comparator, sortable: true, editable: true, filter: true, resizable: true, headerComponentParams: {menuIcon: menu_btn},
-              }
+                field: field, headerName: field, comparator: this.comparator, sortable: true, editable: true, filter: true, resizable: true, width: colWidth, headerComponentParams: {menuIcon: menu_btn},}
             }) : [])
+            let fieldVisPref = result.data().fieldVisPref !== undefined ? result.data().fieldVisPref : this.state.allCofDefs.concat(addedFields).map(field => {
+                                                                                            return field.field;
+                                                                                          });
+            let allColDefs = this.state.allColDefs.concat(addedFields);                               
+            let visibleColumns = allColDefs.filter((colDef) => {
+              return fieldVisPref.includes(colDef.field);
+            });
+            
             this.setState({
               data: data,
               lastCohort: this.context.state.selectedCohort,
               addedFields: addedFields,
-              allColDefs: this.state.allColDefs.concat(addedFields)
+              allColDefs: allColDefs, //this.state.allColDefs.concat(addedFields),
+              fieldVisPref: fieldVisPref,
+              visibleColumns: this.rowSelectionCol.concat(visibleColumns),
             });
           })
         })
@@ -498,30 +511,29 @@ class CaseloadPage extends React.Component {
     visibleColumns = visibleColumns.filter((colDef) => {
       return fields.includes(colDef.field);
     });
-    console.log(visibleColumns);
     this.setState({
-      visibleColumns: visibleColumns,
+      visibleColumns: this.rowSelectionCol.concat(visibleColumns),
       fieldVisPref: fields,
     });
+    
+    //Update db with fields as fieldVisPref
+    if(fields) {
+      console.log(this.context.state);
+      db.collection("student_counselors").doc(this.context.state.selectedCohort)
+      .update({fieldVisPref: fields})
+      .catch(error=>console.log(error));
+    }
+    this.autoSizeAll();
   }
 
-  // /* Catch all function to make sure that allColDefs state variable represents all default and user defined columns at any time */
-  // updateAllColDefs() {
-  //   let userDef = this.state.addedFields;
-  //   let defaultDef = this.fields;
-  //   this.setState({
-  //     allColDefs: defaultDef.concat(userDef),
-  //   });
-  // }
-
   // Autosize all columns
-  autoSizeAll = () => {
+  autoSizeAll() {
     var allColumnIds = [];
     this.gridColumnApi.getAllColumns().forEach(function (column) {
       allColumnIds.push(column.colId);
     });
-    this.gridColumnApi.autoSizeColumns(allColumnIds, true);
-  };
+    this.gridColumnApi.autoSizeColumns(allColumnIds);
+  }
 
   // plus from https://icons8.com/icons/set/plus
   // TODO: (1) create a tool tip for the download button when no data is selected

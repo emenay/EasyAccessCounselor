@@ -9,6 +9,11 @@
     font-size: 18px;
 }
 
+.ag-cell-label-container {
+    /* Necessary to allow for text to grow vertically */
+    width: 100%;
+}
+
 .ag-theme-alpine .ag-header-cell {
     border-right-color: black;
     border-right-width: 1px;
