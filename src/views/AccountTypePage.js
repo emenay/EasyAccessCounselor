@@ -4,6 +4,7 @@ import {UserContext} from '../providers/UserProvider';
 
 import {auth} from '../firebase/firebase';
 import {history} from './App';
+import StripeCheckout from './StripeCheckout';
 
 class AccountTypeComponent extends React.Component {
     static contextType = UserContext;
@@ -37,6 +38,7 @@ class AccountTypeComponent extends React.Component {
                     </div>
                     <p className="typeDesc">{this.content.desc}</p>
                     <ul className="typeList">{this.content.list}</ul>
+                    <StripeCheckout />
                     <button className="typeButton" onClick={()=>setType(this.content.type)}>Sign-up for {this.content.name}</button>
                 </div>
             </div>

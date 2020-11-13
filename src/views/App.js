@@ -19,7 +19,6 @@ import StudentProfilesPage from './StudentProfilesPage';
 import Header from '../components/Header';
 import Sidenav from '../components/Sidenav';
 import Signup from './SignupPage';
-import Signup2 from './SignupPage2';
 import AccountType from './AccountTypePage';
 import PaymentPortal from './PaymentPortal';
 import BillingAddress from './BillingAddressPage';
