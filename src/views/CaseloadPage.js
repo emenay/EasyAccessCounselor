@@ -349,7 +349,8 @@ class CaseloadPage extends React.Component {
               return {
                 field: field, headerName: field, comparator: this.comparator, sortable: true, editable: true, filter: true, resizable: true, width: colWidth, headerComponentParams: {menuIcon: menu_btn},}
             }) : [])
-            let fieldVisPref = result.data().fieldVisPref !== undefined ? result.data().fieldVisPref : this.state.allCofDefs.concat(addedFields).map(field => {
+            console.log(this.state.allColDefs);
+            let fieldVisPref = result.data().fieldVisPref !== undefined ? result.data().fieldVisPref : this.state.allColDefs.concat(addedFields).map(field => {
                                                                                             return field.field;
                                                                                           });
             let allColDefs = this.state.allColDefs.concat(addedFields);                               
