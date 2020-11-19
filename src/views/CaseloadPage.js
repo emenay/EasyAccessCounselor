@@ -59,8 +59,6 @@ export class DownloadPopUp extends React.Component {
           <SelectBox className={'popup-row-filter'} placeholder={'Select Row Options...'} filterOptions={this.props.rowOptions} onColumnOptionChange={this.props.onColumnOptionChange}/>
           <input className ='search_box' type="text" id="popup-name-input" placeholder="Give your file a name..." />
         </div>
-        <div id='download-preview'>
-        </div>
       </div>
       <div id='popup-footer'>
         <div id='download-btn' onClick={this.props.clickMethod}>
@@ -214,7 +212,6 @@ class CaseloadPage extends React.Component {
       columns: [],
       downloadColumns: [],
       frameworkComponents: { agColumnHeader: CustomHeader },
-      fieldPopUpOpen: false,
       visibleColumns: [],
       fieldVisPref: [], // array to be passed to database for persistence of visible fields between sessions 
     });
@@ -603,6 +600,7 @@ class CaseloadPage extends React.Component {
       document.getElementsByClassName('page-container')[0].style.filter = 'blur(0px) grayscale(0%)'
     });
   }
+
 
   displayFieldManagement = () => {
     this.setState(state => {
