@@ -23,6 +23,7 @@ import close_btn from '../assets/essentials_icons/svg/multiply.svg'
 import filter_outline from "../assets/essentials_icons/svg/controls-4.svg"
 import filter_icon from "../assets/essentials_filled/svg/controls-4-filled.svg"
 import {ReactComponent as menu_btn} from '../assets/essentials_icons/svg/menu-1.svg'
+import ReactTooltip from "react-tooltip";
 
 //TODO: 
 // Issue 1: Added fields don't seem to be populated on load of CaseloadPage between states
@@ -32,7 +33,7 @@ import {ReactComponent as menu_btn} from '../assets/essentials_icons/svg/menu-1.
 // Issue 3: If the download window is opened while a cell in the grid is being edited, the grid overlay will appear above DownloadPopUp
 
 function IconButton(props) {
-  return <button className={props.class} style={{backgroundImage: "url(" + props.url + ")"}} onClick={props.clickMethod}/>
+  return  <button data-tip data-for={props.toolTip} className={props.class} style={{backgroundImage: "url(" + props.url + ")"}} onClick={props.clickMethod}/>
 }
 
 export class DownloadPopUp extends React.Component {
@@ -521,7 +522,6 @@ class CaseloadPage extends React.Component {
       .update({fieldVisPref: fields})
       .catch(error=>console.log(error));
     }
-    this.autoSizeAll();
   }
 
   // Autosize all columns
@@ -534,8 +534,6 @@ class CaseloadPage extends React.Component {
   }
 
   // plus from https://icons8.com/icons/set/plus
-  // TODO: (1) create a tool tip for the download button when no data is selected
-  //       (2) bind CaseloadPage to DownloadPopup for more flexibility with ag Grid
   render(){
     const downloadColumns = this.state.downloadColumns;
     return (
@@ -546,10 +544,19 @@ class CaseloadPage extends React.Component {
           <input className ='search_box' type="text" id="myInput" onKeyUp={this.changeSearchString} placeholder="Search Table..." />
           {this.state.rowsSelected && <IconButton url={trash} clickMethod={this.deleteRows} class={'icon_button'}/>}             
           {this.state.undoRows.length > 0 && <IconButton url={undo} clickMethod={this.undoDelete} class={'icon_button'}/>}
-          <IconButton url={filter_outline} clickMethod={this.displayFieldManagement} class={'icon_button'}></IconButton>
-          <IconButton url={add} clickMethod={this.addField} class={'icon_button'}/>
-          {this.state.rowsSelected ? <IconButton url={download_filled} clickMethod={this.downloadData} class={'right_icon_button'}/> :
-                                      <IconButton url={download} clickMethod={this.downloadData} class={'right_icon_button'} />}
+          <IconButton toolTip="filterTip" url={filter_outline} clickMethod={this.displayFieldManagement} class={'icon_button'}></IconButton>
+          <ReactTooltip id="filterTip" place="top" effect="solid">
+            Filter visisble columns
+          </ReactTooltip>
+          <IconButton toolTip="addFieldTip" url={add} clickMethod={this.addField} class={'icon_button'}/>
+          <ReactTooltip id="addFieldTip" place="top" effect="solid">
+            Add a custom field
+          </ReactTooltip>
+          {this.state.rowsSelected ? <IconButton toolTip="downloadTip" url={download_filled} clickMethod={this.downloadData} class={'right_icon_button'}/> :
+                                      <IconButton toolTip="downloadTip" url={download} clickMethod={this.downloadData} class={'right_icon_button'} />}
+          <ReactTooltip id="downloadTip" place="top" effect="solid">
+            Download all data or select specific columns
+          </ReactTooltip>
         </div>       
         <div
           className="ag-theme-alpine"
