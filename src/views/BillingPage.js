@@ -12,7 +12,7 @@ import {functions} from '../firebase/firebase';
 async function handleClick() {
     const functionRef = functions
   .httpsCallable('ext-firestore-stripe-subscriptions-createPortalLink');
-    const { data } = await functionRef({ returnUrl: window.location.origin });
+    const { data } = await functionRef({ returnUrl: window.location.origin + '/billing' });
     window.location.assign(data.url);
 }
 

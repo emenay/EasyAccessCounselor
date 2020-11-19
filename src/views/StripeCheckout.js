@@ -50,8 +50,8 @@ class StripeCheckout extends React.Component {
       .collection('checkout_sessions')
       .add({
         price: this.content.stripePrice,
-        success_url: window.location.origin,
-        cancel_url: window.location.origin,
+        success_url: window.location.origin + '/cohortcreation',
+        cancel_url: window.location.origin + '/AccountType',
       });
     // Wait for the CheckoutSession to get attached by the extension
     docRef.onSnapshot((snap) => {

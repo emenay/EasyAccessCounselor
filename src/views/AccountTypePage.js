@@ -45,19 +45,6 @@ class AccountTypeComponent extends React.Component {
                     </article>
             </div>
 
-            // <div class="column box">
-                
-            //         <h2 class="subtitle is-3">{this.content.header}</h2>
-            //         <div class="content">
-            //             <div class="content is-large">
-            //                 <span class="level-item"><h1>${this.content.price}</h1><h6 class="content is-10">/month</h6></span>
-            //             </div>
-                        
-            //             <p>{this.content.desc}</p>
-            //             <StripeCheckout content = {this.content}/>
-            //         </div>
-                    
-            // </div>
 
         )
     }
@@ -116,7 +103,7 @@ function AccountTypePage() {
         type: "counselor",
         header: "For Counselors",
         price: 100,
-        desc: "Save time and improve your ability to help your students achieve their dreams with multiple cohorts and premium features.",
+        desc: "Save time and help your students achieve their dreams with multiple cohorts and premium features.",
         list: [
             "Premium Cohort Creation",
             "Premium Caseload Management",
@@ -154,20 +141,26 @@ function AccountTypePage() {
             "Team Based Caseload Management",
             "Space Holder..."
         ],
-        primaryColor: "#FB590E", //orange //tile is-ancestor 
+        primaryColor: "#FB590E", //orange
         stripePrice: 'price_1HeKsOKXiwGLHCkWDFSwTKes'
     }
 
     return(
-       
-        <div class="container is-fluid" className ="accountTypeOverlay">
-            <div class="columns is-vcentered"> 
+       <div>
+           <div className ="accountTypeOverlay">
+               <h1 class="title">Choose your account type.</h1>
+           </div>
+           <div class="container is-fluid" className ="accountTypeOverlay">
+            <div class="tile is-ancestor "> 
                 <AccountTypeComponent content = {freeProps}></AccountTypeComponent>
                 <AccountTypeComponent content = {counselorProps}></AccountTypeComponent>
                 <AccountTypeComponent content = {schoolProps}></AccountTypeComponent>
             </div>
             
         </div>
+
+       </div>
+        
 
     )
 }
