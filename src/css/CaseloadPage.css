@@ -9,6 +9,11 @@
     font-size: 18px;
 }
 
+.ag-cell-label-container {
+    /* Necessary to allow for text to grow vertically */
+    width: 100%;
+}
+
 .ag-theme-alpine .ag-header-cell {
     border-right-color: black;
     border-right-width: 1px;
@@ -144,6 +149,37 @@
     margin-top: 10px;
 }
 
+#field_list {
+    display: flex;
+    flex-direction: column; 
+    /* justify-content: flex-start; */
+    flex-wrap: wrap;
+    height: 450px;
+    margin: 10px;
+    margin-left: 20px;
+    margin-top: 20px;
+    overflow-y: scroll;
+    overflow-x: auto;
+}
+
+#field_list label {
+    display: inline-block;
+    padding-right: 10px;
+    white-space: nowrap;
+    margin-left: 0;
+    text-align: left;
+    width: 300px;
+}
+
+#field_list input {
+    vertical-align: middle;
+}
+
+#field_list label span {
+    margin-left: 10px;
+    vertical-align: middle;
+}
+
 #download-options {
     display: flex; 
     flex-direction: column;
@@ -254,3 +290,100 @@
     margin-right: 10px;
 }
 
+/* ag Grid custom column Header css */
+
+.customColumnHeader {
+    display: flex;
+    flex-direction: row; 
+    justify-content: space-around;
+    align-items: center;
+}
+
+.customHeaderMenuButton {
+    float: left;
+    opacity: 1;
+    height: 20px; 
+    width: 20px;
+    text-align: center;
+    margin-right: 10px;
+}
+
+.columnMenuSvg:hover {
+    fill: white;
+}
+
+.sortAscendSvg:hover {
+    fill: white; 
+}
+
+.sortDescendSvg:hover {
+    fill: white;
+}
+
+.sortButton {
+    float: right;
+    height: 20px; 
+    width: 20px;
+    text-align: center;
+    background-color: 0; 
+    margin-left: auto;
+    margin-right: 0;
+    fill: black;
+    background: #ffffff00;
+}
+
+.clear {
+    height: 10px;
+    width: 10px;
+}
+
+.sortRemoveSvg {
+    fill: black;
+} 
+
+.sortRemoveSvg:hover {
+    fill: white;
+}
+
+.customHeaderLabel {
+    float: left;
+    margin: 0 0 0 3px;
+    font-size: 12pt;
+}
+  
+.on {
+    fill: white;
+}
+
+.field_management {
+    position: fixed;
+    top:50%;
+    left:50%;
+    height: 80%;
+    width: 50%; 
+    margin-left:-25%;   /* negative half of width above */
+    margin-top:-20%; 
+    margin-bottom: 20%;
+    border: 4px;
+    border-style: solid;
+    border-radius: 10px; 
+    border-color:rgb(83, 83, 83);
+    z-index: 1;
+    background-color: white;
+}
+
+#save-btn {
+    background-color:#3298CB;
+    height: 40px;
+    width: 150px;
+    border-radius: 5px; 
+    border-style: solid;
+    border-color: none;
+    font-size: 17pt;
+    color: #ffffff;
+    text-align: center;
+    margin-left: auto;
+    margin-right: 30%;
+    cursor: pointer;
+    position: absolute;
+}
