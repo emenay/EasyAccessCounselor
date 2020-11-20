@@ -21,6 +21,19 @@ function TestContext() {
 class StripeCheckout extends React.Component { 
     static contextType = UserContext;
     
+    constructor(props){
+      super(props);
+      this.state = ({
+      });
+      
+
+      this.content = {
+          stripePrice: props.content.stripePrice,
+          name: props.content.name,
+          primaryColor: props.content.primaryColor
+      }
+      
+  }
     
     
     handleClick = async () => {
@@ -36,9 +49,9 @@ class StripeCheckout extends React.Component {
       .doc(this.context.state.user.uid)
       .collection('checkout_sessions')
       .add({
-        price: 'price_1HeKsOKXiwGLHCkWDFSwTKes',
-        success_url: window.location.origin,
-        cancel_url: window.location.origin,
+        price: this.content.stripePrice,
+        success_url: window.location.origin + '/cohortcreation',
+        cancel_url: window.location.origin + '/AccountType',
       });
     // Wait for the CheckoutSession to get attached by the extension
     docRef.onSnapshot((snap) => {
@@ -58,8 +71,8 @@ class StripeCheckout extends React.Component {
 
     render() {
         return(
-            <button role="link" onClick={this.handleClick}>
-                Checkout
+            <button class="button" style={{backgroundColor: this.content.primaryColor, color:"white"}} role="link" onClick={this.handleClick}>
+                Sign up for {this.content.name}
             </button>
         )
     }

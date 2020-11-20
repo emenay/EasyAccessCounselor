@@ -19,7 +19,6 @@ import StudentProfilesPage from './StudentProfilesPage';
 import Header from '../components/Header';
 import Sidenav from '../components/Sidenav';
 import Signup from './SignupPage';
-import Signup2 from './SignupPage2';
 import AccountType from './AccountTypePage';
 import PaymentPortal from './PaymentPortal';
 import BillingAddress from './BillingAddressPage';
@@ -64,9 +63,6 @@ export default function App() {
             <Route path="/cohortcreation">
               { user.state.user ? <CohortCreation /> : <Redirect to='/login' /> }
             </Route>
-            <Route path="/cohortcreation2">
-              { user.state.user ? <CohortCreation /> : <Redirect to='/login' />}
-            </Route>
             <Route path="/login">
             { user.state.user ? <Redirect to='/caseload_management' /> : <Login /> }
             </Route>
@@ -81,15 +77,6 @@ export default function App() {
             </Route>
             <Route path="/billing">
               { user.state.user ? <BillingPage /> : <Redirect to='/login' />}
-            </Route>
-            <Route path="/billingaddress">
-            { user.state.user ? <BillingAddress /> : <Redirect to='/login' />}
-            </Route>
-            <Route path="/paymentsummary">
-            { user.state.user ? <PaymentSummary /> : <Redirect to='/login' />}
-            </Route>
-            <Route path="/receipt">
-            { user.state.user ? <Receipt /> : <Redirect to='/login' />}
             </Route>
             <Route path="/">
               { user.state.user ? <Caseload /> : <Login /> }
