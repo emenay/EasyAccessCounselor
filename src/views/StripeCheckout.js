@@ -37,35 +37,50 @@ class StripeCheckout extends React.Component {
     
     
     handleClick = async () => {
-      // Get Stripe.js instance
-    const stripe = await stripePromise;
 
-    console.log(this.context.state.user);
-    // Call your backend to create the Checkout Session
+    if (this.content.stripePrice == null) {
+      history.push("/cohortcreation");
+            if (document.getElementsByClassName("sidenav-container").length === 1) {
+                document.getElementsByClassName("sidenav-container")[0].style.display = "initial";
+            }
+
+            if (document.getElementsByClassName("header-select").length === 1) {
+                document.getElementsByClassName("header-select")[0].style.display = "initial";
+            }
     
-    // uses school price for now
-    const docRef = await db
-      .collection('customers')
-      .doc(this.context.state.user.uid)
-      .collection('checkout_sessions')
-      .add({
-        price: this.content.stripePrice,
-        success_url: window.location.origin + '/cohortcreation',
-        cancel_url: window.location.origin + '/AccountType',
-      });
-    // Wait for the CheckoutSession to get attached by the extension
-    docRef.onSnapshot((snap) => {
-      const { error, sessionId } = snap.data();
-      if (error) {
-        // Show an error to your customer and then inspect your function logs.
-        alert(`An error occured: ${error.message}`);
-      }
-      if (sessionId) {
-        // We have a session, let's redirect to Checkout
-        // Init Stripe
-        stripe.redirectToCheckout({ sessionId });
-      }
-    });
+    } else {
+          // Get Stripe.js instance
+          const stripe = await stripePromise;
+
+          console.log(this.context.state.user);
+          // Call your backend to create the Checkout Session
+          
+          // uses school price for now
+          const docRef = await db
+            .collection('customers')
+            .doc(this.context.state.user.uid)
+            .collection('checkout_sessions')
+            .add({
+              price: this.content.stripePrice,
+              success_url: window.location.origin + '/cohortcreation',
+              cancel_url: window.location.origin + '/AccountType',
+            });
+          // Wait for the CheckoutSession to get attached by the extension
+          docRef.onSnapshot((snap) => {
+            const { error, sessionId } = snap.data();
+            if (error) {
+              // Show an error to your customer and then inspect your function logs.
+              alert(`An error occured: ${error.message}`);
+            }
+            if (sessionId) {
+              // We have a session, let's redirect to Checkout
+              // Init Stripe
+              stripe.redirectToCheckout({ sessionId });
+            }
+          });
+    }
+
+    
 
     }
 
