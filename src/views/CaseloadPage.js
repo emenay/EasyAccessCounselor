@@ -209,7 +209,7 @@ class CaseloadPage extends React.Component {
       undoRows: [],
       lastCohort: null,
       addedFields: [],
-      allColDefs: [],
+      allColDefs: [{width: "50", pinned: 'left', lockPosition: true, lockPinned: true, sortable: false, checkboxSelection: true, suppressMenu: true, cellStyle: params => {return {backgroundColor: "white", borderTop: "0", borderBottom: "0"}}}],//[],
       columns: [],
       downloadColumns: [],
       frameworkComponents: { agColumnHeader: CustomHeader },
@@ -229,7 +229,7 @@ class CaseloadPage extends React.Component {
 
     // Each object is a column, passed to constructor for Ag-grid
     this.fields = [
-      {width: "50", pinned: 'left', lockPosition: true, lockPinned: true, sortable: false, checkboxSelection: true, suppressMenu: true, cellStyle: params => {return {backgroundColor: "white", borderTop: "0", borderBottom: "0"}}},
+      // {width: "50", pinned: 'left', lockPosition: true, lockPinned: true, sortable: false, checkboxSelection: true, suppressMenu: true, cellStyle: params => {return {backgroundColor: "white", borderTop: "0", borderBottom: "0"}}},
       {field: "id", headerName: "ID", editable: true, valueParser: this.numberType, width: "70", suppressMenu: true},
       {field: "firstName", headerName: "First Name", sortable: true, comparator: this.comparator, filter: true, editable: true, resizable: true, sortable: true},
       {field: 'lastName', headerName: 'Last Name', sortable: true, comparator: this.comparator, filter: true, editable: true, resizable: true},
@@ -353,7 +353,7 @@ class CaseloadPage extends React.Component {
                                                                                           });
             let allColDefs = this.state.allColDefs.concat(addedFields);                               
             let visibleColumns = allColDefs.filter((colDef) => {
-              return fieldVisPref.includes(colDef.field);
+              return fieldVisPref.includes(colDef.field) || colDef.checkboxSelection;
             });
             
             this.setState({
@@ -362,7 +362,7 @@ class CaseloadPage extends React.Component {
               addedFields: addedFields,
               allColDefs: allColDefs, //this.state.allColDefs.concat(addedFields),
               fieldVisPref: fieldVisPref,
-              visibleColumns: this.rowSelectionCol.concat(visibleColumns),
+              visibleColumns: visibleColumns, // this.rowSelectionCol.concat(visibleColumns),
             });
           })
         })
@@ -508,7 +508,7 @@ class CaseloadPage extends React.Component {
   updateFieldFilter(fields) {
     let visibleColumns = this.fields.concat(this.state.addedFields);
     visibleColumns = visibleColumns.filter((colDef) => {
-      return fields.includes(colDef.field);
+      return fields.includes(colDef.field) || colDef.checkboxSelection;
     });
     this.setState({
       visibleColumns: this.rowSelectionCol.concat(visibleColumns),
