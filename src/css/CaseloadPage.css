@@ -109,15 +109,15 @@
 }
 
 .download-popup {
-    position: fixed;
-    top:50%;
+    position: absolute;
+    display: none;
+    top:30%;
     left:50%;
-    height: 80%;
-    width: 50%; 
+    min-height: 600px;
+    min-width: 500px;
     margin-left:-25%;   /* negative half of width above */
     margin-top:-20%; 
     margin-bottom: 20%;
-    display: none;
     border: 4px;
     border-style: solid;
     border-radius: 10px; 
@@ -145,6 +145,7 @@
 #popup-body {
     display: flex;
     flex-direction: row; 
+    justify-content: center;
     height: 450px;
     margin-top: 10px;
 }
@@ -239,7 +240,7 @@
     display: flex;
     flex-direction: row;
     justify-content: space-around;
-    justify-items: space-between;
+    /* justify-items: space-between; */
     margin-top: 20px;
 }
 
@@ -356,11 +357,11 @@
 }
 
 .field_management {
-    position: fixed;
-    top:50%;
+    position: absolute;
+    top:30%;
     left:50%;
-    height: 80%;
-    width: 50%; 
+    min-height: 600px;
+    min-width: 500px;
     margin-left:-25%;   /* negative half of width above */
     margin-top:-20%; 
     margin-bottom: 20%;
