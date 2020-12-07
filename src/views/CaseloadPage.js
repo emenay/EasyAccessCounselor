@@ -80,7 +80,7 @@ export class FieldDisplayPopUp extends React.Component {
     super(props);
     this.state = {
       allColDefs: props.allColDefs.slice(1), // remove row select col def
-      fieldVisPref: props.fieldVisPref, // remove row select col def 
+      fieldVisPref: props.fieldVisPref,
     };
     // Define list of manageable fields and set array of selected fields; this should happen more dynamically as a function of a visible fields state in the parent
     this.fieldList = this.state.allColDefs != null ? this.state.allColDefs.map((field) => {
@@ -391,8 +391,9 @@ class CaseloadPage extends React.Component {
                                                                                           });
             let allColDefs = freshState.allColDefs.concat(addedFields);                               
             let visibleColumns = allColDefs.filter((colDef) => {
-              return fieldVisPref.includes(colDef.field) || colDef.checkboxSelection;
+              return fieldVisPref.includes(colDef.field);
             });
+            
 
             // New state reset/management 
             freshState.data = data;
