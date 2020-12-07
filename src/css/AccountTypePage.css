@@ -50,8 +50,14 @@ the file was originally a copy of another style sheet
     align-items: center;
     justify-content: center;
     padding-left: 10%;
-    padding-right: 10%;
+    padding-right: 20%;
+    padding-top: 25%;
 }
+.accountTypePageList {
+    text-align: left;
+    list-style-type: circle;
+}
+
 
 .typeContainer {
     display: flex;
@@ -105,4 +111,5 @@ the file was originally a copy of another style sheet
     margin-right: 10%;
     max-width: 80%;
     margin-bottom: 0;
+    border: none;
 }

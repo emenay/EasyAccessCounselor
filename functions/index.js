@@ -21,6 +21,7 @@ exports.createStripeCustomer = functions.auth.user().onCreate(async (user) => {
   return;
 });
 
+
 /**
  * Makes a copy of a student's document under their corresponding counselor
  *

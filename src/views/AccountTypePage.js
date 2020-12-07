@@ -4,6 +4,7 @@ import {UserContext} from '../providers/UserProvider';
 
 import {auth} from '../firebase/firebase';
 import {history} from './App';
+import StripeCheckout from './StripeCheckout';
 
 class AccountTypeComponent extends React.Component {
     static contextType = UserContext;
@@ -19,27 +20,32 @@ class AccountTypeComponent extends React.Component {
             price: props.content.price,
             desc: props.content.desc,
             list: props.content.list,
-            primaryColor: props.content.primaryColor
+            primaryColor: props.content.primaryColor,
+            stripePrice: props.content.stripePrice
         }
         
     }
 
     render() {
         return(
-            <div className="typeContainer">
-                <div className="typeHeader">
-                    <h3>{this.content.header}</h3>
-                </div>
-                <div className="typeMainBody">
-                    <h5>Always</h5>
-                    <div className="typeCostContainer">
-                    <h1 className="typeCost">{this.content.price}</h1><h4 className="typeMonth">/month</h4>
+            
+
+            <div class="tile is-parent">
+                <article class="tile is-child box">
+                    <h2 class="subtitle is-3">{this.content.header}</h2>
+                    <div class="content">
+                        <div class="content is-large">
+                            <span class="level-item"><h1>${this.content.price}</h1><h6 class="content is-10">/month</h6></span>
+                        </div>
+                        
+                        <p>{this.content.desc}</p>
+                        
+                        <StripeCheckout content = {this.content}/>
                     </div>
-                    <p className="typeDesc">{this.content.desc}</p>
-                    <ul className="typeList">{this.content.list}</ul>
-                    <button className="typeButton" onClick={()=>setType(this.content.type)}>Sign-up for {this.content.name}</button>
-                </div>
+                    </article>
             </div>
+
+
         )
     }
 }
@@ -86,9 +92,10 @@ function AccountTypePage() {
         type: "free",
         header: "Free Forever",
         price: 0,
-        desc: "Save time in your caseload management, organize cohorts",
+        desc: "Save time in your caseload management and easily organize your cohort of students.",
         list: ["Cohort Creation", "Caseload Management", "Space Holder"],
-        primaryColor: [55, 55, 55] // set this to grey this is just a place holder
+        primaryColor: "#707070", //gray
+        stripePrice: null
     }
 
     const counselorProps = {
@@ -96,14 +103,15 @@ function AccountTypePage() {
         type: "counselor",
         header: "For Counselors",
         price: 100,
-        desc: "Save time and improve your ability to help your students achieve their dreams",
+        desc: "Save time and help your students achieve their dreams with multiple cohorts and premium features.",
         list: [
             "Premium Cohort Creation",
             "Premium Caseload Management",
             "Space Holder...",
             "Space Holder 2...",
         ],
-        primaryColor: [0, 0, 255] // Should be Easy Access blue
+        primaryColor: "#3298CB", //Easy Access blue
+        stripePrice: 'price_1HeKrZKXiwGLHCkW9prEhIZ6'
     }
 
     const schoolProps = {
@@ -111,24 +119,49 @@ function AccountTypePage() {
         type: "school",
         header: "For Schools",
         price: 250,
-        desc: "Teamp up on caseload management by granting access to all of your cohorts across your team",
+        desc: "Team up on caseload management by granting access to all of your cohorts across your school's team of counselors.",
         list: [
             "Multiple Cohort Creation",
             "Team Based Caseload Management",
             "Space Holder...",
-            "Space Holder 2..."
+            "Space Holder 2...",
+            "Multiple Cohort Creation",
+            "Team Based Caseload Management",
+            "Space Holder...",
+            "Multiple Cohort Creation",
+            "Team Based Caseload Management",
+            "Space Holder...",
+            "Multiple Cohort Creation",
+            "Team Based Caseload Management",
+            "Space Holder...",
+            "Multiple Cohort Creation",
+            "Team Based Caseload Management",
+            "Space Holder...",
+            "Multiple Cohort Creation",
+            "Team Based Caseload Management",
+            "Space Holder..."
         ],
-        primaryColor: [255, 100, 0] // Should be orange
+        primaryColor: "#FB590E", //orange
+        stripePrice: 'price_1HeKsOKXiwGLHCkWDFSwTKes'
     }
 
     return(
-        // login header
-        // some kind of body
-        <div className="accountTypeOverlay">
-            <AccountTypeComponent content = {freeProps}></AccountTypeComponent>
-            <AccountTypeComponent content = {counselorProps}></AccountTypeComponent>
-            <AccountTypeComponent content = {schoolProps}></AccountTypeComponent>
+       <div>
+           <div className ="accountTypeOverlay">
+               <h1 class="title">Choose your account type.</h1>
+           </div>
+           <div class="container is-fluid" className ="accountTypeOverlay">
+            <div class="tile is-ancestor "> 
+                <AccountTypeComponent content = {freeProps}></AccountTypeComponent>
+                <AccountTypeComponent content = {counselorProps}></AccountTypeComponent>
+                <AccountTypeComponent content = {schoolProps}></AccountTypeComponent>
+            </div>
+            
         </div>
+
+       </div>
+        
+
     )
 }
 

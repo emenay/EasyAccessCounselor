@@ -111,13 +111,13 @@
 .download-popup {
     position: absolute;
     display: none;
-    top:30%;
+    top: 10%;
+    bottom: 10%;
     left:50%;
     min-height: 600px;
     min-width: 500px;
     margin-left:-25%;   /* negative half of width above */
-    margin-top:-20%; 
-    margin-bottom: 20%;
+    /* margin-bottom: 20%; */
     border: 4px;
     border-style: solid;
     border-radius: 10px; 
@@ -358,13 +358,13 @@
 
 .field_management {
     position: absolute;
-    top:30%;
+    top:10%;
     left:50%;
     min-height: 600px;
     min-width: 500px;
     margin-left:-25%;   /* negative half of width above */
-    margin-top:-20%; 
-    margin-bottom: 20%;
+    /* margin-top:-20%;  */
+    /* margin-bottom: 20%; */
     border: 4px;
     border-style: solid;
     border-radius: 10px; 
