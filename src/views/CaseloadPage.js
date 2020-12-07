@@ -26,11 +26,12 @@ import {ReactComponent as menu_btn} from '../assets/essentials_icons/svg/menu-1.
 import ReactTooltip from "react-tooltip";
 
 //TODO: 
-// Issue 1: Added fields don't seem to be populated on load of CaseloadPage between states
+// Issue 1: Row select not visible when cohorts are changed
+// Issue 2: Added fields don't seem to be populated on load of CaseloadPage between states
 // - Discovered: custom field shows up in ag-grid but is not present in the fields or addedFields property of CaseloadPage instance
-// Issue 2: As custom fields are added, those changes needed to be reflected in the filter options passed as props to DownloadPopUp 
+// Issue 3: As custom fields are added, those changes needed to be reflected in the filter options passed as props to DownloadPopUp 
 //          on its initial render
-// Issue 3: If the download window is opened while a cell in the grid is being edited, the grid overlay will appear above DownloadPopUp
+// Issue 4: If the download window is opened while a cell in the grid is being edited, the grid overlay will appear above DownloadPopUp
 
 function IconButton(props) {
   return  <button data-tip data-for={props.toolTip} className={props.class} style={{backgroundImage: "url(" + props.url + ")"}} onClick={props.clickMethod}/>
@@ -78,8 +79,8 @@ export class FieldDisplayPopUp extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      allColDefs: props.allColDefs.slice(1), // remove row select column def
-      fieldVisPref: props.fieldVisPref,
+      allColDefs: props.allColDefs.slice(1), // remove row select col def
+      fieldVisPref: props.fieldVisPref, // remove row select col def 
     };
     // Define list of manageable fields and set array of selected fields; this should happen more dynamically as a function of a visible fields state in the parent
     this.fieldList = this.state.allColDefs != null ? this.state.allColDefs.map((field) => {
@@ -272,7 +273,6 @@ class CaseloadPage extends React.Component {
   // Helper function for getting a cleared state when a selectedCohort change is detected
   getFreshState() {
     let fields = [
-      // {width: "50", pinned: 'left', lockPosition: true, lockPinned: true, sortable: false, checkboxSelection: true, suppressMenu: true, cellStyle: params => {return {backgroundColor: "white", borderTop: "0", borderBottom: "0"}}},
       {field: "id", headerName: "ID", editable: true, valueParser: this.numberType, width: "70", suppressMenu: true},
       {field: "firstName", headerName: "First Name", sortable: true, comparator: this.comparator, filter: true, editable: true, resizable: true, sortable: true},
       {field: 'lastName', headerName: 'Last Name', sortable: true, comparator: this.comparator, filter: true, editable: true, resizable: true},
@@ -393,37 +393,15 @@ class CaseloadPage extends React.Component {
             let visibleColumns = allColDefs.filter((colDef) => {
               return fieldVisPref.includes(colDef.field);
             });
-            
-<<<<<<< Updated upstream
-            this.setState({
-              data: data,
-              lastCohort: this.context.state.selectedCohort,
-              addedFields: addedFields,
-              allColDefs: allColDefs, //this.state.allColDefs.concat(addedFields),
-              fieldVisPref: fieldVisPref,
-              visibleColumns: this.rowSelectionCol.concat(visibleColumns),
-            });
-=======
+
             // New state reset/management 
             freshState.data = data;
             freshState.lastCohort = this.context.state.selectedCohort;
             freshState.allColDefs = allColDefs;
             freshState.fieldVisPref = fieldVisPref;
-            freshState.visibleColumns = visibleColumns;
-            console.log(freshState.visibleColumns);
+            freshState.visibleColumns = this.rowSelectionCol.concat(visibleColumns);
             this.setState(freshState);
 
-            // Old state refresh/management (be sure to change instance of freshState to this.state...)
-            // this.setState({
-            //   data: data,
-            //   lastCohort: this.context.state.selectedCohort,
-            //   addedFields: addedFields,
-            //   allColDefs: allColDefs,
-            //   fieldVisPref: fieldVisPref,
-            //   visibleColumns: visibleColumns,
-            // });
-
->>>>>>> Stashed changes
           })
         })
         .catch(error => {console.log(error)});
@@ -577,7 +555,6 @@ class CaseloadPage extends React.Component {
     
     //Update db with fields as fieldVisPref
     if(fields) {
-      console.log(this.context.state);
       db.collection("student_counselors").doc(this.context.state.selectedCohort)
       .update({fieldVisPref: fields})
       .catch(error=>console.log(error));
