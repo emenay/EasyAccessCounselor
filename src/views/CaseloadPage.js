@@ -26,11 +26,12 @@ import {ReactComponent as menu_btn} from '../assets/essentials_icons/svg/menu-1.
 import ReactTooltip from "react-tooltip";
 
 //TODO: 
-// Issue 1: Added fields don't seem to be populated on load of CaseloadPage between states
+// Issue 1: Row select not visible when cohorts are changed
+// Issue 2: Added fields don't seem to be populated on load of CaseloadPage between states
 // - Discovered: custom field shows up in ag-grid but is not present in the fields or addedFields property of CaseloadPage instance
-// Issue 2: As custom fields are added, those changes needed to be reflected in the filter options passed as props to DownloadPopUp 
+// Issue 3: As custom fields are added, those changes needed to be reflected in the filter options passed as props to DownloadPopUp 
 //          on its initial render
-// Issue 3: If the download window is opened while a cell in the grid is being edited, the grid overlay will appear above DownloadPopUp
+// Issue 4: If the download window is opened while a cell in the grid is being edited, the grid overlay will appear above DownloadPopUp
 
 function IconButton(props) {
   return  <button data-tip data-for={props.toolTip} className={props.class} style={{backgroundImage: "url(" + props.url + ")"}} onClick={props.clickMethod}/>
@@ -78,8 +79,8 @@ export class FieldDisplayPopUp extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      allColDefs: props.allColDefs.slice(1), // remove row select column def
-      fieldVisPref: props.fieldVisPref,
+      allColDefs: props.allColDefs.slice(1), // remove row select col def
+      fieldVisPref: props.fieldVisPref, // remove row select col def 
     };
     // Define list of manageable fields and set array of selected fields; this should happen more dynamically as a function of a visible fields state in the parent
     this.fieldList = this.state.allColDefs != null ? this.state.allColDefs.map((field) => {
@@ -269,6 +270,42 @@ class CaseloadPage extends React.Component {
     // Reference for download popup to set column option state when new columns are added
     this.downloadPopUp = React.createRef();
   }
+  // Helper function for getting a cleared state when a selectedCohort change is detected
+  getFreshState() {
+    let fields = [
+      {field: "id", headerName: "ID", editable: true, valueParser: this.numberType, width: "70", suppressMenu: true},
+      {field: "firstName", headerName: "First Name", sortable: true, comparator: this.comparator, filter: true, editable: true, resizable: true, sortable: true},
+      {field: 'lastName', headerName: 'Last Name', sortable: true, comparator: this.comparator, filter: true, editable: true, resizable: true},
+      {field: 'goal', headerName: 'Goal', sortable: true, comparator: this.comparator, filter: true, editable: true, resizable: true},
+      {field: "gpa", headerName: 'GPA', comparator: this.numComparator, sortable: true, editable: true, valueParser: this.numberType, filter: 'agNumberColumnFilter', resizable: true},
+      {field: "sat", headerName: 'SAT', comparator: this.numComparator, sortable: true, editable: true, valueParser: this.numberType, filter: 'agNumberColumnFilter', resizable: true},
+      {field: "act", headerName: 'ACT', comparator: this.numComparator, sortable: true, editable: true, valueParser: this.numberType, filter: 'agNumberColumnFilter', resizable: true},
+      {field: "classRank", headerName: 'Class Rank', comparator:  this.numComparator, sortable: true, valueParser: this.numberType, editable: true, filter: 'agNumberColumnFilter', resizable: true},
+      {field: "efc", headerName: 'EFC', comparator:  this.numComparator, sortable: true, valueParser: this.numberType, editable: true, filter: 'agNumberColumnFilter', resizable: true},
+      {field: "payMismatch", headerName: 'Ability to Pay Mismatch', comparator: this.comparator, sortable: true, filter: true, editable: true, resizable: true},
+      {field: "major", headerName: 'Major 1', comparator: this.comparator, sortable: true, filter: true, editable: true, resizable: true},
+      {field: "major2", headerName: 'Major 2', comparator: this.comparator, sortable: true, filter: true, editable: true, resizable: true},
+      {field: "safetyColleges", headerName: 'Safety Colleges', comparator: this.comparator, sortable: true, filter: true, editable: true, resizable: true},
+      {field: "targetColleges", headerName: 'Target Colleges', comparator: this.comparator, sortable: true, filter: true, editable: true, resizable: true},
+      {field: "reachColleges", headerName: 'Reach Colleges', comparator: this.comparator, sortable: true, editable: true, filter: true, resizable: true},
+      {field: "additions", headerName: 'Counselor Additions', comparator: this.comparator, sortable: true, editable: true, filter: true, resizable: true}
+    ];
+    return {
+      modules: AllCommunityModules, 
+      rowsSelected: false,
+      searchString: "",
+      data: [],
+      undoRows: [],
+      lastCohort: null,
+      addedFields: [],
+      allColDefs: [{width: "50", pinned: 'left', lockPosition: true, lockPinned: true, sortable: false, checkboxSelection: true, suppressMenu: true, cellStyle: params => {return {backgroundColor: "white", borderTop: "0", borderBottom: "0"}}}].concat(fields),//[],
+      columns: [],
+      downloadColumns: [],
+      frameworkComponents: { agColumnHeader: CustomHeader },
+      visibleColumns: [],
+      fieldVisPref: [], // array to be passed to database for persistence of visible fields between sessions 
+    };
+  }
 
   // Function for handling selection of column filter options in download popup
   handleColumnOptionChange(downloadColumns) {
@@ -333,7 +370,6 @@ class CaseloadPage extends React.Component {
               ent.uid = doc.id;
               return ent;
             } );
-         
         })
         .then(data => {
           data.push({});
@@ -341,29 +377,31 @@ class CaseloadPage extends React.Component {
           // Could actually just use this query and get the students from the returned collection? TODO
           db.collection("student_counselors").doc(this.context.state.selectedCohort).get()
           .then(result=>{
+            // New cohort so use a fresh state variable
+            let freshState = this.getFreshState();
+
             // Retrieve added fields and visible field pref if they exist. Field vis pref is all fields if not preference has been saved
             let addedFields = (result.data().addedFields !== undefined ? result.data().addedFields.map(field=> {
               let colWidth = ((field.toString().length * 8) + 100).toString();
               return {
                 field: field, headerName: field, comparator: this.comparator, sortable: true, editable: true, filter: true, resizable: true, width: colWidth, headerComponentParams: {menuIcon: menu_btn},}
             }) : [])
-            console.log(this.state.allColDefs);
-            let fieldVisPref = result.data().fieldVisPref !== undefined ? result.data().fieldVisPref : this.state.allColDefs.concat(addedFields).map(field => {
+            let fieldVisPref = result.data().fieldVisPref !== undefined ? result.data().fieldVisPref : freshState.allColDefs.concat(addedFields).map(field => {
                                                                                             return field.field;
                                                                                           });
-            let allColDefs = this.state.allColDefs.concat(addedFields);                               
+            let allColDefs = freshState.allColDefs.concat(addedFields);                               
             let visibleColumns = allColDefs.filter((colDef) => {
               return fieldVisPref.includes(colDef.field) || colDef.checkboxSelection;
             });
-            
-            this.setState({
-              data: data,
-              lastCohort: this.context.state.selectedCohort,
-              addedFields: addedFields,
-              allColDefs: allColDefs, //this.state.allColDefs.concat(addedFields),
-              fieldVisPref: fieldVisPref,
-              visibleColumns: visibleColumns, // this.rowSelectionCol.concat(visibleColumns),
-            });
+
+            // New state reset/management 
+            freshState.data = data;
+            freshState.lastCohort = this.context.state.selectedCohort;
+            freshState.allColDefs = allColDefs;
+            freshState.fieldVisPref = fieldVisPref;
+            freshState.visibleColumns = this.rowSelectionCol.concat(visibleColumns);
+            this.setState(freshState);
+
           })
         })
         .catch(error => {console.log(error)});
@@ -517,7 +555,6 @@ class CaseloadPage extends React.Component {
     
     //Update db with fields as fieldVisPref
     if(fields) {
-      console.log(this.context.state);
       db.collection("student_counselors").doc(this.context.state.selectedCohort)
       .update({fieldVisPref: fields})
       .catch(error=>console.log(error));
