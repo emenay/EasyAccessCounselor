@@ -151,10 +151,6 @@ class SelectBox extends React.Component {
       filterOptions: null,
     };
   }
-  // state = {
-  //   selectedOption: null,
-  //   filterOptions: null,
-  // };
 
   customStyles = {
     valueContainer: (provided, state) => ({
@@ -218,7 +214,6 @@ class CaseloadPage extends React.Component {
       fieldVisPref: [], // array to be passed to database for persistence of visible fields between sessions 
     });
     this.rowSelectionCol = [{width: "50", pinned: 'left', lockPosition: true, lockPinned: true, sortable: false, checkboxSelection: true, suppressMenu: true, cellStyle: params => {return {backgroundColor: "white", borderTop: "0", borderBottom: "0"}}}];
-    
     // Bind in order to access AgGrid properties from download-popup
     this.onBtnDownload = this.onBtnDownload.bind(this);
     this.downloadData = this.downloadData.bind(this);
@@ -230,7 +225,6 @@ class CaseloadPage extends React.Component {
 
     // Each object is a column, passed to constructor for Ag-grid
     this.fields = [
-      // {width: "50", pinned: 'left', lockPosition: true, lockPinned: true, sortable: false, checkboxSelection: true, suppressMenu: true, cellStyle: params => {return {backgroundColor: "white", borderTop: "0", borderBottom: "0"}}},
       {field: "id", headerName: "ID", editable: true, valueParser: this.numberType, width: "70", suppressMenu: true},
       {field: "firstName", headerName: "First Name", sortable: true, comparator: this.comparator, filter: true, editable: true, resizable: true, sortable: true},
       {field: 'lastName', headerName: 'Last Name', sortable: true, comparator: this.comparator, filter: true, editable: true, resizable: true},
@@ -249,20 +243,6 @@ class CaseloadPage extends React.Component {
       {field: "additions", headerName: 'Counselor Additions', comparator: this.comparator, sortable: true, editable: true, filter: true, resizable: true}
     ];
 
-    // implement for deletion dropdown on header TODO
-    this.customHeader = (
-      '<div class="ag-cell-label-container" role="presentation">' +
-      '  <span ref="eMenu" class="ag-header-icon ag-header-cell-menu-button"></span>' +
-      '  <div ref="eLabel" class="ag-header-cell-label" role="presentation">' +
-      '    <span ref="eText" class="ag-header-cell-text" role="columnheader"></span>' +
-      '    <span ref="eSortOrder" class="ag-header-icon ag-sort-order" ></span>' +
-      '    <span ref="eSortAsc" class="ag-header-icon ag-sort-ascending-icon" ></span>' +
-      '    <span ref="eSortDesc" class="ag-header-icon ag-sort-descending-icon" ></span>' +
-      '    <span ref="eSortNone" class="ag-header-icon ag-sort-none-icon" ></span>' +
-      '    <span ref="eFilter" class="ag-header-icon ag-filter-icon"></span>' +
-      '  </div>' +
-      '</div>'
-    )
     this.columnOptions = [];
     this.rowOptions = [];
     this.state.allColDefs = this.state.allColDefs.concat(this.fields);
@@ -380,27 +360,32 @@ class CaseloadPage extends React.Component {
             // New cohort so use a fresh state variable
             let freshState = this.getFreshState();
 
-            // Retrieve added fields and visible field pref if they exist. Field vis pref is all fields if not preference has been saved
+            // Retrieve added fields and visible field pref if they exist. Field vis pref is all fields if no preference has been saved
             let addedFields = (result.data().addedFields !== undefined ? result.data().addedFields.map(field=> {
               let colWidth = ((field.toString().length * 8) + 100).toString();
               return {
                 field: field, headerName: field, comparator: this.comparator, sortable: true, editable: true, filter: true, resizable: true, width: colWidth, headerComponentParams: {menuIcon: menu_btn},}
-            }) : [])
-            let fieldVisPref = result.data().fieldVisPref !== undefined ? result.data().fieldVisPref : freshState.allColDefs.concat(addedFields).map(field => {
-                                                                                            return field.field;
-                                                                                          });
-            let allColDefs = freshState.allColDefs.concat(addedFields);                               
+            }) : null)
+
+            // Slicing to skip over row selection column                                                                              });
+            let fieldVisPref = result.data().fieldVisPref !== undefined ? result.data().fieldVisPref : 
+              addedFields !== null ? freshState.allColDefs.slice(1).concat(addedFields).map(field => { // Don't concat user defined fields if none exist
+                return field.field;
+              }) : freshState.allColDefs.slice(1).map(field => { // Slicing to skip over row selection column 
+                return field.field; 
+              })
+
+            let allColDefs = addedFields !== null ? freshState.allColDefs.concat(addedFields) : freshState.allColDefs;                               
             let visibleColumns = allColDefs.filter((colDef) => {
-              return fieldVisPref.includes(colDef.field);
+              return fieldVisPref.includes(colDef.field) || colDef.checkboxSelection;
             });
             
-
             // New state reset/management 
             freshState.data = data;
             freshState.lastCohort = this.context.state.selectedCohort;
             freshState.allColDefs = allColDefs;
             freshState.fieldVisPref = fieldVisPref;
-            freshState.visibleColumns = this.rowSelectionCol.concat(visibleColumns);
+            freshState.visibleColumns = visibleColumns;
             this.setState(freshState);
 
           })
@@ -429,8 +414,8 @@ class CaseloadPage extends React.Component {
         .update(data);
     } else {
       if (e.value !== undefined && e.value !== ""){
-        console.log('Adding field');
-        console.log(e.data);
+        // console.log('Adding field');
+        // console.log(e.data);
         db.collection("student_counselors").doc(this.context.state.selectedCohort).collection("students")
         .add(e.data)
         .then(response=>{
