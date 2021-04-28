@@ -29,6 +29,7 @@ import ReactTooltip from "react-tooltip";
 // Issue 1: Row select not visible when cohorts are changed
 // Issue 2: Added fields don't seem to be populated on load of CaseloadPage between states
 // - Discovered: custom field shows up in ag-grid but is not present in the fields or addedFields property of CaseloadPage instance
+// - Added line in inital loading of data from database to set state of addedFields, maybe fixed?
 // Issue 3: As custom fields are added, those changes needed to be reflected in the filter options passed as props to DownloadPopUp 
 //          on its initial render
 // Issue 4: If the download window is opened while a cell in the grid is being edited, the grid overlay will appear above DownloadPopUp
@@ -386,6 +387,7 @@ class CaseloadPage extends React.Component {
             freshState.allColDefs = allColDefs;
             freshState.fieldVisPref = fieldVisPref;
             freshState.visibleColumns = visibleColumns;
+            freshState.addedFields = addedFields;
             this.setState(freshState);
 
           })
@@ -538,7 +540,6 @@ class CaseloadPage extends React.Component {
       visibleColumns: this.rowSelectionCol.concat(visibleColumns),
       fieldVisPref: fields,
     });
-    
     //Update db with fields as fieldVisPref
     if(fields) {
       db.collection("student_counselors").doc(this.context.state.selectedCohort)

@@ -36,6 +36,7 @@
     "react-spreadsheet": "^0.4.46",
     "react-tooltip": "^4.2.10",
     "react-virtualized": "^9.21.2",
+    "reactjs-popup": "^2.0.4",
     "read-excel-file": "^4.0.6",
     "sinon": "^9.2.1",
     "stripe": "^8.118.0"

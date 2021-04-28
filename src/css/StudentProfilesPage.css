@@ -128,7 +128,7 @@
 /* Taken from https://www.w3schools.com/howto/howto_css_modals.asp example*/
 .studentdetails-modal {
     position: fixed; /* Stay in place */
-    z-index: 1000; /* Sit on top */
+    z-index: 999; /* Sit on top */
     left: 0;
     top: 0;
     width: 100%; /* Full width */
@@ -229,7 +229,7 @@
     width: 24.8%;
     height: 40px;
     float: left;
-    z-index: 999;
+    z-index: 998;
     border-top-left-radius: 5px;
     border-top-right-radius: 5px;
     background-color: #3298CB;
@@ -286,7 +286,7 @@
 }
 
 .studentdetails-flag {
-    z-index: 998;
+    z-index: 997;
     margin-left: 20px;
     margin-top: 10px;
     width: 30px;
@@ -753,3 +753,45 @@ span.clear {
 input[type="checkbox"] {
     vertical-align: center;
 }
+
+.studentdetails-modal input[type="text"] {
+    width: 170px;
+    height: 25px;
+    font-size: 18px;
+    padding-bottom: 15px;
+    -webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
+    -moz-box-sizing: border-box;    /* Firefox, other Gecko */
+    box-sizing: border-box;         /* Opera/IE 8+ */
+}  
+
+.popup-modal {
+    z-index: 1000;   
+    vertical-align: middle;
+}
+
+.popup-modal input[type="text"] {
+    width: 170px;
+    height: 20px;
+    font-size: 18px;
+}
+  
+.card-buttons {
+      position: relative;
+      right: -125px;
+}
+
+.popup-content {
+    margin: auto;
+    background: rgb(255, 255, 255);
+    border: solid;
+    width: 32%;
+    height: 15%;
+    padding: 5px;
+    padding-top: 10px;
+    font-size: 18px;
+  }
+  
+  .popup-overlay {
+    background: rgba(0, 0, 0, 0.75);
+  }
+  

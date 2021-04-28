@@ -6,6 +6,7 @@ import "../css/StudentProfilesPage.css";
 import "../css/searchBar.css";
 import StudentDetailsModal from '../components/StudentDetailsModal.js';
 import {db} from "../firebase/firebase";
+import firebase from 'firebase/app';
 import sorted_ascend from "../assets/sorted_ascend.png";
 import sorted_descend from "../assets/sorted_descend.png";
 import unsorted_icon from "../assets/unsorted_icon.png";
@@ -61,8 +62,8 @@ class StudentProfilesPage extends React.Component{
     }
 
     // Retrieve data from database
-    getCohortData = () => {
-        if (this.context.state && this.state.lastCohort !== this.context.state.selectedCohort){
+    getCohortData = (bypass=false) => {
+        if (bypass===true || (this.context.state && this.state.lastCohort !== this.context.state.selectedCohort)){
             db.collection("student_counselors").doc(this.context.state.selectedCohort).collection("students")
             .get()
             .then(querySnapshot => {
@@ -104,6 +105,43 @@ class StudentProfilesPage extends React.Component{
     componentDidUpdate() {
         this.getCohortData();
     }
+
+    /* function to pass down to update state from child
+        parameters (uid = specific student id value, fields = fields that are updated, info = old values)
+        note: getCohortData might be excessive reading from database. If possible try and not use it.
+    */
+    cardUpdate = (uid, fields, info, addedFields = false) => {
+        let obj = {};
+        let addedNames = [];
+        for (const i in fields) {
+            obj = {...obj, ...fields[i]};
+            for (let j in fields[i]) {
+                addedNames.push(j);
+            }
+        }
+        //console.log(obj);
+        for (var i in obj) {
+        db.collection("student_counselors").doc(this.context.state.selectedCohort).collection("students").doc(uid).update(obj)
+        .then( () => {
+
+        if (addedFields === true && addedNames) {
+            
+            db.collection("student_counselors").doc(this.context.state.selectedCohort)
+            .update({addedFields: firebase.firestore.FieldValue.arrayUnion(...addedNames)})
+            .catch(error=>console.log(error));
+        }
+
+
+        this.clickCard({...info, ...obj});
+        //console.log({...info, ...obj});
+        this.getCohortData(true);
+        //console.log(this.state.data);
+        });
+        break;
+        }
+        
+    }
+
 
     // Helper function for sorting
     compare = (field, isReverse) => {
@@ -152,17 +190,21 @@ class StudentProfilesPage extends React.Component{
 
     clickFlag = (id) => {
         // Update flagSet to reflect change
+        var isFlagged;
         if (this.state.flagSet.has(id)) {
             var new_set = new Set(this.state.flagSet);
             new_set.delete(id);
             this.setState({flagSet: new_set});
+            isFlagged = false;
         } else {
             this.setState({flagSet: this.state.flagSet.add(id)})
+            isFlagged = true;
         }
         // Update database to reflect change
-        if (this.context.state.user) {
+        if (this.context.state.user) 
+        {
             db.collection("student_counselors").doc(this.context.state.selectedCohort).collection("students").doc(id)
-            .update({flagged: this.state.flagSet.has(id)});
+            .update({flagged: isFlagged});
         }
     }
 
@@ -238,7 +280,7 @@ class StudentProfilesPage extends React.Component{
                 <DropdownFilterMenu fields={this.filterFields} filterGroupItems={this.state.filterGroupItems} deleteFilter={this.deleteFilter} changeEvent={this.changeFilter} filters={this.state.filters} icon={Object.keys(this.state.filters).length === 0 ? filter_outline : filter_icon} />
                 <DropdownSortMenu fields={this.sortFields} changeEvent={this.changeSort} icon={this.state.sortIcon}/>
             </div>
-            {this.state.selectedCard && <StudentDetailsModal flagged={this.state.flagSet.has(this.state.selectedCard.uid)} exitModal={this.exitModal} cohort={this.context.state.selectedCohort} info={this.state.selectedCard} />}
+            {this.state.selectedCard && <StudentDetailsModal flagged={this.state.flagSet.has(this.state.selectedCard.uid)} exitModal={this.exitModal} cohort={this.context.state.selectedCohort} info={this.state.selectedCard} cardUpdate = {this.cardUpdate} />}
             <GridView data={data} clickCard={this.clickCard} clickFlag={this.clickFlag} flags={this.state.flagSet}/>
         </div>
     }
