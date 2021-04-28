@@ -8,6 +8,7 @@ import "firebase/auth";
 import {UserContext} from '../providers/UserProvider';
 import { Link } from 'react-router-dom';
 import {history} from './App';
+import SubscribeModal from '../components/SubscribeModal.js'
 
 /*
     This file is messy because it was worked on by multiple people.
@@ -214,13 +215,33 @@ class DataEntrySelection extends React.Component {
     static contextType = UserContext;
     constructor(props){
         super(props);
-        this.state = {selectedState: null}
+        this.state = {
+            selectedState: null,
+            modal: false
+        }
+    }
+    
+    exitModal = () => {
+        this.setState({modal: false});
     }
     onChange = (e)=> {
         this.setState({selectedState: e.target.value});
     }
 
-    onSubmit = ()=> {
+    onSubmit = async ()=> {
+
+        const subscriptionRef = db.collection('customers')
+            .doc(this.context.state.user.uid)
+            .collection('subscriptions')
+            .where('status', 'in', ['trialing', 'active']);
+
+        const snapshot = await subscriptionRef.get();
+
+        if (snapshot.empty && this.context.state.cohorts.length != 0) {
+            this.setState({modal: true});
+            return;
+        } 
+
         switch(this.state.selectedState){
             case "manual":
                 let name = this.props.name();
@@ -265,6 +286,7 @@ class DataEntrySelection extends React.Component {
                     <p>Upload data from your computer</p>
             </div>  
             <button className={"select-entry-btn" + (this.state.selectedState ? "": " inactive")} onClick={this.onSubmit}>Create</button>
+            {this.state.modal && <SubscribeModal exitModal={this.exitModal}/>}
         </div>);
     }
 }

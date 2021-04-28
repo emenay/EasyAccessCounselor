@@ -3,6 +3,7 @@ import 'firebase/firestore';
 import 'firebase/auth';
 import 'firebase/app';
 import 'firebase/functions';
+import Cookies from 'js-cookie';
 
 import config from './config';
 
@@ -12,6 +13,7 @@ firebase.initializeApp(config);
 export const functions = firebase.app().functions('us-east1');
 
 export const signOut = () => {
+    Cookies.remove("cohort");
     firebase.auth().signOut();
 }
 
