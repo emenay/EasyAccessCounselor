@@ -1,14 +1,14 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import '../css/AccountTypePage.css';
-import {UserContext} from '../providers/UserProvider';
+import { UserContext } from '../providers/UserProvider';
 
-import {auth} from '../firebase/firebase';
-import {history} from './App';
+import { auth } from '../firebase/firebase';
+import { history } from './App';
 import StripeCheckout from './StripeCheckout';
 
 class AccountTypeComponent extends React.Component {
     static contextType = UserContext;
-    constructor(props){
+    constructor(props) {
         super(props);
         this.state = ({
         });
@@ -23,13 +23,11 @@ class AccountTypeComponent extends React.Component {
             primaryColor: props.content.primaryColor,
             stripePrice: props.content.stripePrice
         }
-        
+
     }
 
     render() {
-        return(
-            
-
+        return (
             <div class="tile is-parent">
                 <article class="tile is-child box">
                     <h2 class="subtitle is-3">{this.content.header}</h2>
@@ -37,12 +35,12 @@ class AccountTypeComponent extends React.Component {
                         <div class="content is-large">
                             <span class="level-item"><h1>${this.content.price}</h1><h6 class="content is-10">/month</h6></span>
                         </div>
-                        
+
                         <p>{this.content.desc}</p>
-                        
-                        <StripeCheckout content = {this.content}/>
+
+                        <StripeCheckout content={this.content} cancelURL="/AccountType" />
                     </div>
-                    </article>
+                </article>
             </div>
 
 
@@ -51,7 +49,7 @@ class AccountTypeComponent extends React.Component {
 }
 
 function setType(type) {
-    switch(type) {
+    switch (type) {
         case 'free':
             // TODO: set user type to free
             history.push("/cohortcreation");
@@ -82,7 +80,7 @@ function AccountTypePage() {
     if (document.getElementsByClassName("sidenav-container").length === 1) {
         document.getElementsByClassName("sidenav-container")[0].style.display = "none";
     }
-    
+
     if (document.getElementsByClassName("header-select").length === 1) {
         document.getElementsByClassName("header-select")[0].style.display = "none";
     }
@@ -145,22 +143,22 @@ function AccountTypePage() {
         stripePrice: 'price_1HeKsOKXiwGLHCkWDFSwTKes'
     }
 
-    return(
-       <div>
-           <div className ="accountTypeOverlay">
-               <h1 class="title">Choose your account type.</h1>
-           </div>
-           <div class="container is-fluid" className ="accountTypeOverlay">
-            <div class="tile is-ancestor "> 
-                <AccountTypeComponent content = {freeProps}></AccountTypeComponent>
-                <AccountTypeComponent content = {counselorProps}></AccountTypeComponent>
-                <AccountTypeComponent content = {schoolProps}></AccountTypeComponent>
+    return (
+        <div>
+            <div className="accountTypeOverlay">
+                <h1 class="title">Choose your account type.</h1>
             </div>
-            
+            <div class="container is-fluid" className="accountTypeOverlay">
+                <div class="tile is-ancestor ">
+                    <AccountTypeComponent content={freeProps}></AccountTypeComponent>
+                    <AccountTypeComponent content={counselorProps}></AccountTypeComponent>
+                    <AccountTypeComponent content={schoolProps}></AccountTypeComponent>
+                </div>
+
+            </div>
+
         </div>
 
-       </div>
-        
 
     )
 }

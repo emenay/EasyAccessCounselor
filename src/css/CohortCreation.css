@@ -151,3 +151,37 @@
     height: 40px;
     font-size: 20px;
 }
+
+.sub-modal {
+    position: fixed; /* Stay in place */
+    z-index: 1000; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: none; 
+    text-align: center;
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+.sub-modal-content {
+    background-color: #fefefe;
+    margin: 15% auto; 
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%; 
+    /* position: absolute; */
+    border-radius: 5px;
+    /* padding: 20px;
+    height: 40%;
+    bottom: 4%;
+    left: 0; right: 0;
+    width: 80%; */
+    /* margin: auto;
+    margin-top: 17%;  */
+    overflow-y: auto;
+    border: 1px solid #888;
+}
+
+
