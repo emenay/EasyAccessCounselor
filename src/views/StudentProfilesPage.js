@@ -57,7 +57,8 @@ class StudentProfilesPage extends React.Component{
             flagToggle: false, // True if only viewing flagged student
             sortIcon: unsorted_icon,
             lastCohort: null, // Used to not repeatedly load same cohort when cohort switched/reloaded
-            filterGroupItems: {"gender": new Set(), "race": new Set(), "major": new Set()} //Each group filter has a set of fields to be filtered by
+            filterGroupItems: {"gender": new Set(), "race": new Set(), "major": new Set()}, //Each group filter has a set of fields to be filtered by
+            inEditMode: false // True when wanting to edit the fields shown in student card
         }
     }
 
@@ -208,6 +209,11 @@ class StudentProfilesPage extends React.Component{
         }
     }
 
+    // Changes if user wants to edit
+    editToggle = () => {
+        this.setState({inEditMode: !this.state.inEditMode});
+    }
+
     // Changes if flag toggled
     flagToggle = () => {
         this.setState({flagToggle: !this.state.flagToggle});
@@ -281,7 +287,7 @@ class StudentProfilesPage extends React.Component{
                 <DropdownSortMenu fields={this.sortFields} changeEvent={this.changeSort} icon={this.state.sortIcon}/>
             </div>
             {this.state.selectedCard && <StudentDetailsModal flagged={this.state.flagSet.has(this.state.selectedCard.uid)} exitModal={this.exitModal} cohort={this.context.state.selectedCohort} info={this.state.selectedCard} cardUpdate = {this.cardUpdate} />}
-            <GridView data={data} clickCard={this.clickCard} clickFlag={this.clickFlag} flags={this.state.flagSet}/>
+            <GridView data={data} clickCard={this.clickCard} clickFlag={this.clickFlag} flags={this.state.flagSet} inEditMode={this.state.inEditMode} editToggle={this.editToggle} cohort={this.context.state.selectedCohort} />
         </div>
     }
 }

@@ -42,6 +42,20 @@
     height: 30px;
 }
 
+.edit {
+    position: absolute;
+    bottom: 8px;
+    right: 8px;
+    width: 30px;
+    height: 30px;
+}
+
+.minus {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+}
+
 .dropdown {
     outline: none;
 }
@@ -120,9 +134,30 @@
     font-family: "Open Sans";
 }
 
+.scard-detail-edit {
+    position: relative;
+    line-height: 1.6;
+    font-size: 16px;
+    font-family: "Open Sans";
+    left: 25px;
+}
+
 .scard-content {
     margin: auto;
     padding: 1rem 1.5rem;
+}
+
+.scard-edit {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 40%;
+}
+
+.scard-edit-buttons {
+    display: grid;
+    grid-template-columns: 50px 300px;
+    column-gap: 20px;
 }
 
 /* Taken from https://www.w3schools.com/howto/howto_css_modals.asp example*/
@@ -490,6 +525,12 @@
 .save {
     margin-right: 5px;
     background-color: rgb(77, 165, 77);
+}
+
+.saveField {
+    margin-right: 5px;
+    background-color: rgb(77, 165, 77);
+    width: 50px;
 }
 
 .save:hover {
