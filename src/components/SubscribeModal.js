@@ -97,9 +97,15 @@ function SubscribeModal(props) {
         stripePrice: 'price_1IlcqsKXiwGLHCkWln1AWpeD'
     }
 
+    
     return (
         <div id="myModal" className="sub-modal" onClick={props.exitModal}>
             <div className="sub-modal-content" onClick={(e)=> e.stopPropagation()}>
+                <div>
+                    <p><strong>Creating multiple cohorts is a feature only available to pro plans. For access to 
+                        multiple cohorts (and a ton of other features!), please sign up for one of the plans below.</strong></p>
+                </div>
+                <br></br>
                 <div className="container is-fluid">
                     <div className="tile is-ancestor ">
                         <AccountTypeComponent content={counselorProps}></AccountTypeComponent>
