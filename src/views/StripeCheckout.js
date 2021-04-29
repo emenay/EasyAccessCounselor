@@ -62,6 +62,7 @@ class StripeCheckout extends React.Component {
             .collection('checkout_sessions')
             .add({
               price: this.content.stripePrice,
+              allow_promotion_codes: true,
               success_url: window.location.origin + '/cohortcreation',
               cancel_url: window.location.origin + this.props.cancelURL,
             });
