@@ -89,7 +89,7 @@ export function GridView(props) {
               fieldsShown: defaultFields
           });
 
-          setChosenFields(resp.data().fieldsShown); // update state
+          setChosenFields(defaultFields); // update state
         }
     })
     .catch(err => {console.log(err)});
