@@ -33,7 +33,7 @@ class AccountTypeComponent extends React.Component {
                     <h2 class="subtitle is-3">{this.content.header}</h2>
                     <div class="content">
                         <div class="content is-large">
-                            <span class="level-item"><h1>${this.content.price}</h1><h6 class="content is-10">/month</h6></span>
+                            <span class="level-item"><h1>${this.content.price}</h1><h6 class="content is-10">/year</h6></span>
                         </div>
 
                         <p>{this.content.desc}</p>
@@ -109,7 +109,7 @@ function AccountTypePage() {
             "Space Holder 2...",
         ],
         primaryColor: "#3298CB", //Easy Access blue
-        stripePrice: 'price_1HeKrZKXiwGLHCkW9prEhIZ6'
+        stripePrice: 'price_1IlcpaKXiwGLHCkWR5oFgEZl'
     }
 
     const schoolProps = {
@@ -140,7 +140,7 @@ function AccountTypePage() {
             "Space Holder..."
         ],
         primaryColor: "#FB590E", //orange
-        stripePrice: 'price_1HeKsOKXiwGLHCkWDFSwTKes'
+        stripePrice: 'price_1IlcqsKXiwGLHCkWln1AWpeD'
     }
 
     return (
