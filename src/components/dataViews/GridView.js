@@ -3,6 +3,8 @@ import {db} from '../../firebase/firebase';
 import Select from 'react-select';
 import unflagged from '../../assets/essentials_icons/svg/flag-3.svg';
 import orange_flag from "../../assets/essentials_filled/svg/flag-3-filled.svg";
+import green_flag from "../../assets/essentials_filled/svg/flag-3-filled-green.svg";
+import purple_flag from "../../assets/essentials_filled/svg/flag-3-filled-purple.svg";
 import edit_symbol from "../../assets/essentials_icons/svg/edit.svg";
 import minus_symbol from "../../assets/essentials_icons/svg/minus.svg";
 
@@ -226,6 +228,20 @@ export function GridView(props) {
     setChosenFields(reducedFields); // update state
   }
 
+  // renders flag based on flagset
+  const renderFlag = (id) => {
+    console.log(props);
+    if (props.flags.has(id)) {
+      return orange_flag;
+    } else if (props.flagsGreen.has(id)) {
+      return green_flag;
+    } else if (props.flagsPurp.has(id)) {
+      return purple_flag;
+    } else {
+      return unflagged;
+    }
+  }
+
   // render fields shown in grid view
   // this is a very poor implementation, should be simplified if able
   // renders fields when not in edit mode
@@ -243,7 +259,7 @@ export function GridView(props) {
                 <p className="scard-detail">{generateField(fields[chosenFields[2]] + ": ", person[chosenFields[2]])}</p>
                 <p className="scard-detail">{generateField(fields[chosenFields[3]] + ": ", person[chosenFields[3]])}</p>
                 <p className="scard-detail">{generateField(fields[chosenFields[4]] + ": ", person[chosenFields[4]])}</p>
-                <img src={props.flags.has(person.uid)? orange_flag : unflagged} onClick={(e)=>{props.clickFlag(person.uid); e.stopPropagation();}} className="flag" alt="Flag"/>
+                <img src={renderFlag(person.uid)} onClick={(e)=>{props.clickFlag(person.uid); e.stopPropagation();}} className="flag" alt="Flag"/>
                 <img src={edit_symbol} onClick={(e)=>{props.editToggle(); e.stopPropagation();}} className="edit" alt="Edit" />
               </div>
             </div>
@@ -262,7 +278,7 @@ export function GridView(props) {
                 <p className="scard-detail">{generateField(fields[chosenFields[1]] + ": ", person[chosenFields[1]])}</p>
                 <p className="scard-detail">{generateField(fields[chosenFields[2]] + ": ", person[chosenFields[2]])}</p>
                 <p className="scard-detail">{generateField(fields[chosenFields[3]] + ": ", person[chosenFields[3]])}</p>
-                <img src={props.flags.has(person.uid)? orange_flag : unflagged} onClick={(e)=>{props.clickFlag(person.uid); e.stopPropagation();}} className="flag" alt="Flag"/>
+                <img src={renderFlag(person.uid)} onClick={(e)=>{props.clickFlag(person.uid); e.stopPropagation();}} className="flag" alt="Flag"/>
                 <img src={edit_symbol} onClick={(e)=>{props.editToggle(); e.stopPropagation();}} className="edit" alt="Edit" />
               </div>
             </div>
@@ -280,7 +296,7 @@ export function GridView(props) {
                 <p className="scard-detail">{generateField(fields[chosenFields[0]] + ": ", person[chosenFields[0]])}</p>
                 <p className="scard-detail">{generateField(fields[chosenFields[1]] + ": ", person[chosenFields[1]])}</p>
                 <p className="scard-detail">{generateField(fields[chosenFields[2]] + ": ", person[chosenFields[2]])}</p>
-                <img src={props.flags.has(person.uid)? orange_flag : unflagged} onClick={(e)=>{props.clickFlag(person.uid); e.stopPropagation();}} className="flag" alt="Flag"/>
+                <img src={renderFlag(person.uid)} onClick={(e)=>{props.clickFlag(person.uid); e.stopPropagation();}} className="flag" alt="Flag"/>
                 <img src={edit_symbol} onClick={(e)=>{props.editToggle(); e.stopPropagation();}} className="edit" alt="Edit" />
               </div>
             </div>
@@ -297,7 +313,7 @@ export function GridView(props) {
                 <p className="card-title scard-detail">{(person.firstName !== undefined ? person.firstName + " " : "") + (person.lastName !== undefined ? person.lastName + " " : "")}</p>
                 <p className="scard-detail">{generateField(fields[chosenFields[0]] + ": ", person[chosenFields[0]])}</p>
                 <p className="scard-detail">{generateField(fields[chosenFields[1]] + ": ", person[chosenFields[1]])}</p>
-                <img src={props.flags.has(person.uid)? orange_flag : unflagged} onClick={(e)=>{props.clickFlag(person.uid); e.stopPropagation();}} className="flag" alt="Flag"/>
+                <img src={renderFlag(person.uid)} onClick={(e)=>{props.clickFlag(person.uid); e.stopPropagation();}} className="flag" alt="Flag"/>
                 <img src={edit_symbol} onClick={(e)=>{props.editToggle(); e.stopPropagation();}} className="edit" alt="Edit" />
               </div>
             </div>
@@ -313,7 +329,7 @@ export function GridView(props) {
                 <p className="scard-detail" id="cardContent"></p>
                 <p className="card-title scard-detail">{(person.firstName !== undefined ? person.firstName + " " : "") + (person.lastName !== undefined ? person.lastName + " " : "")}</p>
                 <p className="scard-detail">{generateField(fields[chosenFields[0]] + ": ", person[chosenFields[0]])}</p>
-                <img src={props.flags.has(person.uid)? orange_flag : unflagged} onClick={(e)=>{props.clickFlag(person.uid); e.stopPropagation();}} className="flag" alt="Flag"/>
+                <img src={renderFlag(person.uid)} onClick={(e)=>{props.clickFlag(person.uid); e.stopPropagation();}} className="flag" alt="Flag"/>
                 <img src={edit_symbol} onClick={(e)=>{props.editToggle(); e.stopPropagation();}} className="edit" alt="Edit" />
               </div>
             </div>
@@ -328,7 +344,7 @@ export function GridView(props) {
               <div className="scard-content">
                 <p className="scard-detail" id="cardContent"></p>
                 <p className="card-title scard-detail">{(person.firstName !== undefined ? person.firstName + " " : "") + (person.lastName !== undefined ? person.lastName + " " : "")}</p>
-                <img src={props.flags.has(person.uid)? orange_flag : unflagged} onClick={(e)=>{props.clickFlag(person.uid); e.stopPropagation();}} className="flag" alt="Flag"/>
+                <img src={renderFlag(person.uid)} onClick={(e)=>{props.clickFlag(person.uid); e.stopPropagation();}} className="flag" alt="Flag"/>
                 <img src={edit_symbol} onClick={(e)=>{props.editToggle(); e.stopPropagation();}} className="edit" alt="Edit" />
               </div>
             </div>
@@ -350,7 +366,7 @@ export function GridView(props) {
                 <img src={minus_symbol} className="minus" onClick={(e)=>{minusToggle3(); e.stopPropagation();}} /><p className="scard-detail-edit">{generateField(fields[chosenFields[2]] + ": ", person[chosenFields[2]])}</p>
                 <img src={minus_symbol} className="minus" onClick={(e)=>{minusToggle4(); e.stopPropagation();}} /><p className="scard-detail-edit">{generateField(fields[chosenFields[3]] + ": ", person[chosenFields[3]])}</p>
                 <img src={minus_symbol} className="minus" onClick={(e)=>{minusToggle5(); e.stopPropagation();}} /><p className="scard-detail-edit">{generateField(fields[chosenFields[4]] + ": ", person[chosenFields[4]])}</p>
-                <img src={props.flags.has(person.uid)? orange_flag : unflagged} onClick={(e)=>{props.clickFlag(person.uid); e.stopPropagation();}} className="flag" alt="Flag"/>
+                <img src={renderFlag(person.uid)} onClick={(e)=>{props.clickFlag(person.uid); e.stopPropagation();}} className="flag" alt="Flag"/>
                 <button className="saveField" onClick={(e)=>{props.editToggle(); e.stopPropagation();}}>Save</button>
               </div>
             </div>
@@ -368,7 +384,7 @@ export function GridView(props) {
                 <img src={minus_symbol} className="minus" onClick={(e)=>{minusToggle2(); e.stopPropagation();}} /><p className="scard-detail-edit">{generateField(fields[chosenFields[1]] + ": ", person[chosenFields[1]])}</p>
                 <img src={minus_symbol} className="minus" onClick={(e)=>{minusToggle3(); e.stopPropagation();}} /><p className="scard-detail-edit">{generateField(fields[chosenFields[2]] + ": ", person[chosenFields[2]])}</p>
                 <img src={minus_symbol} className="minus" onClick={(e)=>{minusToggle4(); e.stopPropagation();}} /><p className="scard-detail-edit">{generateField(fields[chosenFields[3]] + ": ", person[chosenFields[3]])}</p>
-                <img src={props.flags.has(person.uid)? orange_flag : unflagged} onClick={(e)=>{props.clickFlag(person.uid); e.stopPropagation();}} className="flag" alt="Flag"/>
+                <img src={renderFlag(person.uid)} onClick={(e)=>{props.clickFlag(person.uid); e.stopPropagation();}} className="flag" alt="Flag"/>
                 <div className="scard-edit-buttons">
                   <button className="saveField" onClick={(e)=>{props.editToggle(); e.stopPropagation();}}>Save</button>
                   <Select className="scard-edit" options={getFieldOptions()} onChange={dropdownToggle} />
@@ -388,7 +404,7 @@ export function GridView(props) {
                 <img src={minus_symbol} className="minus" onClick={(e)=>{minusToggle1(); e.stopPropagation();}} /><p className="scard-detail-edit">{generateField(fields[chosenFields[0]] + ": ", person[chosenFields[0]])}</p>
                 <img src={minus_symbol} className="minus" onClick={(e)=>{minusToggle2(); e.stopPropagation();}} /><p className="scard-detail-edit">{generateField(fields[chosenFields[1]] + ": ", person[chosenFields[1]])}</p>
                 <img src={minus_symbol} className="minus" onClick={(e)=>{minusToggle3(); e.stopPropagation();}} /><p className="scard-detail-edit">{generateField(fields[chosenFields[2]] + ": ", person[chosenFields[2]])}</p>
-                <img src={props.flags.has(person.uid)? orange_flag : unflagged} onClick={(e)=>{props.clickFlag(person.uid); e.stopPropagation();}} className="flag" alt="Flag"/>
+                <img src={renderFlag(person.uid)} onClick={(e)=>{props.clickFlag(person.uid); e.stopPropagation();}} className="flag" alt="Flag"/>
                 <div className="scard-edit-buttons">
                   <button className="saveField" onClick={(e)=>{props.editToggle(); e.stopPropagation();}}>Save</button>
                   <Select className="scard-edit" options={getFieldOptions()} onChange={dropdownToggle} />
@@ -407,7 +423,7 @@ export function GridView(props) {
                 <p className="card-title scard-detail">{(person.firstName !== undefined ? person.firstName + " " : "") + (person.lastName !== undefined ? person.lastName + " " : "")}</p>
                 <img src={minus_symbol} className="minus" onClick={(e)=>{minusToggle1(); e.stopPropagation();}} /><p className="scard-detail-edit">{generateField(fields[chosenFields[0]] + ": ", person[chosenFields[0]])}</p>
                 <img src={minus_symbol} className="minus" onClick={(e)=>{minusToggle2(); e.stopPropagation();}} /><p className="scard-detail-edit">{generateField(fields[chosenFields[1]] + ": ", person[chosenFields[1]])}</p>
-                <img src={props.flags.has(person.uid)? orange_flag : unflagged} onClick={(e)=>{props.clickFlag(person.uid); e.stopPropagation();}} className="flag" alt="Flag"/>
+                <img src={renderFlag(person.uid)} onClick={(e)=>{props.clickFlag(person.uid); e.stopPropagation();}} className="flag" alt="Flag"/>
                 <div className="scard-edit-buttons">
                   <button className="saveField" onClick={(e)=>{props.editToggle(); e.stopPropagation();}}>Save</button>
                   <Select className="scard-edit" options={getFieldOptions()} onChange={dropdownToggle} />
@@ -425,7 +441,7 @@ export function GridView(props) {
               <div className="scard-content">
                 <p className="card-title scard-detail">{(person.firstName !== undefined ? person.firstName + " " : "") + (person.lastName !== undefined ? person.lastName + " " : "")}</p>
                 <img src={minus_symbol} className="minus" onClick={(e)=>{minusToggle1(); e.stopPropagation();}} /><p className="scard-detail-edit">{generateField(fields[chosenFields[0]] + ": ", person[chosenFields[0]])}</p>
-                <img src={props.flags.has(person.uid)? orange_flag : unflagged} onClick={(e)=>{props.clickFlag(person.uid); e.stopPropagation();}} className="flag" alt="Flag"/>
+                <img src={renderFlag(person.uid)} onClick={(e)=>{props.clickFlag(person.uid); e.stopPropagation();}} className="flag" alt="Flag"/>
                 <div className="scard-edit-buttons">
                   <button className="saveField" onClick={(e)=>{props.editToggle(); e.stopPropagation();}}>Save</button>
                   <Select className="scard-edit" options={getFieldOptions()} onChange={dropdownToggle} />
@@ -442,7 +458,7 @@ export function GridView(props) {
             <div className="card" key={person.uid}>
               <div className="scard-content">
                 <p className="card-title scard-detail">{(person.firstName !== undefined ? person.firstName + " " : "") + (person.lastName !== undefined ? person.lastName + " " : "")}</p>
-                <img src={props.flags.has(person.uid)? orange_flag : unflagged} onClick={(e)=>{props.clickFlag(person.uid); e.stopPropagation();}} className="flag" alt="Flag"/>
+                <img src={renderFlag(person.uid)} onClick={(e)=>{props.clickFlag(person.uid); e.stopPropagation();}} className="flag" alt="Flag"/>
                 <div className="scard-edit-buttons">
                   <button className="saveField" onClick={(e)=>{props.editToggle(); e.stopPropagation();}}>Save</button>
                   <Select className="scard-edit" options={getFieldOptions()} onChange={dropdownToggle} />

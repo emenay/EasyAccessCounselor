@@ -16,6 +16,8 @@ import filter_outline from "../assets/essentials_icons/svg/controls-4.svg"
 import filter_icon from "../assets/essentials_filled/svg/controls-4-filled.svg"
 import unflagged from "../assets/essentials_icons/svg/flag-3.svg";
 import orange_flag from "../assets/essentials_filled/svg/flag-3-filled.svg";
+import purple_flag from "../assets/essentials_filled/svg/flag-3-filled-purple.svg";
+import green_flag from "../assets/essentials_filled/svg/flag-3-filled-green.svg";
 
 // OLD Icon Imports
 // import filter_outline from "../assets/filter_outline.png";
@@ -54,6 +56,8 @@ class StudentProfilesPage extends React.Component{
             filters: {}, // filters: object mapping field to a set of values to be filtered by
             searchString: "",
             flagSet: new Set(), // Set of uids for students flagged
+            flagSetPurp: new Set(), // Set of uids for students flagged purple
+            flagSetGreen: new Set(), // Set of uids for students flagged green
             flagToggle: false, // True if only viewing flagged student
             sortIcon: unsorted_icon,
             lastCohort: null, // Used to not repeatedly load same cohort when cohort switched/reloaded
@@ -79,10 +83,14 @@ class StudentProfilesPage extends React.Component{
             })
             .then(data => {
                 let flagSet = new Set();
+                let flagSetGreen = new Set();
+                let flagSetPurp = new Set();
                 let filterGroupItems = Object.assign(this.state.filterGroupItems, {});
                 data.forEach(person=>{
                     // Checking to see if flagged
-                    if (person.flagged === true) flagSet.add(person.uid);
+                    if (person.flagged === "orange") flagSet.add(person.uid);
+                    else if (person.flagged === "green") flagSetGreen.add(person.uid);
+                    else if (person.flagged === "purple") flagSetPurp.add(person.uid);
                     // Add option to filter if not previously seen
                     for (const field in filterGroupItems){
                         if (person[field] !== undefined) filterGroupItems[field].add(person[field]);
@@ -91,6 +99,8 @@ class StudentProfilesPage extends React.Component{
                 this.setState({
                     data: data,
                     flagSet: flagSet,
+                    flagSetGreen : flagSetGreen,
+                    flagSetPurp: flagSetPurp,
                     lastCohort: this.context.state.selectedCohort,
                     filterGroupItems: filterGroupItems
                 });
@@ -195,11 +205,21 @@ class StudentProfilesPage extends React.Component{
         if (this.state.flagSet.has(id)) {
             var new_set = new Set(this.state.flagSet);
             new_set.delete(id);
-            this.setState({flagSet: new_set});
+            this.setState({flagSet: new_set, flagSetGreen: this.state.flagSetGreen.add(id)});
+            isFlagged = "green";
+        } else if (this.state.flagSetGreen.has(id)){
+            var new_set = new Set(this.state.flagSetGreen);
+            new_set.delete(id);
+            this.setState({flagSetGreen: new_set, flagSetPurp: this.state.flagSetPurp.add(id)});
+            isFlagged = "purple";
+        } else if (this.state.flagSetPurp.has(id)) {
+            var new_set = new Set(this.state.flagSetPurp);
+            new_set.delete(id);
+            this.setState({flagSetPurp: new_set});
             isFlagged = false;
         } else {
             this.setState({flagSet: this.state.flagSet.add(id)})
-            isFlagged = true;
+            isFlagged = "orange";
         }
         // Update database to reflect change
         if (this.context.state.user) 
@@ -216,7 +236,15 @@ class StudentProfilesPage extends React.Component{
 
     // Changes if flag toggled
     flagToggle = () => {
-        this.setState({flagToggle: !this.state.flagToggle});
+        if (this.state.flagToggle === false) {
+            this.setState({flagToggle: "orange"});
+        } else if (this.state.flagToggle == "orange") {
+            this.setState({flagToggle: "green"});
+        } else if (this.state.flagToggle == "green") {
+            this.setState({flagToggle: "purple"});
+        } else {
+            this.setState({flagToggle: false});
+        }
     }
 
     // Called when clicking out of the student information popup modal, allows exit
@@ -253,9 +281,34 @@ class StudentProfilesPage extends React.Component{
         this.setState({filters: new_filter});
     }
 
+    // Helper function to group by flag
+    flagFilter = (data, toggle) => {
+        if (toggle == "orange") {
+            return data.filter(person => {return this.state.flagSet.has(person.uid)});
+        } else if (toggle == "green") {
+            return data.filter(person => {return this.state.flagSetGreen.has(person.uid)});
+        } else if (toggle == "purple") {
+            return data.filter(person => {return this.state.flagSetPurp.has(person.uid)});
+        }
+        return data;
+    }
+
+    // Helper function to return flag image to be displayed
+    renderFlag = (toggle) => {
+        if (toggle == "orange") {
+            return orange_flag
+        } else if (toggle == "green") {
+            return green_flag
+        } else if (toggle == "purple") {
+            return purple_flag
+        } else {
+            return unflagged;
+        }
+    }
+
     render(){
         let data = this.state.data;
-        data = this.state.flagToggle ? data.filter(person => {return this.state.flagSet.has(person.uid)}) : data;
+        data = this.state.flagToggle===false ? data: this.flagFilter(data,this.state.flagToggle);
         if (this.state.searchString !== "") {
             data = data.filter(person=>{
                 if ((person.firstName && person.firstName.toLowerCase().slice(0, this.state.searchString.length) === this.state.searchString.toLowerCase()) || (person.lastName && person.lastName.toLowerCase().slice(0, this.state.searchString.length) === this.state.searchString.toLowerCase())){
@@ -282,12 +335,12 @@ class StudentProfilesPage extends React.Component{
         return <div className="profiles-content">
             <div className="profiles-header">
                 <input type="text" id="myInput" onKeyUp={this.changeSearchString} placeholder="Search for Students.." />
-                <button className="flag-button" onClick={this.flagToggle}><img className="flag-image" alt="Select flagged fields icon" src={this.state.flagToggle? orange_flag : unflagged} /></button>
+                <button className="flag-button" onClick={this.flagToggle}><img className="flag-image" alt="Select flagged fields icon" src={this.renderFlag(this.state.flagToggle)} /></button>
                 <DropdownFilterMenu fields={this.filterFields} filterGroupItems={this.state.filterGroupItems} deleteFilter={this.deleteFilter} changeEvent={this.changeFilter} filters={this.state.filters} icon={Object.keys(this.state.filters).length === 0 ? filter_outline : filter_icon} />
                 <DropdownSortMenu fields={this.sortFields} changeEvent={this.changeSort} icon={this.state.sortIcon}/>
             </div>
             {this.state.selectedCard && <StudentDetailsModal flagged={this.state.flagSet.has(this.state.selectedCard.uid)} exitModal={this.exitModal} cohort={this.context.state.selectedCohort} info={this.state.selectedCard} cardUpdate = {this.cardUpdate} />}
-            <GridView data={data} clickCard={this.clickCard} clickFlag={this.clickFlag} flags={this.state.flagSet} inEditMode={this.state.inEditMode} editToggle={this.editToggle} cohort={this.context.state.selectedCohort} />
+            <GridView data={data} clickCard={this.clickCard} clickFlag={this.clickFlag} flags={this.state.flagSet} flagsGreen={this.state.flagSetGreen} flagsPurp={this.state.flagSetPurp} inEditMode={this.state.inEditMode} editToggle={this.editToggle} cohort={this.context.state.selectedCohort} />
         </div>
     }
 }
