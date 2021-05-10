@@ -39,7 +39,7 @@
     "reactjs-popup": "^2.0.4",
     "read-excel-file": "^4.0.6",
     "sinon": "^9.2.1",
-    "stripe": "^8.118.0"
+    "stripe": "^8.148.0"
   },
   "scripts": {
     "start": "react-scripts start",
