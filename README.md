@@ -18,6 +18,8 @@ If you get any "unable to resolve _____ module" errors, try deleting the node_mo
 ## Testing
 Testing is in need of a lot of work. Currently there are some boiler plate tests implemented that mostly focus on comparing snapshots of the code the previous dev team worked on but these tests are far from robust and it is strongly recommended that the next dev team devotes a considerable amount of time to implementing proper testing. Tests are simply run using the command `npm test` while in the project directory in terminal, for coverage reports use `npm test -- --coverage`
 
+Note: As of May 2021, several of the tests written in 2020 fail due to snapshots not matching after our edits to several files
+
 ## Deployment
 ### By: Jeremy Venerella
 * Install the Firebase CLI tools
