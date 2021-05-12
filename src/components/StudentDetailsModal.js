@@ -21,13 +21,14 @@ function CollegeListPanel(props){
     const [editing, changeEditing] = useState(false);
     const [editedFields, setEditedFields] = useState([]);
 
-
+    // helper function to be called when user types in input text box
     const updateValue = (e, field) => {
         let newEditedField = [...editedFields];
         newEditedField.push({[field]: e.target.value});
         setEditedFields(newEditedField);
     }
 
+    // calls parent function to reload card once save Changes button clicked
     const setEdit = (editing, saveChanges=false) => {
         changeEditing(editing);
 
@@ -36,51 +37,17 @@ function CollegeListPanel(props){
             props.cardUpdate(props.info.uid,editedFields,props.info);
 
             setEditedFields([]);
-            
-        // No need to refresh from DB if we just updated it with local data
+         
         }
     }
 
-
+    // static arrays with information in the two columns
     let info = props.info;
     let collegeArr = ["major", "major2", "region", "collegeSize", "collegeSetting", "collegeDiversity", 
                         "collegeDiversityTypes", "religion", "rotc", "athletics"]
     let studentArr = ["state", "zipcode", "gpa", "classRank", "act", "sat", "efc", "payMismatch"];
-  /*  return (
-        <div className="college-panel">
-            <div className="college-side">
-                <b>College Information</b>
 
-                <p><span>Field of Study 1: </span>{InputFieldElement(editing,info.major)}</p>
-                <p><span>Field of Study 2: </span>{InputFieldElement(editing,info.major2)}</p>
-                <p><span>Region: </span>{InputFieldElement(editing,info.region)}</p>
-                <p><span>College Size: </span>{InputFieldElement(editing,info.collegeSize)}</p>
-                <p><span>College Setting: </span>{InputFieldElement(editing,info.collegeSetting)}</p>
-                <p><span>College Diversity (% URM:) </span>{InputFieldElement(editing,info.collegeDiversity)}</p>
-                <p><span>College Diversity (Type): </span>{InputFieldElement(editing,info.collegeDiversityTypes)}</p>
-                <p><span>Religion: </span>{InputFieldElement(editing,info.religion)}</p>
-                <p><span>Military/ROTC: </span>{InputFieldElement(editing,info.rotc)}</p>
-                <p><span>Athletics: </span>{InputFieldElement(editing,info.athletics)}</p>
-            </div>
-            <div className="college-side">
-                <b>Student Information</b>
-                <p><span>State: </span>{InputFieldElement(editing,info.state)}</p>
-                <p><span>Zip: </span>{InputFieldElement(editing,info.zipcode)}</p>
-                <p><span>GPA: </span>{InputFieldElement(editing,info.gpa)}</p>
-                <p><span>Class Rank: </span>{InputFieldElement(editing,info.classRank)}</p>
-                <p><span>ACT: </span>{InputFieldElement(editing,info.act)}</p>
-                <p><span>SAT: </span>{InputFieldElement(editing,info.sat)}</p>
-                <p><span>EFC: </span>{InputFieldElement(editing,info.efc)}</p>
-                <p><span>Ability to Pay Mismatch: </span>{InputFieldElement(editing,info.payMismatch)}</p>
-            </div>
-
-
-                
-            <button className="studentdetails-editbutton" onClick={()=>changeEditing(!editing)}/>
-        </div>
-    );*/
-
-
+    // Create arrays of div elements for two columns
     let collegeInfo = [];
     for (let i=0; i<collegeArr.length; i++) {
         const processedField = processField(collegeArr[i]);
@@ -109,6 +76,7 @@ function CollegeListPanel(props){
         );
     }
 
+    // return two columns as arrays along with button
     return (<div className="college-panel">
                 <div className="college-side">
                     <b>College Information</b>
@@ -133,6 +101,7 @@ function CollegeListPanel(props){
         );
 }
 
+// helper component to allow for editing of different tabs
 function InputFieldElement(props) {
     return(<p> 
         <span>{props.field}: </span> 
@@ -261,13 +230,14 @@ function ApplicationProcessPanel(props) {
     const [editing, changeEditing] = useState(false);
     const [editedFields, setEditedFields] = useState([]);
 
-
+    // update value based on user typing in input text box
     const updateValue = (e, field) => {
         let newEditedField = [...editedFields];
         newEditedField.push({[field]: e.target.value});
         setEditedFields(newEditedField);
     }
 
+    // call parent function to reload card/update database
     const setEdit = (editing, saveChanges=false) => {
         changeEditing(editing);
 
@@ -277,10 +247,10 @@ function ApplicationProcessPanel(props) {
 
             setEditedFields([]);
             
-        // No need to refresh from DB if we just updated it with local data
         }
     }
 
+    // very static array for column
     let info = props.info;
     let fieldSwap = {
         visits  :  "Visits",
@@ -307,7 +277,7 @@ function ApplicationProcessPanel(props) {
         cssProfile  :  "CSS Profile",
     };
 
-    // let preappArr = ["visits"];
+    // Static arrays for different checklist portions
     let appArr = ["earlyApplications", "regularApplications", "essays", "testing", "counselorRecommendations",
                     "resume"];
     let postappArr = ["results", "admittedSchools", "rejectedSchools", "waitlistedSchools", "decision"];
@@ -315,6 +285,8 @@ function ApplicationProcessPanel(props) {
     let finaidArr = ["appFeeWaiver", "fafsaStatus", "fafsaVerification", "financialAidAwardLetters", 
                         "financialAidAppeal", "cssProfile"];
 
+    
+    // Series of for loops to create different arrays for different checklist sections
     let appInfo = [];
     for (let i=0; i<appArr.length; i++) {
         const processedField = fieldSwap[appArr[i]];
@@ -372,7 +344,7 @@ function ApplicationProcessPanel(props) {
     }
 
 
-
+    // Final div with arrays in checklist and buttons
     return(
         <div className="appproc-panel">
             <div className="appproc-col">
@@ -432,6 +404,7 @@ function ApplicationProcessPanel(props) {
     );
 }
 
+// Generate the card information depending on editing or not
 function GenInfoCol(props) {
     let col = [];
     for (let i=0; i<props.fields.length; i++) {
@@ -449,14 +422,6 @@ function GenInfoCol(props) {
        
     }
 
-   /* if (props.editing === true) {
-        col.push(<div className="modalFieldElement">
-        
-       <p key="addCustomField"><span>Add New Field: </span>
-            <input type="text" onChange={(e) => props.addField(e)} />
-        </p>    
-    </div>)
-    }*/
 
     return <div className="fieldsSection">
             {col}
@@ -474,6 +439,7 @@ function GenInfoCol(props) {
         </div>
 }
 
+// component for minus button + input text that shows when pressing edit button
 function ModalFieldElement(props) {
     return <div className="modalFieldElement">
         {/* If the user is in edit mode, display button to remove this field element */}
@@ -589,6 +555,8 @@ function HandleEditInit(props) {
         </div>
 }
 
+
+// Simpler editbutton component for just editing
 function ToggleEditButton(props) {
     return <div>
         <button data-tip="Customize what fields are shown" className="studentdetails-editbutton" onClick={()=> {props.setEdit(true)}}>
@@ -598,6 +566,7 @@ function ToggleEditButton(props) {
     </div>
 }
 
+// More complex edit button component with add fields button next to it and popup code
 function ToggleEditButtonInit(props) {
     return <div class="card-buttons">
         <button data-tip="Customize what fields are shown" className="studentdetails-editbutton" onClick={()=> {props.setEdit(true)}}>
@@ -781,16 +750,19 @@ function GeneralInformationPanel(props) {
         setFieldsData(newFieldsData);
     }
 
+    // Helper function for the edit field future
     const updateValue = (e, field) => {
         let newEditedField = [...editedFields];
         newEditedField.push({[field]: e.target.value});
         setEditedFields(newEditedField);
     }
 
+    // Helper function for add custom field feature
     const addField = (e) => {
         setNewField(e.target.value);
     }
 
+    // Function to add custom field to database
     const submitAddedField = () => {
         if (newField != null && newField != "") {
             db.collection("student_counselors").doc(props.cohort)
@@ -854,9 +826,9 @@ function GeneralInformationPanel(props) {
 class StudentDetailsModal extends React.Component {
     constructor(props) {
         super(props);
-        this.tabs = ["General Information", "Notes", "College List", "Application Process"];
+        this.tabs = ["General", "Notes", "College List", "Checklist"];
         this.state = {
-            selectedTab: "General Information",
+            selectedTab: "General",
             selectedCohort: this.props.cohort
         }
 
@@ -869,9 +841,9 @@ class StudentDetailsModal extends React.Component {
 
     whichPanel = (tab) => {
         switch(tab){
-            case 'General Information':
+            case 'General':
                 return <GeneralInformationPanel fields={this.state.fields} cohort={this.props.cohort} info={this.props.info} cardUpdate={this.props.cardUpdate} />
-            case 'Application Process':
+            case 'Checklist':
                 return <ApplicationProcessPanel info={this.props.info} cardUpdate={this.props.cardUpdate} />
             case 'Notes':
                 return <NotesPanel info={this.props.info}/>

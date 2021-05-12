@@ -250,6 +250,9 @@ class DataEntrySelection extends React.Component {
                     return;
                 }
                 
+                // base fields to set visible for new cohorts
+                const fieldsVisPref =  ["id", "firstName", "lastName","goal", "gpa",  "sat", "act","classRank",  "efc", "payMismatch",  "major",  "major2",  "safetyColleges",  "targetColleges",  "reachColleges", "additions"];
+
                 // Upload the cohort
                 // TODO: CohortCode unneccessary?????
                 db.collection("cohortCode").add({
@@ -257,7 +260,7 @@ class DataEntrySelection extends React.Component {
                     studentID: "1231251"
                   }).then(function(docRef) {
                     
-                    db.collection("student_counselors").doc(docRef.id).set({name:name,counselor:firebase.auth().currentUser.uid});
+                    db.collection("student_counselors").doc(docRef.id).set({name:name,counselor:firebase.auth().currentUser.uid, fieldVisPref: fieldsVisPref});
                     return [name, docRef.id];
         
                 })

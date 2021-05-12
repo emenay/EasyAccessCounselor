@@ -130,7 +130,7 @@ class StudentProfilesPage extends React.Component{
                 addedNames.push(j);
             }
         }
-        //console.log(obj);
+        
         for (var i in obj) {
         db.collection("student_counselors").doc(this.context.state.selectedCohort).collection("students").doc(uid).update(obj)
         .then( () => {
@@ -144,9 +144,8 @@ class StudentProfilesPage extends React.Component{
 
 
         this.clickCard({...info, ...obj});
-        //console.log({...info, ...obj});
+ 
         this.getCohortData(true);
-        //console.log(this.state.data);
         });
         break;
         }
@@ -221,6 +220,7 @@ class StudentProfilesPage extends React.Component{
             this.setState({flagSet: this.state.flagSet.add(id)})
             isFlagged = "orange";
         }
+
         // Update database to reflect change
         if (this.context.state.user) 
         {

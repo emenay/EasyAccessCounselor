@@ -230,7 +230,7 @@ export function GridView(props) {
 
   // renders flag based on flagset
   const renderFlag = (id) => {
-    console.log(props);
+  
     if (props.flags.has(id)) {
       return orange_flag;
     } else if (props.flagsGreen.has(id)) {

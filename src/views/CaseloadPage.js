@@ -534,7 +534,9 @@ class CaseloadPage extends React.Component {
   updateFieldFilter(fields) {
     let visibleColumns = this.fields.concat(this.state.addedFields);
     visibleColumns = visibleColumns.filter((colDef) => {
-      return fields.includes(colDef.field) || colDef.checkboxSelection;
+      if (colDef !== null) {
+        return fields.includes(colDef.field) || colDef.checkboxSelection;
+      }
     });
     this.setState({
       visibleColumns: this.rowSelectionCol.concat(visibleColumns),
