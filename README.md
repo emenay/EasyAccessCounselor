@@ -16,7 +16,7 @@ Last updated November 8, 2020.
 If you get any "unable to resolve _____ module" errors, try deleting the node_modules folder and running `npm install` again.
 
 ## Testing
-Testing is in need of a lot of work, there were no tests implemented prior to November 2020. Currently there are some boiler plate tests implemented that mostly focus on comparing snapshots of the code the previous dev team worked on but these tests are far from robust and it is strongly recommended that the next dev team devotes a considerable amount of time to implementing proper testing. Tests are simply run using the command `npm test` while in the project directory in terminal, for coverage reports use `npm test -- --coverage`
+Testing is in need of a lot of work. Currently there are some boiler plate tests implemented that mostly focus on comparing snapshots of the code the previous dev team worked on but these tests are far from robust and it is strongly recommended that the next dev team devotes a considerable amount of time to implementing proper testing. Tests are simply run using the command `npm test` while in the project directory in terminal, for coverage reports use `npm test -- --coverage`
 
 ## Deployment
 ### By: Jeremy Venerella
@@ -66,9 +66,10 @@ For an unrestricted development process, be sure to get access to the associated
 * `Stripe`:  
     * Message team leads, Rocky Moon, or Vitaly Radsky for login information
 Previous contributions and work logs: 
-* `COMP 523 Team Website`: https://tarheels.live/unceasyaccessteam/
+* `COMP 523 Fall 2020 Team Website`: https://tarheels.live/unceasyaccessteam/
     * For details on weekly accomplishments, see the Journals page.
     * For details on course work associated with the Easy Access project, see the Deliverables page.
+* `COMP 523 Spring 2021 Team Website`: https://tarheels.live/comp523teamm/
 
 ### Contributing Resources
 * [Intro to React Tutorial](https://reactjs.org/tutorial/tutorial.html)
@@ -78,10 +79,11 @@ Previous contributions and work logs:
 ## Authors
 * Easy Access: Vitaly Radsky and Rocky Moon
 * CS + Social Good
-* COMP 523: Tanner Bluhm, Ian Dershem, Kipp Williams
+* COMP 523 Fall 2020: Tanner Bluhm, Ian Dershem, Kipp Williams
+* COMP 523 Spring 2021: Hannah Bodnar, Gaurachandra Das, Nada Rahmouni, Emily Stahle
 
 ## License
 Copyright 2020 Vitaly Radsky
 
 ## Acknowledgements
-Thank you to Adam Franzen for being an excellent mentor to the COMP 523 team while working on this project!
+Thank you to Adam Franzen and Mike Lake for being excellent mentors to the COMP 523 teams while working on this project!
