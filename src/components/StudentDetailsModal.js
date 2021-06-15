@@ -259,8 +259,11 @@ function ApplicationProcessPanel(props) {
         essays  :  "Essays",
         testing  :  "Testing",
         counselorRecommendations  :  "Counselor Recommendations",
-        resume  :  "Teacher Recommendations",
+        portfolio: "Portfolio",
+        resume  :  "Resume",
+        teacherRecommendations: "Teacher Recommendations",
         results  :  "Results",
+        deferredSchools : "Deferred Schools",
         admittedSchools  :  "Admitted Schools",
         rejectedSchools  :  "Rejected Schools",
         waitlistedSchools  :  "Waitlisted Schools",
@@ -270,26 +273,70 @@ function ApplicationProcessPanel(props) {
         summerPrograms  :  "Summer Programs",
         housing  :  "Housing",
         appFeeWaiver  :  "App Fee Waiver",
-        fafsaStatus  :  "FAFSA Status",
+        satOrActWaiver: "SAT/ACT Fee Waiver",
+        fafsa  :  "FAFSA",
         fafsaVerification  :  "FAFSA Verification",
         financialAidAwardLetters  :  "Financial Aid Award Letters",
         financialAidAppeal  :  "Financial Aid Appeal",
+        fallScholarships: "Fall Scholarships",
+        springScholarships: "Spring Scholarships",
+        loanCounseling: "Loan Counseling",
         cssProfile  :  "CSS Profile",
+        fourYearPlan: "4 year Plan",
+        jrYearCourse: "Jr Year Course Selection",
+        srYearSelect: "Sr Year Selection",
+        balancedCollegeList: "Create Balanced College List",
+        createCollegeAccount: "Create College Account",
+
+
     };
 
     // Static arrays for different checklist portions
-    let appArr = ["earlyApplications", "regularApplications", "essays", "testing", "counselorRecommendations",
-                    "resume"];
-    let postappArr = ["results", "admittedSchools", "rejectedSchools", "waitlistedSchools", "decision"];
-    let postdesArr = ["deposit", "orientation", "summerPrograms", "housing"];
-    let finaidArr = ["appFeeWaiver", "fafsaStatus", "fafsaVerification", "financialAidAwardLetters", 
-                        "financialAidAppeal", "cssProfile"];
+    let grades9to11 = ["fourYearPlan", "summerPrograms", "jrYearCourse"];
+    let preApp = ["srYearSelect", "visits", "balancedCollegeList"];
+    let theApp = ["appFeeWaiver", "earlyApplications", "regularApplications", "essays", "satOrActWaiver", "testing", "counselorRecommendations", "teacherRecommendations", "resume", "portfolio"];
+    let appresults = ["deferredSchools", "admittedSchools", "rejectedSchools", "waitlistedSchools", "decision"];
+    let postdesArr = ["deposit", "createCollegeAccount", "orientation", "summerPrograms", "housing"];
+    let finaidArr = ["fafsa", "cssProfile", "fallScholarships"];
+    let finaidSpring = ["fafsaVerification", "springScholarships", "financialAidAwardLetters", "financialAidAppeal", "loanCounseling"];
+    
+    
 
     
     // Series of for loops to create different arrays for different checklist sections
+
+    let nineToElevenInfo = [];
+    for (let i = 0; i < grades9to11.length; i++) {
+        const processedField = fieldSwap[grades9to11[i]];
+        if (processedField) nineToElevenInfo.push(
+            <InputFieldElement 
+                editing={editing}  
+                field={processedField} 
+                info={info[processedField]} 
+                dbField={processedField}
+                updateValue={updateValue}
+            />
+
+        );
+    }
+
+    let preappInfo = [];
+    for (let i=0; i<preApp.length; i++) {
+        const processedField = fieldSwap[preApp[i]];
+        if (processedField) preappInfo.push(
+            <InputFieldElement 
+                editing={editing}  
+                field={processedField} 
+                info={info[processedField]} 
+                dbField={processedField}
+                updateValue={updateValue}
+            />
+        );
+    }
+
     let appInfo = [];
-    for (let i=0; i<appArr.length; i++) {
-        const processedField = fieldSwap[appArr[i]];
+    for (let i=0; i<theApp.length; i++) {
+        const processedField = fieldSwap[theApp[i]];
         if (processedField) appInfo.push(
             <InputFieldElement 
                 editing={editing}  
@@ -302,8 +349,8 @@ function ApplicationProcessPanel(props) {
     }
 
     let postappInfo = [];
-    for (let i=0; i<postappArr.length; i++) {
-        const processedField = fieldSwap[postappArr[i]];
+    for (let i=0; i<appresults.length; i++) {
+        const processedField = fieldSwap[appresults[i]];
         if (processedField) postappInfo.push(
             <InputFieldElement 
                 editing={editing}  
@@ -343,37 +390,44 @@ function ApplicationProcessPanel(props) {
         );
     }
 
+    let finaidInfoSpring = [];
+    for (let i=0; i<finaidSpring.length; i++) {
+        const processedField = fieldSwap[finaidSpring[i]];
+        if (processedField) finaidInfoSpring.push(
+            <InputFieldElement 
+                editing={editing}  
+                field={processedField} 
+                info={info[processedField]} 
+                dbField={processedField}
+                updateValue={updateValue}
+            />
+        );
+    }
+
 
     // Final div with arrays in checklist and buttons
     return(
         <div className="appproc-panel">
             <div className="appproc-col">
+
                 <div className="app-group">
                     <div className="app-circle" />
-                    <b>Pre-Application</b>
-                   {<InputFieldElement 
-                        editing={editing}  
-                        field="Visits" 
-                        info={info["Visits"]} 
-                        dbField="Visits"
-                        updateValue={updateValue}
-                        />}
-                    {<InputFieldElement 
-                        editing={editing}  
-                        field="Balanced College List" 
-                        info={info["Balanced College List"]} 
-                        dbField="Balanced College List"
-                        updateValue={updateValue}
-                        />}
+                    <b>Grades 9-11</b>
+                    {nineToElevenInfo}
                 </div>
                 <div className="app-group">
                     <div className="app-circle" />
-                    <b>Application Checklist</b>
+                    <b>Pre-Application</b>
+                    {preappInfo}
+                </div>
+                <div className="app-group">
+                    <div className="app-circle" />
+                    <b>The Application</b>
                     {appInfo}
                 </div>
                 <div className="app-group">
                     <div className="app-circle" />
-                    <b>Post-Application</b>
+                    <b>Application Results</b>
                     {postappInfo}
                 </div>
                 <div className="app-group">
@@ -383,12 +437,25 @@ function ApplicationProcessPanel(props) {
                 </div>
                 <div className="app-group" style={{borderLeft: "0px"}}>
                     <div className="app-circle" />
-                    <b>Graduation!</b>
+                    <b>College Enrollment!</b>
                 </div>
             </div>
             <div className="appproc-col">
-                <b>Financial Aid</b>
-                {finaidInfo}
+
+                <div className="app-group">
+                    <div className="app-circle" />
+                    <b>Financial Aid</b>
+                    <br/>
+                    <b>Fall</b>
+                    
+                    {finaidInfo}
+                </div>
+                <div className="app-group" style={{borderLeft: "0px"}}>
+                    <div className="app-circle" />
+                    <b>Spring</b>
+                    {finaidInfoSpring}
+                </div>
+
             </div>
             
             <HandleEdit
