@@ -10,6 +10,25 @@ import firebase from 'firebase/app';
 import ReactTooltip from 'react-tooltip';
 import Select from 'react-select';
 import Popup from 'reactjs-popup';
+import '../css/CaseloadPage.css';
+import 'bulma/css/bulma.css';
+import '../css/CollegeListPage.css';
+import PropTypes from 'prop-types';
+import { makeStyles, useTheme } from '@material-ui/core/styles';
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableHead from '@material-ui/core/TableHead';
+import TableContainer from '@material-ui/core/TableContainer';
+import TableFooter from '@material-ui/core/TableFooter';
+import TablePagination from '@material-ui/core/TablePagination';
+import TableRow from '@material-ui/core/TableRow';
+import IconButton from '@material-ui/core/IconButton';
+import Paper from '@material-ui/core/Paper';
+import FirstPageIcon from '@material-ui/icons/FirstPage';
+import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
+import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
+import LastPageIcon from '@material-ui/icons/LastPage';
 //import 'reactjs-popup/dist/index.css';
 
 
@@ -43,16 +62,73 @@ function CollegeListPanel(props){
 
     // static arrays with information in the two columns
     let info = props.info;
+    console.log("as;dflkjase;lrj");
+    console.log(info);
     let collegeArr = ["major", "major2", "region", "collegeSize", "collegeSetting", "collegeDiversity", 
                         "collegeDiversityTypes", "religion", "rotc", "athletics"]
     let studentArr = ["state", "zipcode", "gpa", "classRank", "act", "sat", "efc", "payMismatch"];
 
+    let column1 = ["GPA", "Class Rank", "SAT", "ACT", "EFC", "Ability to Pay"];
+    let column2 = ["Major 1", "Major 2", "Distance from Home", "Region", "College Size"];
+    let column3 = ["College Diversity", "College Type", "Religion", "Military/ROTC", "Athletics", "Notes"];
     // Create arrays of div elements for two columns
+
+    let col1info = [];
+    for (let i=0; i<column1.length; i++) {
+        const processedField = processField(column1[i]);
+        if (processedField) col1info.push(
+            <div>
+            <InputFieldElement 
+                editing={editing}  
+                field={processedField} 
+                info={info[column1[i]]} 
+                dbField={column1[i]}
+                updateValue={updateValue}
+            />
+            <br/>
+            </div>
+        );
+    }
+
+    let col2info = [];
+    for (let i=0; i<column2.length; i++) {
+        const processedField = processField(column2[i]);
+        if (processedField) col2info.push(
+            <div>
+            <InputFieldElement 
+                editing={editing}  
+                field={processedField} 
+                info={info[column2[i]]} 
+                dbField={column2[i]}
+                updateValue={updateValue}
+            />
+            <br/>
+            </div>
+        );
+    }
+
+    let col3info = [];
+    for (let i=0; i<column3.length; i++) {
+        const processedField = processField(column3[i]);
+        if (processedField) col3info.push(
+            <div>
+            <InputFieldElement 
+                editing={editing}  
+                field={processedField} 
+                info={info[column3[i]]} 
+                dbField={column3[i]}
+                updateValue={updateValue}
+            />
+            <br/>
+            </div>
+        );
+    }
+
     let collegeInfo = [];
     for (let i=0; i<collegeArr.length; i++) {
         const processedField = processField(collegeArr[i]);
         if (processedField) collegeInfo.push(
-            <InputFieldElement 
+            <InputFieldElement
                 editing={editing}  
                 field={processedField} 
                 info={info[collegeArr[i]]} 
@@ -75,17 +151,30 @@ function CollegeListPanel(props){
             />
         );
     }
-
+    let x = [1,2,3,4,5];
+    let y = [3, 4,5,6,7];
+    let z = [2,3,4,5,6];
     // return two columns as arrays along with button
-    return (<div className="college-panel">
+    return (<div>
+
+            <div className="college-panel">
+                <b>Information</b>
+            </div>
+
+            <div className="college-panel">
                 <div className="college-side">
-                    <b>College Information</b>
-                    {collegeInfo}
+                    
+                    {col1info}
+                </div>
+               
+                <div className="college-side">
+
+                    {col2info}
                 </div>
 
                 <div className="college-side">
-                    <b>Student Information</b>
-                    {studentInfo}
+                    
+                    {col3info}
                 </div>
 
          <HandleEdit
@@ -97,15 +186,49 @@ function CollegeListPanel(props){
                             addedFields={addedFields}
                             addNewPreferences={addToPreferences}*/
                         />
-        </div>
+            </div>
+
+
+            <TableContainer component={Paper}>
+        <Table aria-label="custom pagination table">
+          <TableHead>
+              
+            <TableRow>
+            
+            </TableRow>
+          </TableHead>
+
+          <TableBody>
+          
+  
+          
+          </TableBody>
+          <TableFooter>
+              
+            <TableRow>
+            
+            </TableRow>
+          </TableFooter>
+        </Table>
+      </TableContainer>
+        
+        
+    </div>
+    
+    
         );
 }
 
 // helper component to allow for editing of different tabs
 function InputFieldElement(props) {
     return(<p> 
-        <span>{props.field}: </span> 
-        {props.editing===true ? <input type="text" defaultValue={props.info} onChange={(e) => props.updateValue(e,props.dbField)} />:props.info}
+        <span> {props.field}: </span> 
+        {props.editing===true 
+            ? <input type="text" defaultValue={props.info} onChange={(e) => props.updateValue(e,props.dbField)} />:
+            
+            props.info === undefined || props.info === ""
+                ? <text>{props.info }</text> :
+            <text class = "fieldElement" style = {{color: "white"}}>{props.info}</text>}
         </p>);
 }
 
@@ -137,6 +260,7 @@ function HandleEdit(props) {
                 <EditButton editExit={props.setEdit} info={props.info} /> :
                 <ToggleEditButton setEdit={props.setEdit}/>
             }
+            
         </div>
 }
 
