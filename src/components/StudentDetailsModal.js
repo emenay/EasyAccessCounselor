@@ -62,8 +62,7 @@ function CollegeListPanel(props){
 
     // static arrays with information in the two columns
     let info = props.info;
-    console.log("as;dflkjase;lrj");
-    console.log(info);
+    
     let collegeArr = ["major", "major2", "region", "collegeSize", "collegeSetting", "collegeDiversity", 
                         "collegeDiversityTypes", "religion", "rotc", "athletics"]
     let studentArr = ["state", "zipcode", "gpa", "classRank", "act", "sat", "efc", "payMismatch"];
@@ -151,10 +150,8 @@ function CollegeListPanel(props){
             />
         );
     }
-    let x = [1,2,3,4,5];
-    let y = [3, 4,5,6,7];
-    let z = [2,3,4,5,6];
     // return two columns as arrays along with button
+
     return (<div>
 
             <div className="college-panel">
@@ -189,7 +186,7 @@ function CollegeListPanel(props){
             </div>
 
 
-            <TableContainer component={Paper}>
+            {/* <TableContainer component={Paper}>
         <Table aria-label="custom pagination table">
           <TableHead>
               
@@ -210,7 +207,24 @@ function CollegeListPanel(props){
             </TableRow>
           </TableFooter>
         </Table>
-      </TableContainer>
+      </TableContainer> */}
+    <input type = "text" placeholder = "Search Colleges"></input>
+    <div class = "grid-container" id = "grid-container">
+        <div class = "grid-item"> </div>
+        <div class = "grid-item"> Affordable </div>
+        <div class = "grid-item"> Maybe Affordable </div>
+        <div class = "grid-item"> Reach </div>
+        <div class = "grid-item"> some stuff </div>
+        <div class = "grid-item"> some stuff </div>
+        <div class = "grid-item"> Target </div>
+        <div class = "grid-item"> some stuff </div>
+        <div class = "grid-item"> some stuff </div>
+        <div class = "grid-item"> Safety </div>
+        <div class = "grid-item"> some stuff </div>
+        <div class = "grid-item"> some stuff </div>
+
+    </div>
+      
         
         
     </div>
@@ -221,6 +235,7 @@ function CollegeListPanel(props){
 
 // helper component to allow for editing of different tabs
 function InputFieldElement(props) {
+    var x = {color: 'white', textAlign: 'right'};
     return(<p> 
         <span> {props.field}: </span> 
         {props.editing===true 
@@ -228,7 +243,7 @@ function InputFieldElement(props) {
             
             props.info === undefined || props.info === ""
                 ? <text>{props.info }</text> :
-            <text class = "fieldElement" style = {{color: "white"}}>{props.info}</text>}
+            <text class = "fieldElement" style = {x}>{props.info}</text>}
         </p>);
 }
 
