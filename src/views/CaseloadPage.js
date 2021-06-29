@@ -241,7 +241,7 @@ class CaseloadPage extends React.Component {
       {field: "safetyColleges", headerName: 'Safety Colleges', comparator: this.comparator, sortable: true, filter: true, editable: true, resizable: true},
       {field: "targetColleges", headerName: 'Target Colleges', comparator: this.comparator, sortable: true, filter: true, editable: true, resizable: true},
       {field: "reachColleges", headerName: 'Reach Colleges', comparator: this.comparator, sortable: true, editable: true, filter: true, resizable: true},
-      {field: "additions", headerName: 'Counselor Additions', comparator: this.comparator, sortable: true, editable: true, filter: true, resizable: true}
+      {field: "additions", headerName: 'Counselor Notes', comparator: this.comparator, sortable: true, editable: true, filter: true, resizable: true}
     ];
 
     this.columnOptions = [];
@@ -269,7 +269,7 @@ class CaseloadPage extends React.Component {
       {field: "safetyColleges", headerName: 'Safety Colleges', comparator: this.comparator, sortable: true, filter: true, editable: true, resizable: true},
       {field: "targetColleges", headerName: 'Target Colleges', comparator: this.comparator, sortable: true, filter: true, editable: true, resizable: true},
       {field: "reachColleges", headerName: 'Reach Colleges', comparator: this.comparator, sortable: true, editable: true, filter: true, resizable: true},
-      {field: "additions", headerName: 'Counselor Additions', comparator: this.comparator, sortable: true, editable: true, filter: true, resizable: true}
+      {field: "additions", headerName: 'Counselor Notes', comparator: this.comparator, sortable: true, editable: true, filter: true, resizable: true}
     ];
     return {
       modules: AllCommunityModules, 
