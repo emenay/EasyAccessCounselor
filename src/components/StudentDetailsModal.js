@@ -12,6 +12,7 @@ import Select from 'react-select';
 import Popup from 'reactjs-popup';
 //import 'reactjs-popup/dist/index.css';
 
+// Github testing
 
 // File controls popups for student profiles page
 // Each tab in the popup is a component "panel" displayed by the StudentDetailsModal
