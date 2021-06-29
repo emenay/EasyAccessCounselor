@@ -338,7 +338,7 @@ class FieldMatches extends React.Component {
             "Safety Colleges": "safetyColleges",
             "Target Colleges": "targetColleges",
             "Reach Colleges": "reachColleges",
-            "Counselor Additions": "additions",
+            "Counselor Notes": "additions",
             "Want to Attend (Region)": "region",
             "College Size": "collegeSize",
             "College Setting": "collegeSetting",
