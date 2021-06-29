@@ -816,8 +816,6 @@ function GeneralInformationPanel(props) {
                     
                 </div>
             </div>
-            <hr class="mainFieldBreak"></hr>
-            <p><span>Counselor Notes: </span>{info["Latest Note"]}</p>
         </div>
 }
 
@@ -866,7 +864,6 @@ class StudentDetailsModal extends React.Component {
                     <p className="studentdetails-title">{this.props.info.firstName + " " + this.props.info.lastName}</p>
                     {this.props.flagged ? <img className="studentdetails-flag" src={orange_flag} alt="flagged icon"/> : null}
                 </div>
-                <p className="studentdetails-goal">{"Goal: " + (typeof this.props.info.goal === "undefined" ? "--" : this.props.info.goal)}</p>
                 <div className="studentdetails-innerbackground"/>
                 <div className={"studentdetails-content" + (this.state.selectedTab === "Notes" ? " caseloadContents" : "")}>
                     {this.whichPanel(this.state.selectedTab)}
