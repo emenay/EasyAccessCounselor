@@ -12,6 +12,9 @@ import Select from 'react-select';
 import Popup from 'reactjs-popup';
 import $ from 'jquery';
 import "../css/CollegeListPage.css";
+import {colleges} from './CollegeArray.js';
+import { AutoSuggest } from 'react-autosuggestions';
+import TextField from '@material-ui/core/TextField';
 //import 'reactjs-popup/dist/index.css';
 
 // Make an edit for testBranch
@@ -28,6 +31,7 @@ function CollegeListPanel(props){
     const [addedFields, setAddedFields] = useState(false); // keeps track of whether user is in process of adding field
     // const [editedFields, setEditedFields] = useState([]); // keeps track of changes made to existing field values
     const [newField, setNewField] = useState("");
+    const [make, setMake] = React.useState();
 
     useEffect(() => {refreshWithDatabase();}, []) // Basically, on render pull field preferences from database
 
@@ -153,6 +157,7 @@ function CollegeListPanel(props){
     var x = {width: "100%"}
     var y = {visibility: "hidden"}
     var z = {textAlign: "center"}
+    var collegesObject = {colleges: colleges}
     return (
     <div>
         <HandleEdit
@@ -280,7 +285,16 @@ function CollegeListPanel(props){
                 <div>
                 OR
                 </div>
-                <input></input>
+                <form >
+            <AutoSuggest
+                name="Colleges"
+                options={colleges}
+                handleChange={setMake}
+                value={make}
+            />
+            <button>Submit</button>
+        </form>
+
 
             </td>
         </tr>
@@ -290,6 +304,7 @@ function CollegeListPanel(props){
 
 
     </table>
+
     </div>
          
         );
