@@ -10,6 +10,9 @@ import firebase from 'firebase/app';
 import ReactTooltip from 'react-tooltip';
 import Select from 'react-select';
 import Popup from 'reactjs-popup';
+import { PinDropSharp } from '@material-ui/icons';
+import { Modal } from '@material-ui/core';
+import $ from 'jquery';
 //import 'reactjs-popup/dist/index.css';
 
 
@@ -19,25 +22,96 @@ import Popup from 'reactjs-popup';
 // Fairly static panel displaying info on college list
 function CollegeListPanel(props){
     const [editing, changeEditing] = useState(false);
+    const [fieldsData, setFieldsData] = useState(false);
+    const [addedFields, setAddedFields] = useState(false);
     const [editedFields, setEditedFields] = useState([]);
+    const [newField, setNewField] = useState("");
 
-    // helper function to be called when user types in input text box
+    useEffect(() => {refreshWithDatabase();}, [])
+
+        const refreshWithDatabase = () => {
+        db.collection("student_counselors").doc(props.cohort).get()
+        .then(resp => {
+            if (resp.data().genInfoFields) {
+                setFieldsData(resp.data().genInfoFields);
+            } else {
+                /*
+                If it's the user's first time accessing a student profile card, set their preferences to any data that is
+                available for the selected student
+                */
+                let kindaDefaultFields = Object.keys(props.info);
+                // Remove uid from default fields
+                if ("uid" in kindaDefaultFields) kindaDefaultFields.splice(findEltinArr(kindaDefaultFields, "uid"), 1);
+
+                // update database
+                db.collection("student_counselors").doc(props.cohort).update({
+                    genInfoFields: kindaDefaultFields
+                });
+
+                setFieldsData(kindaDefaultFields); // update state
+            }
+        })
+        .catch(err => {console.log(err);})
+    }
+
+    // Function to change whether or not the user is in editing mode and whether or not
+    // to save the changes they made. Save in this case means to update the database
+    // with a new set of preferences for what fields are to be shown
+    const setEdit = (editing, saveChanges=false) => {
+        changeEditing(editing);
+
+        if (saveChanges) {
+            db.collection("student_counselors").doc(props.cohort).update({
+                genInfoFields: fieldsData
+            });
+            
+            props.cardUpdate(props.info.uid,editedFields,props.info);
+
+            setEditedFields([]);
+            
+        // No need to refresh from DB if we just updated it with local data
+        } else {
+            refreshWithDatabase();
+        }
+    }
+
+    // Helper function for the delete field feature
+    const removeFromPreferences = (field) => {
+        fieldsData.splice(findEltinArr(fieldsData, field), 1);
+        let newFieldsData = [...fieldsData];
+        setFieldsData(newFieldsData);
+    }
+
+    // Helper function for the add field feature
+/*     const addToPreferences = (newField) => {
+        let newFieldsData = [...fieldsData]
+        newFieldsData.push(newField);
+        setFieldsData(newFieldsData);
+    } */
+
+    // Helper function for the edit field future
     const updateValue = (e, field) => {
         let newEditedField = [...editedFields];
         newEditedField.push({[field]: e.target.value});
         setEditedFields(newEditedField);
     }
 
-    // calls parent function to reload card once save Changes button clicked
-    const setEdit = (editing, saveChanges=false) => {
-        changeEditing(editing);
+    // Helper function for add custom field feature
+    const addField = (e) => {
+        setNewField(e.target.value);
+    }
 
-        if (saveChanges) {
-            
-            props.cardUpdate(props.info.uid,editedFields,props.info);
+    // Function to add custom field to database
+    const submitAddedField = () => {
+        if (newField != null && newField != "") {
+            db.collection("student_counselors").doc(props.cohort)
+                .update({addedFields: firebase.firestore.FieldValue.arrayUnion(newField),  genInfoFields: firebase.firestore.FieldValue.arrayUnion(newField), fieldVisPref: firebase.firestore.FieldValue.arrayUnion(newField)})
+                .catch(error=>console.log(error));
 
-            setEditedFields([]);
-         
+                //addToPreferences(newField);
+                
+                setNewField("");
+                
         }
     }
 
@@ -88,14 +162,16 @@ function CollegeListPanel(props){
                     {studentInfo}
                 </div>
 
-         <HandleEdit
+         <HandleEditInit
                             info={info}
                             setEdit={setEdit} 
                             editing={editing} 
-                        /*    fieldsData={fieldsData} 
-                            setAddedFields={changeAddedFields} 
+                            fieldsData={fieldsData} 
+                            setAddedFields={setAddedFields} 
                             addedFields={addedFields}
-                            addNewPreferences={addToPreferences}*/
+                            //addNewPreferences={addToPreferences}
+                            addField={addField}
+                            submitAddedField={submitAddedField}
                         />
         </div>
         );
@@ -135,7 +211,7 @@ function HandleEdit(props) {
         return <div className="editSuite">
             {props.editing === true ? 
                 <EditButton editExit={props.setEdit} info={props.info} /> :
-                <ToggleEditButton setEdit={props.setEdit}/>
+                <ToggleEditButton setEdit={props.setEdit} addToPreferences={props.addToPreferences}/>
             }
         </div>
 }
@@ -229,6 +305,31 @@ function NotesPanel(props) {
 function ApplicationProcessPanel(props) {
     const [editing, changeEditing] = useState(false);
     const [editedFields, setEditedFields] = useState([]);
+    const [fieldsData, setFieldsData] = useState(false);
+    const [newField, setNewField] = useState("");
+
+    useEffect(() => {refreshWithDatabase();}, []) // Basically, on render pull field preferences from database
+
+    const refreshWithDatabase = () => {
+        db.collection("student_counselors").doc(props.cohort).get()
+        .then(resp => {
+            if (resp.data().appFields) {
+                setFieldsData(resp.data().appFields);
+            } else {
+                /*
+                If it's the user's first time accessing a student profile card, set their preferences to any data that is
+                available for the selected student
+                */
+                let kindaDefaultFields = Object.keys(origAppFields);
+
+                // update database
+                db.collection("student_counselors").doc(props.cohort).update({
+                    appFields: origAppFields
+                });
+            }
+        })
+        .catch(err => {console.log(err);})
+    }
 
     // update value based on user typing in input text box
     const updateValue = (e, field) => {
@@ -250,52 +351,101 @@ function ApplicationProcessPanel(props) {
         }
     }
 
+/*     const removeFromPreferences1 = (field) => {
+        fieldsData.splice(findEltinArr(fieldsData, field), 1);
+        let newFieldsData = [...fieldsData];
+        setFieldsData(newFieldsData);
+    } */
+
+    let removeFromPreferences = (e) => {
+        console.log(e);
+        $('#' + e).toggle()
+    }
+
+    let addInfo = [];
+
+    const addToPreferences = () => {
+        fieldSwap.set(newField, newField);
+        addArr[addArr.length]=newField;
+        console.log(newField);
+        console.log(addArr[0]);
+        console.log(fieldSwap.get(addArr[0]));
+         addInfo.push(
+            <ModalFieldElement
+                editing={editing}
+                removeFromPreferences={removeFromPreferences}
+                field={fieldSwap.get(addArr[(addArr.length)-1])}
+                info={info[fieldSwap.get(addArr[(addArr.length)-1])]}
+                dbField={addArr[(addArr.length)-1]}
+                updateValue={updateValue}
+            />) 
+        setNewField("");
+    }
+
+    const addField = (e) => {
+        setNewField(e.target.value);
+    }
+
+    const submitAddedField = () => {
+        if (newField != null && newField != "") {
+            addToPreferences(newField);
+            setNewField("");
+        }
+    } 
+
     // very static array for column
     let info = props.info;
-    let fieldSwap = {
-        visits  :  "Visits",
-        earlyApplications  :  "Early Applications",
-        regularApplications  :  "Regular Applications",
-        essays  :  "Essays",
-        testing  :  "Testing",
-        counselorRecommendations  :  "Counselor Recommendations",
-        resume  :  "Teacher Recommendations",
-        results  :  "Results",
-        admittedSchools  :  "Admitted Schools",
-        rejectedSchools  :  "Rejected Schools",
-        waitlistedSchools  :  "Waitlisted Schools",
-        decision  :  "Student Decision",
-        deposit  :  "Deposit",
-        orientation  :  "Orientation",
-        summerPrograms  :  "Summer Programs",
-        housing  :  "Housing",
-        appFeeWaiver  :  "App Fee Waiver",
-        fafsaStatus  :  "FAFSA Status",
-        fafsaVerification  :  "FAFSA Verification",
-        financialAidAwardLetters  :  "Financial Aid Award Letters",
-        financialAidAppeal  :  "Financial Aid Appeal",
-        cssProfile  :  "CSS Profile",
-    };
+
+    const fieldSwap = new Map();
+    fieldSwap.set("visits", "Visits");
+    fieldSwap.set("earlyApplications", "Early Applications");
+    fieldSwap.set("regularApplications", "Regular Applications");
+    fieldSwap.set("essays", "Essays");
+    fieldSwap.set("testing", "Testing");
+    fieldSwap.set("counselorRecommendations", "Counselor Recommendations");
+    fieldSwap.set("resume", "Teacher Recommendations");
+    fieldSwap.set("results", "Results");
+    fieldSwap.set("admitttedSchools", "Admitted Schools");
+    fieldSwap.set("rejectedSchools", "Rejected Schools");
+    fieldSwap.set("waitlistedSchools", "Waitlisted Schools");
+    fieldSwap.set("decision", "Student Decision");
+    fieldSwap.set("deposit", "Deposit");
+    fieldSwap.set("orientation", "Orientation");
+    fieldSwap.set("summerPrograms", "Summer Programs");
+    fieldSwap.set("housing", "Housing");
+    fieldSwap.set("appFeeWaiver", "App Fee Waiver");
+    fieldSwap.set("fafsaStatus", "FAFSA Status");
+    fieldSwap.set("fafsaVerification", "FAFSA Verification");
+    fieldSwap.set("financialAidAwardLetters", "Financial Aid Award Letters");
+    fieldSwap.set("financialAidAppeal", "Financial Aid Appeal");
+    fieldSwap.set("ccsProfile", "CCS Profile");
 
     // Static arrays for different checklist portions
+    let origAppFields = ["earlyApplications", "regularApplications", "essays", "testing", "counselorRecommendations",
+    "resume", "results", "admittedSchools", "rejectedSchools", "waitlistedSchools", "decision", "deposit", "orientation", "summerPrograms", "housing",
+    "appFeeWaiver", "fafsaStatus", "fafsaVerification", "financialAidAwardLetters", 
+                        "financialAidAppeal", "cssProfile"]
+
     let appArr = ["earlyApplications", "regularApplications", "essays", "testing", "counselorRecommendations",
                     "resume"];
     let postappArr = ["results", "admittedSchools", "rejectedSchools", "waitlistedSchools", "decision"];
     let postdesArr = ["deposit", "orientation", "summerPrograms", "housing"];
     let finaidArr = ["appFeeWaiver", "fafsaStatus", "fafsaVerification", "financialAidAwardLetters", 
                         "financialAidAppeal", "cssProfile"];
+    let addArr = [];
 
     
     // Series of for loops to create different arrays for different checklist sections
     let appInfo = [];
     for (let i=0; i<appArr.length; i++) {
-        const processedField = fieldSwap[appArr[i]];
+        const processedField = fieldSwap.get(appArr[i]);
         if (processedField) appInfo.push(
-            <InputFieldElement 
-                editing={editing}  
+            <ModalFieldElement 
+                editing={editing} 
+                removeFromPreferences={removeFromPreferences} 
                 field={processedField} 
                 info={info[processedField]} 
-                dbField={processedField}
+                dbField={appArr[i]}
                 updateValue={updateValue}
             />
         );
@@ -303,13 +453,14 @@ function ApplicationProcessPanel(props) {
 
     let postappInfo = [];
     for (let i=0; i<postappArr.length; i++) {
-        const processedField = fieldSwap[postappArr[i]];
+        const processedField = fieldSwap.get(postappArr[i]);
         if (processedField) postappInfo.push(
-            <InputFieldElement 
-                editing={editing}  
-                field={processedField} 
+            <ModalFieldElement 
+                editing={editing} 
+                removeFromPreferences={removeFromPreferences} 
+                field={processedField}  
                 info={info[processedField]} 
-                dbField={processedField}
+                dbField={postappArr[i]}
                 updateValue={updateValue}
             />
         );
@@ -317,13 +468,14 @@ function ApplicationProcessPanel(props) {
 
     let postdesInfo = [];
     for (let i=0; i<postdesArr.length; i++) {
-        const processedField = fieldSwap[postdesArr[i]];
+        const processedField = fieldSwap.get(postdesArr[i]);
         if (processedField) postdesInfo.push(
-            <InputFieldElement 
+            <ModalFieldElement 
                 editing={editing}  
+                removeFromPreferences={removeFromPreferences}
                 field={processedField} 
                 info={info[processedField]} 
-                dbField={processedField}
+                dbField={postdesArr[i]}
                 updateValue={updateValue}
             />
         );
@@ -331,18 +483,33 @@ function ApplicationProcessPanel(props) {
 
     let finaidInfo = [];
     for (let i=0; i<finaidArr.length; i++) {
-        const processedField = fieldSwap[finaidArr[i]];
+        const processedField = fieldSwap.get(finaidArr[i]);
         if (processedField) finaidInfo.push(
-            <InputFieldElement 
+            <ModalFieldElement 
                 editing={editing}  
+                removeFromPreferences={removeFromPreferences}
                 field={processedField} 
                 info={info[processedField]} 
-                dbField={processedField}
+                dbField={finaidArr[i]}
                 updateValue={updateValue}
             />
         );
     }
 
+    //let addInfo = [];
+/*     for (let i=0; i<addArr.length; i++) {
+        const processedField = fieldSwap.get(addArr[i]);
+        if (processedField) addInfo.push(
+            <ModalFieldElement
+                editing={editing}
+                removeFromPreferences={removeFromPreferences}
+                field={processedField}
+                info={info[processedField]}
+                dbField={addArr[i]}
+                updateValue={updateValue}
+            />
+        );
+    } */
 
     // Final div with arrays in checklist and buttons
     return(
@@ -351,18 +518,21 @@ function ApplicationProcessPanel(props) {
                 <div className="app-group">
                     <div className="app-circle" />
                     <b>Pre-Application</b>
-                   {<InputFieldElement 
-                        editing={editing}  
-                        field="Visits" 
-                        info={info["Visits"]} 
-                        dbField="Visits"
+                       {<ModalFieldElement
+                        editing={editing}
+                        removeFromPreferences={removeFromPreferences}
+                        field="Visits"
+                        info={info["Visits"]}
+                        dbField="visits"
                         updateValue={updateValue}
                         />}
-                    {<InputFieldElement 
+
+                        {<ModalFieldElement 
                         editing={editing}  
+                        removeFromPreferences={removeFromPreferences}
                         field="Balanced College List" 
                         info={info["Balanced College List"]} 
-                        dbField="Balanced College List"
+                        dbField="balancedCollegeList"
                         updateValue={updateValue}
                         />}
                 </div>
@@ -386,19 +556,31 @@ function ApplicationProcessPanel(props) {
                     <b>Graduation!</b>
                 </div>
             </div>
-            <div className="appproc-col">
-                <b>Financial Aid</b>
-                {finaidInfo}
-            </div>
+
             
-            <HandleEdit
+            <div>
+                <div className="app-group">
+                    <b>Financial Aid</b>
+                    {finaidInfo}
+                </div>
+                <div className="app-group">
+                    <b>Additional Information</b>
+                    {addInfo}
+                </div> 
+            </div>
+
+            
+            <HandleEditInit
                             info={info}
                             setEdit={setEdit} 
-                            editing={editing} 
-                        /*    fieldsData={fieldsData} 
-                            setAddedFields={changeAddedFields} 
-                            addedFields={addedFields}
-                            addNewPreferences={addToPreferences}*/
+                            editing={editing}
+                            addToPreferences={addToPreferences}
+                            addField={addField}
+                            submitAddedField = {submitAddedField}
+
+                            //fieldsData={fieldsData} 
+                            //addNewPreferences={addToPreferences}
+                            //removeFromPreferences={removeFromPreferences}
                         />
         </div>
     );
@@ -441,7 +623,7 @@ function GenInfoCol(props) {
 
 // component for minus button + input text that shows when pressing edit button
 function ModalFieldElement(props) {
-    return <div className="modalFieldElement">
+    return <div className="modalFieldElement" id={props.dbField}>
         {/* If the user is in edit mode, display button to remove this field element */}
         {props.editing === true && 
             <button onClick={() => props.removeFromPreferences(props.dbField)}>
@@ -503,7 +685,6 @@ function getNonVisibleOptions(totalOptions, visibleOptions) {
     return nonVisibleOptions;
 }
 
-
 // Helper parent component to contain buttons to display in editing mode
 function EditButtonSuite(props) {
     const nonVisibleOptions = getNonVisibleOptions(Object.keys(props.info), props.fields);
@@ -518,7 +699,7 @@ function EditButtonSuite(props) {
                     <img src={plus_symbol} />
                     Add Item
                 </button> 
-                <ReactTooltip place="top" type="dark" effect="solid" />
+                <ReactTooltip place="top" type="dark" effect="solid"/>
             </div>
             :
             <button className="addFieldButton" onClick={()=> {props.setAddedFields(true);}}>
@@ -558,11 +739,46 @@ function HandleEditInit(props) {
 
 // Simpler editbutton component for just editing
 function ToggleEditButton(props) {
-    return <div>
+    /* return <div>
         <button data-tip="Customize what fields are shown" className="studentdetails-editbutton" onClick={()=> {props.setEdit(true)}}>
             <img src={edit_symbol} alt="edit"/>
         </button>
         <ReactTooltip place="top" type="dark" effect="solid"/>
+    </div> */
+
+    return <div class="card-buttons">
+        <button data-tip="Customize what fields are shown" className="studentdetails-editbutton" onClick={()=> {props.setEdit(true)}}>
+            <img src={edit_symbol} alt="edit"/>
+        </button>
+        <ReactTooltip place="top" type="dark" effect="solid"/>
+        {props.editing != true && <Popup
+                        trigger={<button className="button" data-tip="Add a custom field" className="studentdetails-editbutton"><img src={plus_symbol} alt="edit"/></button>}
+                        modal
+                        nested
+                    >
+                        {close => (
+                        <div className="popup-modal">
+                            <p><span>Add New Field: </span>
+                            <input type="text" onChange={(e) => props.addToPreferences(e)} />
+                            </p>
+                            <div className="saveCancelContainer">
+                                <button 
+                                    className="save" 
+                                    onClick={() => {
+                                        close();
+                                    }}
+                                >Add Field</button>
+                                <button 
+                                    className="cancel" 
+                                    onClick={() => {
+                                        console.log('modal closed ');
+                                        close();
+                                        }}
+                                >Cancel</button>
+                            </div>
+                        </div>
+                        )}
+                    </Popup> }
     </div>
 }
 
@@ -844,11 +1060,11 @@ class StudentDetailsModal extends React.Component {
             case 'General':
                 return <GeneralInformationPanel fields={this.state.fields} cohort={this.props.cohort} info={this.props.info} cardUpdate={this.props.cardUpdate} />
             case 'Checklist':
-                return <ApplicationProcessPanel info={this.props.info} cardUpdate={this.props.cardUpdate} />
+                return <ApplicationProcessPanel info={this.props.info} cardUpdate={this.props.cardUpdate} fields={this.state.fields} cohort={this.props.cohort} />
             case 'Notes':
                 return <NotesPanel info={this.props.info}/>
             case 'College List':
-                return <CollegeListPanel info={this.props.info} cardUpdate={this.props.cardUpdate} />
+                return <CollegeListPanel fields={this.state.fields} cohort={this.props.cohort} info={this.props.info} cardUpdate={this.props.cardUpdate} />
             default:
                 return <p>Hello world</p>
         }
