@@ -14,6 +14,7 @@ import $ from 'jquery';
 import "../css/CollegeListPage.css";
 //import 'reactjs-popup/dist/index.css';
 
+// Make an edit for testBranch
 
 // File controls popups for student profiles page
 // Each tab in the popup is a component "panel" displayed by the StudentDetailsModal
@@ -913,7 +914,7 @@ function processField(field) {
         safetyColleges  :  "Safety Colleges",
         targetColleges  :  "Target Colleges",
         reachColleges  :  "Reach Colleges",
-        additions  :  "Counselor Additions",
+        additions  :  "Counselor Notes",
         region  :  "Want to Attend (Region)",
         distanceFromHome: "Distance From Home",
         collegeSize  :  "College Size",
@@ -940,6 +941,8 @@ function GeneralInformationPanel(props) {
 
     useEffect(() => {refreshWithDatabase();}, []) // Basically, on render pull field preferences from database
 
+    console.log(props.info)
+
     const refreshWithDatabase = () => {
         db.collection("student_counselors").doc(props.cohort).get()
         .then(resp => {
@@ -951,10 +954,17 @@ function GeneralInformationPanel(props) {
                 available for the selected student
                 */
                 let kindaDefaultFields = Object.keys(props.info);
+
+                // kindaDefaultFields.push('Counselor Notes')
+                // console.log(kindaDefaultFields)
+
                 // Remove uid from default fields
                 if ("uid" in kindaDefaultFields) kindaDefaultFields.splice(findEltinArr(kindaDefaultFields, "uid"), 1);
 
+                // Add Counselor Notes in a similar way above
+
                 // update database
+                // add Counselor Notes into Firebase here
                 db.collection("student_counselors").doc(props.cohort).update({
                     genInfoFields: kindaDefaultFields
                 });
@@ -1066,8 +1076,7 @@ function GeneralInformationPanel(props) {
                     
                 </div>
             </div>
-            <hr class="mainFieldBreak"></hr>
-            <p><span>Counselor Notes: </span>{info["Latest Note"]}</p>
+
         </div>
 }
 
@@ -1116,7 +1125,6 @@ class StudentDetailsModal extends React.Component {
                     <p className="studentdetails-title">{this.props.info.firstName + " " + this.props.info.lastName}</p>
                     {this.props.flagged ? <img className="studentdetails-flag" src={orange_flag} alt="flagged icon"/> : null}
                 </div>
-                <p className="studentdetails-goal">{"Goal: " + (typeof this.props.info.goal === "undefined" ? "--" : this.props.info.goal)}</p>
                 <div className="studentdetails-innerbackground"/>
                 <div className={"studentdetails-content" + (this.state.selectedTab === "Notes" ? " caseloadContents" : "")}>
                     {this.whichPanel(this.state.selectedTab)}
