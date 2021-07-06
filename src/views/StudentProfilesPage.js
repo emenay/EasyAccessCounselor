@@ -306,6 +306,8 @@ class StudentProfilesPage extends React.Component{
         }
     }
 
+    
+
     render(){
         let data = this.state.data;
         data = this.state.flagToggle===false ? data: this.flagFilter(data,this.state.flagToggle);
