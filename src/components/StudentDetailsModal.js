@@ -10,30 +10,8 @@ import firebase from 'firebase/app';
 import ReactTooltip from 'react-tooltip';
 import Select from 'react-select';
 import Popup from 'reactjs-popup';
-<<<<<<< HEAD
 import $ from 'jquery';
 import "../css/CollegeListPage.css";
-=======
-import '../css/CaseloadPage.css';
-import 'bulma/css/bulma.css';
-import '../css/CollegeListPage.css';
-import PropTypes from 'prop-types';
-import { makeStyles, useTheme } from '@material-ui/core/styles';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableHead from '@material-ui/core/TableHead';
-import TableContainer from '@material-ui/core/TableContainer';
-import TableFooter from '@material-ui/core/TableFooter';
-import TablePagination from '@material-ui/core/TablePagination';
-import TableRow from '@material-ui/core/TableRow';
-import IconButton from '@material-ui/core/IconButton';
-import Paper from '@material-ui/core/Paper';
-import FirstPageIcon from '@material-ui/icons/FirstPage';
-import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
-import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
-import LastPageIcon from '@material-ui/icons/LastPage';
->>>>>>> e0f478030f99186ea84347b9b2ce95f974d523e9
 //import 'reactjs-popup/dist/index.css';
 
 // Make an edit for testBranch
@@ -132,7 +110,6 @@ function CollegeListPanel(props){
     const changeAddedFields = (val) => {setAddedFields(val);}
     // static arrays with information in the two columns
     let info = props.info;
-<<<<<<< HEAD
 
     let affordabilityInfo = ["GPA", "Class Rank", "SAT", "ACT", "EFC", "Ability to Pay"];
     let fitInfo = ["Major 1", "Major 2", "Distance from Home", "Region", "College Size", "College Diversity", "College Type", "Religion", "Military/ROTC", "Athletics"];
@@ -149,74 +126,6 @@ function CollegeListPanel(props){
             
             <InputFieldElement
                 name = {affordabilityInfo[i]} 
-=======
-    
-    let collegeArr = ["major", "major2", "region", "collegeSize", "collegeSetting", "collegeDiversity", 
-                        "collegeDiversityTypes", "religion", "rotc", "athletics"]
-    let studentArr = ["state", "zipcode", "gpa", "classRank", "act", "sat", "efc", "payMismatch"];
-
-    let column1 = ["GPA", "Class Rank", "SAT", "ACT", "EFC", "Ability to Pay"];
-    let column2 = ["Major 1", "Major 2", "Distance from Home", "Region", "College Size"];
-    let column3 = ["College Diversity", "College Type", "Religion", "Military/ROTC", "Athletics", "Notes"];
-    // Create arrays of div elements for two columns
-
-    let col1info = [];
-    for (let i=0; i<column1.length; i++) {
-        const processedField = processField(column1[i]);
-        if (processedField) col1info.push(
-            <div>
-            <InputFieldElement 
-                editing={editing}  
-                field={processedField} 
-                info={info[column1[i]]} 
-                dbField={column1[i]}
-                updateValue={updateValue}
-            />
-            <br/>
-            </div>
-        );
-    }
-
-    let col2info = [];
-    for (let i=0; i<column2.length; i++) {
-        const processedField = processField(column2[i]);
-        if (processedField) col2info.push(
-            <div>
-            <InputFieldElement 
-                editing={editing}  
-                field={processedField} 
-                info={info[column2[i]]} 
-                dbField={column2[i]}
-                updateValue={updateValue}
-            />
-            <br/>
-            </div>
-        );
-    }
-
-    let col3info = [];
-    for (let i=0; i<column3.length; i++) {
-        const processedField = processField(column3[i]);
-        if (processedField) col3info.push(
-            <div>
-            <InputFieldElement 
-                editing={editing}  
-                field={processedField} 
-                info={info[column3[i]]} 
-                dbField={column3[i]}
-                updateValue={updateValue}
-            />
-            <br/>
-            </div>
-        );
-    }
-
-    let collegeInfo = [];
-    for (let i=0; i<collegeArr.length; i++) {
-        const processedField = processField(collegeArr[i]);
-        if (processedField) collegeInfo.push(
-            <InputFieldElement
->>>>>>> e0f478030f99186ea84347b9b2ce95f974d523e9
                 editing={editing}  
                 info={info[dbinfo[i]]} 
                 dbField={[dbinfo[i]]}
@@ -239,40 +148,14 @@ function CollegeListPanel(props){
             
         )
     }
+
     // return two columns as arrays along with button
-<<<<<<< HEAD
     var x = {width: "100%"}
     var y = {visibility: "hidden"}
     var z = {textAlign: "center"}
     return (
     <div>
         <HandleEdit
-=======
-
-    return (<div>
-
-            <div className="college-panel">
-                <b>Information</b>
-            </div>
-
-            <div className="college-panel">
-                <div className="college-side">
-                    
-                    {col1info}
-                </div>
-               
-                <div className="college-side">
-
-                    {col2info}
-                </div>
-
-                <div className="college-side">
-                    
-                    {col3info}
-                </div>
-
-         <HandleEdit
->>>>>>> e0f478030f99186ea84347b9b2ce95f974d523e9
                             info={info}
                             setEdit={setEdit} 
                             editing={editing} 
@@ -281,7 +164,6 @@ function CollegeListPanel(props){
                             addedFields={addedFields}
                             addNewPreferences={addToPreferences}*/
                         />
-<<<<<<< HEAD
 
     <table class = "colListTable" style = {x}>
     <tbody>
@@ -322,35 +204,6 @@ function CollegeListPanel(props){
         
   </table>
   {/* <div class = "grid-container" id = "grid-container">
-=======
-            </div>
-
-
-            {/* <TableContainer component={Paper}>
-        <Table aria-label="custom pagination table">
-          <TableHead>
-              
-            <TableRow>
-            
-            </TableRow>
-          </TableHead>
-
-          <TableBody>
-          
-  
-          
-          </TableBody>
-          <TableFooter>
-              
-            <TableRow>
-            
-            </TableRow>
-          </TableFooter>
-        </Table>
-      </TableContainer> */}
-    <input type = "text" placeholder = "Search Colleges"></input>
-    <div class = "grid-container" id = "grid-container">
->>>>>>> e0f478030f99186ea84347b9b2ce95f974d523e9
         <div class = "grid-item"> </div>
         <div class = "grid-item"> Affordable </div>
         <div class = "grid-item"> Maybe Affordable </div>
@@ -364,7 +217,6 @@ function CollegeListPanel(props){
         <div class = "grid-item"> some stuff </div>
         <div class = "grid-item"> some stuff </div>
 
-<<<<<<< HEAD
     </div> */}
     <br/>
     <br/>
@@ -440,15 +292,6 @@ function CollegeListPanel(props){
     </table>
     </div>
          
-=======
-    </div>
-      
-        
-        
-    </div>
-    
-    
->>>>>>> e0f478030f99186ea84347b9b2ce95f974d523e9
         );
 }
 
@@ -456,7 +299,6 @@ function CollegeListPanel(props){
 
 // helper component to allow for editing of different tabs
 function InputFieldElement(props) {
-<<<<<<< HEAD
     // return(<p> 
     //     <span>{props.field}: </span> 
     //     {props.editing===true ? <input type="text" defaultValue={props.info} onChange={(e) => props.updateValue(e,props.dbField)} />:props.info}
@@ -488,18 +330,11 @@ function InputFieldElement(props) {
         <td>
        <p key={props.info}><span>{props.field} </span>
        {props.editing===true 
-=======
-    var x = {color: 'white', textAlign: 'right'};
-    return(<p> 
-        <span> {props.field}: </span> 
-        {props.editing===true 
->>>>>>> e0f478030f99186ea84347b9b2ce95f974d523e9
             ? <input type="text" defaultValue={props.info} onChange={(e) => props.updateValue(e,props.dbField)} />:
             
             props.info === undefined || props.info === ""
                 ? <text>{props.info }</text> :
             <text class = "fieldElement" style = {x}>{props.info}</text>}
-<<<<<<< HEAD
 
         </p>  
         </td>  
@@ -513,9 +348,6 @@ function InputFieldElement(props) {
 function hide(id) {
 
     $("#" + id).hide();
-=======
-        </p>);
->>>>>>> e0f478030f99186ea84347b9b2ce95f974d523e9
 }
 
 // Helper parent component to contain buttons to display in editing mode
@@ -546,7 +378,6 @@ function HandleEdit(props) {
                 <EditButton editExit={props.setEdit} info={props.info} /> :
                 <ToggleEditButton setEdit={props.setEdit}/>
             }
-            
         </div>
 }
 
@@ -677,11 +508,8 @@ function ApplicationProcessPanel(props) {
         essays  :  "Essays",
         testing  :  "Testing",
         counselorRecommendations  :  "Counselor Recommendations",
-        portfolio: "Portfolio",
-        resume  :  "Resume",
-        teacherRecommendations: "Teacher Recommendations",
+        resume  :  "Teacher Recommendations",
         results  :  "Results",
-        deferredSchools : "Deferred Schools",
         admittedSchools  :  "Admitted Schools",
         rejectedSchools  :  "Rejected Schools",
         waitlistedSchools  :  "Waitlisted Schools",
@@ -691,70 +519,26 @@ function ApplicationProcessPanel(props) {
         summerPrograms  :  "Summer Programs",
         housing  :  "Housing",
         appFeeWaiver  :  "App Fee Waiver",
-        satOrActWaiver: "SAT/ACT Fee Waiver",
-        fafsa  :  "FAFSA",
+        fafsaStatus  :  "FAFSA Status",
         fafsaVerification  :  "FAFSA Verification",
         financialAidAwardLetters  :  "Financial Aid Award Letters",
         financialAidAppeal  :  "Financial Aid Appeal",
-        fallScholarships: "Fall Scholarships",
-        springScholarships: "Spring Scholarships",
-        loanCounseling: "Loan Counseling",
         cssProfile  :  "CSS Profile",
-        fourYearPlan: "4 year Plan",
-        jrYearCourse: "Jr Year Course Selection",
-        srYearSelect: "Sr Year Selection",
-        balancedCollegeList: "Create Balanced College List",
-        createCollegeAccount: "Create College Account",
-
-
     };
 
     // Static arrays for different checklist portions
-    let grades9to11 = ["fourYearPlan", "summerPrograms", "jrYearCourse"];
-    let preApp = ["srYearSelect", "visits", "balancedCollegeList"];
-    let theApp = ["appFeeWaiver", "earlyApplications", "regularApplications", "essays", "satOrActWaiver", "testing", "counselorRecommendations", "teacherRecommendations", "resume", "portfolio"];
-    let appresults = ["deferredSchools", "admittedSchools", "rejectedSchools", "waitlistedSchools", "decision"];
-    let postdesArr = ["deposit", "createCollegeAccount", "orientation", "summerPrograms", "housing"];
-    let finaidArr = ["fafsa", "cssProfile", "fallScholarships"];
-    let finaidSpring = ["fafsaVerification", "springScholarships", "financialAidAwardLetters", "financialAidAppeal", "loanCounseling"];
-    
-    
+    let appArr = ["earlyApplications", "regularApplications", "essays", "testing", "counselorRecommendations",
+                    "resume"];
+    let postappArr = ["results", "admittedSchools", "rejectedSchools", "waitlistedSchools", "decision"];
+    let postdesArr = ["deposit", "orientation", "summerPrograms", "housing"];
+    let finaidArr = ["appFeeWaiver", "fafsaStatus", "fafsaVerification", "financialAidAwardLetters", 
+                        "financialAidAppeal", "cssProfile"];
 
     
     // Series of for loops to create different arrays for different checklist sections
-
-    let nineToElevenInfo = [];
-    for (let i = 0; i < grades9to11.length; i++) {
-        const processedField = fieldSwap[grades9to11[i]];
-        if (processedField) nineToElevenInfo.push(
-            <InputFieldElement 
-                editing={editing}  
-                field={processedField} 
-                info={info[processedField]} 
-                dbField={processedField}
-                updateValue={updateValue}
-            />
-
-        );
-    }
-
-    let preappInfo = [];
-    for (let i=0; i<preApp.length; i++) {
-        const processedField = fieldSwap[preApp[i]];
-        if (processedField) preappInfo.push(
-            <InputFieldElement 
-                editing={editing}  
-                field={processedField} 
-                info={info[processedField]} 
-                dbField={processedField}
-                updateValue={updateValue}
-            />
-        );
-    }
-
     let appInfo = [];
-    for (let i=0; i<theApp.length; i++) {
-        const processedField = fieldSwap[theApp[i]];
+    for (let i=0; i<appArr.length; i++) {
+        const processedField = fieldSwap[appArr[i]];
         if (processedField) appInfo.push(
             <ProcessPanelElement 
                 editing={editing}  
@@ -767,8 +551,8 @@ function ApplicationProcessPanel(props) {
     }
 
     let postappInfo = [];
-    for (let i=0; i<appresults.length; i++) {
-        const processedField = fieldSwap[appresults[i]];
+    for (let i=0; i<postappArr.length; i++) {
+        const processedField = fieldSwap[postappArr[i]];
         if (processedField) postappInfo.push(
             <ProcessPanelElement  
                 editing={editing}  
@@ -808,35 +592,14 @@ function ApplicationProcessPanel(props) {
         );
     }
 
-    let finaidInfoSpring = [];
-    for (let i=0; i<finaidSpring.length; i++) {
-        const processedField = fieldSwap[finaidSpring[i]];
-        if (processedField) finaidInfoSpring.push(
-            <InputFieldElement 
-                editing={editing}  
-                field={processedField} 
-                info={info[processedField]} 
-                dbField={processedField}
-                updateValue={updateValue}
-            />
-        );
-    }
-
 
     // Final div with arrays in checklist and buttons
     return(
         <div className="appproc-panel">
             <div className="appproc-col">
-
-                <div className="app-group">
-                    <div className="app-circle" />
-                    <b>Grades 9-11</b>
-                    {nineToElevenInfo}
-                </div>
                 <div className="app-group">
                     <div className="app-circle" />
                     <b>Pre-Application</b>
-<<<<<<< HEAD
                    {<ProcessPanelElement  
                         editing={editing}  
                         field="Visits" 
@@ -851,18 +614,15 @@ function ApplicationProcessPanel(props) {
                         dbField="Balanced College List"
                         updateValue={updateValue}
                         />}
-=======
-                    {preappInfo}
->>>>>>> e0f478030f99186ea84347b9b2ce95f974d523e9
                 </div>
                 <div className="app-group">
                     <div className="app-circle" />
-                    <b>The Application</b>
+                    <b>Application Checklist</b>
                     {appInfo}
                 </div>
                 <div className="app-group">
                     <div className="app-circle" />
-                    <b>Application Results</b>
+                    <b>Post-Application</b>
                     {postappInfo}
                 </div>
                 <div className="app-group">
@@ -872,25 +632,12 @@ function ApplicationProcessPanel(props) {
                 </div>
                 <div className="app-group" style={{borderLeft: "0px"}}>
                     <div className="app-circle" />
-                    <b>College Enrollment!</b>
+                    <b>Graduation!</b>
                 </div>
             </div>
             <div className="appproc-col">
-
-                <div className="app-group">
-                    <div className="app-circle" />
-                    <b>Financial Aid</b>
-                    <br/>
-                    <b>Fall</b>
-                    
-                    {finaidInfo}
-                </div>
-                <div className="app-group" style={{borderLeft: "0px"}}>
-                    <div className="app-circle" />
-                    <b>Spring</b>
-                    {finaidInfoSpring}
-                </div>
-
+                <b>Financial Aid</b>
+                {finaidInfo}
             </div>
             
             <HandleEdit
