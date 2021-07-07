@@ -6807,3 +6807,4 @@ export const colleges = [
     "University of the Virgin Islands",
     "University of the Virgin Islands-Albert A. Sheen" 
 ]
+
