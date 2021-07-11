@@ -10,6 +10,12 @@ import firebase from 'firebase/app';
 import ReactTooltip from 'react-tooltip';
 import Select from 'react-select';
 import Popup from 'reactjs-popup';
+import $ from 'jquery';
+import "../css/CollegeListPage.css";
+import {colleges} from './CollegeArray.js';
+import { AutoSuggest } from 'react-autosuggestions';
+import TextField from '@material-ui/core/TextField';
+import axios from 'axios';
 //import 'reactjs-popup/dist/index.css';
 
 // Make an edit for testBranch
@@ -19,8 +25,42 @@ import Popup from 'reactjs-popup';
 
 // Fairly static panel displaying info on college list
 function CollegeListPanel(props){
+        
     const [editing, changeEditing] = useState(false);
     const [editedFields, setEditedFields] = useState([]);
+    // const [editing, changeEditing] = useState(false); // keeps track of whether user is in edit mode
+    const [fieldsData, setFieldsData] = useState(false); // keeps track of what fields user wants to see
+    const [addedFields, setAddedFields] = useState(false); // keeps track of whether user is in process of adding field
+    // const [editedFields, setEditedFields] = useState([]); // keeps track of changes made to existing field values
+    const [newField, setNewField] = useState("");
+    const [make, setMake] = React.useState();
+
+    useEffect(() => {refreshWithDatabase();}, []) // Basically, on render pull field preferences from database
+
+    const refreshWithDatabase = () => {
+        db.collection("student_counselors").doc(props.cohort).get()
+        .then(resp => {
+            if (resp.data().genInfoFields) {
+                setFieldsData(resp.data().genInfoFields);
+            } else {
+                /*
+                If it's the user's first time accessing a student profile card, set their preferences to any data that is
+                available for the selected student
+                */
+                let kindaDefaultFields = Object.keys(props.info);
+                // Remove uid from default fields
+                if ("uid" in kindaDefaultFields) kindaDefaultFields.splice(findEltinArr(kindaDefaultFields, "uid"), 1);
+
+                // update database
+                db.collection("student_counselors").doc(props.cohort).update({
+                    genInfoFields: kindaDefaultFields
+                });
+
+                setFieldsData(kindaDefaultFields); // update state
+            }
+        })
+        .catch(err => {console.log(err);})
+    }
 
     // helper function to be called when user types in input text box
     const updateValue = (e, field) => {
@@ -39,57 +79,90 @@ function CollegeListPanel(props){
 
             setEditedFields([]);
          
+        } else {
+            refreshWithDatabase();
         }
     }
 
-    // static arrays with information in the two columns
-    let info = props.info;
-    let collegeArr = ["major", "major2", "region", "collegeSize", "collegeSetting", "collegeDiversity", 
-                        "collegeDiversityTypes", "religion", "rotc", "athletics"]
-    let studentArr = ["state", "zipcode", "gpa", "classRank", "act", "sat", "efc", "payMismatch"];
-
-    // Create arrays of div elements for two columns
-    let collegeInfo = [];
-    for (let i=0; i<collegeArr.length; i++) {
-        const processedField = processField(collegeArr[i]);
-        if (processedField) collegeInfo.push(
-            <InputFieldElement 
-                editing={editing}  
-                field={processedField} 
-                info={info[collegeArr[i]]} 
-                dbField={collegeArr[i]}
-                updateValue={updateValue}
-            />
-        );
+    const removeFromPreferences = (field) => {
+        fieldsData.splice(findEltinArr(fieldsData, field), 1);
+        let newFieldsData = [...fieldsData];
+        setFieldsData(newFieldsData);
     }
 
-    let studentInfo = [];
-    for (let i=0; i<studentArr.length; i++) {
-        const processedField = processField(studentArr[i]);
-        if (processedField) studentInfo.push(
-            <InputFieldElement 
+    const addToPreferences = (newField) => {
+        let newFieldsData = [...fieldsData]
+        newFieldsData.push(newField);
+        setFieldsData(newFieldsData);
+    }
+
+    const addField = (e) => {
+        setNewField(e.target.value);
+    }
+
+    const submitAddedField = () => {
+        if (newField != null && newField != "") {
+            db.collection("student_counselors").doc(props.cohort)
+                .update({addedFields: firebase.firestore.FieldValue.arrayUnion(newField),  genInfoFields: firebase.firestore.FieldValue.arrayUnion(newField), fieldVisPref: firebase.firestore.FieldValue.arrayUnion(newField)})
+                .catch(error=>console.log(error));
+
+                addToPreferences(newField);
+                
+                setNewField("");
+                
+        }
+    }
+
+    const changeAddedFields = (val) => {setAddedFields(val);}
+    // static arrays with information in the two columns
+    let info = props.info;
+
+    let affordabilityInfo = ["GPA", "Class Rank", "SAT", "ACT", "EFC", "Ability to Pay"];
+    let fitInfo = ["Major 1", "Major 2", "Distance from Home", "Region", "College Size", "College Diversity", "College Type", "Religion", "Military/ROTC", "Athletics"];
+    let allinfo = ["GPA", "Class Rank", "SAT", "ACT", "EFC", "Ability to Pay","Major 1", "Major 2", "Distance from Home", "Region", "College Size", "College Diversity", "College Type", "Religion", "Military/ROTC", "Athletics"];
+    var fieldsPref;
+    var fieldsHide;
+    var dbinfo = ["gpa", "classRank", "sat", "act", "efc", "payMismatch"];
+    var dbinfo2 = ["major1", "major2", "distancefromHome", "region", "collegeSize", "collegeDiversity", "collegeType", "religion", "rotc", "athletics"];
+    let count = 0;
+    // 
+    let affordabilityView = [];
+    for (let i = 0; i < dbinfo.length; i++) {
+        affordabilityView.push(
+            
+            <InputFieldElement
+                name = {affordabilityInfo[i]} 
                 editing={editing}  
-                field={processedField} 
-                info={info[studentArr[i]]} 
-                dbField={studentArr[i]}
-                updateValue={updateValue}
-            />
-        );
+                info={info[dbinfo[i]]} 
+                dbField={[dbinfo[i]]}
+                updateValue={updateValue}/>
+           
+            
+        )
+    }
+    let collegeFitView = [];
+    for (let i = 0; i < dbinfo2.length; i++) {
+        collegeFitView.push(
+            
+            <InputFieldElement
+                name = {fitInfo[i]} 
+                editing={editing}  
+                info={info[dbinfo2[i]]} 
+                dbField={dbinfo2[i]}
+                updateValue={updateValue}/>
+           
+            
+        )
     }
 
     // return two columns as arrays along with button
-    return (<div className="college-panel">
-                <div className="college-side">
-                    <b>College Information</b>
-                    {collegeInfo}
-                </div>
-
-                <div className="college-side">
-                    <b>Student Information</b>
-                    {studentInfo}
-                </div>
-
-         <HandleEdit
+    var x = {width: "100%"}
+    var y = {visibility: "hidden"}
+    var z = {textAlign: "center"}
+    var collegesObject = {colleges: colleges}
+    return (
+    <div>
+        <HandleEdit
                             info={info}
                             setEdit={setEdit} 
                             editing={editing} 
@@ -98,16 +171,201 @@ function CollegeListPanel(props){
                             addedFields={addedFields}
                             addNewPreferences={addToPreferences}*/
                         />
-        </div>
+
+    <table class = "colListTable" style = {x}>
+    <tbody>
+        <tr>
+        <th></th> 
+        <th>Information</th>
+        <th>Counselor <button class = "colListButton">Sync</button></th> 
+        <th></th>
+        <th>Student</th>
+        </tr>
+    </tbody>
+
+    <tbody>
+        <tr>
+        <th></th>
+        <th>Affordabiity and Selectivity Info</th> 
+        <th></th>
+        <th></th>
+        <th></th>
+        </tr>
+    </tbody>
+    
+    
+    {/* <tr> */}
+    {affordabilityView}
+    <tbody>
+        <tr>
+        <th></th>
+        <th>Fit Information</th>
+        <td></td> 
+        <td><input type = "checkbox"/></td>
+        <td></td>
+        </tr>
+    </tbody>
+
+
+    {collegeFitView}
+        
+  </table>
+  {/* <div class = "grid-container" id = "grid-container">
+        <div class = "grid-item"> </div>
+        <div class = "grid-item"> Affordable </div>
+        <div class = "grid-item"> Maybe Affordable </div>
+        <div class = "grid-item"> Reach </div>
+        <div class = "grid-item"> some stuff </div>
+        <div class = "grid-item"> some stuff </div>
+        <div class = "grid-item"> Target </div>
+        <div class = "grid-item"> some stuff </div>
+        <div class = "grid-item"> some stuff </div>
+        <div class = "grid-item"> Safety </div>
+        <div class = "grid-item"> some stuff </div>
+        <div class = "grid-item"> some stuff </div>
+
+    </div> */}
+    <br/>
+    <br/>
+    <b>College List</b>
+    <table class = "colListTable2">
+        <tbody>
+            <tr>
+                <th class = "greyCell"></th>
+                <th class = "greyCell">Safety</th>
+                <th class = "greyCell">Target</th>
+                <th class = "greyCell">Reach</th>
+            </tr>
+        </tbody>
+            <tr>
+                <td>$</td>
+                <td></td>
+                <td></td>
+                <td></td>
+
+            </tr>
+        <tbody>
+
+            <tr>
+                <td>$$</td>
+                <td class = "greyCell"></td>
+                <td class = "greyCell"></td>
+                <td class = "greyCell"></td>
+                
+            </tr>
+
+        </tbody>
+
+        <tbody>
+            <tr>
+                <td>$$$</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                
+            </tr>
+        </tbody>
+
+    </table>
+
+    <br/>
+    <br/>
+    <table class = "colListTable3">
+        <tbody>
+        <tr>
+            <th style = {z}>Search for Colleges
+            </th>
+        </tr>
+        </tbody>
+        <tbody>
+        <tr>
+            <td style = {z}>
+                <div>
+                Filter Using Counselor Info
+                </div>
+                <button class = "colListButton">Search</button>
+                <div>
+                OR
+                </div>
+                <form >
+            <AutoSuggest
+                name="Colleges"
+                options={colleges}
+                handleChange={setMake}
+                value={make}
+            />
+            <button>Submit</button>
+        </form>
+
+
+            </td>
+        </tr>
+        </tbody>
+
+        
+
+
+    </table>
+
+    </div>
+         
         );
 }
 
+
+
 // helper component to allow for editing of different tabs
 function InputFieldElement(props) {
-    return(<p> 
-        <span>{props.field}: </span> 
-        {props.editing===true ? <input type="text" defaultValue={props.info} onChange={(e) => props.updateValue(e,props.dbField)} />:props.info}
-        </p>);
+     
+    // return(<p> 
+    //     <span>{props.field}: </span> 
+    //     {props.editing===true ? <input type="text" defaultValue={props.info} onChange={(e) => props.updateValue(e,props.dbField)} />:props.info}
+    //     </p>);
+    var x = {color: 'white'};
+    var y = {display: "none"}
+    // return(<p> 
+    //     <span> {props.field}: </span> 
+    //     {props.editing===true 
+    //         ? <input type="text" defaultValue={props.info} onChange={(e) => props.updateValue(e,props.dbField)} />:
+            
+    //         props.info === undefined || props.info === ""
+    //             ? <text>{props.info }</text> :
+    //         <text class = "fieldElement" style = {x}>{props.info}</text>}
+    //     </p>);
+    return <tbody>
+        <tr className="inputFieldElement" id = {props.dbField}>
+       <td>
+        {/* If the user is in edit mode, display button to remove this field element */}
+        {props.editing === true && 
+            <button onClick={() => hide(props.dbField)}>
+                <img src={minus_symbol}/>
+            </button>
+        }
+        </td>
+         <td>
+        {props.name}
+        </td>
+        <td>
+       <p key={props.info}><span>{props.field} </span>
+       {props.editing===true 
+            ? <input type="text" defaultValue={props.info} onChange={(e) => props.updateValue(e,props.dbField)} />:
+            
+            props.info === undefined || props.info === ""
+                ? <text>{props.info }</text> :
+            <text class = "fieldElement" style = {x}>{props.info}</text>}
+
+        </p>  
+        </td>  
+        <td><input type = "checkbox"/></td>
+        <td>awaiting</td>
+       
+        </tr>
+        </tbody>
+}
+
+function hide(id) {
+
+    $("#" + id).hide();
 }
 
 // Helper parent component to contain buttons to display in editing mode
@@ -226,6 +484,13 @@ function NotesPanel(props) {
     );
 }
 
+function ProcessPanelElement(props) {
+    return(<p> 
+        <span>{props.field}: </span> 
+        {props.editing===true ? <input type="text" defaultValue={props.info} onChange={(e) => props.updateValue(e,props.dbField)} />:props.info}
+        </p>);
+}
+
 // Static panel for viewing Application Process
 function ApplicationProcessPanel(props) {
     const [editing, changeEditing] = useState(false);
@@ -250,6 +515,7 @@ function ApplicationProcessPanel(props) {
             
         }
     }
+
 
     // very static array for column
     let info = props.info;
@@ -292,7 +558,7 @@ function ApplicationProcessPanel(props) {
     for (let i=0; i<appArr.length; i++) {
         const processedField = fieldSwap[appArr[i]];
         if (processedField) appInfo.push(
-            <InputFieldElement 
+            <ProcessPanelElement 
                 editing={editing}  
                 field={processedField} 
                 info={info[processedField]} 
@@ -306,7 +572,7 @@ function ApplicationProcessPanel(props) {
     for (let i=0; i<postappArr.length; i++) {
         const processedField = fieldSwap[postappArr[i]];
         if (processedField) postappInfo.push(
-            <InputFieldElement 
+            <ProcessPanelElement  
                 editing={editing}  
                 field={processedField} 
                 info={info[processedField]} 
@@ -320,7 +586,7 @@ function ApplicationProcessPanel(props) {
     for (let i=0; i<postdesArr.length; i++) {
         const processedField = fieldSwap[postdesArr[i]];
         if (processedField) postdesInfo.push(
-            <InputFieldElement 
+            <ProcessPanelElement 
                 editing={editing}  
                 field={processedField} 
                 info={info[processedField]} 
@@ -334,7 +600,7 @@ function ApplicationProcessPanel(props) {
     for (let i=0; i<finaidArr.length; i++) {
         const processedField = fieldSwap[finaidArr[i]];
         if (processedField) finaidInfo.push(
-            <InputFieldElement 
+            <ProcessPanelElement  
                 editing={editing}  
                 field={processedField} 
                 info={info[processedField]} 
@@ -352,14 +618,14 @@ function ApplicationProcessPanel(props) {
                 <div className="app-group">
                     <div className="app-circle" />
                     <b>Pre-Application</b>
-                   {<InputFieldElement 
+                   {<ProcessPanelElement  
                         editing={editing}  
                         field="Visits" 
                         info={info["Visits"]} 
                         dbField="Visits"
                         updateValue={updateValue}
                         />}
-                    {<InputFieldElement 
+                    {<ProcessPanelElement  
                         editing={editing}  
                         field="Balanced College List" 
                         info={info["Balanced College List"]} 
@@ -668,13 +934,15 @@ function processField(field) {
         reachColleges  :  "Reach Colleges",
         additions  :  "Counselor Notes",
         region  :  "Want to Attend (Region)",
+        distanceFromHome: "Distance From Home",
         collegeSize  :  "College Size",
         collegeSetting  :  "College Setting",
         collegeDiversity  :  "College Diversity (% URM)",
         collegeDiversityTypes  :  "College Diversity (Types)",
+        collegeType: "College Type",
         religion  :  "Religion",
         rotc  :  "Military/ROTC",
-        athletics  :  "Athletics",
+        athletics  :  "Athletics"
     }
 
     if (field in fieldSwap) return fieldSwap[field];
@@ -857,7 +1125,7 @@ class StudentDetailsModal extends React.Component {
             case 'Notes':
                 return <NotesPanel info={this.props.info}/>
             case 'College List':
-                return <CollegeListPanel info={this.props.info} cardUpdate={this.props.cardUpdate} />
+                return <CollegeListPanel fields={this.state.fields} cohort={this.props.cohort} info={this.props.info} cardUpdate={this.props.cardUpdate} />
             default:
                 return <p>Hello world</p>
         }
