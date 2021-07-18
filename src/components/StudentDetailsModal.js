@@ -307,12 +307,135 @@ function CollegeListPanel(props){
 
     </table>
 
+    <button onClick={categorizeCollege} >Categorize</button>
     </div>
          
         );
 }
 
+function categorizeCollege() {
+    console.log("College Designation:" + categorizeCollegeSelecitvity());
+}
 
+function categorizeCollegeSelecitvity() {
+    var data = {
+        //TODO
+        gpa: 2.3,
+        act: 20, 
+        sat: undefined, 
+        collegeSelectivityScore: 5
+    };
+    var studentSelectivityScore;
+    if(!data.gpa){
+        console.log("pop up message: GPA Required")
+        //TODO
+    } 
+    else if(!data.act && !data.sat){
+        studentSelectivityScore = categorizeCollegeSelectivityGPA(data.gpa);
+    }
+    else if(!data.act) {
+        studentSelectivityScore = categorizeCollegeSelectivitySAT(data.gpa, data.sat);
+    }
+    else if(!data.sat) {
+        studentSelectivityScore = categorizeCollegeSelectivityACT(data.gpa, data.act)
+    }
+    else {
+        let scoreSAT = categorizeCollegeSelectivitySAT(data.gpa, data.sat);
+        let scoreACT = categorizeCollegeSelectivityACT(data.gpa, data.act);
+        if(scoreSAT < scoreACT) {
+            studentSelectivityScore = scoreSAT;
+        }
+        else {
+            studentSelectivityScore = scoreACT;
+        }
+    }
+    return compareSelecivityScores(studentSelectivityScore, data.collegeSelectivityScore);
+}
+
+function compareSelecivityScores(studentSelectivityScore, collegeSelectivityScore) {
+    if(studentSelectivityScore > collegeSelectivityScore) {
+        return "Reach";
+    } else if(studentSelectivityScore < collegeSelectivityScore) {
+        return "Safety";
+    } else {
+        return "Target";
+    }
+}
+
+function categorizeCollegeSelectivityGPA(gpa){
+    //weighted scaling
+    if(gpa > 4.0) {
+        return 2;
+    }
+    else if(gpa >3.5) {
+        return 3;
+    }
+    else if(gpa > 3.0) {
+        return 4;
+    }
+    else if(gpa > 2.5) {
+        return 5;
+    }
+    else {
+        return 6;
+    }
+}
+
+function categorizeCollegeSelectivitySAT(gpa, sat) {
+    if((gpa >= 3.50 && sat >= 1300) ||
+       (gpa >= 3.75 && sat >= 1200)) {
+        return 2;
+    } 
+    else if((gpa >= 3.00 && sat >= 1250) ||
+            (gpa >= 3.25 && sat >= 1150) ||
+            (gpa >= 3.75 && sat >= 1100) ||
+            (gpa >= 4.00 && sat >= 1050)) {
+        return 3;
+    }
+    else if((gpa >= 2.25 && sat >= 1400) ||
+            (gpa >= 2.50 && sat >= 1050) ||
+            (gpa >= 3.25 && sat >= 1000) ||
+            (gpa >= 3.50 && sat >=  950)) {
+        return 4;
+    }
+    else if((gpa >= 2.00 && sat >= 1050) ||
+            (gpa >= 2.25 && sat >= 1000) ||
+            (gpa >= 2.50 && sat >=  880) ||
+            (gpa >= 3.5)) {
+        return 5;
+    }
+    else {
+        return 6;
+    }
+}
+
+function categorizeCollegeSelectivityACT(gpa, act) {
+    if((gpa >= 3.50 && act >= 28) ||
+       (gpa >= 3.75 && act >= 25)) {
+        return 2;
+    } 
+    else if((gpa >= 3.00 && act >= 26) ||
+            (gpa >= 3.25 && act >= 23) ||
+            (gpa >= 3.75 && act >= 22) ||
+            (gpa >= 4.00 && act >= 20)) {
+        return 3;
+    }
+    else if((gpa >= 2.25 && act >= 31) ||
+            (gpa >= 2.50 && act >= 20) ||
+            (gpa >= 3.25 && act >= 19) ||
+            (gpa >= 3.50 && act >= 18)) {
+        return 4;
+    }
+    else if((gpa >= 2.00 && act >= 20) ||
+            (gpa >= 2.25 && act >= 19) ||
+            (gpa >= 2.50 && act >= 17) ||
+            (gpa >= 3.5)) {
+        return 5;
+    }
+    else {
+        return 6;
+    }
+}
 
 // helper component to allow for editing of different tabs
 function InputFieldElement(props) {
