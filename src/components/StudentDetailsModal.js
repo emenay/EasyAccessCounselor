@@ -16,6 +16,7 @@ import {colleges} from './CollegeArray.js';
 import { AutoSuggest } from 'react-autosuggestions';
 import TextField from '@material-ui/core/TextField';
 import axios from 'axios';
+// import Checkbox from "./Checkbox";
 //import 'reactjs-popup/dist/index.css';
 
 // Make an edit for testBranch
@@ -25,7 +26,8 @@ import axios from 'axios';
 
 // Fairly static panel displaying info on college list
 function CollegeListPanel(props){
-        
+
+
     const [editing, changeEditing] = useState(false);
     const [editedFields, setEditedFields] = useState([]);
     // const [editing, changeEditing] = useState(false); // keeps track of whether user is in edit mode
@@ -33,8 +35,11 @@ function CollegeListPanel(props){
     const [addedFields, setAddedFields] = useState(false); // keeps track of whether user is in process of adding field
     // const [editedFields, setEditedFields] = useState([]); // keeps track of changes made to existing field values
     const [newField, setNewField] = useState("");
-    const [make, setMake] = React.useState();
+    const [college, setCollege] = React.useState();
+    
+    const [searchResults, setResults] = useState([]);
 
+    const [checkedList, setCheckedList] = useState([]);
     useEffect(() => {refreshWithDatabase();}, []) // Basically, on render pull field preferences from database
 
     const refreshWithDatabase = () => {
@@ -115,6 +120,112 @@ function CollegeListPanel(props){
 
     const changeAddedFields = (val) => {setAddedFields(val);}
     // static arrays with information in the two columns
+    let searches = [];
+    const searchCollege = (e, searchtype) => {
+
+        e.preventDefault();
+        
+        if (searchtype === "search") {
+
+            if (college) {
+
+                let collegelowercased = college.replace(/[^A-Za-z0-9]/g, '').toLowerCase();
+                console.log(collegelowercased);
+                axios.get("https://collegerestapijs.herokuapp.com/colleges/name?name=" + collegelowercased)
+                .then(res => {
+                const colleges= res.data;
+                console.log(colleges);
+
+                
+                for (let i = 0; i < colleges.length; i++) {
+                    
+                    var pubOrPriv = "";
+                    if (colleges[i].control === "1") {
+                        pubOrPriv = "Public";
+                    } else if (colleges[i].control === "2") {
+                        pubOrPriv = "Private";
+                    } else if (colleges[i].control === "3") {
+                        pubOrPriv = "For Profit"
+                    } 
+
+                    console.log(colleges[i]);
+                    searches.push(<CollegeElement
+                    id = {colleges[i].unitid}
+                    name = {colleges[i].instnm}
+                    state = {colleges[i].stabbr !== "NA" ? colleges[i].stabbr : ""}
+                    pub = {pubOrPriv}
+                    needmet = {colleges[i].needmet !== "NA" ? colleges[i].needmet * 100 + "% Need Met" : ""}
+                    selectivity = {colleges[i].selectivity_char}
+                    />)
+                    
+               
+             
+                }
+
+                
+                setResults(arr => [...arr, searches]);
+
+
+            
+            })
+            } else {
+                alert("Please enter a college name!");
+            }
+        } else if (searchtype === "filter") {
+
+
+        }
+        
+
+
+
+    }
+
+    function CollegeElement(props) {
+        let x = props.name;
+        return <tr style = {{color: "white"}}>
+        <input id = {props.id} type = "checkbox" onClick = {(e, x) => addtoCheckedList(e, x)}></input>
+        {/* <Checkbox
+            label = {props.name}
+            isSelected = {this.state.checkboxes[props.name]}
+            onCheckboxChange = {this.handleCheckboxChange}
+        /> */}
+        <td style = {{backgroundColor: "#61a3a0", borderBottomLeftRadius: 10, borderTopLeftRadius: 10}}> {props.name}</td>
+        <td style = {{backgroundColor: "#61a3a0"}}> {props.state}</td>
+        <td style = {{backgroundColor: "#61a3a0"}}> {props.pub}</td>
+        <td style = {{backgroundColor: "#61a3a0"}}> {props.needmet} </td>
+        <td style = {{backgroundColor: "#61a3a0", borderBottomRightRadius: 10, borderTopRightRadius: 10}}> {props.selectivity}</td>
+    
+    </tr>
+    }
+
+    
+    const addtoCheckedList = (e) => {
+        let id = e.target.id;
+        console.log($('#'+ id).is(':checked'));
+        if ($('#' + id).is(':checked')) {
+            // console.log($('#checkedcolleges').next().text());
+            let x = [$('#' + id).next().text()];
+            console.log(x);
+            setCheckedList(arr => [...arr, x]);
+            checkedList.push($('#' + id).next().text());
+            console.log(checkedList);
+        } else {
+            console.log($('#' + id).next().text());
+            let x = $('#' + id).next().text();
+            // let y = checkedList.filter(p => p !== x);
+            // setCheckedList(y);
+            // console.log(checkedList);
+            
+            console.log(["dsf", "sdf", "Sdf"]);
+   
+        }
+    }
+        
+            
+       
+        
+    
     let info = props.info;
 
     let affordabilityInfo = ["GPA", "Class Rank", "SAT", "ACT", "EFC", "Ability to Pay"];
@@ -160,6 +271,7 @@ function CollegeListPanel(props){
     var y = {visibility: "hidden"}
     var z = {textAlign: "center"}
     var collegesObject = {colleges: colleges}
+
     return (
     <div>
         <HandleEdit
@@ -177,7 +289,7 @@ function CollegeListPanel(props){
         <tr>
         <th></th> 
         <th>Information</th>
-        <th>Counselor <button class = "colListButton">Sync</button></th> 
+        <th>Counselor <button class = "colListButton mediumbutton">Sync</button></th> 
         <th></th>
         <th>Student</th>
         </tr>
@@ -210,21 +322,7 @@ function CollegeListPanel(props){
     {collegeFitView}
         
   </table>
-  {/* <div class = "grid-container" id = "grid-container">
-        <div class = "grid-item"> </div>
-        <div class = "grid-item"> Affordable </div>
-        <div class = "grid-item"> Maybe Affordable </div>
-        <div class = "grid-item"> Reach </div>
-        <div class = "grid-item"> some stuff </div>
-        <div class = "grid-item"> some stuff </div>
-        <div class = "grid-item"> Target </div>
-        <div class = "grid-item"> some stuff </div>
-        <div class = "grid-item"> some stuff </div>
-        <div class = "grid-item"> Safety </div>
-        <div class = "grid-item"> some stuff </div>
-        <div class = "grid-item"> some stuff </div>
 
-    </div> */}
     <br/>
     <br/>
     <b>College List</b>
@@ -283,31 +381,71 @@ function CollegeListPanel(props){
                 <div>
                 Filter Using Counselor Info
                 </div>
-                <button class = "colListButton">Search</button>
+                <button onClick={(e, searchtype) => searchCollege(e, "filter")} class = "colListButton mediumbutton">Search</button>
                 <div>
                 OR
                 </div>
-                <form >
+                <form>
+                    
             <AutoSuggest
                 name="Colleges"
                 options={colleges}
-                handleChange={setMake}
-                value={make}
+                handleChange={setCollege}
+                value={college}
             />
-            <button>Submit</button>
+            
+            <button onClick={(e, searchtype) => searchCollege(e, "search")}>Submit</button>
         </form>
 
 
             </td>
         </tr>
         </tbody>
+    </table>
+    <br/>
+    <br/>
+    <br/>
+    <br/>
+    
+    <table class = "colListTable3">
+        <tbody>
+            <tr>
+                <td>
+                <span>
+                    <button class = "colListButton bigbutton">Add to College List</button>
+                    <button class = "colListButton mediumbutton">Remove</button>
+                </span>
 
+                </td>
         
+            </tr>
+        </tbody>
+    
+        <tbody class = "searchresults">
+            <tr>
+                <td>Search Results</td>
+            </tr>
+            <tr id = "collegesearchresults">
 
+                <td>
 
+                    <table class = "resultsTable" style = {{width: "90%"}}>
+                        <tbody class = "results">
+                            
+                            {searchResults}
+                
+                        </tbody>
+
+                    </table>
+
+                </td>
+            </tr>
+        </tbody>
     </table>
 
     <button onClick={categorizeCollege} >Categorize</button>
+
+
     </div>
          
         );
@@ -534,7 +672,7 @@ function categorizeStudentSelectivityACT(gpa, act) {
 
 // helper component to allow for editing of different tabs
 function InputFieldElement(props) {
-     
+
     // return(<p> 
     //     <span>{props.field}: </span> 
     //     {props.editing===true ? <input type="text" defaultValue={props.info} onChange={(e) => props.updateValue(e,props.dbField)} />:props.info}
@@ -1177,7 +1315,6 @@ function GeneralInformationPanel(props) {
 
     useEffect(() => {refreshWithDatabase();}, []) // Basically, on render pull field preferences from database
 
-    console.log(props.info)
 
     const refreshWithDatabase = () => {
         db.collection("student_counselors").doc(props.cohort).get()
@@ -1318,7 +1455,7 @@ function GeneralInformationPanel(props) {
 
 // Component handles backround css, tab switching
 // Info = person object
-class StudentDetailsModal extends React.Component {
+export default class StudentDetailsModal extends React.Component {
     constructor(props) {
         super(props);
         this.tabs = ["General", "Notes", "College List", "Checklist"];
@@ -1370,4 +1507,3 @@ class StudentDetailsModal extends React.Component {
     }
 }
 
-export default StudentDetailsModal;
