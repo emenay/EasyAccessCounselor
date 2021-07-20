@@ -314,13 +314,108 @@ function CollegeListPanel(props){
 }
 
 function categorizeCollege() {
-    console.log("College Designation:" + categorizeCollegeSelecitvity());
+    console.log("College Selectivity Designation: " + categorizeCollegeSelecitvity());
+    console.log("College Affordability Designation: "+categorizeCollegeAffordability());
 }
+
+function categorizeCollegeAffordability(collegeName) {
+    var data = {
+        //TODO: get this data instead of hard coding 
+        zipcode: 7751, //TODO: what about leading 0's
+        ability: 1, //this is going to be a category not a integer
+        studentState: "NJ",
+        studentStateScore: 1,
+        studentSelectivityScore: 5, 
+        collegeAffordabilityScore: 4, 
+        universe: 1, 
+        collegeState: "NC", 
+        needMet: .5
+    };
+    var studentAffordabilityScore;
+    if(!data.zipcode || !data.state) {
+        //TODO: pop up message
+        console.log("pop up message: zip code and state Required")
+    }
+    if(!data.ability) {
+        //TODO: set efc to a default value 
+        //efc is 1-6k
+        //efc is basically ability to pay 
+    }
+
+    studentAffordabilityScore = affordabilityUniverse(data.universe);
+    if(studentAffordabilityScore) {
+        return studentAffordabilityScore;
+    }
+    studentAffordabilityScore = affordabilityCommuting(data.zipcode, data.state);
+    if(studentAffordabilityScore) {
+        return studentAffordabilityScore;
+    }
+
+    if(data.studentState.localeCompare(data.collegeState) === 0) {
+        studentAffordabilityScore = affordabilityInStatePublic(data.studentStateScore, data.studentSelectivityScore, data.ability);
+    }
+    else if(data.control === 2) { 
+        studentAffordabilityScore = affordabilityPrivate(data.ability, data.needMet);
+    }
+    else if(data.control === 1 && data.studentState.localeCompare(data.collegeState) !== 0) {
+        studentAffordabilityScore = affordabilityOOSPublic();
+    }
+}
+
+function affordabilityUniverse(universe) {
+    if(universe !== 1) {
+        return "Most Expensive";
+    } 
+}
+function affordabilityCommuting(zipcode, state) {
+    //TODO: zip code comparison to get miles 
+    const MAX_COMMUTING_DISTANCE = 25;//miles
+}
+
+function affordabilityInStatePublic(stateScore, selectivity, ability) {
+    if((stateScore === 1) ||
+        (stateScore === 2 && selectivity ===2) || 
+        (stateScore === 2 && selectivity >=3 && ability >= 10000) ||
+        (stateScore === 3 && ability >= 10000)) {
+        return "Least Expensive";
+    }
+    else if((stateScore === 2 && selectivity >= 3 && ability < 10000) ||
+            (stateScore === 3 && ability < 10000)) {
+        return "Mildly Expensive";
+    }
+    else {
+        //TODO: what is the else? or is the else if the else 
+    }
+}
+
+function affordabilityPrivate(ability, needMet) {
+    if((ability > 25000) ||
+        (ability > 15000 && needMet >= .80) ||
+        (ability > 10000 && needMet >= .85) || 
+        (ability >  6000 && needMet >= .87) || 
+        (ability >  1000 && needMet >= .90) || 
+        (ability >     0 && needMet >= .90)) {
+        return "Least Expensive";    
+    } else if((ability > 15000) ||
+        (ability > 10000 && needMet >= .80) ||
+        (ability >  6000 && needMet >= .85) || 
+        (ability >     0 && needMet >= .87)) {
+        return "Mildly Expensive"; 
+    } else {
+        return "Most Expensive";
+    }
+}
+
+function affordabilityOOSPublic (studentSelectivity, collegeSelectivity, ability ) { //TODO
+
+}
+
+
 
 function categorizeCollegeSelecitvity() {
     var data = {
-        //TODO
-        gpa: 2.3,
+        //TODO: get this data instead of hard coding 
+        gpa: 4.0,
         act: 20, 
         sat: undefined, 
         collegeSelectivityScore: 5
@@ -328,20 +423,20 @@ function categorizeCollegeSelecitvity() {
     var studentSelectivityScore;
     if(!data.gpa){
         console.log("pop up message: GPA Required")
-        //TODO
+        //TODO: pop up message 
     } 
     else if(!data.act && !data.sat){
-        studentSelectivityScore = categorizeCollegeSelectivityGPA(data.gpa);
+        studentSelectivityScore = categorizeStudentSelectivityGPA(data.gpa);
     }
     else if(!data.act) {
-        studentSelectivityScore = categorizeCollegeSelectivitySAT(data.gpa, data.sat);
+        studentSelectivityScore = categorizeStudentSelectivitySAT(data.gpa, data.sat);
     }
     else if(!data.sat) {
-        studentSelectivityScore = categorizeCollegeSelectivityACT(data.gpa, data.act)
+        studentSelectivityScore = categorizeStudentSelectivityACT(data.gpa, data.act)
     }
     else {
-        let scoreSAT = categorizeCollegeSelectivitySAT(data.gpa, data.sat);
-        let scoreACT = categorizeCollegeSelectivityACT(data.gpa, data.act);
+        let scoreSAT = categorizeStudentSelectivitySAT(data.gpa, data.sat);
+        let scoreACT = categorizeStudentSelectivityACT(data.gpa, data.act);
         if(scoreSAT < scoreACT) {
             studentSelectivityScore = scoreSAT;
         }
@@ -362,7 +457,7 @@ function compareSelecivityScores(studentSelectivityScore, collegeSelectivityScor
     }
 }
 
-function categorizeCollegeSelectivityGPA(gpa){
+function categorizeStudentSelectivityGPA(gpa){
     //weighted scaling
     if(gpa > 4.0) {
         return 2;
@@ -381,7 +476,7 @@ function categorizeCollegeSelectivityGPA(gpa){
     }
 }
 
-function categorizeCollegeSelectivitySAT(gpa, sat) {
+function categorizeStudentSelectivitySAT(gpa, sat) {
     if((gpa >= 3.50 && sat >= 1300) ||
        (gpa >= 3.75 && sat >= 1200)) {
         return 2;
@@ -409,7 +504,7 @@ function categorizeCollegeSelectivitySAT(gpa, sat) {
     }
 }
 
-function categorizeCollegeSelectivityACT(gpa, act) {
+function categorizeStudentSelectivityACT(gpa, act) {
     if((gpa >= 3.50 && act >= 28) ||
        (gpa >= 3.75 && act >= 25)) {
         return 2;
