@@ -1979,7 +1979,6 @@ export const colleges = [
     "Triton College - Intl Union of Operating Engr Local 399 Trning Fac.",
     "University of Illinois at Chicago",
     "Madison Media Institute-Rockford Career College",
-    "G Skin & Beauty Institute",
     "Southern Illinois University-Edwardsville",
     "Larry's Barber College",
     "Illinois College of Optometry",
