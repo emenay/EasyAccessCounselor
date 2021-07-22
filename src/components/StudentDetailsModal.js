@@ -1,4 +1,4 @@
-import React, {useState, useContext, useEffect} from 'react';
+import React, {useState, useContext, useEffect, useReducer} from 'react';
 import edit_symbol from '../assets/essentials_icons/svg/edit.svg';
 import plus_symbol from "../assets/essentials_icons/svg/plus.svg";
 import minus_symbol from "../assets/essentials_icons/svg/minus.svg";
@@ -16,6 +16,8 @@ import {colleges} from './CollegeArray.js';
 import { AutoSuggest } from 'react-autosuggestions';
 import TextField from '@material-ui/core/TextField';
 import axios from 'axios';
+
+
 // import Checkbox from "./Checkbox";
 //import 'reactjs-popup/dist/index.css';
 
@@ -26,7 +28,6 @@ import axios from 'axios';
 
 // Fairly static panel displaying info on college list
 function CollegeListPanel(props){
-
 
     const [editing, changeEditing] = useState(false);
     const [editedFields, setEditedFields] = useState([]);
@@ -40,6 +41,7 @@ function CollegeListPanel(props){
     const [searchResults, setResults] = useState([]);
 
     const [checkedList, setCheckedList] = useState([]);
+
     useEffect(() => {refreshWithDatabase();}, []) // Basically, on render pull field preferences from database
 
     const refreshWithDatabase = () => {
@@ -121,6 +123,41 @@ function CollegeListPanel(props){
     const changeAddedFields = (val) => {setAddedFields(val);}
     // static arrays with information in the two columns
     let searches = [];
+
+    const reducer = (state, action) => {
+
+        if (state.checkedIds.includes(action.id)) {
+          return {
+            ...state,
+            checkedIds: state.checkedIds.filter(id => id !== action.id)
+          }
+        }
+        
+        return {
+          ...state,
+          checkedIds: [
+            ...state.checkedIds,
+            action.id
+          ]
+        }
+      }
+
+    const initialState = { checkedIds: [] }
+    
+    const [state, dispatch] = useReducer(reducer, initialState)
+
+    const CheckBox = ({id}, {name}) => (
+        
+        <input
+          id={id}
+        //   checked={state.checkedIds.includes(id)}
+          onClick={() => dispatch({ id })}
+          type="checkbox"
+        />
+        
+      )
+
+
     const searchCollege = (e, searchtype) => {
 
         e.preventDefault();
@@ -182,9 +219,10 @@ function CollegeListPanel(props){
     }
 
     function CollegeElement(props) {
-        let x = props.name;
+
         return <tr style = {{color: "white"}}>
-        <input id = {props.id} type = "checkbox" onClick = {(e, x) => addtoCheckedList(e, x)}></input>
+            <CheckBox id = {props.name} name = {props.name}/>
+        {/* <input id = {props.id} type = "checkbox" onClick = {(e) => addtoCheckedList(props, e)}></input> */}
         {/* <Checkbox
             label = {props.name}
             isSelected = {this.state.checkboxes[props.name]}
@@ -197,34 +235,7 @@ function CollegeListPanel(props){
         <td style = {{backgroundColor: "#61a3a0", borderBottomRightRadius: 10, borderTopRightRadius: 10}}> {props.selectivity}</td>
     
     </tr>
-    }
-
-    
-    const addtoCheckedList = (e) => {
-        let id = e.target.id;
-        console.log($('#'+ id).is(':checked'));
-        if ($('#' + id).is(':checked')) {
-            // console.log($('#checkedcolleges').next().text());
-            let x = [$('#' + id).next().text()];
-            console.log(x);
-            setCheckedList(arr => [...arr, x]);
-            checkedList.push($('#' + id).next().text());
-            console.log(checkedList);
-        } else {
-            console.log($('#' + id).next().text());
-            let x = $('#' + id).next().text();
-            // let y = checkedList.filter(p => p !== x);
-            // setCheckedList(y);
-            // console.log(checkedList);
-            
-            console.log(["dsf", "sdf", "Sdf"]);
-   
-        }
-    }
-        
-            
-       
-        
+    }        
     
     let info = props.info;
 
@@ -412,7 +423,7 @@ function CollegeListPanel(props){
             <tr>
                 <td>
                 <span>
-                    <button class = "colListButton bigbutton">Add to College List</button>
+                    <button class = "colListButton bigbutton" onClick = {() => {alert(state.checkedIds)}}>Add to College List</button>
                     <button class = "colListButton mediumbutton">Remove</button>
                 </span>
 
