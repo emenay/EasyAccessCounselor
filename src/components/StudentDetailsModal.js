@@ -10,26 +10,35 @@ import firebase from 'firebase/app';
 import ReactTooltip from 'react-tooltip';
 import Select from 'react-select';
 import Popup from 'reactjs-popup';
-import { PinDropSharp } from '@material-ui/icons';
-import { Modal } from '@material-ui/core';
 import $ from 'jquery';
+import "../css/CollegeListPage.css";
+import {colleges} from './CollegeArray.js';
+import { Autosuggest } from 'react-autosuggest';
+import TextField from '@material-ui/core/TextField';
+import axios from 'axios';
+import { validateParams } from 'airtable/lib/query';
 //import 'reactjs-popup/dist/index.css';
 
+// Make an edit for testBranch
 
 // File controls popups for student profiles page
 // Each tab in the popup is a component "panel" displayed by the StudentDetailsModal
 
 // Fairly static panel displaying info on college list
 function CollegeListPanel(props){
+        
     const [editing, changeEditing] = useState(false);
-    const [fieldsData, setFieldsData] = useState(false);
-    const [addedFields, setAddedFields] = useState(false);
     const [editedFields, setEditedFields] = useState([]);
+    // const [editing, changeEditing] = useState(false); // keeps track of whether user is in edit mode
+    const [fieldsData, setFieldsData] = useState(false); // keeps track of what fields user wants to see
+    const [addedFields, setAddedFields] = useState(false); // keeps track of whether user is in process of adding field
+    // const [editedFields, setEditedFields] = useState([]); // keeps track of changes made to existing field values
     const [newField, setNewField] = useState("");
+    const [make, setMake] = React.useState();
 
-    useEffect(() => {refreshWithDatabase();}, [])
+    useEffect(() => {refreshWithDatabase();}, []) // Basically, on render pull field preferences from database
 
-        const refreshWithDatabase = () => {
+    const refreshWithDatabase = () => {
         db.collection("student_counselors").doc(props.cohort).get()
         .then(resp => {
             if (resp.data().genInfoFields) {
@@ -54,135 +63,383 @@ function CollegeListPanel(props){
         .catch(err => {console.log(err);})
     }
 
-    // Function to change whether or not the user is in editing mode and whether or not
-    // to save the changes they made. Save in this case means to update the database
-    // with a new set of preferences for what fields are to be shown
-    const setEdit = (editing, saveChanges=false) => {
-        changeEditing(editing);
-
-        if (saveChanges) {
-            db.collection("student_counselors").doc(props.cohort).update({
-                genInfoFields: fieldsData
-            });
-            
-            props.cardUpdate(props.info.uid,editedFields,props.info);
-
-            setEditedFields([]);
-            
-        // No need to refresh from DB if we just updated it with local data
-        } else {
-            refreshWithDatabase();
-        }
-    }
-
-    // Helper function for the delete field feature
-    const removeFromPreferences = (field) => {
-        fieldsData.splice(findEltinArr(fieldsData, field), 1);
-        let newFieldsData = [...fieldsData];
-        setFieldsData(newFieldsData);
-    }
-
-    // Helper function for the add field feature
-/*     const addToPreferences = (newField) => {
-        let newFieldsData = [...fieldsData]
-        newFieldsData.push(newField);
-        setFieldsData(newFieldsData);
-    } */
-
-    // Helper function for the edit field future
+    // helper function to be called when user types in input text box
     const updateValue = (e, field) => {
         let newEditedField = [...editedFields];
         newEditedField.push({[field]: e.target.value});
         setEditedFields(newEditedField);
     }
 
-    // Helper function for add custom field feature
+    // calls parent function to reload card once save Changes button clicked
+    const setEdit = (editing, saveChanges=false) => {
+        changeEditing(editing);
+
+        if (saveChanges) {
+            
+            props.cardUpdate(props.info.uid,editedFields,props.info);
+
+            setEditedFields([]);
+         
+        } else {
+            refreshWithDatabase();
+        }
+    }
+
+    const removeFromPreferences = (field) => {
+        fieldsData.splice(findEltinArr(fieldsData, field), 1);
+        let newFieldsData = [...fieldsData];
+        setFieldsData(newFieldsData);
+    }
+
+    const addToPreferences = (newField) => {
+        let newFieldsData = [...fieldsData]
+        newFieldsData.push(newField);
+        setFieldsData(newFieldsData);
+    }
+
     const addField = (e) => {
         setNewField(e.target.value);
     }
 
-    // Function to add custom field to database
     const submitAddedField = () => {
         if (newField != null && newField != "") {
             db.collection("student_counselors").doc(props.cohort)
                 .update({addedFields: firebase.firestore.FieldValue.arrayUnion(newField),  genInfoFields: firebase.firestore.FieldValue.arrayUnion(newField), fieldVisPref: firebase.firestore.FieldValue.arrayUnion(newField)})
                 .catch(error=>console.log(error));
 
-                //addToPreferences(newField);
+                addToPreferences(newField);
                 
                 setNewField("");
                 
         }
     }
 
+    const changeAddedFields = (val) => {setAddedFields(val);}
     // static arrays with information in the two columns
     let info = props.info;
-    let collegeArr = ["major", "major2", "region", "collegeSize", "collegeSetting", "collegeDiversity", 
-                        "collegeDiversityTypes", "religion", "rotc", "athletics"]
-    let studentArr = ["state", "zipcode", "gpa", "classRank", "act", "sat", "efc", "payMismatch"];
 
-    // Create arrays of div elements for two columns
-    let collegeInfo = [];
-    for (let i=0; i<collegeArr.length; i++) {
-        const processedField = processField(collegeArr[i]);
-        if (processedField) collegeInfo.push(
-            <InputFieldElement 
+    let affordabilityInfo = ["GPA", "Class Rank", "SAT", "ACT", "EFC", "Ability to Pay"];
+    let fitInfo = ["Major 1", "Major 2", "Distance from Home", "Region", "College Size", "College Diversity", "College Type", "Religion", "Military/ROTC", "Athletics"];
+    let allinfo = ["GPA", "Class Rank", "SAT", "ACT", "EFC", "Ability to Pay","Major 1", "Major 2", "Distance from Home", "Region", "College Size", "College Diversity", "College Type", "Religion", "Military/ROTC", "Athletics"];
+    var fieldsPref;
+    var fieldsHide;
+    var dbinfo = ["gpa", "classRank", "sat", "act", "efc", "payMismatch"];
+    var dbinfo2 = ["major1", "major2", "distancefromHome", "region", "collegeSize", "collegeDiversity", "collegeType", "religion", "rotc", "athletics"];
+    let count = 0;
+    // 
+    let affordabilityView = [];
+    for (let i = 0; i < dbinfo.length; i++) {
+        affordabilityView.push(
+            
+            <InputFieldElement
+                name = {affordabilityInfo[i]} 
                 editing={editing}  
-                field={processedField} 
-                info={info[collegeArr[i]]} 
-                dbField={collegeArr[i]}
-                updateValue={updateValue}
-            />
-        );
+                info={info[dbinfo[i]]} 
+                dbField={[dbinfo[i]]}
+                updateValue={updateValue}/>
+           
+            
+        )
     }
-
-    let studentInfo = [];
-    for (let i=0; i<studentArr.length; i++) {
-        const processedField = processField(studentArr[i]);
-        if (processedField) studentInfo.push(
-            <InputFieldElement 
+    let collegeFitView = [];
+    for (let i = 0; i < dbinfo2.length; i++) {
+        collegeFitView.push(
+            
+            <InputFieldElement
+                name = {fitInfo[i]} 
                 editing={editing}  
-                field={processedField} 
-                info={info[studentArr[i]]} 
-                dbField={studentArr[i]}
-                updateValue={updateValue}
-            />
-        );
+                info={info[dbinfo2[i]]} 
+                dbField={dbinfo2[i]}
+                updateValue={updateValue}/>
+           
+            
+        )
     }
-
+    
     // return two columns as arrays along with button
-    return (<div className="college-panel">
-                <div className="college-side">
-                    <b>College Information</b>
-                    {collegeInfo}
-                </div>
+    var x = {width: "100%"}
+    var y = {visibility: "hidden"}
+    var z = {textAlign: "center"}
+    var gpa = validate(props)[1];
+    var state = validate(props)[2];
+    var zip = validate(props)[3];
+    var gpaInput = "";
+    var stateInput = "";
+    var zipInput = "";
 
-                <div className="college-side">
-                    <b>Student Information</b>
-                    {studentInfo}
-                </div>
+    var collegesObject = {colleges: colleges}
 
-         <HandleEditInit
+    return (
+    <div>
+        <HandleEdit
                             info={info}
                             setEdit={setEdit} 
                             editing={editing} 
-                            fieldsData={fieldsData} 
-                            setAddedFields={setAddedFields} 
+                        /*    fieldsData={fieldsData} 
+                            setAddedFields={changeAddedFields} 
                             addedFields={addedFields}
-                            //addNewPreferences={addToPreferences}
-                            addField={addField}
-                            submitAddedField={submitAddedField}
+                            addNewPreferences={addToPreferences}*/
                         />
-        </div>
+
+    <table class = "colListTable" style = {x}>
+    <tbody>
+        <tr>
+        <th></th> 
+        <th>Information</th>
+        <th>Counselor <button class = "colListButton">Sync</button></th> 
+        <th></th>
+        <th>Student</th>
+        </tr>
+    </tbody>
+
+    <tbody>
+        <tr>
+        <th></th>
+        <th>Affordabiity and Selectivity Info</th> 
+        <th></th>
+        <th></th>
+        <th></th>
+        </tr>
+    </tbody>
+    
+    
+    {/* <tr> */}
+    {affordabilityView}
+    <tbody>
+        <tr>
+        <th></th>
+        <th>Fit Information</th>
+        <td></td> 
+        <td><input type = "checkbox"/></td>
+        <td></td>
+        </tr>
+    </tbody>
+
+
+    {collegeFitView}
+        
+  </table>
+  {/* <div class = "grid-container" id = "grid-container">
+        <div class = "grid-item"> </div>
+        <div class = "grid-item"> Affordable </div>
+        <div class = "grid-item"> Maybe Affordable </div>
+        <div class = "grid-item"> Reach </div>
+        <div class = "grid-item"> some stuff </div>
+        <div class = "grid-item"> some stuff </div>
+        <div class = "grid-item"> Target </div>
+        <div class = "grid-item"> some stuff </div>
+        <div class = "grid-item"> some stuff </div>
+        <div class = "grid-item"> Safety </div>
+        <div class = "grid-item"> some stuff </div>
+        <div class = "grid-item"> some stuff </div>
+    </div> */}
+    <br/>
+    <br/>
+    <b>College List</b>
+    <table class = "colListTable2">
+        <tbody>
+            <tr>
+                <th class = "greyCell"></th>
+                <th class = "greyCell">Safety</th>
+                <th class = "greyCell">Target</th>
+                <th class = "greyCell">Reach</th>
+            </tr>
+        </tbody>
+            <tr>
+                <td>$</td>
+                <td></td>
+                <td></td>
+                <td></td>
+
+            </tr>
+        <tbody>
+
+            <tr>
+                <td>$$</td>
+                <td class = "greyCell"></td>
+                <td class = "greyCell"></td>
+                <td class = "greyCell"></td>
+                
+            </tr>
+
+        </tbody>
+
+        <tbody>
+            <tr>
+                <td>$$$</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                
+            </tr>
+        </tbody>
+
+    </table>
+
+    <br/>
+    <br/>
+    <table class = "colListTable3">
+        <tbody>
+        <tr>
+            <th style = {z}>Search for Colleges
+            </th>
+        </tr>
+        </tbody>
+        <tbody>
+        <tr>
+            <td style = {z}>
+                <div>
+                Filter Using Counselor Info
+                </div>
+                <button class = "colListButton">Search</button>
+                <div>
+                OR
+                </div>
+                {/* <form >
+            <Autosuggest
+                name="Colleges"
+                options={colleges}
+                handleChange={setMake}
+                value={make}
+            />
+            <button>Submit</button>
+        </form> */}
+            {/* <button>Submit</button> */}
+
+            <ReactTooltip place="bottom" type="dark" effect="solid"/>
+                <Popup
+                    trigger={<button className="colListButton">Add to list</button>}
+                    modal
+                    >
+                    {close => (
+                        <div className="popup-addcollege">
+                            <div className="popup-header">
+                                <b>{validate(props)[0]}</b>
+                            </div>
+                            
+                            <div className="popup-addcollcontent">
+                                {gpa ?
+                                (<p><span>Add GPA: </span><input type="text" onChange={(e) => gpaInput = e}/></p>) 
+                                : console.log("No GPA input needed")}
+                            </div>
+
+                            <div className="popup-addcollcontent">
+                                {state ?
+                                (<p><span>Add home state: </span><input type="text" onChange={(e) => stateInput = e}/></p>)
+                                : console.log("No state input needed")}
+                            </div>
+
+                            <div className="popup-addcollcontent">
+                                {zip ?
+                                (<p><span>Add zipcode: </span><input type="text" onChange={(e) => zipInput = e}/></p>) 
+                                : console.log("No zipcode input needed")}
+                            </div>
+
+                            <button onClick={()=> {
+                                
+                                close()}}>Done</button>
+                        </div>
+                    )}
+                    </Popup>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+    </div>
+         
         );
+}
+
+function validate(props) {
+    let info = props.info;
+    const errors = [];
+    let g = typeof(info.gpa) === "undefined" || info.gpa === null || info.gpa <= 0;
+    let s = typeof(info.state) === "undefined" || info.state === null;
+    let z = typeof(info.zipcode) === "undefined" || info.zipcode <= 0 || info.zipcode === null;
+
+
+    if(g && s && z) {
+        errors.push("Cannot add to list without valid GPA, home state, and zipcode.");
+        errors.push(true, true, true);
+    } else if(g && z) {
+        errors.push("Cannot add to list without valid GPA and zipcode.");
+        errors.push(true, false, true);
+    } else if(s && z) {
+        errors.push("Cannot add to list without valid home state and zipcode.");
+        errors.push(false, true, true);
+    } else if(g && s) {
+        errors.push("Cannot add to list without valid GPA and home state.");
+        errors.push(true, true, false);
+    } else if(z) {
+        errors.push("Cannot add to list without valid zipcode.");
+        errors.push(false, false, true);
+    } else if(s) {
+        errors.push("Cannot add to list without valid state.\n");
+        errors.push(false, true, false);
+    } else if(g) {
+        errors.push("Cannot add to list without valid GPA.\n");
+        errors.push(true, false, false);
+    } 
+    if(errors.length < 1) {
+        errors.push("College added!");
+    }
+    console.log(errors);
+    return errors;
 }
 
 // helper component to allow for editing of different tabs
 function InputFieldElement(props) {
-    return(<p> 
-        <span>{props.field}: </span> 
-        {props.editing===true ? <input type="text" defaultValue={props.info} onChange={(e) => props.updateValue(e,props.dbField)} />:props.info}
-        </p>);
+     
+    // return(<p> 
+    //     <span>{props.field}: </span> 
+    //     {props.editing===true ? <input type="text" defaultValue={props.info} onChange={(e) => props.updateValue(e,props.dbField)} />:props.info}
+    //     </p>);
+    var x = {color: 'white'};
+    var y = {display: "none"}
+    // return(<p> 
+    //     <span> {props.field}: </span> 
+    //     {props.editing===true 
+    //         ? <input type="text" defaultValue={props.info} onChange={(e) => props.updateValue(e,props.dbField)} />:
+            
+    //         props.info === undefined || props.info === ""
+    //             ? <text>{props.info }</text> :
+    //         <text class = "fieldElement" style = {x}>{props.info}</text>}
+    //     </p>);
+    return <tbody>
+        <tr className="inputFieldElement" id = {props.dbField}>
+       <td>
+        {/* If the user is in edit mode, display button to remove this field element */}
+        {props.editing === true && 
+            <button onClick={() => hide(props.dbField)}>
+                <img src={minus_symbol}/>
+            </button>
+        }
+        </td>
+         <td>
+        {props.name}
+        </td>
+        <td>
+       <p key={props.info}><span>{props.field} </span>
+       {props.editing===true 
+            ? <input type="text" defaultValue={props.info} onChange={(e) => props.updateValue(e,props.dbField)} />:
+            
+            props.info === undefined || props.info === ""
+                ? <text>{props.info }</text> :
+            <text class = "fieldElement" style = {x}>{props.info}</text>}
+
+        </p>  
+        </td>  
+        <td><input type = "checkbox"/></td>
+        <td>awaiting</td>
+       
+        </tr>
+        </tbody>
+}
+
+function hide(id) {
+
+    $("#" + id).hide();
 }
 
 // Helper parent component to contain buttons to display in editing mode
@@ -208,12 +465,12 @@ function EditButton(props) {
 
 // Helper component to accomodate for call to database
 function HandleEdit(props) {
-        return <div className="editSuite">
-            {props.editing === true ? 
-                <EditButton editExit={props.setEdit} info={props.info} /> :
-                <ToggleEditButton setEdit={props.setEdit} addToPreferences={props.addToPreferences}/>
-            }
-        </div>
+    return <div className="editSuite">
+        {props.editing === true ? 
+            <EditButton editExit={props.setEdit} info={props.info} /> :
+            <ToggleEditButton setEdit={props.setEdit}/>
+        }
+    </div>
 }
 
 
@@ -1039,7 +1296,7 @@ function GeneralInformationPanel(props) {
 
 // Component handles backround css, tab switching
 // Info = person object
-class StudentDetailsModal extends React.Component {
+export default class StudentDetailsModal extends React.Component {
     constructor(props) {
         super(props);
         this.tabs = ["General", "Notes", "College List", "Checklist"];
@@ -1082,7 +1339,6 @@ class StudentDetailsModal extends React.Component {
                     <p className="studentdetails-title">{this.props.info.firstName + " " + this.props.info.lastName}</p>
                     {this.props.flagged ? <img className="studentdetails-flag" src={orange_flag} alt="flagged icon"/> : null}
                 </div>
-                <p className="studentdetails-goal">{"Goal: " + (typeof this.props.info.goal === "undefined" ? "--" : this.props.info.goal)}</p>
                 <div className="studentdetails-innerbackground"/>
                 <div className={"studentdetails-content" + (this.state.selectedTab === "Notes" ? " caseloadContents" : "")}>
                     {this.whichPanel(this.state.selectedTab)}
@@ -1091,5 +1347,3 @@ class StudentDetailsModal extends React.Component {
         </div>
     }
 }
-
-export default StudentDetailsModal;
