@@ -306,7 +306,7 @@ function CollegeListPanel(props){
         </form> */}
             {/* <button>Submit</button> */}
 
-            <ReactTooltip place="bottom" type="dark" effect="solid"/>
+            <ReactTooltip place="middle" type="dark" effect="solid"/>
                 <Popup
                     trigger={<button className="colListButton">Add to list</button>}
                     modal
