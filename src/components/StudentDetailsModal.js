@@ -412,7 +412,7 @@ function CollegeListPanel(props){
             <tr>
                 <td>
                 <span>
-                    <button class = "colListButton bigbutton"onClick={categorizeColleges(categorizeCollege(getCollegeCoordinates(props, state.checkedIds)))}>Add to College List</button> 
+                    <button class = "colListButton bigbutton"onClick={categorizeColleges(categorizeCollege(getCollegeCoordinates(props, 198419)))}>Add to College List</button> 
                     <button class = "colListButton mediumbutton">Remove</button>
                 </span>
 
@@ -461,9 +461,9 @@ function categorizeCollege(row, collumn) { //puts college on UI
 
 function getCollegeCoordinates(props, collegeID) { //TODO: this is currently hard coded 
     var selectivity = categorizeCollegeSelecitvity(props, collegeID);
-    var affordabiility = categorizeCollegeAffordability(props, collegeID);
+    var affordability = categorizeCollegeAffordability(props, collegeID);
     console.log("College Selectivity Designation: " + selectivity);
-    console.log("College Affordability Designation: "+ affordabiility);
+    console.log("College Affordability Designation: "+ affordability);
     return [selectivity, affordability];
 }
 
