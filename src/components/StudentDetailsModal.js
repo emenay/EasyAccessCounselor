@@ -412,7 +412,7 @@ function CollegeListPanel(props){
             <tr>
                 <td>
                 <span>
-                    <button class = "colListButton bigbutton">Add to College List</button>
+                    <button class = "colListButton bigbutton"onClick={categorizeColleges(categorizeCollege(getCollegeCoordinates(props, state.checkedIds)))}>Add to College List</button> 
                     <button class = "colListButton mediumbutton">Remove</button>
                 </span>
 
@@ -443,27 +443,39 @@ function CollegeListPanel(props){
         </tbody>
     </table>
 
-    <button onClick={categorizeCollege} >Categorize</button>
-
 
     </div>
          
         );
 }
-
-function categorizeCollege() {
-    console.log("College Selectivity Designation: " + categorizeCollegeSelecitvity());
-    console.log("College Affordability Designation: "+categorizeCollegeAffordability());
+function categorizeColleges(props, collegeIDs) {
+    for(var i = 0; i<collegeIDs.length; i++){
+        var coordiantes = getCollegeCoordinates(props, collegeIDs[i])
+        categorizeCollege(coordiantes[1], coordiantes[2]);
+    }
 }
 
-function categorizeCollegeAffordability(collegeName) {
+function categorizeCollege(row, collumn) { //puts college on UI
+
+}
+
+function getCollegeCoordinates(props, collegeID) { //TODO: this is currently hard coded 
+    var selectivity = categorizeCollegeSelecitvity(props, collegeID);
+    var affordabiility = categorizeCollegeAffordability(props, collegeID);
+    console.log("College Selectivity Designation: " + selectivity);
+    console.log("College Affordability Designation: "+ affordabiility);
+    return [selectivity, affordability];
+}
+
+function categorizeCollegeAffordability(props, collegeID) {
+    console.log(props.info)
     var data = {
         //TODO: get this data instead of hard coding 
-        zipcode: 7751, //TODO: what about leading 0's
-        ability: 1, //this is going to be a category not a integer
+        zipcode: props.info.zipcode, //TODO: what about leading 0's
+        ability: props.ability, //this is going to be a category not a integer
         studentState: "NJ",
-        studentStateScore: 1,
-        studentSelectivityScore: 5, 
+        studentStateScore: 1, //get from csv in slaxk 
+        studentSelectivityScore: getStudentSelectivityScore(props), //from previous selectivity 
         collegeAffordabilityScore: 4, 
         universe: 1, 
         collegeState: "NC", 
@@ -549,40 +561,50 @@ function affordabilityOOSPublic (studentSelectivity, collegeSelectivity, ability
 }
 
 
+function getCollegeSelectivityScore(collegeID) {
+    axios.get("https://collegerestapijs.herokuapp.com/colleges/id?id=" + collegeID)
+            .then(res => {
+            const college= res.data;
+            return college[0].selectivity_char});
+}
 
-function categorizeCollegeSelecitvity() {
+function categorizeCollegeSelecitvity(props, collegeID) {
+    var collegeSelectivityScore = getCollegeSelectivityScore(collegeID);
+    var studentSelectivityScore = getStudentSelectivityScore(props);
+    
+    return compareSelecivityScores(studentSelectivityScore, collegeSelectivityScore);
+}
+
+function getStudentSelectivityScore(props) {
     var data = {
         //TODO: get this data instead of hard coding 
-        gpa: 4.0,
-        act: 20, 
-        sat: undefined, 
-        collegeSelectivityScore: 5
+        gpa: props.info.gpa,
+        act: props.info.act, 
+        sat: props.info.sat
     };
-    var studentSelectivityScore;
     if(!data.gpa){
         console.log("pop up message: GPA Required")
         //TODO: pop up message 
     } 
     else if(!data.act && !data.sat){
-        studentSelectivityScore = categorizeStudentSelectivityGPA(data.gpa);
+        return categorizeStudentSelectivityGPA(data.gpa);
     }
     else if(!data.act) {
-        studentSelectivityScore = categorizeStudentSelectivitySAT(data.gpa, data.sat);
+        return categorizeStudentSelectivitySAT(data.gpa, data.sat);
     }
     else if(!data.sat) {
-        studentSelectivityScore = categorizeStudentSelectivityACT(data.gpa, data.act)
+        return categorizeStudentSelectivityACT(data.gpa, data.act)
     }
     else {
         let scoreSAT = categorizeStudentSelectivitySAT(data.gpa, data.sat);
         let scoreACT = categorizeStudentSelectivityACT(data.gpa, data.act);
         if(scoreSAT < scoreACT) {
-            studentSelectivityScore = scoreSAT;
+            return scoreSAT;
         }
         else {
-            studentSelectivityScore = scoreACT;
+            return scoreACT;
         }
     }
-    return compareSelecivityScores(studentSelectivityScore, data.collegeSelectivityScore);
 }
 
 function compareSelecivityScores(studentSelectivityScore, collegeSelectivityScore) {
