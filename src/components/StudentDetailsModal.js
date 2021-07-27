@@ -33,9 +33,6 @@ function CollegeListPanel(props){
     const [editedFields, setEditedFields] = useState([]);
     // const [editing, changeEditing] = useState(false); // keeps track of whether user is in edit mode
     const [fieldsData, setFieldsData] = useState(false); // keeps track of what fields user wants to see
-    const [addedFields, setAddedFields] = useState(false); // keeps track of whether user is in process of adding field
-    // const [editedFields, setEditedFields] = useState([]); // keeps track of changes made to existing field values
-    const [newField, setNewField] = useState("");
     const [college, setCollege] = React.useState();
     
     const [searchResults, setResults] = useState([]);
@@ -91,37 +88,6 @@ function CollegeListPanel(props){
         }
     }
 
-    const removeFromPreferences = (field) => {
-        fieldsData.splice(findEltinArr(fieldsData, field), 1);
-        let newFieldsData = [...fieldsData];
-        setFieldsData(newFieldsData);
-    }
-
-    const addToPreferences = (newField) => {
-        let newFieldsData = [...fieldsData]
-        newFieldsData.push(newField);
-        setFieldsData(newFieldsData);
-    }
-
-    const addField = (e) => {
-        setNewField(e.target.value);
-    }
-
-    const submitAddedField = () => {
-        if (newField != null && newField != "") {
-            db.collection("student_counselors").doc(props.cohort)
-                .update({addedFields: firebase.firestore.FieldValue.arrayUnion(newField),  genInfoFields: firebase.firestore.FieldValue.arrayUnion(newField), fieldVisPref: firebase.firestore.FieldValue.arrayUnion(newField)})
-                .catch(error=>console.log(error));
-
-                addToPreferences(newField);
-                
-                setNewField("");
-                
-        }
-    }
-
-    const changeAddedFields = (val) => {setAddedFields(val);}
-    // static arrays with information in the two columns
     let searches = [];
 
     const reducer = (state, action) => {
@@ -159,7 +125,6 @@ function CollegeListPanel(props){
 
 
     const searchCollege = (e, searchtype) => {
-
         e.preventDefault();
         
         if (searchtype === "search") {
@@ -194,16 +159,13 @@ function CollegeListPanel(props){
                     needmet = {colleges[i].needmet !== "NA" ? colleges[i].needmet * 100 + "% Need Met" : ""}
                     selectivity = {colleges[i].selectivity_char}
                     />)
+                    searches.push(<br/>);
                     
                
              
                 }
-
                 
                 setResults(arr => [...arr, searches]);
-
-
-            
             })
             } else {
                 alert("Please enter a college name!");
@@ -212,16 +174,12 @@ function CollegeListPanel(props){
 
 
         }
-        
-
-
-
     }
 
     function CollegeElement(props) {
 
         return <tr style = {{color: "white"}}>
-            <CheckBox id = {props.name} name = {props.name}/>
+            <CheckBox id = {props.id} name = {props.name}/>
         {/* <input id = {props.id} type = "checkbox" onClick = {(e) => addtoCheckedList(props, e)}></input> */}
         {/* <Checkbox
             label = {props.name}
@@ -242,8 +200,6 @@ function CollegeListPanel(props){
     let affordabilityInfo = ["GPA", "Class Rank", "SAT", "ACT", "EFC", "Ability to Pay"];
     let fitInfo = ["Major 1", "Major 2", "Distance from Home", "Region", "College Size", "College Diversity", "College Type", "Religion", "Military/ROTC", "Athletics"];
     let allinfo = ["GPA", "Class Rank", "SAT", "ACT", "EFC", "Ability to Pay","Major 1", "Major 2", "Distance from Home", "Region", "College Size", "College Diversity", "College Type", "Religion", "Military/ROTC", "Athletics"];
-    var fieldsPref;
-    var fieldsHide;
     var dbinfo = ["gpa", "classRank", "sat", "act", "efc", "payMismatch"];
     var dbinfo2 = ["major1", "major2", "distancefromHome", "region", "collegeSize", "collegeDiversity", "collegeType", "religion", "rotc", "athletics"];
     let count = 0;
@@ -257,9 +213,7 @@ function CollegeListPanel(props){
                 editing={editing}  
                 info={info[dbinfo[i]]} 
                 dbField={[dbinfo[i]]}
-                updateValue={updateValue}/>
-           
-            
+                updateValue={updateValue}/>    
         )
     }
     let collegeFitView = [];
@@ -285,21 +239,24 @@ function CollegeListPanel(props){
 
     return (
     <div>
-        <HandleEdit
-                            info={info}
-                            setEdit={setEdit} 
-                            editing={editing} 
-                        /*    fieldsData={fieldsData} 
-                            setAddedFields={changeAddedFields} 
-                            addedFields={addedFields}
-                            addNewPreferences={addToPreferences}*/
-                        />
-
+    
     <table class = "colListTable" style = {x}>
+        
     <tbody>
         <tr>
         <th></th> 
-        <th>Information</th>
+        <th >Information 
+        </th>
+        <HandleEdit
+                    info={info}
+                    setEdit={setEdit} 
+                    editing={editing} 
+        /*    fieldsData={fieldsData} 
+                setAddedFields={changeAddedFields} 
+                addedFields={addedFields}
+                addNewPreferences={addToPreferences}*/
+                />
+        
         <th>Counselor <button class = "colListButton mediumbutton">Sync</button></th> 
         <th></th>
         <th>Student</th>
@@ -310,30 +267,25 @@ function CollegeListPanel(props){
         <tr>
         <th></th>
         <th>Affordabiity and Selectivity Info</th> 
+        
         <th></th>
         <th></th>
         <th></th>
         </tr>
     </tbody>
-    
-    
-    {/* <tr> */}
     {affordabilityView}
     <tbody>
         <tr>
         <th></th>
         <th>Fit Information</th>
+    
         <td></td> 
         <td><input type = "checkbox"/></td>
         <td></td>
         </tr>
     </tbody>
-
-
-    {collegeFitView}
-        
+    {collegeFitView}      
   </table>
-
     <br/>
     <br/>
     <b>College List</b>
@@ -351,32 +303,24 @@ function CollegeListPanel(props){
                 <td></td>
                 <td></td>
                 <td></td>
-
             </tr>
         <tbody>
-
             <tr>
                 <td>$$</td>
                 <td class = "greyCell"></td>
                 <td class = "greyCell"></td>
-                <td class = "greyCell"></td>
-                
+                <td class = "greyCell"></td>        
             </tr>
-
         </tbody>
-
         <tbody>
             <tr>
                 <td>$$$</td>
                 <td></td>
                 <td></td>
-                <td></td>
-                
+                <td></td>  
             </tr>
         </tbody>
-
     </table>
-
     <br/>
     <br/>
     <table class = "colListTable3">
@@ -399,16 +343,13 @@ function CollegeListPanel(props){
                 <form>
                     
             <AutoSuggest
-                name="Colleges"
+                name = "col"
                 options={colleges}
                 handleChange={setCollege}
                 value={college}
-            />
-            
-            <button onClick={(e, searchtype) => searchCollege(e, "search")}>Submit</button>
+            />       
+            <button onClick={(e, searchtype) => searchCollege(e, "search")} class = "colListButton mediumbutton">Submit</button>
         </form>
-
-
             </td>
         </tr>
         </tbody>
@@ -417,7 +358,6 @@ function CollegeListPanel(props){
     <br/>
     <br/>
     <br/>
-    
     <table class = "colListTable3">
         <tbody>
             <tr>
@@ -426,36 +366,25 @@ function CollegeListPanel(props){
                     <button class = "colListButton bigbutton" onClick = {() => {alert(state.checkedIds)}}>Add to College List</button>
                     <button class = "colListButton mediumbutton">Remove</button>
                 </span>
-
                 </td>
-        
             </tr>
         </tbody>
-    
         <tbody class = "searchresults">
             <tr>
                 <td>Search Results</td>
             </tr>
             <tr id = "collegesearchresults">
-
                 <td>
-
                     <table class = "resultsTable" style = {{width: "90%"}}>
                         <tbody class = "results">
                             
                             {searchResults}
-                
                         </tbody>
-
                     </table>
-
                 </td>
             </tr>
         </tbody>
     </table>
-
-
-
     </div>
          
         );
@@ -492,6 +421,7 @@ function InputFieldElement(props) {
          <td>
         {props.name}
         </td>
+        
         <td>
        <p key={props.info}><span>{props.field} </span>
        {props.editing===true 
@@ -504,6 +434,7 @@ function InputFieldElement(props) {
         </p>  
         </td>  
         <td><input type = "checkbox"/></td>
+        <td></td>
         <td>awaiting</td>
        
         </tr>
@@ -538,7 +469,7 @@ function EditButton(props) {
 
 // Helper component to accomodate for call to database
 function HandleEdit(props) {
-        return <div className="editSuite">
+        return <div className="editSuite" style = {{width: "250px", height: "40px"}}>
             {props.editing === true ? 
                 <EditButton editExit={props.setEdit} info={props.info} /> :
                 <ToggleEditButton setEdit={props.setEdit}/>
@@ -972,8 +903,8 @@ function HandleEditInit(props) {
 
 // Simpler editbutton component for just editing
 function ToggleEditButton(props) {
-    return <div>
-        <button data-tip="Customize what fields are shown" className="studentdetails-editbutton" onClick={()=> {props.setEdit(true)}}>
+     return <div >
+       <button style = {{width: "50px", height: "50px"}}data-tip="Customize what fields are shown" className="studentdetails-editbutton" onClick={()=> {props.setEdit(true)}}>
             <img src={edit_symbol} alt="edit"/>
         </button>
         <ReactTooltip place="top" type="dark" effect="solid"/>
