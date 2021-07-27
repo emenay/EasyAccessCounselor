@@ -9,6 +9,7 @@ import {UserContext} from '../providers/UserProvider';
 import { Link } from 'react-router-dom';
 import {history} from './App';
 import SubscribeModal from '../components/SubscribeModal.js'
+// import { resultsAriaMessage } from 'react-select/src/accessibility';
 
 /*
     This file is messy because it was worked on by multiple people.
@@ -260,10 +261,19 @@ class DataEntrySelection extends React.Component {
                     cohort: "unc",
                     studentID: "1231251"
                   }).then(function(docRef) {
+
+                    var result = ''
+                    //var result = name+'-'
+                    var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
+                    var charactersLength = characters.length
+                    for ( var i = 0; i < 5; i++ ) {
+                        result += characters.charAt(Math.floor(Math.random() * charactersLength))
+                    }
                     
-                    db.collection("student_counselors").doc(docRef.id).set({name:name,counselor:firebase.auth().currentUser.uid, fieldVisPref: fieldsVisPref, colListFieldsPref: colListFieldsPref, colListFieldsHide: colListFieldsHide});
-                    
-                    return [name, docRef.id];
+                    console.log(result)
+
+                    db.collection("student_counselors").doc(result).set({name:name,counselor:firebase.auth().currentUser.uid, fieldVisPref: fieldsVisPref});
+                    return [name, result];
         
                 })
                 .then(([name, code]) => {this.context.addCohort(name, code); history.push('/caseload_management')})
@@ -376,7 +386,19 @@ class FieldMatches extends React.Component {
             cohort: "unc",
             studentID: "1231251"
           }).then(function(docRef) {
-            code = docRef.id;
+            var result = ''
+            //var result = name+'-'
+            var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
+            var charactersLength = characters.length
+            for ( var j = 0; j < 5; j++ ) {
+                result += characters.charAt(Math.floor(Math.random() * charactersLength))
+            }
+            
+            console.log(result)
+            
+            code = result
+
+            console.log(code)
             // db.collection('counselors').doc(counselor).update( {
             //     cohort: db.FieldValue.arrayUnion(docRef.id)
             //  });
@@ -399,7 +421,7 @@ class FieldMatches extends React.Component {
                 db.collection("student_counselors").doc(code).collection("students").add(myobj);
             }
             
-            db.collection("student_counselors").doc(docRef.id).set({name:name, counselor:counselor, addedFields: Array.from(addedFields)});
+            db.collection("student_counselors").doc(code).set({name:name, counselor:counselor, addedFields: Array.from(addedFields)});
             // db.collection("counselors").doc(counselor).update({})
             return [name, code];
 

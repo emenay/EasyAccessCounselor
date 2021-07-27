@@ -455,8 +455,8 @@ function categorizeColleges(props, collegeIDs) {
     }
 }
 
-function categorizeCollege(row, collumn) { //puts college on UI
-
+function categorizeCollege(row, column) { 
+    console.log("Row: "+row+" Column: "+column)//TODO: put college in correct spot on UI
 }
 
 function getCollegeCoordinates(props, collegeID) { //TODO: this is currently hard coded 
