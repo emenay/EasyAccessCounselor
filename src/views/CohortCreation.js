@@ -253,7 +253,8 @@ class DataEntrySelection extends React.Component {
                 
                 // base fields to set visible for new cohorts
                 const fieldsVisPref =  ["id", "firstName", "lastName","goal", "gpa",  "sat", "act","classRank",  "efc", "payMismatch",  "major",  "major2",  "safetyColleges",  "targetColleges",  "reachColleges", "additions"];
-
+                const colListFieldsPref = ["GPA", "Class Rank", "SAT", "ACT", "EFC", "Ability to Pay", "Major 1", "Major 2", "Distance from Home", "Region", "College Size", "College Diversity", "College Type", "Religion", "Military/ROTC", "Athletics"];
+                const colListFieldsHide = [];
                 // Upload the cohort
                 // TODO: CohortCode unneccessary?????
                 db.collection("cohortCode").add({
