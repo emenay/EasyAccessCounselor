@@ -12,7 +12,7 @@ import SubscribeModal from '../components/SubscribeModal.js'
 // import { resultsAriaMessage } from 'react-select/src/accessibility';
 
 /*
-    This file is messy because it was worked on by multiple people.
+    This file is messy because it was worked on by multiple people
     The login portions can likely be deleted, I'm leaving them here now for posterity
 
 */
