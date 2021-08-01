@@ -48,7 +48,7 @@ var fields = {
   safetyColleges  :  "Safety Colleges",
   targetColleges  :  "Target Colleges",
   reachColleges  :  "Reach Colleges",
-  additions  :  "Counselor Additions",
+  additions  :  "Counselor Notes",
   region  :  "Want to Attend (Region)",
   collegeSize  :  "College Size",
   collegeSetting  :  "College Setting",

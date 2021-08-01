@@ -214,53 +214,6 @@
     border: 1px solid #888;
 }
 
-.colListTable {
-
-    margin: 0 auto;
-    border-collapse:separate; 
-    border-spacing:1em;
-
-}
-
-.colListTable2 {
-    margin: 0 auto;
-    border-collapse:collapse;
-    border:1px solid black;
-    width: 100%
-
-}
-
-.colListTable2 td {
-    border:1px solid gray;
-}
-
-.colListTable3 {
-    margin: 0 auto;
-    border-collapse:collapse;
-    border:1px solid black;
-    width: 75%;
-}
-
-.colListTable3 td {
-    margin: 0 auto;
-    border:1px solid gray;
-    text-align: center;
-}
-
-.colListButton {
-    background-color:#0E1030;
-    border-radius: 15px;
-    height: 40;
-    width: 15%;
-    text-align: center;
-}
-
-
-.greyCell {
-
-    background-color: rgb(204, 198, 198);
-    
-}
 
 .caseloadContents {
     border: 0;

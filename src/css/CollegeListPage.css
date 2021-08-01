@@ -22,7 +22,7 @@
     margin: 0 auto;
     border-collapse:collapse;
     border:1px solid black;
-    width: 75%;
+    width: 90%;
 }
 
 .colListTable3 td {
@@ -34,10 +34,47 @@
 .colListButton {
     background-color:#0E1030;
     border-radius: 15px;
-    height: 40;
-    width: 15%;
     text-align: center;
+    font-weight: bold;
+
+    }
+
+.bigbutton {
+    height: 40px;
+    width: 150px;
+    
+    
 }
+
+.mediumbutton {
+    height: 40px;
+    width: 90px;
+}
+
+
+.resultsTable {
+
+    margin: 0 auto;
+    border-collapse: collapse; 
+    border-spacing: 20px 0;
+    
+    display: table;
+    
+
+}
+
+
+
+.resultsTable tr td {
+
+    border: none;
+    text-align: center;
+
+    
+    
+}
+
+
 
 
 .greyCell {
