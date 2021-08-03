@@ -363,7 +363,7 @@ function CollegeListPanel(props){
             <tr>
                 <td>
                 <span>
-                    <button class = "colListButton bigbutton" onClick = {categorizeColleges(props, 198419)}>Add to College List</button>
+                    <button class = "colListButton bigbutton" onClick = {categorizeColleges(props, 183859)}>Add to College List</button>
                     <button class = "colListButton mediumbutton">Remove</button>
                 </span>
                 </td>
@@ -390,11 +390,17 @@ function CollegeListPanel(props){
         );
 }
 
+function categorizeButtonClick(){
+    // if(validate() === true ){
+    //     categorizeCollege()
+    // }
+}
+
 function categorizeColleges(props, collegeIDs) {
-    for(var i = 0; i<collegeIDs.length; i++){
-        var coordiantes = getCollegeCoordinates(props, collegeIDs[i])
+    // for(var i = 0; i<collegeIDs ; i++){
+        var coordiantes = getCollegeCoordinates(props, collegeIDs)
         categorizeCollege(coordiantes[1], coordiantes[2]);
-    }
+    // }
 }
 function categorizeCollege(row, column) { 
     console.log("Row: "+row+" Column: "+column)//TODO: put college in correct spot on UI
@@ -491,15 +497,26 @@ function affordabilityPrivate(ability, needMet) {
 }
 function affordabilityOOSPublic (studentSelectivity, collegeSelectivity, ability ) { //TODO
 }
-function getCollegeSelectivityScore(collegeID) {
-    axios.get("https://collegerestapijs.herokuapp.com/colleges/id?id=" + collegeID)
-            .then(res => {
-            const college= res.data;
-            return college[0].selectivity_char});
+async function getCollegeSelectivityScore(collegeID) {
+    // axios.get("https://collegerestapijs.herokuapp.com/colleges/id?id=" + collegeID)
+    //         .then(res => {
+    //         const college= res.data;
+    //         return college[0].selectivity_char});
+    const response = await axios.get("https://collegerestapijs.herokuapp.com/colleges/id?id=" + collegeID)
+    return (response.data[0].selectivity_char)
 }
+
+const secondFunction = async (collegeID) => {
+    const result = await getCollegeSelectivityScore(collegeID)
+    return result;
+  }
+
+
 function categorizeCollegeSelecitvity(props, collegeID) {
     var collegeSelectivityScore = getCollegeSelectivityScore(collegeID);
     var studentSelectivityScore = getStudentSelectivityScore(props);
+    console.log(collegeSelectivityScore); 
+    console.log(studentSelectivityScore);
     return compareSelecivityScores(studentSelectivityScore, collegeSelectivityScore);
 }
 function getStudentSelectivityScore(props) {
@@ -539,7 +556,7 @@ function compareSelecivityScores(studentSelectivityScore, collegeSelectivityScor
     } else if(studentSelectivityScore < collegeSelectivityScore) {
         return "Safety";
     } else {
-        return "Target";
+        return "Target";//TODO i think it is just going here, what type of variables are we dealing with 
     }
 }
 function categorizeStudentSelectivityGPA(gpa){
@@ -1138,7 +1155,7 @@ function ToggleEditButton(props) {
 
 // More complex edit button component with add fields button next to it and popup code
 function ToggleEditButtonInit(props) {
-    return <div class="card-buttons">
+    return <div className="card-buttons">
         <button data-tip="Customize what fields are shown" className="studentdetails-editbutton" onClick={()=> {props.setEdit(true)}}>
             <img src={edit_symbol} alt="edit"/>
         </button>
