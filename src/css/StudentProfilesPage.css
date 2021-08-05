@@ -879,8 +879,8 @@ input[type="checkbox"] {
     margin: auto;
     background: rgb(255, 255, 255);
     border: solid;
-    width: 32%;
-    height: 15%;
+    width: auto;
+    height: auto;
     padding: 5px;
     padding-top: 10px;
     font-size: 18px;
@@ -894,10 +894,9 @@ input[type="checkbox"] {
       z-index: 1000;
       vertical-align: middle;
       background: rgb(255, 255, 255);
-      width: 400px;
-      height: 200px;
+      width: auto;
+      height: auto;
       padding: 5px;
-      padding-top: 10px;
   }
 
   .popup-header {

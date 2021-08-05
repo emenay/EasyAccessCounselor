@@ -154,3 +154,10 @@
     align-items: center;
     width: 100%;
 }
+
+#col-autosuggest-options {
+
+    margin: auto;
+    text-align: center;
+    
+}

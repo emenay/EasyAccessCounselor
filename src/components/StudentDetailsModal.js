@@ -1,4 +1,4 @@
-import React, {useState, useContext, useEffect} from 'react';
+import React, {useState, useContext, useEffect, useReducer} from 'react';
 import edit_symbol from '../assets/essentials_icons/svg/edit.svg';
 import plus_symbol from "../assets/essentials_icons/svg/plus.svg";
 import minus_symbol from "../assets/essentials_icons/svg/minus.svg";
@@ -16,7 +16,9 @@ import {colleges} from './CollegeArray.js';
 import { AutoSuggest } from 'react-autosuggestions';
 import TextField from '@material-ui/core/TextField';
 import axios from 'axios';
-import { validateParams } from 'airtable/lib/query';
+
+
+// import Checkbox from "./Checkbox";
 //import 'reactjs-popup/dist/index.css';
 
 // Make an edit for testBranch
@@ -26,21 +28,19 @@ import { validateParams } from 'airtable/lib/query';
 
 // Fairly static panel displaying info on college list
 function CollegeListPanel(props){
-        
+
+    const [ids, setIds] = useState([]);
+    const [elements, setElements] = useState([]);
+
     const [editing, changeEditing] = useState(false);
     const [editedFields, setEditedFields] = useState([]);
     // const [editing, changeEditing] = useState(false); // keeps track of whether user is in edit mode
     const [fieldsData, setFieldsData] = useState(false); // keeps track of what fields user wants to see
-    const [addedFields, setAddedFields] = useState(false); // keeps track of whether user is in process of adding field
-    // const [editedFields, setEditedFields] = useState([]); // keeps track of changes made to existing field values
-    const [newField, setNewField] = useState("");
-    const [make, setMake] = React.useState();
-
     const [college, setCollege] = React.useState();
     
     const [searchResults, setResults] = useState([]);
+    
 
-    const [checkedList, setCheckedList] = useState([]);
     useEffect(() => {refreshWithDatabase();}, []) // Basically, on render pull field preferences from database
 
     const refreshWithDatabase = () => {
@@ -90,41 +90,44 @@ function CollegeListPanel(props){
         }
     }
 
-    const removeFromPreferences = (field) => {
-        fieldsData.splice(findEltinArr(fieldsData, field), 1);
-        let newFieldsData = [...fieldsData];
-        setFieldsData(newFieldsData);
-    }
-
-    const addToPreferences = (newField) => {
-        let newFieldsData = [...fieldsData]
-        newFieldsData.push(newField);
-        setFieldsData(newFieldsData);
-    }
-
-    const addField = (e) => {
-        setNewField(e.target.value);
-    }
-
-    const submitAddedField = () => {
-        if (newField != null && newField != "") {
-            db.collection("student_counselors").doc(props.cohort)
-                .update({addedFields: firebase.firestore.FieldValue.arrayUnion(newField),  genInfoFields: firebase.firestore.FieldValue.arrayUnion(newField), fieldVisPref: firebase.firestore.FieldValue.arrayUnion(newField)})
-                .catch(error=>console.log(error));
-
-                addToPreferences(newField);
-                
-                setNewField("");
-                
-        }
-    }
-
-    const changeAddedFields = (val) => {setAddedFields(val);}
-
-    // static arrays with information in the two columns
     let searches = [];
-    const searchCollege = (e, searchtype) => {
+    
 
+    const reducer = (state, action) => {
+
+        if (state.checkedIds.includes(action.id)) {
+          return {
+            ...state,
+            checkedIds: state.checkedIds.filter(id => id !== action.id)
+          }
+        }
+        
+        return {
+          ...state,
+          checkedIds: [
+            ...state.checkedIds,
+            action.id
+          ]
+        }
+      }
+
+    const initialState = { checkedIds: [] }
+    
+    const [state, dispatch] = useReducer(reducer, initialState)
+
+    const CheckBox = ({id}, {name}) => (
+        
+        <input
+          id={id}
+        //   checked={state.checkedIds.includes(id)}
+          onClick={() => dispatch({ id })}
+          type="checkbox"
+        />
+        
+      )
+
+
+    const searchCollege = (e, searchtype) => {
         e.preventDefault();
         
         if (searchtype === "search") {
@@ -132,11 +135,11 @@ function CollegeListPanel(props){
             if (college) {
 
                 let collegelowercased = college.replace(/[^A-Za-z0-9]/g, '').toLowerCase();
-                console.log(collegelowercased);
+                // console.log(collegelowercased);
                 axios.get("https://collegerestapijs.herokuapp.com/colleges/name?name=" + collegelowercased)
                 .then(res => {
                 const colleges= res.data;
-                console.log(colleges);
+                // console.log(colleges);
 
                 
                 for (let i = 0; i < colleges.length; i++) {
@@ -150,25 +153,36 @@ function CollegeListPanel(props){
                         pubOrPriv = "For Profit"
                     } 
 
-                    console.log(colleges[i]);
-                    searches.push(<CollegeElement
+                    // console.log(colleges[i]);
+
+                    let colElement = <CollegeElement
                     id = {colleges[i].unitid}
                     name = {colleges[i].instnm}
                     state = {colleges[i].stabbr !== "NA" ? colleges[i].stabbr : ""}
                     pub = {pubOrPriv}
                     needmet = {colleges[i].needmet !== "NA" ? colleges[i].needmet * 100 + "% Need Met" : ""}
                     selectivity = {colleges[i].selectivity_char}
-                    />)
+                    />;
+
+                    searches.push(colElement);
+
+                    let newIds = [...ids];
+                    let newElements = [...elements];
+                    newIds.push(colleges[i].unitid);
+                    newElements.push(colElement);
+
+                    setIds(newIds);
+                    setElements(newElements);
+                    console.log(ids);
+                    console.log(elements);
+                    searches.push(<br/>);
+                    // console.log(searches);
                     
                
              
                 }
-
                 
                 setResults(arr => [...arr, searches]);
-
-
-            
             })
             } else {
                 alert("Please enter a college name!");
@@ -177,16 +191,13 @@ function CollegeListPanel(props){
 
 
         }
-        
-
-
-
     }
 
     function CollegeElement(props) {
-        let x = props.name;
+
         return <tr style = {{color: "white"}}>
-        <input id = {props.id} type = "checkbox" onClick = {(e, x) => addtoCheckedList(e, x)}></input>
+            <CheckBox id = {props.id} name = {props.name}/>
+        {/* <input id = {props.id} type = "checkbox" onClick = {(e) => addtoCheckedList(props, e)}></input> */}
         {/* <Checkbox
             label = {props.name}
             isSelected = {this.state.checkboxes[props.name]}
@@ -199,42 +210,32 @@ function CollegeListPanel(props){
         <td style = {{backgroundColor: "#61a3a0", borderBottomRightRadius: 10, borderTopRightRadius: 10}}> {props.selectivity}</td>
     
     </tr>
-    }
+    }  
 
-    
-    const addtoCheckedList = (e) => {
-        let id = e.target.id;
-        console.log($('#'+ id).is(':checked'));
-        if ($('#' + id).is(':checked')) {
-            // console.log($('#checkedcolleges').next().text());
-            let x = [$('#' + id).next().text()];
-            console.log(x);
-            setCheckedList(arr => [...arr, x]);
-            checkedList.push($('#' + id).next().text());
-            console.log(checkedList);
-        } else {
-            console.log($('#' + id).next().text());
-            let x = $('#' + id).next().text();
-            // let y = checkedList.filter(p => p !== x);
-            // setCheckedList(y);
-            // console.log(checkedList);
-            
-            console.log(["dsf", "sdf", "Sdf"]);
-   
+    function removeColleges() {
+
+        // console.log(ids);
+
+        for(let i=0; i < state.checkedIds.length; i++) {
+            let v = state.checkedIds[i];
+            // console.log(typeof(v));
+            // console.log(typeof(ids[i]));
+            let j = findEltinArr(ids, v);
+            if(j > -1) {
+                setIds(ids.splice(j, 1));
+                setElements(elements.splice(j, 1));
+            }
+            console.log(j);
         }
+        console.log(ids);
+        setResults(elements);
     }
-        
-            
-       
-        
     
     let info = props.info;
 
     let affordabilityInfo = ["GPA", "Class Rank", "SAT", "ACT", "EFC", "Ability to Pay"];
     let fitInfo = ["Major 1", "Major 2", "Distance from Home", "Region", "College Size", "College Diversity", "College Type", "Religion", "Military/ROTC", "Athletics"];
     let allinfo = ["GPA", "Class Rank", "SAT", "ACT", "EFC", "Ability to Pay","Major 1", "Major 2", "Distance from Home", "Region", "College Size", "College Diversity", "College Type", "Religion", "Military/ROTC", "Athletics"];
-    var fieldsPref;
-    var fieldsHide;
     var dbinfo = ["gpa", "classRank", "sat", "act", "efc", "payMismatch"];
     var dbinfo2 = ["major1", "major2", "distancefromHome", "region", "collegeSize", "collegeDiversity", "collegeType", "religion", "rotc", "athletics"];
     let count = 0;
@@ -248,9 +249,7 @@ function CollegeListPanel(props){
                 editing={editing}  
                 info={info[dbinfo[i]]} 
                 dbField={[dbinfo[i]]}
-                updateValue={updateValue}/>
-           
-            
+                updateValue={updateValue}/>    
         )
     }
     let collegeFitView = [];
@@ -272,9 +271,7 @@ function CollegeListPanel(props){
     var x = {width: "100%"}
     var y = {visibility: "hidden"}
     var z = {textAlign: "center"}
-    var gpa = validate(props)[1];
-    var state = validate(props)[2];
-    var zip = validate(props)[3];
+
     var gpaInput = props.info.gpa;
     var stateInput = props.info.state;
     var zipInput = props.info.zip;
@@ -283,21 +280,24 @@ function CollegeListPanel(props){
 
     return (
     <div>
-        <HandleEdit
-                            info={info}
-                            setEdit={setEdit} 
-                            editing={editing} 
-                        /*    fieldsData={fieldsData} 
-                            setAddedFields={changeAddedFields} 
-                            addedFields={addedFields}
-                            addNewPreferences={addToPreferences}*/
-                        />
-
+    
     <table class = "colListTable" style = {x}>
+        
     <tbody>
         <tr>
         <th></th> 
-        <th>Information</th>
+        <th >Information 
+        </th>
+        <HandleEdit
+                    info={info}
+                    setEdit={setEdit} 
+                    editing={editing} 
+        /*    fieldsData={fieldsData} 
+                setAddedFields={changeAddedFields} 
+                addedFields={addedFields}
+                addNewPreferences={addToPreferences}*/
+                />
+        
         <th>Counselor <button class = "colListButton mediumbutton">Sync</button></th> 
         <th></th>
         <th>Student</th>
@@ -308,28 +308,24 @@ function CollegeListPanel(props){
         <tr>
         <th></th>
         <th>Affordabiity and Selectivity Info</th> 
+        
         <th></th>
         <th></th>
         <th></th>
         </tr>
     </tbody>
-    
-    
-    {/* <tr> */}
     {affordabilityView}
     <tbody>
         <tr>
         <th></th>
         <th>Fit Information</th>
+    
         <td></td> 
         <td><input type = "checkbox"/></td>
         <td></td>
         </tr>
     </tbody>
-
-
-    {collegeFitView}
-        
+    {collegeFitView}      
   </table>
     <br/>
     <br/>
@@ -348,32 +344,24 @@ function CollegeListPanel(props){
                 <td></td>
                 <td></td>
                 <td></td>
-
             </tr>
         <tbody>
-
             <tr>
                 <td>$$</td>
                 <td class = "greyCell"></td>
                 <td class = "greyCell"></td>
-                <td class = "greyCell"></td>
-                
+                <td class = "greyCell"></td>        
             </tr>
-
         </tbody>
-
         <tbody>
             <tr>
                 <td>$$$</td>
                 <td></td>
                 <td></td>
-                <td></td>
-                
+                <td></td>  
             </tr>
         </tbody>
-
     </table>
-
     <br/>
     <br/>
     <table class = "colListTable3">
@@ -395,17 +383,18 @@ function CollegeListPanel(props){
                 </div>
                 <form>
                     
-                <AutoSuggest
-                name="Colleges"
+            <AutoSuggest
+                name = "col"
                 options={colleges}
                 handleChange={setCollege}
                 value={college}
-            />
-            
-            <button onClick={(e, searchtype) => searchCollege(e, "search")}>Submit</button>
-        </form>
-
-
+            />       
+             <button 
+                onClick={(e, searchtype) => searchCollege(e, "search")} 
+                class = "colListButton mediumbutton"
+                >Submit</button>
+         
+            </form>
             </td>
         </tr>
         </tbody>
@@ -414,92 +403,55 @@ function CollegeListPanel(props){
     <br/>
     <br/>
     <br/>
-    
     <table class = "colListTable3">
         <tbody>
             <tr>
                 <td>
                 <span>
-                    {/* <button class = "colListButton bigbutton">Add to College List</button> */}
-                    <Popup
+                    {validate(props) && <button class = "colListButton bigbutton">Add to College List</button>}
+                    {!validate(props) && <Popup
                     trigger={<button class="colListButton bigbutton">Add to College List</button>}
                     modal
                     >
                     {close => (
                         <div className="popup-addcollege">
                             <div className="popup-header">
-                                <b>{validate(props)[0]}</b>
+                                <b>{validateMessage(props)[0]}</b>
                             </div>
-                            
-                            {/* <div className="popup-addcollcontent">
-                                {gpa ?
-                                (<p><span>Add GPA: </span><input type="text" onChange={(e) => gpaInput = e}/></p>) 
-                                : console.log("No GPA input needed")
-                                }
-                            </div>
-
-                            <div className="popup-addcollcontent">
-                                {state ?
-                                (<p><span>Add home state: </span><input type="text" onChange={(e) => stateInput = e}/></p>)
-                                : console.log("No state input needed")}
-                            </div>
-
-                            <div className="popup-addcollcontent">
-                                {zip ?
-                                (<p><span>Add zipcode: </span><input type="text" onChange={(e) => zipInput = e}/></p>) 
-                                : console.log("No zipcode input needed")}
-                            </div> */}
 
                             <button onClick={()=> {
-                                
-                                
                                 close()}}>Done</button>
                         </div>
                     )}
-                    </Popup>
-                    <button class = "colListButton mediumbutton" onClick={() => {
-                        console.log(checkedList);
-                        for(let i=0; i<checkedList; i++) {
-                            console.log(checkedList);
-                        };
-                    }}>Remove</button>
-                </span>
+                    </Popup>}
+                    
 
+                    <button class = "colListButton mediumbutton" onClick={() => removeColleges()} className = "colListButton mediumbutton">Remove</button>
+                 </span>
                 </td>
-        
             </tr>
         </tbody>
-    
         <tbody class = "searchresults">
             <tr>
                 <td>Search Results</td>
             </tr>
             <tr id = "collegesearchresults">
-
                 <td>
-
                     <table class = "resultsTable" style = {{width: "90%"}}>
                         <tbody class = "results">
-                            
                             {searchResults}
-                
                         </tbody>
-
                     </table>
-
                 </td>
             </tr>
         </tbody>
     </table>
-
-
-
     </div>
          
         );
 }
 
-function validate(props) {
+function validateMessage(props) {
     let info = props.info;
     const errors = [];
     let g = typeof(info.gpa) === "undefined" || info.gpa === null || info.gpa <= 0;
@@ -509,31 +461,36 @@ function validate(props) {
 
     if(g && s && z) {
         errors.push("Cannot add to list without valid GPA, home state, and zipcode.");
-        errors.push(true, true, true);
+        errors.push(false);
     } else if(g && z) {
         errors.push("Cannot add to list without valid GPA and zipcode.");
-        errors.push(true, false, true);
+        errors.push(false);
     } else if(s && z) {
         errors.push("Cannot add to list without valid home state and zipcode.");
-        errors.push(false, true, true);
+        errors.push(false);
     } else if(g && s) {
         errors.push("Cannot add to list without valid GPA and home state.");
-        errors.push(true, true, false);
+        errors.push(false);
     } else if(z) {
         errors.push("Cannot add to list without valid zipcode.");
-        errors.push(false, false, true);
+        errors.push(false);
     } else if(s) {
         errors.push("Cannot add to list without valid state.\n");
-        errors.push(false, true, false);
+        errors.push(false);
     } else if(g) {
         errors.push("Cannot add to list without valid GPA.\n");
-        errors.push(true, false, false);
+        errors.push(false);
     } 
     if(errors.length < 1) {
         errors.push("College added!");
+        errors.push(true);
     }
-    console.log(errors);
+    // console.log(errors);
     return errors;
+}
+
+function validate(props) {
+    return validateMessage(props)[1];
 }
 
 // helper component to allow for editing of different tabs
@@ -567,6 +524,7 @@ function InputFieldElement(props) {
          <td>
         {props.name}
         </td>
+        
         <td>
        <p key={props.info}><span>{props.field} </span>
        {props.editing===true 
@@ -579,6 +537,7 @@ function InputFieldElement(props) {
         </p>  
         </td>  
         <td><input type = "checkbox"/></td>
+        <td></td>
         <td>awaiting</td>
        
         </tr>
@@ -613,12 +572,12 @@ function EditButton(props) {
 
 // Helper component to accomodate for call to database
 function HandleEdit(props) {
-    return <div className="editSuite">
-        {props.editing === true ? 
-            <EditButton editExit={props.setEdit} info={props.info} /> :
-            <ToggleEditButton setEdit={props.setEdit}/>
-        }
-    </div>
+        return <div className="editSuite" style = {{width: "250px", height: "40px"}}>
+            {props.editing === true ? 
+                <EditButton editExit={props.setEdit} info={props.info} /> :
+                <ToggleEditButton setEdit={props.setEdit}/>
+            }
+        </div>
 }
 
 
@@ -1151,15 +1110,8 @@ function HandleEditInit(props) {
 
 // Simpler editbutton component for just editing
 function ToggleEditButton(props) {
-    /* return <div>
-        <button data-tip="Customize what fields are shown" className="studentdetails-editbutton" onClick={()=> {props.setEdit(true)}}>
-            <img src={edit_symbol} alt="edit"/>
-        </button>
-        <ReactTooltip place="top" type="dark" effect="solid"/>
-    </div> */
-
-    return <div class="card-buttons">
-        <button data-tip="Customize what fields are shown" className="studentdetails-editbutton" onClick={()=> {props.setEdit(true)}}>
+     return <div >
+       <button style = {{width: "50px", height: "50px"}}data-tip="Customize what fields are shown" className="studentdetails-editbutton" onClick={()=> {props.setEdit(true)}}>
             <img src={edit_symbol} alt="edit"/>
         </button>
         <ReactTooltip place="top" type="dark" effect="solid"/>
