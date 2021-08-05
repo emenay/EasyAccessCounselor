@@ -14,7 +14,6 @@ import SubscribeModal from '../components/SubscribeModal.js'
 /*
     This file is messy because it was worked on by multiple people
     The login portions can likely be deleted, I'm leaving them here now for posterity
-
 */
 
 // export default function Login() {
