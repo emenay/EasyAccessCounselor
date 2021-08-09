@@ -363,7 +363,7 @@ function CollegeListPanel(props){
             <tr>
                 <td>
                 <span>
-                    <button class = "colListButton bigbutton" onClick = {categorizeColleges(props, 183859)}>Add to College List</button>
+                    <button class = "colListButton bigbutton" onClick ={() => categorizeColleges(props, state.checkedIds)}>Add to College List</button>
                     <button class = "colListButton mediumbutton">Remove</button>
                 </span>
                 </td>
@@ -396,45 +396,94 @@ function categorizeButtonClick(){
     // }
 }
 
-function categorizeColleges(props, collegeIDs) {
-    // for(var i = 0; i<collegeIDs ; i++){
-        var coordiantes = getCollegeCoordinates(props, collegeIDs)
-        categorizeCollege(coordiantes[1], coordiantes[2]);
-    // }
+async function categorizeColleges(props, collegeIDs) {
+    var coordinates;
+    for(var i = 0; i<collegeIDs.length ; i++){
+        coordinates = await getCollegeCoordinates(props, collegeIDs[i])
+        categorizeCollege(coordinates.affordabilityInt, coordinates.selectivityInt);
+    }
 }
 function categorizeCollege(row, column) { 
     console.log("Row: "+row+" Column: "+column)//TODO: put college in correct spot on UI
 }
-function getCollegeCoordinates(props, collegeID) { //TODO: this is currently hard coded 
-    var selectivity = categorizeCollegeSelecitvity(props, collegeID);
-    var affordability = categorizeCollegeAffordability(props, collegeID);
-    console.log("College Selectivity Designation: " + selectivity);
-    console.log("College Affordability Designation: "+ affordability);
-    return [selectivity, affordability];
-}
-function categorizeCollegeAffordability(props, collegeID) {
-    console.log(props.info)
-    var data = {
-        //TODO: get this data instead of hard coding 
-        zipcode: props.info.zipcode, //TODO: what about leading 0's
-        ability: props.ability, //this is going to be a category not a integer
-        studentState: "NJ",
-        studentStateScore: 1, //get from csv in slaxk 
-        studentSelectivityScore: getStudentSelectivityScore(props), //from previous selectivity 
-        collegeAffordabilityScore: 4, 
-        universe: 1, 
-        collegeState: "NC", 
-        needMet: .5
-    };
-    var studentAffordabilityScore;
-    if(!data.zipcode || !data.state) {
-        //TODO: pop up message
-        console.log("pop up message: zip code and state Required")
+const REACH = "Reach"
+const TARGET = "Target"
+const SAFETY = "Safety"
+const MOST_EXPENSIVE = "Most Expensive"
+const MILDLY_EXPENSIVE = "Mildly Expensive"
+const LEAST_EXPENSIVE = "Least Expensive"
+
+async function getCollegeCoordinates(props, collegeID) {  
+    var selectivityString = await categorizeCollegeSelecitvity(props, collegeID);
+    var affordabilityString = await categorizeCollegeAffordability(props, collegeID);
+    var coordinates = {
+        selectivityInt: -1,
+        affordabilityInt: -1
     }
+    console.log("College Selectivity Designation: " + selectivityString);
+    console.log("College Affordability Designation: "+ affordabilityString);
+    if(selectivityString.localeCompare(SAFETY)===0){
+        coordinates.selectivityInt = 0;
+    } else if (selectivityString.localeCompare(TARGET)===0){
+        coordinates.selectivityInt = 1;
+    } else if (selectivityString.localeCompare(REACH)===0){
+        coordinates.selectivityInt = 2;
+    }
+    if(affordabilityString.localeCompare(LEAST_EXPENSIVE)===0){
+        coordinates.affordabilityInt = 0;
+    } else if (affordabilityString.localeCompare(MILDLY_EXPENSIVE)===0){
+        coordinates.affordabilityInt = 1;
+    } else if (affordabilityString.localeCompare(MOST_EXPENSIVE)===0){
+        coordinates.affordabilityInt = 2;
+    }
+    return coordinates;
+}
+
+async function getCollegeUniverse(collegeID) {
+    const response = await axios.get("https://collegerestapijs.herokuapp.com/colleges/id?id=" + collegeID)
+    return (response.data[0].universe)
+}
+
+async function getCollegeState(collegeID) {
+    const response = await axios.get("https://collegerestapijs.herokuapp.com/colleges/id?id=" + collegeID)
+    return (response.data[0].stabbr)
+}
+
+async function getCollegeStateScore(collegeID){
+    const response = await axios.get("https://collegerestapijs.herokuapp.com/colleges/id?id=" + collegeID)
+    return (response.data[0].afford)
+}
+
+async function getCollegeNeedMet(collegeID){
+    const response = await axios.get("https://collegerestapijs.herokuapp.com/colleges/id?id=" + collegeID)
+    return (response.data[0].needmet)
+}
+
+async function getCollegeControl(collegeID){
+    const response = await axios.get("https://collegerestapijs.herokuapp.com/colleges/id?id=" + collegeID)
+    return (response.data[0].control)
+}
+
+async function categorizeCollegeAffordability(props, collegeID) {
+    var data = {
+        zipcode: parseInt(props.info.zip),
+        ability: parseInt(props.info.famAfford),
+        studentState: props.info.state, 
+        studentSelectivityScore: getStudentSelectivityScore(props), 
+        universe: parseInt(await getCollegeUniverse(collegeID)), 
+        collegeState: await getCollegeState(collegeID),
+        collegeStateScore: parseInt(await getCollegeStateScore(collegeID)),
+        control: parseInt(await getCollegeControl(collegeID)),
+        needMet: parseInt(await getCollegeNeedMet(collegeID))
+    }
+    var studentAffordabilityScore;
+    //unnnesecary code because algorithm assumes these variables have been prechecked
+    // if(!data.zipcode || !data.state) {
+    //     console.log("pop up message: zip code and state Required")
+    // }
     if(!data.ability) {
-        //TODO: set efc to a default value 
-        //efc is 1-6k
-        //efc is basically ability to pay 
+        props.info.efc = "6000"
+        data.ability =  60000;
     }
     studentAffordabilityScore = affordabilityUniverse(data.universe);
     if(studentAffordabilityScore) {
@@ -446,17 +495,24 @@ function categorizeCollegeAffordability(props, collegeID) {
     }
     if(data.studentState.localeCompare(data.collegeState) === 0) {
         studentAffordabilityScore = affordabilityInStatePublic(data.studentStateScore, data.studentSelectivityScore, data.ability);
+        return studentAffordabilityScore
     }
     else if(data.control === 2) { 
         studentAffordabilityScore = affordabilityPrivate(data.ability, data.needMet);
+        return studentAffordabilityScore
     }
     else if(data.control === 1 && data.studentState.localeCompare(data.collegeState) !== 0) {
         studentAffordabilityScore = affordabilityOOSPublic();
+        return studentAffordabilityScore
+    }
+    else {
+        //Should never get here 
+        return MILDLY_EXPENSIVE
     }
 }
 function affordabilityUniverse(universe) {
     if(universe !== 1) {
-        return "Most Expensive";
+        return MOST_EXPENSIVE;
     } 
 }
 function affordabilityCommuting(zipcode, state) {
@@ -468,14 +524,10 @@ function affordabilityInStatePublic(stateScore, selectivity, ability) {
         (stateScore === 2 && selectivity ===2) || 
         (stateScore === 2 && selectivity >=3 && ability >= 10000) ||
         (stateScore === 3 && ability >= 10000)) {
-        return "Least Expensive";
-    }
-    else if((stateScore === 2 && selectivity >= 3 && ability < 10000) ||
-            (stateScore === 3 && ability < 10000)) {
-        return "Mildly Expensive";
+        return LEAST_EXPENSIVE;
     }
     else {
-        //TODO: what is the else? or is the else if the else 
+        return MILDLY_EXPENSIVE;
     }
 }
 function affordabilityPrivate(ability, needMet) {
@@ -485,52 +537,55 @@ function affordabilityPrivate(ability, needMet) {
         (ability >  6000 && needMet >= .87) || 
         (ability >  1000 && needMet >= .90) || 
         (ability >     0 && needMet >= .90)) {
-        return "Least Expensive";    
+        return LEAST_EXPENSIVE;    
     } else if((ability > 15000) ||
         (ability > 10000 && needMet >= .80) ||
         (ability >  6000 && needMet >= .85) || 
         (ability >     0 && needMet >= .87)) {
-        return "Mildly Expensive"; 
+        return MILDLY_EXPENSIVE; 
     } else {
-        return "Most Expensive";
+        return MOST_EXPENSIVE;
     }
 }
-function affordabilityOOSPublic (studentSelectivity, collegeSelectivity, ability ) { //TODO
+function affordabilityOOSPublic (studentSelectivity, collegeSelectivity, ability ) { //TODO: some variables from website didnt make sense
+    if(studentSelectivity === 2  ||
+        studentSelectivity ===2  && ability >15000 && ability <25000 ||
+        studentSelectivity ===2  && ability >25000) {
+        return LEAST_EXPENSIVE
+    } else if(studentSelectivity === 2 && ability >6000 && ability <15000 ||
+        studentSelectivity ===2  && ability > 15000 && ability<25000 ||
+        studentSelectivity ===2  && ability > 25000 ||
+        studentSelectivity >=3 && ability > 15000 & ability <25000 ||
+        studentSelectivity >=3 && ability >25000) {
+        return MILDLY_EXPENSIVE
+    } else {
+        return MOST_EXPENSIVE
+    }
 }
+
 async function getCollegeSelectivityScore(collegeID) {
-    // axios.get("https://collegerestapijs.herokuapp.com/colleges/id?id=" + collegeID)
-    //         .then(res => {
-    //         const college= res.data;
-    //         return college[0].selectivity_char});
     const response = await axios.get("https://collegerestapijs.herokuapp.com/colleges/id?id=" + collegeID)
     return (response.data[0].selectivity_char)
 }
 
-const secondFunction = async (collegeID) => {
-    const result = await getCollegeSelectivityScore(collegeID)
-    return result;
-  }
 
-
-function categorizeCollegeSelecitvity(props, collegeID) {
-    var collegeSelectivityScore = getCollegeSelectivityScore(collegeID);
+async function categorizeCollegeSelecitvity(props, collegeID) {
+    var collegeSelectivityScore = await (getCollegeSelectivityScore(collegeID))
+    collegeSelectivityScore = Number(collegeSelectivityScore[0])
     var studentSelectivityScore = getStudentSelectivityScore(props);
-    console.log(collegeSelectivityScore); 
-    console.log(studentSelectivityScore);
     return compareSelecivityScores(studentSelectivityScore, collegeSelectivityScore);
 }
 function getStudentSelectivityScore(props) {
     var data = {
-        //TODO: get this data instead of hard coding 
         gpa: props.info.gpa,
         act: props.info.act, 
         sat: props.info.sat
     };
-    if(!data.gpa){
-        console.log("pop up message: GPA Required")
-        //TODO: pop up message 
-    } 
-    else if(!data.act && !data.sat){
+    //unnnesecary code because algorithm assumes these variables have been prechecked
+    // if(!data.gpa){
+    //     console.log("pop up message: GPA Required")
+    // } 
+    if(!data.act && !data.sat){
         return categorizeStudentSelectivityGPA(data.gpa);
     }
     else if(!data.act) {
@@ -552,11 +607,11 @@ function getStudentSelectivityScore(props) {
 }
 function compareSelecivityScores(studentSelectivityScore, collegeSelectivityScore) {
     if(studentSelectivityScore > collegeSelectivityScore) {
-        return "Reach";
+        return REACH;
     } else if(studentSelectivityScore < collegeSelectivityScore) {
-        return "Safety";
+        return SAFETY;
     } else {
-        return "Target";//TODO i think it is just going here, what type of variables are we dealing with 
+        return TARGET;
     }
 }
 function categorizeStudentSelectivityGPA(gpa){
