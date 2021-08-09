@@ -34,6 +34,7 @@ Note: As of May 2021, several of the tests written in 2020 fail due to snapshots
    * Use the arrow keys to move to “Hosting: ”, press space to select and enter to confirm.
 * When asked what directory to use as your public directory, type `build` and hit enter. This will choose the build folder that was generated earlier.
 * You will then be prompted to configure it as a single page app. Type `y` for this option and press `enter`.
+* If asked to set up automatic builds and deploys with GiHub? Type `n'
 * If asked to overwrite index.html, type `n` and press `enter`.
 * The command `firebase serve` can be run to test the website before deployment. This will start a local server similar to running npm start. You can press `ctrl+c` in the terminal to stop the server.
 * After confirming the website runs normally, run the command `firebase deploy` to deploy the site to firebase. 
@@ -83,6 +84,7 @@ Previous contributions and work logs:
 * CS + Social Good
 * COMP 523 Fall 2020: Tanner Bluhm, Ian Dershem, Kipp Williams
 * COMP 523 Spring 2021: Hannah Bodnar, Gaurachandra Das, Nada Rahmouni, Emily Stahle
+* Innovate Carolina Summer 2021: Owen Stegall, Jackson Lei, Emily Menay, Kenny Moore
 
 ## License
 Copyright 2020 Vitaly Radsky
