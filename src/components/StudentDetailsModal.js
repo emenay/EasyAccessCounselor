@@ -39,11 +39,20 @@ function CollegeListPanel(props){
     const [college, setCollege] = React.useState();
     
     const [searchResults, setResults] = useState([]);
-    
+    const [safetyCheap, setSafetyCheap] = useState([]);
+    const [targetCheap, setTargetCheap] = useState([]);
+    const [reachCheap, setReachCheap] = useState([]);
+    const [safetyMid, setSafetyMid] = useState([]);
+    const [targetMid, setTargetMid] = useState([]);
+    const [reachMid, setReachMid] = useState([]);
+    const [safetyCostly, setSafetyCostly] = useState([]);
+    const [targetCostly, setTargetCostly] = useState([]);
+    const [reachCostly, setReachCostly] = useState([]);
 
     useEffect(() => {refreshWithDatabase();}, []) // Basically, on render pull field preferences from database
 
     const refreshWithDatabase = () => {
+
         db.collection("student_counselors").doc(props.cohort).get()
         .then(resp => {
             if (resp.data().genInfoFields) {
@@ -66,6 +75,38 @@ function CollegeListPanel(props){
             }
         })
         .catch(err => {console.log(err);})
+
+        if (props.studentinfo.collegeList) {
+
+            let reachCheap = props.studentinfo.collegeList.Reach.filter(p => p.Affordability === 1).map(p => <div><text class = "fieldElement">{p.SchoolName}</text></div>);
+            let reachMid = props.studentinfo.collegeList.Reach.filter(p => p.Affordability === 2).map(p => <div><text class = "fieldElement">{p.SchoolName}</text></div>);
+            let reachCostly = props.studentinfo.collegeList.Reach.filter(p => p.Affordability === 3).map(p => <div><text class = "fieldElement">{p.SchoolName}</text></div>);
+
+            let targetCheap = props.studentinfo.collegeList.Target.filter(p => p.Affordability === 1).map(p => <div><text class = "fieldElement">{p.SchoolName}</text></div>);
+            let targetMid = props.studentinfo.collegeList.Target.filter(p => p.Affordability === 2).map(p => <div><text class = "fieldElement">{p.SchoolName}</text></div>);
+            let targetCostly = props.studentinfo.collegeList.Target.filter(p => p.Affordability === 3).map(p => <div><text class = "fieldElement">{p.SchoolName}</text></div>);
+
+            let safetyCheap = props.studentinfo.collegeList.Safety.filter(p => p.Affordability === 1).map(p => <div><text class = "fieldElement">{p.SchoolName}</text></div>);
+            let safetyMid = props.studentinfo.collegeList.Safety.filter(p => p.Affordability === 2).map(p => <div><text class = "fieldElement">{p.SchoolName}</text></div>);
+            let safetyCostly = props.studentinfo.collegeList.Safety.filter(p => p.Affordability === 3).map(p => <div><text class = "fieldElement">{p.SchoolName}</text></div>);
+
+            
+
+            setReachCheap(reachCheap);
+            setReachMid(reachMid);
+            setReachCostly(reachCostly);
+
+            setTargetCheap(targetCheap);
+            setTargetMid(targetMid);
+            setTargetCostly(targetCostly);
+
+            setSafetyCheap(safetyCheap);
+            setSafetyMid(safetyMid);
+            setSafetyCostly(safetyCostly);
+
+        }
+
+        
     }
 
     // helper function to be called when user types in input text box
@@ -140,7 +181,6 @@ function CollegeListPanel(props){
                 .then(res => {
                 const colleges= res.data;
                 // console.log(colleges);
-
                 
                 for (let i = 0; i < colleges.length; i++) {
                     
@@ -154,7 +194,6 @@ function CollegeListPanel(props){
                     } 
 
                     // console.log(colleges[i]);
-
                     let colElement = <CollegeElement
                     id = {colleges[i].unitid}
                     name = {colleges[i].instnm}
@@ -197,12 +236,6 @@ function CollegeListPanel(props){
 
         return <tr style = {{color: "white"}}>
             <CheckBox id = {props.id} name = {props.name}/>
-        {/* <input id = {props.id} type = "checkbox" onClick = {(e) => addtoCheckedList(props, e)}></input> */}
-        {/* <Checkbox
-            label = {props.name}
-            isSelected = {this.state.checkboxes[props.name]}
-            onCheckboxChange = {this.handleCheckboxChange}
-        /> */}
         <td style = {{backgroundColor: "#61a3a0", borderBottomLeftRadius: 10, borderTopLeftRadius: 10}}> {props.name}</td>
         <td style = {{backgroundColor: "#61a3a0"}}> {props.state}</td>
         <td style = {{backgroundColor: "#61a3a0"}}> {props.pub}</td>
@@ -232,7 +265,8 @@ function CollegeListPanel(props){
     }
     
     let info = props.info;
-
+    let studentinfo = props.studentinfo;
+    
     let affordabilityInfo = ["GPA", "Class Rank", "SAT", "ACT", "EFC", "Ability to Pay"];
     let fitInfo = ["Major 1", "Major 2", "Distance from Home", "Region", "College Size", "College Diversity", "College Type", "Religion", "Military/ROTC", "Athletics"];
     let allinfo = ["GPA", "Class Rank", "SAT", "ACT", "EFC", "Ability to Pay","Major 1", "Major 2", "Distance from Home", "Region", "College Size", "College Diversity", "College Type", "Religion", "Military/ROTC", "Athletics"];
@@ -240,6 +274,7 @@ function CollegeListPanel(props){
     var dbinfo2 = ["major1", "major2", "distancefromHome", "region", "collegeSize", "collegeDiversity", "collegeType", "religion", "rotc", "athletics"];
     let count = 0;
     // 
+    
     let affordabilityView = [];
     for (let i = 0; i < dbinfo.length; i++) {
         affordabilityView.push(
@@ -248,8 +283,11 @@ function CollegeListPanel(props){
                 name = {affordabilityInfo[i]} 
                 editing={editing}  
                 info={info[dbinfo[i]]} 
+                studentinfo = {studentinfo[dbinfo[i]]}
                 dbField={[dbinfo[i]]}
-                updateValue={updateValue}/>    
+                updateValue={updateValue}
+                id = {props.info.uid}
+                />    
         )
     }
     let collegeFitView = [];
@@ -260,8 +298,11 @@ function CollegeListPanel(props){
                 name = {fitInfo[i]} 
                 editing={editing}  
                 info={info[dbinfo2[i]]} 
+                studentinfo = {studentinfo[dbinfo2[i]]}
                 dbField={dbinfo2[i]}
-                updateValue={updateValue}/>
+                updateValue={updateValue}
+                id = {props.info.uid}
+                />
            
             
         )
@@ -271,7 +312,7 @@ function CollegeListPanel(props){
     var x = {width: "100%"}
     var y = {visibility: "hidden"}
     var z = {textAlign: "center"}
-
+    var whitetext = {color: "white"};
     var gpaInput = props.info.gpa;
     var stateInput = props.info.state;
     var zipInput = props.info.zip;
@@ -287,7 +328,8 @@ function CollegeListPanel(props){
         <tr>
         <th></th> 
         <th >Information 
-        </th>
+        </th>    
+        <th>Counselor <button class = "colListButton mediumbutton">Sync</button></th> 
         <HandleEdit
                     info={info}
                     setEdit={setEdit} 
@@ -297,8 +339,6 @@ function CollegeListPanel(props){
                 addedFields={addedFields}
                 addNewPreferences={addToPreferences}*/
                 />
-        
-        <th>Counselor <button class = "colListButton mediumbutton">Sync</button></th> 
         <th></th>
         <th>Student</th>
         </tr>
@@ -341,24 +381,24 @@ function CollegeListPanel(props){
         </tbody>
             <tr>
                 <td>$</td>
-                <td></td>
-                <td></td>
-                <td></td>
+                <td>{safetyCheap}</td>
+                <td>{targetCheap}</td>
+                <td>{reachCheap}</td>
             </tr>
         <tbody>
             <tr>
                 <td>$$</td>
-                <td class = "greyCell"></td>
-                <td class = "greyCell"></td>
-                <td class = "greyCell"></td>        
+                <td class = "greyCell">{safetyMid}</td>
+                <td class = "greyCell">{targetMid}</td>
+                <td class = "greyCell">{reachMid}</td>        
             </tr>
         </tbody>
         <tbody>
             <tr>
                 <td>$$$</td>
-                <td></td>
-                <td></td>
-                <td></td>  
+                <td>{safetyCostly}</td>
+                <td>{targetCostly}</td>
+                <td>{reachCostly}</td>  
             </tr>
         </tbody>
     </table>
@@ -798,8 +838,6 @@ function InputFieldElement(props) {
     //     <span>{props.field}: </span> 
     //     {props.editing===true ? <input type="text" defaultValue={props.info} onChange={(e) => props.updateValue(e,props.dbField)} />:props.info}
     //     </p>);
-    var x = {color: 'white'};
-    var y = {display: "none"}
     // return(<p> 
     //     <span> {props.field}: </span> 
     //     {props.editing===true 
@@ -809,6 +847,9 @@ function InputFieldElement(props) {
     //             ? <text>{props.info }</text> :
     //         <text class = "fieldElement" style = {x}>{props.info}</text>}
     //     </p>);
+
+    // let studentfield = db.collection("student_counselors").doc(props.)
+    
     return <tbody>
         <tr className="inputFieldElement" id = {props.dbField}>
        <td>
@@ -830,13 +871,15 @@ function InputFieldElement(props) {
             
             props.info === undefined || props.info === ""
                 ? <text>{props.info }</text> :
-            <text class = "fieldElement" style = {x}>{props.info}</text>}
+            <text class = "fieldElement">{props.info}</text>}
 
         </p>  
         </td>  
         <td><input type = "checkbox"/></td>
         <td></td>
-        <td>awaiting</td>
+        <td>{props.studentinfo === undefined || props.studentinfo === ""
+                ? <text>{props.studentinfo }</text> : <text class = "fieldElement" >{props.studentinfo}</text>}
+        </td>
        
         </tr>
         </tbody>
@@ -1735,7 +1778,7 @@ export default class StudentDetailsModal extends React.Component {
             case 'Notes':
                 return <NotesPanel info={this.props.info}/>
             case 'College List':
-                return <CollegeListPanel fields={this.state.fields} cohort={this.props.cohort} info={this.props.info} cardUpdate={this.props.cardUpdate} />
+                return <CollegeListPanel fields={this.state.fields} cohort={this.props.cohort} info={this.props.info} studentinfo = {this.props.studentinfo} cardUpdate={this.props.cardUpdate} />
             default:
                 return <p>Hello world</p>
         }

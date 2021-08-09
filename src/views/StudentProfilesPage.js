@@ -50,7 +50,9 @@ class StudentProfilesPage extends React.Component{
         ]
         this.state = {
             data: [], // array of student objects to be returned by db
+            studentdata: [], // array of students from the student_info db
             selectedCard: null, // object for student details of selected student, null if none selected
+            studentFieldsInfo: null,
             sortField: "uid", // which field to be sorted by
             sortReverse: false,
             filters: {}, // filters: object mapping field to a set of values to be filtered by
@@ -65,7 +67,6 @@ class StudentProfilesPage extends React.Component{
             inEditMode: false // True when wanting to edit the fields shown in student card
         }
     }
-
     // Retrieve data from database
     getCohortData = (bypass=false) => {
         if (bypass===true || (this.context.state && this.state.lastCohort !== this.context.state.selectedCohort)){
@@ -82,6 +83,7 @@ class StudentProfilesPage extends React.Component{
                 
             })
             .then(data => {
+                
                 let flagSet = new Set();
                 let flagSetGreen = new Set();
                 let flagSetPurp = new Set();
@@ -106,6 +108,28 @@ class StudentProfilesPage extends React.Component{
                 });
             })
             .catch(error => {console.log(error)});
+
+            db.collection("student_counselors").doc(this.context.state.selectedCohort).collection("student_info")
+                .get()
+                .then(querySnapshot => {
+                    // array of student objects (this time in the studentinfo database)
+                    return querySnapshot.docs.map(doc => {
+                        // Adding id to doc data
+                        var ent = doc.data();
+                        ent.uid = doc.id;
+                        return ent;
+                    });
+                        
+                })
+                .then(data => {
+
+                    this.setState({
+                        studentdata: data,
+                       
+                    });
+                })
+                .catch(error => {console.log(error)});
+
         }
     }
 
@@ -130,7 +154,6 @@ class StudentProfilesPage extends React.Component{
                 addedNames.push(j);
             }
         }
-        
         for (var i in obj) {
         db.collection("student_counselors").doc(this.context.state.selectedCohort).collection("students").doc(uid).update(obj)
         .then( () => {
@@ -196,6 +219,14 @@ class StudentProfilesPage extends React.Component{
     // Change selected card when clicked
     clickCard = (person) => {
         this.setState({selectedCard: person});
+
+        let studentfields = this.state.studentdata.filter((p) => p.uid === person.uid);
+        if (studentfields.length === 0) {
+            this.setState({studentFieldsInfo: {}});
+        } else {
+            this.setState({studentFieldsInfo: studentfields[0]});   
+        }
+           
     }
 
     clickFlag = (id) => {
@@ -341,7 +372,7 @@ class StudentProfilesPage extends React.Component{
                 <DropdownFilterMenu fields={this.filterFields} filterGroupItems={this.state.filterGroupItems} deleteFilter={this.deleteFilter} changeEvent={this.changeFilter} filters={this.state.filters} icon={Object.keys(this.state.filters).length === 0 ? filter_outline : filter_icon} />
                 <DropdownSortMenu fields={this.sortFields} changeEvent={this.changeSort} icon={this.state.sortIcon}/>
             </div>
-            {this.state.selectedCard && <StudentDetailsModal flagged={this.state.flagSet.has(this.state.selectedCard.uid)} exitModal={this.exitModal} cohort={this.context.state.selectedCohort} info={this.state.selectedCard} cardUpdate = {this.cardUpdate} />}
+            {this.state.selectedCard && <StudentDetailsModal flagged={this.state.flagSet.has(this.state.selectedCard.uid)} exitModal={this.exitModal} cohort={this.context.state.selectedCohort} info={this.state.selectedCard} studentinfo = {this.state.studentFieldsInfo} cardUpdate = {this.cardUpdate} />}
             <GridView data={data} clickCard={this.clickCard} clickFlag={this.clickFlag} flags={this.state.flagSet} flagsGreen={this.state.flagSetGreen} flagsPurp={this.state.flagSetPurp} inEditMode={this.state.inEditMode} editToggle={this.editToggle} cohort={this.context.state.selectedCohort} />
         </div>
     }
