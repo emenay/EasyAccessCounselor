@@ -29,6 +29,9 @@ import axios from 'axios';
 // Fairly static panel displaying info on college list
 function CollegeListPanel(props){
 
+    const [ids, setIds] = useState([]);
+    const [elements, setElements] = useState([]);
+
     const [editing, changeEditing] = useState(false);
     const [editedFields, setEditedFields] = useState([]);
     // const [editing, changeEditing] = useState(false); // keeps track of whether user is in edit mode
@@ -36,7 +39,6 @@ function CollegeListPanel(props){
     const [college, setCollege] = React.useState();
     
     const [searchResults, setResults] = useState([]);
-
     const [safetyCheap, setSafetyCheap] = useState([]);
     const [targetCheap, setTargetCheap] = useState([]);
     const [reachCheap, setReachCheap] = useState([]);
@@ -130,6 +132,7 @@ function CollegeListPanel(props){
     }
 
     let searches = [];
+    
 
     const reducer = (state, action) => {
 
@@ -173,10 +176,11 @@ function CollegeListPanel(props){
             if (college) {
 
                 let collegelowercased = college.replace(/[^A-Za-z0-9]/g, '').toLowerCase();
-            
+                // console.log(collegelowercased);
                 axios.get("https://collegerestapijs.herokuapp.com/colleges/name?name=" + collegelowercased)
                 .then(res => {
                 const colleges= res.data;
+                // console.log(colleges);
                 
                 for (let i = 0; i < colleges.length; i++) {
                     
@@ -188,15 +192,30 @@ function CollegeListPanel(props){
                     } else if (colleges[i].control === "3") {
                         pubOrPriv = "For Profit"
                     } 
-                    searches.push(<CollegeElement
+
+                    // console.log(colleges[i]);
+                    let colElement = <CollegeElement
                     id = {colleges[i].unitid}
                     name = {colleges[i].instnm}
                     state = {colleges[i].stabbr !== "NA" ? colleges[i].stabbr : ""}
                     pub = {pubOrPriv}
                     needmet = {colleges[i].needmet !== "NA" ? colleges[i].needmet * 100 + "% Need Met" : ""}
                     selectivity = {colleges[i].selectivity_char}
-                    />)
+                    />;
+
+                    searches.push(colElement);
+
+                    let newIds = [...ids];
+                    let newElements = [...elements];
+                    newIds.push(colleges[i].unitid);
+                    newElements.push(colElement);
+
+                    setIds(newIds);
+                    setElements(newElements);
+                    console.log(ids);
+                    console.log(elements);
                     searches.push(<br/>);
+                    // console.log(searches);
                     
                
              
@@ -224,7 +243,26 @@ function CollegeListPanel(props){
         <td style = {{backgroundColor: "#61a3a0", borderBottomRightRadius: 10, borderTopRightRadius: 10}}> {props.selectivity}</td>
     
     </tr>
-    }        
+    }  
+
+    function removeColleges() {
+
+        // console.log(ids);
+
+        for(let i=0; i < state.checkedIds.length; i++) {
+            let v = state.checkedIds[i];
+            // console.log(typeof(v));
+            // console.log(typeof(ids[i]));
+            let j = findEltinArr(ids, v);
+            if(j > -1) {
+                setIds(ids.splice(j, 1));
+                setElements(elements.splice(j, 1));
+            }
+            console.log(j);
+        }
+        console.log(ids);
+        setResults(elements);
+    }
     
     let info = props.info;
     let studentinfo = props.studentinfo;
@@ -269,12 +307,16 @@ function CollegeListPanel(props){
             
         )
     }
-
+    
     // return two columns as arrays along with button
     var x = {width: "100%"}
     var y = {visibility: "hidden"}
     var z = {textAlign: "center"}
     var whitetext = {color: "white"};
+    var gpaInput = props.info.gpa;
+    var stateInput = props.info.state;
+    var zipInput = props.info.zip;
+
     var collegesObject = {colleges: colleges}
 
     return (
@@ -387,8 +429,12 @@ function CollegeListPanel(props){
                 handleChange={setCollege}
                 value={college}
             />       
-            <button onClick={(e, searchtype) => searchCollege(e, "search")} class = "colListButton mediumbutton">Submit</button>
-        </form>
+             <button 
+                onClick={(e, searchtype) => searchCollege(e, "search")} 
+                class = "colListButton mediumbutton"
+                >Submit</button>
+         
+            </form>
             </td>
         </tr>
         </tbody>
@@ -402,9 +448,27 @@ function CollegeListPanel(props){
             <tr>
                 <td>
                 <span>
-                    <button class = "colListButton bigbutton" onClick = {() => {alert(state.checkedIds)}}>Add to College List</button>
-                    <button class = "colListButton mediumbutton">Remove</button>
-                </span>
+
+                    {validate(props) && <button class = "colListButton bigbutton" onClick ={() => categorizeColleges(props, state.checkedIds)}>Add to College List</button>}
+                    {!validate(props) && <Popup
+                    trigger={<button class="colListButton bigbutton">Add to College List</button>}
+                    modal
+                    >
+                    {close => (
+                        <div className="popup-addcollege">
+                            <div className="popup-header">
+                                <b>{validateMessage(props)[0]}</b>
+                            </div>
+
+                            <button onClick={()=> {
+                                close()}}>Done</button>
+                        </div>
+                    )}
+                    </Popup>}
+                    
+
+                    <button class = "colListButton mediumbutton" onClick={() => removeColleges()} className = "colListButton mediumbutton">Remove</button>
+                 </span>
                 </td>
             </tr>
         </tbody>
@@ -416,7 +480,6 @@ function CollegeListPanel(props){
                 <td>
                     <table class = "resultsTable" style = {{width: "90%"}}>
                         <tbody class = "results">
-                            
                             {searchResults}
                         </tbody>
                     </table>
@@ -429,9 +492,348 @@ function CollegeListPanel(props){
         );
 }
 
+function categorizeButtonClick(){
+    // if(validate() === true ){
+    //     categorizeCollege()
+    // }
+}
+
+async function categorizeColleges(props, collegeIDs) {
+    var coordinates;
+    for(var i = 0; i<collegeIDs.length ; i++){
+        coordinates = await getCollegeCoordinates(props, collegeIDs[i])
+        categorizeCollege(coordinates.affordabilityInt, coordinates.selectivityInt);
+    }
+}
+function categorizeCollege(row, column) { 
+    console.log("Row: "+row+" Column: "+column)//TODO: put college in correct spot on UI
+}
+const REACH = "Reach"
+const TARGET = "Target"
+const SAFETY = "Safety"
+const MOST_EXPENSIVE = "Most Expensive"
+const MILDLY_EXPENSIVE = "Mildly Expensive"
+const LEAST_EXPENSIVE = "Least Expensive"
+
+async function getCollegeCoordinates(props, collegeID) {  
+    var selectivityString = await categorizeCollegeSelecitvity(props, collegeID);
+    var affordabilityString = await categorizeCollegeAffordability(props, collegeID);
+    var coordinates = {
+        selectivityInt: -1,
+        affordabilityInt: -1
+    }
+    console.log("College Selectivity Designation: " + selectivityString);
+    console.log("College Affordability Designation: "+ affordabilityString);
+    if(selectivityString.localeCompare(SAFETY)===0){
+        coordinates.selectivityInt = 0;
+    } else if (selectivityString.localeCompare(TARGET)===0){
+        coordinates.selectivityInt = 1;
+    } else if (selectivityString.localeCompare(REACH)===0){
+        coordinates.selectivityInt = 2;
+    }
+    if(affordabilityString.localeCompare(LEAST_EXPENSIVE)===0){
+        coordinates.affordabilityInt = 0;
+    } else if (affordabilityString.localeCompare(MILDLY_EXPENSIVE)===0){
+        coordinates.affordabilityInt = 1;
+    } else if (affordabilityString.localeCompare(MOST_EXPENSIVE)===0){
+        coordinates.affordabilityInt = 2;
+    }
+    return coordinates;
+}
+
+async function getCollegeUniverse(collegeID) {
+    const response = await axios.get("https://collegerestapijs.herokuapp.com/colleges/id?id=" + collegeID)
+    return (response.data[0].universe)
+}
+
+async function getCollegeState(collegeID) {
+    const response = await axios.get("https://collegerestapijs.herokuapp.com/colleges/id?id=" + collegeID)
+    return (response.data[0].stabbr)
+}
+
+async function getCollegeStateScore(collegeID){
+    const response = await axios.get("https://collegerestapijs.herokuapp.com/colleges/id?id=" + collegeID)
+    return (response.data[0].afford)
+}
+
+async function getCollegeNeedMet(collegeID){
+    const response = await axios.get("https://collegerestapijs.herokuapp.com/colleges/id?id=" + collegeID)
+    return (response.data[0].needmet)
+}
+
+async function getCollegeControl(collegeID){
+    const response = await axios.get("https://collegerestapijs.herokuapp.com/colleges/id?id=" + collegeID)
+    return (response.data[0].control)
+}
+
+async function categorizeCollegeAffordability(props, collegeID) {
+    var data = {
+        zipcode: parseInt(props.info.zip),
+        ability: parseInt(props.info.famAfford),
+        studentState: props.info.state, 
+        studentSelectivityScore: getStudentSelectivityScore(props), 
+        universe: parseInt(await getCollegeUniverse(collegeID)), 
+        collegeState: await getCollegeState(collegeID),
+        collegeStateScore: parseInt(await getCollegeStateScore(collegeID)),
+        control: parseInt(await getCollegeControl(collegeID)),
+        needMet: parseInt(await getCollegeNeedMet(collegeID))
+    }
+    var studentAffordabilityScore;
+    //unnnesecary code because algorithm assumes these variables have been prechecked
+    // if(!data.zipcode || !data.state) {
+    //     console.log("pop up message: zip code and state Required")
+    // }
+    if(!data.ability) {
+        props.info.efc = "6000"
+        data.ability =  60000;
+    }
+    studentAffordabilityScore = affordabilityUniverse(data.universe);
+    if(studentAffordabilityScore) {
+        return studentAffordabilityScore;
+    }
+    studentAffordabilityScore = affordabilityCommuting(data.zipcode, data.state);
+    if(studentAffordabilityScore) {
+        return studentAffordabilityScore;
+    }
+    if(data.studentState.localeCompare(data.collegeState) === 0) {
+        studentAffordabilityScore = affordabilityInStatePublic(data.studentStateScore, data.studentSelectivityScore, data.ability);
+        return studentAffordabilityScore
+    }
+    else if(data.control === 2) { 
+        studentAffordabilityScore = affordabilityPrivate(data.ability, data.needMet);
+        return studentAffordabilityScore
+    }
+    else if(data.control === 1 && data.studentState.localeCompare(data.collegeState) !== 0) {
+        studentAffordabilityScore = affordabilityOOSPublic();
+        return studentAffordabilityScore
+    }
+    else {
+        //Should never get here 
+        return MILDLY_EXPENSIVE
+    }
+}
+function affordabilityUniverse(universe) {
+    if(universe !== 1) {
+        return MOST_EXPENSIVE;
+    } 
+}
+function affordabilityCommuting(zipcode, state) {
+    //TODO: zip code comparison to get miles 
+    const MAX_COMMUTING_DISTANCE = 25;//miles
+}
+function affordabilityInStatePublic(stateScore, selectivity, ability) {
+    if((stateScore === 1) ||
+        (stateScore === 2 && selectivity ===2) || 
+        (stateScore === 2 && selectivity >=3 && ability >= 10000) ||
+        (stateScore === 3 && ability >= 10000)) {
+        return LEAST_EXPENSIVE;
+    }
+    else {
+        return MILDLY_EXPENSIVE;
+    }
+}
+function affordabilityPrivate(ability, needMet) {
+    if((ability > 25000) ||
+        (ability > 15000 && needMet >= .80) ||
+        (ability > 10000 && needMet >= .85) || 
+        (ability >  6000 && needMet >= .87) || 
+        (ability >  1000 && needMet >= .90) || 
+        (ability >     0 && needMet >= .90)) {
+        return LEAST_EXPENSIVE;    
+    } else if((ability > 15000) ||
+        (ability > 10000 && needMet >= .80) ||
+        (ability >  6000 && needMet >= .85) || 
+        (ability >     0 && needMet >= .87)) {
+        return MILDLY_EXPENSIVE; 
+    } else {
+        return MOST_EXPENSIVE;
+    }
+}
+function affordabilityOOSPublic (studentSelectivity, collegeSelectivity, ability ) { //TODO: some variables from website didnt make sense
+    if(studentSelectivity === 2  ||
+        studentSelectivity ===2  && ability >15000 && ability <25000 ||
+        studentSelectivity ===2  && ability >25000) {
+        return LEAST_EXPENSIVE
+    } else if(studentSelectivity === 2 && ability >6000 && ability <15000 ||
+        studentSelectivity ===2  && ability > 15000 && ability<25000 ||
+        studentSelectivity ===2  && ability > 25000 ||
+        studentSelectivity >=3 && ability > 15000 & ability <25000 ||
+        studentSelectivity >=3 && ability >25000) {
+        return MILDLY_EXPENSIVE
+    } else {
+        return MOST_EXPENSIVE
+    }
+}
+
+async function getCollegeSelectivityScore(collegeID) {
+    const response = await axios.get("https://collegerestapijs.herokuapp.com/colleges/id?id=" + collegeID)
+    return (response.data[0].selectivity_char)
+}
+
+
+async function categorizeCollegeSelecitvity(props, collegeID) {
+    var collegeSelectivityScore = await (getCollegeSelectivityScore(collegeID))
+    collegeSelectivityScore = Number(collegeSelectivityScore[0])
+    var studentSelectivityScore = getStudentSelectivityScore(props);
+    return compareSelecivityScores(studentSelectivityScore, collegeSelectivityScore);
+}
+function getStudentSelectivityScore(props) {
+    var data = {
+        gpa: props.info.gpa,
+        act: props.info.act, 
+        sat: props.info.sat
+    };
+    //unnnesecary code because algorithm assumes these variables have been prechecked
+    // if(!data.gpa){
+    //     console.log("pop up message: GPA Required")
+    // } 
+    if(!data.act && !data.sat){
+        return categorizeStudentSelectivityGPA(data.gpa);
+    }
+    else if(!data.act) {
+        return categorizeStudentSelectivitySAT(data.gpa, data.sat);
+    }
+    else if(!data.sat) {
+        return categorizeStudentSelectivityACT(data.gpa, data.act)
+    }
+    else {
+        let scoreSAT = categorizeStudentSelectivitySAT(data.gpa, data.sat);
+        let scoreACT = categorizeStudentSelectivityACT(data.gpa, data.act);
+        if(scoreSAT < scoreACT) {
+            return scoreSAT;
+        }
+        else {
+            return scoreACT;
+        }
+    }
+}
+function compareSelecivityScores(studentSelectivityScore, collegeSelectivityScore) {
+    if(studentSelectivityScore > collegeSelectivityScore) {
+        return REACH;
+    } else if(studentSelectivityScore < collegeSelectivityScore) {
+        return SAFETY;
+    } else {
+        return TARGET;
+    }
+}
+function categorizeStudentSelectivityGPA(gpa){
+    //weighted scaling
+    if(gpa > 4.0) {
+        return 2;
+    }
+    else if(gpa >3.5) {
+        return 3;
+    }
+    else if(gpa > 3.0) {
+        return 4;
+    }
+    else if(gpa > 2.5) {
+        return 5;
+    }
+    else {
+        return 6;
+    }
+}
+function categorizeStudentSelectivitySAT(gpa, sat) {
+    if((gpa >= 3.50 && sat >= 1300) ||
+       (gpa >= 3.75 && sat >= 1200)) {
+        return 2;
+    } 
+    else if((gpa >= 3.00 && sat >= 1250) ||
+            (gpa >= 3.25 && sat >= 1150) ||
+            (gpa >= 3.75 && sat >= 1100) ||
+            (gpa >= 4.00 && sat >= 1050)) {
+        return 3;
+    }
+    else if((gpa >= 2.25 && sat >= 1400) ||
+            (gpa >= 2.50 && sat >= 1050) ||
+            (gpa >= 3.25 && sat >= 1000) ||
+            (gpa >= 3.50 && sat >=  950)) {
+        return 4;
+    }
+    else if((gpa >= 2.00 && sat >= 1050) ||
+            (gpa >= 2.25 && sat >= 1000) ||
+            (gpa >= 2.50 && sat >=  880) ||
+            (gpa >= 3.5)) {
+        return 5;
+    }
+    else {
+        return 6;
+    }
+}
+function categorizeStudentSelectivityACT(gpa, act) {
+    if((gpa >= 3.50 && act >= 28) ||
+       (gpa >= 3.75 && act >= 25)) {
+        return 2;
+    } 
+    else if((gpa >= 3.00 && act >= 26) ||
+            (gpa >= 3.25 && act >= 23) ||
+            (gpa >= 3.75 && act >= 22) ||
+            (gpa >= 4.00 && act >= 20)) {
+        return 3;
+    }
+    else if((gpa >= 2.25 && act >= 31) ||
+            (gpa >= 2.50 && act >= 20) ||
+            (gpa >= 3.25 && act >= 19) ||
+            (gpa >= 3.50 && act >= 18)) {
+        return 4;
+    }
+    else if((gpa >= 2.00 && act >= 20) ||
+            (gpa >= 2.25 && act >= 19) ||
+            (gpa >= 2.50 && act >= 17) ||
+            (gpa >= 3.5)) {
+        return 5;
+    }
+    else {
+        return 6;
+    }
+}
+
+function validateMessage(props) {
+    let info = props.info;
+    const errors = [];
+    let g = typeof(info.gpa) === "undefined" || info.gpa === null || info.gpa <= 0;
+    let s = typeof(info.state) === "undefined" || info.state === null;
+    let z = typeof(info.zipcode) === "undefined" || info.zipcode <= 0 || info.zipcode === null;
+
+
+    if(g && s && z) {
+        errors.push("Cannot add to list without valid GPA, home state, and zipcode.");
+        errors.push(false);
+    } else if(g && z) {
+        errors.push("Cannot add to list without valid GPA and zipcode.");
+        errors.push(false);
+    } else if(s && z) {
+        errors.push("Cannot add to list without valid home state and zipcode.");
+        errors.push(false);
+    } else if(g && s) {
+        errors.push("Cannot add to list without valid GPA and home state.");
+        errors.push(false);
+    } else if(z) {
+        errors.push("Cannot add to list without valid zipcode.");
+        errors.push(false);
+    } else if(s) {
+        errors.push("Cannot add to list without valid state.\n");
+        errors.push(false);
+    } else if(g) {
+        errors.push("Cannot add to list without valid GPA.\n");
+        errors.push(false);
+    } 
+    if(errors.length < 1) {
+        errors.push("College added!");
+        errors.push(true);
+    }
+    // console.log(errors);
+    return errors;
+}
+
+function validate(props) {
+    return validateMessage(props)[1];
+}
+
 // helper component to allow for editing of different tabs
 function InputFieldElement(props) {
-
+     
     // return(<p> 
     //     <span>{props.field}: </span> 
     //     {props.editing===true ? <input type="text" defaultValue={props.info} onChange={(e) => props.updateValue(e,props.dbField)} />:props.info}
@@ -615,6 +1017,31 @@ function ProcessPanelElement(props) {
 function ApplicationProcessPanel(props) {
     const [editing, changeEditing] = useState(false);
     const [editedFields, setEditedFields] = useState([]);
+    const [fieldsData, setFieldsData] = useState(false);
+    const [newField, setNewField] = useState("");
+
+    useEffect(() => {refreshWithDatabase();}, []) // Basically, on render pull field preferences from database
+
+    const refreshWithDatabase = () => {
+        db.collection("student_counselors").doc(props.cohort).get()
+        .then(resp => {
+            if (resp.data().appFields) {
+                setFieldsData(resp.data().appFields);
+            } else {
+                /*
+                If it's the user's first time accessing a student profile card, set their preferences to any data that is
+                available for the selected student
+                */
+                let kindaDefaultFields = Object.keys(origAppFields);
+
+                // update database
+                db.collection("student_counselors").doc(props.cohort).update({
+                    appFields: origAppFields
+                });
+            }
+        })
+        .catch(err => {console.log(err);})
+    }
 
     // update value based on user typing in input text box
     const updateValue = (e, field) => {
@@ -636,53 +1063,101 @@ function ApplicationProcessPanel(props) {
         }
     }
 
+/*     const removeFromPreferences1 = (field) => {
+        fieldsData.splice(findEltinArr(fieldsData, field), 1);
+        let newFieldsData = [...fieldsData];
+        setFieldsData(newFieldsData);
+    } */
+
+    let removeFromPreferences = (e) => {
+        console.log(e);
+        $('#' + e).toggle()
+    }
+
+    let addInfo = [];
+
+    const addToPreferences = () => {
+        fieldSwap.set(newField, newField);
+        addArr[addArr.length]=newField;
+        console.log(newField);
+        console.log(addArr[0]);
+        console.log(fieldSwap.get(addArr[0]));
+         addInfo.push(
+            <ModalFieldElement
+                editing={editing}
+                removeFromPreferences={removeFromPreferences}
+                field={fieldSwap.get(addArr[(addArr.length)-1])}
+                info={info[fieldSwap.get(addArr[(addArr.length)-1])]}
+                dbField={addArr[(addArr.length)-1]}
+                updateValue={updateValue}
+            />) 
+        setNewField("");
+    }
+
+    const addField = (e) => {
+        setNewField(e.target.value);
+    }
+
+    const submitAddedField = () => {
+        if (newField != null && newField != "") {
+            addToPreferences(newField);
+            setNewField("");
+        }
+    } 
 
     // very static array for column
     let info = props.info;
-    let fieldSwap = {
-        visits  :  "Visits",
-        earlyApplications  :  "Early Applications",
-        regularApplications  :  "Regular Applications",
-        essays  :  "Essays",
-        testing  :  "Testing",
-        counselorRecommendations  :  "Counselor Recommendations",
-        resume  :  "Teacher Recommendations",
-        results  :  "Results",
-        admittedSchools  :  "Admitted Schools",
-        rejectedSchools  :  "Rejected Schools",
-        waitlistedSchools  :  "Waitlisted Schools",
-        decision  :  "Student Decision",
-        deposit  :  "Deposit",
-        orientation  :  "Orientation",
-        summerPrograms  :  "Summer Programs",
-        housing  :  "Housing",
-        appFeeWaiver  :  "App Fee Waiver",
-        fafsaStatus  :  "FAFSA Status",
-        fafsaVerification  :  "FAFSA Verification",
-        financialAidAwardLetters  :  "Financial Aid Award Letters",
-        financialAidAppeal  :  "Financial Aid Appeal",
-        cssProfile  :  "CSS Profile",
-    };
+
+    const fieldSwap = new Map();
+    fieldSwap.set("visits", "Visits");
+    fieldSwap.set("earlyApplications", "Early Applications");
+    fieldSwap.set("regularApplications", "Regular Applications");
+    fieldSwap.set("essays", "Essays");
+    fieldSwap.set("testing", "Testing");
+    fieldSwap.set("counselorRecommendations", "Counselor Recommendations");
+    fieldSwap.set("resume", "Teacher Recommendations");
+    fieldSwap.set("results", "Results");
+    fieldSwap.set("admitttedSchools", "Admitted Schools");
+    fieldSwap.set("rejectedSchools", "Rejected Schools");
+    fieldSwap.set("waitlistedSchools", "Waitlisted Schools");
+    fieldSwap.set("decision", "Student Decision");
+    fieldSwap.set("deposit", "Deposit");
+    fieldSwap.set("orientation", "Orientation");
+    fieldSwap.set("summerPrograms", "Summer Programs");
+    fieldSwap.set("housing", "Housing");
+    fieldSwap.set("appFeeWaiver", "App Fee Waiver");
+    fieldSwap.set("fafsaStatus", "FAFSA Status");
+    fieldSwap.set("fafsaVerification", "FAFSA Verification");
+    fieldSwap.set("financialAidAwardLetters", "Financial Aid Award Letters");
+    fieldSwap.set("financialAidAppeal", "Financial Aid Appeal");
+    fieldSwap.set("ccsProfile", "CCS Profile");
 
     // Static arrays for different checklist portions
+    let origAppFields = ["earlyApplications", "regularApplications", "essays", "testing", "counselorRecommendations",
+    "resume", "results", "admittedSchools", "rejectedSchools", "waitlistedSchools", "decision", "deposit", "orientation", "summerPrograms", "housing",
+    "appFeeWaiver", "fafsaStatus", "fafsaVerification", "financialAidAwardLetters", 
+                        "financialAidAppeal", "cssProfile"]
+
     let appArr = ["earlyApplications", "regularApplications", "essays", "testing", "counselorRecommendations",
                     "resume"];
     let postappArr = ["results", "admittedSchools", "rejectedSchools", "waitlistedSchools", "decision"];
     let postdesArr = ["deposit", "orientation", "summerPrograms", "housing"];
     let finaidArr = ["appFeeWaiver", "fafsaStatus", "fafsaVerification", "financialAidAwardLetters", 
                         "financialAidAppeal", "cssProfile"];
+    let addArr = [];
 
     
     // Series of for loops to create different arrays for different checklist sections
     let appInfo = [];
     for (let i=0; i<appArr.length; i++) {
-        const processedField = fieldSwap[appArr[i]];
+        const processedField = fieldSwap.get(appArr[i]);
         if (processedField) appInfo.push(
-            <ProcessPanelElement 
-                editing={editing}  
+            <ModalFieldElement 
+                editing={editing} 
+                removeFromPreferences={removeFromPreferences} 
                 field={processedField} 
                 info={info[processedField]} 
-                dbField={processedField}
+                dbField={appArr[i]}
                 updateValue={updateValue}
             />
         );
@@ -690,13 +1165,14 @@ function ApplicationProcessPanel(props) {
 
     let postappInfo = [];
     for (let i=0; i<postappArr.length; i++) {
-        const processedField = fieldSwap[postappArr[i]];
+        const processedField = fieldSwap.get(postappArr[i]);
         if (processedField) postappInfo.push(
-            <ProcessPanelElement  
-                editing={editing}  
-                field={processedField} 
+            <ModalFieldElement 
+                editing={editing} 
+                removeFromPreferences={removeFromPreferences} 
+                field={processedField}  
                 info={info[processedField]} 
-                dbField={processedField}
+                dbField={postappArr[i]}
                 updateValue={updateValue}
             />
         );
@@ -704,13 +1180,14 @@ function ApplicationProcessPanel(props) {
 
     let postdesInfo = [];
     for (let i=0; i<postdesArr.length; i++) {
-        const processedField = fieldSwap[postdesArr[i]];
+        const processedField = fieldSwap.get(postdesArr[i]);
         if (processedField) postdesInfo.push(
-            <ProcessPanelElement 
+            <ModalFieldElement 
                 editing={editing}  
+                removeFromPreferences={removeFromPreferences}
                 field={processedField} 
                 info={info[processedField]} 
-                dbField={processedField}
+                dbField={postdesArr[i]}
                 updateValue={updateValue}
             />
         );
@@ -718,18 +1195,33 @@ function ApplicationProcessPanel(props) {
 
     let finaidInfo = [];
     for (let i=0; i<finaidArr.length; i++) {
-        const processedField = fieldSwap[finaidArr[i]];
+        const processedField = fieldSwap.get(finaidArr[i]);
         if (processedField) finaidInfo.push(
-            <ProcessPanelElement  
+            <ModalFieldElement 
                 editing={editing}  
+                removeFromPreferences={removeFromPreferences}
                 field={processedField} 
                 info={info[processedField]} 
-                dbField={processedField}
+                dbField={finaidArr[i]}
                 updateValue={updateValue}
             />
         );
     }
 
+    //let addInfo = [];
+/*     for (let i=0; i<addArr.length; i++) {
+        const processedField = fieldSwap.get(addArr[i]);
+        if (processedField) addInfo.push(
+            <ModalFieldElement
+                editing={editing}
+                removeFromPreferences={removeFromPreferences}
+                field={processedField}
+                info={info[processedField]}
+                dbField={addArr[i]}
+                updateValue={updateValue}
+            />
+        );
+    } */
 
     // Final div with arrays in checklist and buttons
     return(
@@ -738,18 +1230,21 @@ function ApplicationProcessPanel(props) {
                 <div className="app-group">
                     <div className="app-circle" />
                     <b>Pre-Application</b>
-                   {<ProcessPanelElement  
-                        editing={editing}  
-                        field="Visits" 
-                        info={info["Visits"]} 
-                        dbField="Visits"
+                       {<ModalFieldElement
+                        editing={editing}
+                        removeFromPreferences={removeFromPreferences}
+                        field="Visits"
+                        info={info["Visits"]}
+                        dbField="visits"
                         updateValue={updateValue}
                         />}
-                    {<ProcessPanelElement  
+
+                        {<ModalFieldElement 
                         editing={editing}  
+                        removeFromPreferences={removeFromPreferences}
                         field="Balanced College List" 
                         info={info["Balanced College List"]} 
-                        dbField="Balanced College List"
+                        dbField="balancedCollegeList"
                         updateValue={updateValue}
                         />}
                 </div>
@@ -773,19 +1268,31 @@ function ApplicationProcessPanel(props) {
                     <b>Graduation!</b>
                 </div>
             </div>
-            <div className="appproc-col">
-                <b>Financial Aid</b>
-                {finaidInfo}
-            </div>
+
             
-            <HandleEdit
+            <div>
+                <div className="app-group">
+                    <b>Financial Aid</b>
+                    {finaidInfo}
+                </div>
+                <div className="app-group">
+                    <b>Additional Information</b>
+                    {addInfo}
+                </div> 
+            </div>
+
+            
+            <HandleEditInit
                             info={info}
                             setEdit={setEdit} 
-                            editing={editing} 
-                        /*    fieldsData={fieldsData} 
-                            setAddedFields={changeAddedFields} 
-                            addedFields={addedFields}
-                            addNewPreferences={addToPreferences}*/
+                            editing={editing}
+                            addToPreferences={addToPreferences}
+                            addField={addField}
+                            submitAddedField = {submitAddedField}
+
+                            //fieldsData={fieldsData} 
+                            //addNewPreferences={addToPreferences}
+                            //removeFromPreferences={removeFromPreferences}
                         />
         </div>
     );
@@ -828,7 +1335,7 @@ function GenInfoCol(props) {
 
 // component for minus button + input text that shows when pressing edit button
 function ModalFieldElement(props) {
-    return <div className="modalFieldElement">
+    return <div className="modalFieldElement" id={props.dbField}>
         {/* If the user is in edit mode, display button to remove this field element */}
         {props.editing === true && 
             <button onClick={() => props.removeFromPreferences(props.dbField)}>
@@ -890,7 +1397,6 @@ function getNonVisibleOptions(totalOptions, visibleOptions) {
     return nonVisibleOptions;
 }
 
-
 // Helper parent component to contain buttons to display in editing mode
 function EditButtonSuite(props) {
     const nonVisibleOptions = getNonVisibleOptions(Object.keys(props.info), props.fields);
@@ -905,7 +1411,7 @@ function EditButtonSuite(props) {
                     <img src={plus_symbol} />
                     Add Item
                 </button> 
-                <ReactTooltip place="top" type="dark" effect="solid" />
+                <ReactTooltip place="top" type="dark" effect="solid"/>
             </div>
             :
             <button className="addFieldButton" onClick={()=> {props.setAddedFields(true);}}>
@@ -950,12 +1456,40 @@ function ToggleEditButton(props) {
             <img src={edit_symbol} alt="edit"/>
         </button>
         <ReactTooltip place="top" type="dark" effect="solid"/>
+        {props.editing != true && <Popup
+                        trigger={<button className="button" data-tip="Add a custom field" className="studentdetails-editbutton"><img src={plus_symbol} alt="edit"/></button>}
+                        modal
+                        nested
+                    >
+                        {close => (
+                        <div className="popup-modal">
+                            <p><span>Add New Field: </span>
+                            <input type="text" onChange={(e) => props.addToPreferences(e)} />
+                            </p>
+                            <div className="saveCancelContainer">
+                                <button 
+                                    className="save" 
+                                    onClick={() => {
+                                        close();
+                                    }}
+                                >Add Field</button>
+                                <button 
+                                    className="cancel" 
+                                    onClick={() => {
+                                        console.log('modal closed ');
+                                        close();
+                                        }}
+                                >Cancel</button>
+                            </div>
+                        </div>
+                        )}
+                    </Popup> }
     </div>
 }
 
 // More complex edit button component with add fields button next to it and popup code
 function ToggleEditButtonInit(props) {
-    return <div class="card-buttons">
+    return <div className="card-buttons">
         <button data-tip="Customize what fields are shown" className="studentdetails-editbutton" onClick={()=> {props.setEdit(true)}}>
             <img src={edit_symbol} alt="edit"/>
         </button>
@@ -1240,7 +1774,7 @@ export default class StudentDetailsModal extends React.Component {
             case 'General':
                 return <GeneralInformationPanel fields={this.state.fields} cohort={this.props.cohort} info={this.props.info} cardUpdate={this.props.cardUpdate} />
             case 'Checklist':
-                return <ApplicationProcessPanel info={this.props.info} cardUpdate={this.props.cardUpdate} />
+                return <ApplicationProcessPanel info={this.props.info} cardUpdate={this.props.cardUpdate} fields={this.state.fields} cohort={this.props.cohort} />
             case 'Notes':
                 return <NotesPanel info={this.props.info}/>
             case 'College List':
@@ -1270,4 +1804,3 @@ export default class StudentDetailsModal extends React.Component {
         </div>
     }
 }
-
