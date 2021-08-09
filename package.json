@@ -30,6 +30,7 @@
     "js-cookie": "^2.2.1",
     "json2csv": "^5.0.6",
     "react": "^16.13.1",
+    "react-autosuggest": "^10.1.0",
     "react-autosuggestions": "^3.2.0",
     "react-bootstrap": "^1.2.2",
     "react-datasheet": "^1.4.1",
