@@ -37,11 +37,20 @@ function CollegeListPanel(props){
     
     const [searchResults, setResults] = useState([]);
 
-    const [checkedList, setCheckedList] = useState([]);
+    const [safetyCheap, setSafetyCheap] = useState([]);
+    const [targetCheap, setTargetCheap] = useState([]);
+    const [reachCheap, setReachCheap] = useState([]);
+    const [safetyMid, setSafetyMid] = useState([]);
+    const [targetMid, setTargetMid] = useState([]);
+    const [reachMid, setReachMid] = useState([]);
+    const [safetyCostly, setSafetyCostly] = useState([]);
+    const [targetCostly, setTargetCostly] = useState([]);
+    const [reachCostly, setReachCostly] = useState([]);
 
     useEffect(() => {refreshWithDatabase();}, []) // Basically, on render pull field preferences from database
 
     const refreshWithDatabase = () => {
+
         db.collection("student_counselors").doc(props.cohort).get()
         .then(resp => {
             if (resp.data().genInfoFields) {
@@ -64,6 +73,38 @@ function CollegeListPanel(props){
             }
         })
         .catch(err => {console.log(err);})
+
+        if (props.studentinfo.collegeList) {
+
+            let reachCheap = props.studentinfo.collegeList.Reach.filter(p => p.Affordability === 1).map(p => <div><text class = "fieldElement">{p.SchoolName}</text></div>);
+            let reachMid = props.studentinfo.collegeList.Reach.filter(p => p.Affordability === 2).map(p => <div><text class = "fieldElement">{p.SchoolName}</text></div>);
+            let reachCostly = props.studentinfo.collegeList.Reach.filter(p => p.Affordability === 3).map(p => <div><text class = "fieldElement">{p.SchoolName}</text></div>);
+
+            let targetCheap = props.studentinfo.collegeList.Target.filter(p => p.Affordability === 1).map(p => <div><text class = "fieldElement">{p.SchoolName}</text></div>);
+            let targetMid = props.studentinfo.collegeList.Target.filter(p => p.Affordability === 2).map(p => <div><text class = "fieldElement">{p.SchoolName}</text></div>);
+            let targetCostly = props.studentinfo.collegeList.Target.filter(p => p.Affordability === 3).map(p => <div><text class = "fieldElement">{p.SchoolName}</text></div>);
+
+            let safetyCheap = props.studentinfo.collegeList.Safety.filter(p => p.Affordability === 1).map(p => <div><text class = "fieldElement">{p.SchoolName}</text></div>);
+            let safetyMid = props.studentinfo.collegeList.Safety.filter(p => p.Affordability === 2).map(p => <div><text class = "fieldElement">{p.SchoolName}</text></div>);
+            let safetyCostly = props.studentinfo.collegeList.Safety.filter(p => p.Affordability === 3).map(p => <div><text class = "fieldElement">{p.SchoolName}</text></div>);
+
+            
+
+            setReachCheap(reachCheap);
+            setReachMid(reachMid);
+            setReachCostly(reachCostly);
+
+            setTargetCheap(targetCheap);
+            setTargetMid(targetMid);
+            setTargetCostly(targetCostly);
+
+            setSafetyCheap(safetyCheap);
+            setSafetyMid(safetyMid);
+            setSafetyCostly(safetyCostly);
+
+        }
+
+        
     }
 
     // helper function to be called when user types in input text box
@@ -132,12 +173,10 @@ function CollegeListPanel(props){
             if (college) {
 
                 let collegelowercased = college.replace(/[^A-Za-z0-9]/g, '').toLowerCase();
-                console.log(collegelowercased);
+            
                 axios.get("https://collegerestapijs.herokuapp.com/colleges/name?name=" + collegelowercased)
                 .then(res => {
                 const colleges= res.data;
-                console.log(colleges);
-
                 
                 for (let i = 0; i < colleges.length; i++) {
                     
@@ -149,8 +188,6 @@ function CollegeListPanel(props){
                     } else if (colleges[i].control === "3") {
                         pubOrPriv = "For Profit"
                     } 
-
-                    console.log(colleges[i]);
                     searches.push(<CollegeElement
                     id = {colleges[i].unitid}
                     name = {colleges[i].instnm}
@@ -237,6 +274,7 @@ function CollegeListPanel(props){
     var x = {width: "100%"}
     var y = {visibility: "hidden"}
     var z = {textAlign: "center"}
+    var whitetext = {color: "white"};
     var collegesObject = {colleges: colleges}
 
     return (
@@ -301,24 +339,24 @@ function CollegeListPanel(props){
         </tbody>
             <tr>
                 <td>$</td>
-                <td></td>
-                <td></td>
-                <td></td>
+                <td>{safetyCheap}</td>
+                <td>{targetCheap}</td>
+                <td>{reachCheap}</td>
             </tr>
         <tbody>
             <tr>
                 <td>$$</td>
-                <td class = "greyCell"></td>
-                <td class = "greyCell"></td>
-                <td class = "greyCell"></td>        
+                <td class = "greyCell">{safetyMid}</td>
+                <td class = "greyCell">{targetMid}</td>
+                <td class = "greyCell">{reachMid}</td>        
             </tr>
         </tbody>
         <tbody>
             <tr>
                 <td>$$$</td>
-                <td></td>
-                <td></td>
-                <td></td>  
+                <td>{safetyCostly}</td>
+                <td>{targetCostly}</td>
+                <td>{reachCostly}</td>  
             </tr>
         </tbody>
     </table>
@@ -398,8 +436,6 @@ function InputFieldElement(props) {
     //     <span>{props.field}: </span> 
     //     {props.editing===true ? <input type="text" defaultValue={props.info} onChange={(e) => props.updateValue(e,props.dbField)} />:props.info}
     //     </p>);
-    var x = {color: 'white'};
-    var y = {display: "none"}
     // return(<p> 
     //     <span> {props.field}: </span> 
     //     {props.editing===true 
@@ -433,14 +469,14 @@ function InputFieldElement(props) {
             
             props.info === undefined || props.info === ""
                 ? <text>{props.info }</text> :
-            <text class = "fieldElement" style = {x}>{props.info}</text>}
+            <text class = "fieldElement">{props.info}</text>}
 
         </p>  
         </td>  
         <td><input type = "checkbox"/></td>
         <td></td>
         <td>{props.studentinfo === undefined || props.studentinfo === ""
-                ? <text>{props.studentinfo }</text> : <text class = "fieldElement" style = {x}>{props.studentinfo}</text>}
+                ? <text>{props.studentinfo }</text> : <text class = "fieldElement" >{props.studentinfo}</text>}
         </td>
        
         </tr>
