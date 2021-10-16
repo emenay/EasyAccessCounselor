@@ -448,15 +448,6 @@ function CollegeListPanel(props) {
                 Sync
               </button>
             </th>
-            <HandleEdit
-              info={info}
-              setEdit={setEdit}
-              editing={editing}
-              /*    fieldsData={fieldsData} 
-                setAddedFields={changeAddedFields} 
-                addedFields={addedFields}
-                addNewPreferences={addToPreferences} */
-            />
             <th></th>
             <th>Student</th>
           </tr>
