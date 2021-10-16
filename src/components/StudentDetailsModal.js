@@ -425,26 +425,29 @@ function CollegeListPanel(props) {
 
   var collegesObject = { colleges: colleges }
 
+  function syncButtonPress() {
+    alert('Sync button')
+  }
+
   return (
     <div>
       <table class="colListTable" style={x}>
         <tbody>
           <tr>
             <th></th>
-            <th>Information</th>
             <th>
-              Counselor <button class="colListButton mediumbutton">Sync</button>
+              Information{' '}
+              <HandleEdit info={info} setEdit={setEdit} editing={editing} />
             </th>
-            <HandleEdit
-              info={info}
-              setEdit={setEdit}
-              editing={editing}
-              /*    fieldsData={fieldsData} 
-                setAddedFields={changeAddedFields} 
-                addedFields={addedFields}
-                addNewPreferences={addToPreferences}*/
-            />
-            <th></th>
+
+            <th>Counselor</th>
+            <th>
+              <button
+                onClick={() => syncButtonPress()}
+                class="colListButton mediumbutton">
+                Sync
+              </button>
+            </th>
             <th>Student</th>
           </tr>
         </tbody>
@@ -1082,7 +1085,7 @@ function EditButton(props) {
 // Helper component to accomodate for call to database
 function HandleEdit(props) {
   return (
-    <div className="editSuite" style={{ width: '250px', height: '40px' }}>
+    <div style={{ display: 'inline-block' }}>
       {props.editing === true ? (
         <EditButton editExit={props.setEdit} info={props.info} />
       ) : (
