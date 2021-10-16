@@ -1084,7 +1084,7 @@ function EditButton(props) {
 // Helper component to accomodate for call to database
 function HandleEdit(props) {
   return (
-    <div style={{display:"inline-block" }}>
+    <div style={{ display: 'inline-block' }}>
       {props.editing === true ? (
         <EditButton editExit={props.setEdit} info={props.info} />
       ) : (
