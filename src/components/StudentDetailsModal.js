@@ -425,6 +425,8 @@ function CollegeListPanel(props) {
 
   var collegesObject = { colleges: colleges }
 
+  
+
   return (
     <div>
       <table class="colListTable" style={x}>
@@ -442,7 +444,7 @@ function CollegeListPanel(props) {
               /*    fieldsData={fieldsData} 
                 setAddedFields={changeAddedFields} 
                 addedFields={addedFields}
-                addNewPreferences={addToPreferences}*/
+                addNewPreferences={addToPreferences} */
             />
             <th></th>
             <th>Student</th>
@@ -1085,7 +1087,10 @@ function HandleEdit(props) {
       {props.editing === true ? (
         <EditButton editExit={props.setEdit} info={props.info} />
       ) : (
-        <ToggleEditButton setEdit={props.setEdit} />
+        <ToggleEditButton
+         setEdit={props.setEdit} 
+         addToPreferences={props.addToPreferences}
+         />
       )}
     </div>
   )
@@ -1773,6 +1778,15 @@ function HandleEditInit(props) {
 
 // Simpler editbutton component for just editing
 function ToggleEditButton(props) {
+  let newField = 'New Field'
+  function handleChange(e) {
+    newField = e.target.value;
+  }
+
+  function save(newField) {
+    console.log("save ni ma ge bi" + newField)
+    console.log(props.setEdit)
+  }
   return (
     <div>
       <button
@@ -1803,14 +1817,14 @@ function ToggleEditButton(props) {
                 <span>Add New Field: </span>
                 <input
                   type="text"
-                  onChange={(e) => props.addToPreferences(e)}
+                  onChange={(e) => handleChange(e)}
                 />
               </p>
               <div className="saveCancelContainer">
                 <button
                   className="save"
                   onClick={() => {
-                    close()
+                    save(newField)
                   }}>
                   Add Field
                 </button>
