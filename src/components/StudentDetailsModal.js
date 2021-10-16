@@ -529,7 +529,7 @@ function CollegeListPanel(props) {
               <div>OR</div>
               <form>
                 <AutoSuggest
-                  name="col"
+                  name=" "
                   options={colleges}
                   handleChange={setCollege}
                   value={college}
