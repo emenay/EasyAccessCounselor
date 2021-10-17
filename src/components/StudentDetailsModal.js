@@ -457,7 +457,6 @@ function CollegeListPanel(props) {
           <tr>
             <th></th>
             <th>Affordabiity and Selectivity Info</th>
-
             <th></th>
             <th></th>
             <th></th>
@@ -532,7 +531,6 @@ function CollegeListPanel(props) {
               </button>
               <div>OR</div>
               <form>
-                
                 <AutoSuggest
                   name=" "
                   options={colleges}
@@ -1091,9 +1089,9 @@ function HandleEdit(props) {
         <EditButton editExit={props.setEdit} info={props.info} />
       ) : (
         <ToggleEditButton
-         setEdit={props.setEdit} 
-         addToPreferences={props.addToPreferences}
-         />
+          setEdit={props.setEdit}
+          addToPreferences={props.addToPreferences}
+        />
       )}
     </div>
   )
@@ -1783,11 +1781,11 @@ function HandleEditInit(props) {
 function ToggleEditButton(props) {
   let newField = 'New Field'
   function handleChange(e) {
-    newField = e.target.value;
+    newField = e.target.value
   }
 
   function save(newField) {
-    console.log("save ni ma ge bi" + newField)
+    console.log('save ni ma ge bi' + newField)
     console.log(props.setEdit)
   }
   return (
@@ -1818,10 +1816,7 @@ function ToggleEditButton(props) {
             <div className="popup-modal">
               <p>
                 <span>Add New Field: </span>
-                <input
-                  type="text"
-                  onChange={(e) => handleChange(e)}
-                />
+                <input type="text" onChange={(e) => handleChange(e)} />
               </p>
               <div className="saveCancelContainer">
                 <button
