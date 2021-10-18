@@ -1,7 +1,5 @@
-
-
 label {
-    display: flex;
+  display: flex;
   flex-direction: row;
   justify-content: flex-end;
   text-align: right;
@@ -9,23 +7,23 @@ label {
   line-height: 26px;
   margin-bottom: 10px;
   margin-left: 0;
-  }
-
-  input{
-      padding: 15px;
-  }
-
-.formBlock{
-    margin-bottom: 100px;
-    color:  #3298CB;
 }
-  .inputLabel {
-    height: 20px;
+
+input {
+  padding: 15px;
+}
+
+.formBlock {
+  margin-bottom: 100px;
+  color: #3298cb;
+}
+.inputLabel {
+  height: 20px;
   flex: 0 0 200px;
   margin-left: 10px;
-  }
+}
 
-  #updateStatus {
-      color: green;
-      margin-left: 200px;
-  }
+#updateStatus {
+  color: green;
+  margin-left: 200px;
+}

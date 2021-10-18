@@ -437,7 +437,12 @@ function CollegeListPanel(props) {
             <th></th>
             <th>
               Information{' '}
-              <HandleEdit info={info} setEdit={setEdit} editing={editing} />
+              <HandleEdit
+                info={info}
+                setEdit={setEdit}
+                editing={editing}
+                tiny={true}
+              />
             </th>
 
             <th>Counselor</th>

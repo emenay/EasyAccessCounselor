@@ -1,159 +1,140 @@
 .colListTable {
-
-    margin: 0 auto;
-    border-collapse:separate; 
-    border-spacing:1em;
-
+  margin: 0 auto;
+  border-collapse: separate;
+  border-spacing: 1em;
 }
 
 .colListTable2 {
-    margin: 0 auto;
-    border-collapse:collapse;
-    border:1px solid black;
-    width: 100%
-
+  margin: 0 auto;
+  border-collapse: collapse;
+  border: 1px solid black;
+  width: 100%;
 }
 
 .colListTable2 td {
-    border:1px solid gray;
+  border: 1px solid gray;
 }
 
 .colListTable3 {
-    margin: 0 auto;
-    border-collapse:collapse;
-    border:1px solid black;
-    width: 90%;
+  margin: 0 auto;
+  border-collapse: collapse;
+  border: 1px solid black;
+  width: 90%;
 }
 
 .colListTable3 td {
-    margin: 0 auto;
-    border:1px solid gray;
-    text-align: right;
+  margin: 0 auto;
+  border: 1px solid gray;
+  text-align: right;
 }
 
 .colListButton {
-    background-color:#0E1030;
-    border-radius: 15px;
-    text-align: center;
-    font-weight: bold;
-
-    }
+  background-color: #0e1030;
+  border-radius: 15px;
+  text-align: center;
+  font-weight: bold;
+}
 
 .bigbutton {
-    height: 40px;
-    width: 150px;
-    
-    
+  height: 40px;
+  width: 150px;
 }
 
 .mediumbutton {
-    height: 40px;
-    width: 90px;
+  height: 40px;
+  width: 90px;
 }
 
-
 .resultsTable {
+  margin: 0 auto;
+  border-collapse: collapse;
+  border-spacing: 20px 0;
 
-    margin: 0 auto;
-    border-collapse: collapse; 
-    border-spacing: 20px 0;
-    
-    display: table;
-    
-
+  display: table;
 }
 
 .resultsTable tr td {
-
-    border: none;
-    text-align: center;
-
-    
-    
+  border: none;
+  text-align: center;
 }
 
 .greyCell {
-
-    background-color: rgb(204, 198, 198);
-    
+  background-color: rgb(204, 198, 198);
 }
 
 .inputFieldElement p {
-    display: flex;
-    flex-direction: row;
-    justify-content: left;
-    align-items: center;
-    text-align: justify;
-    width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: left;
+  align-items: center;
+  text-align: justify;
+  width: 100%;
 }
 
 .inputFieldElement p span {
-    display: block;
-    width: fit-content;
-    text-align: center;
-    padding-top: 3px;
-    padding-right: 5px;
+  display: block;
+  width: fit-content;
+  text-align: center;
+  padding-top: 3px;
+  padding-right: 5px;
 }
 
 .inputFieldElement button {
-    display: flex;
-    background-color: transparent;
-    border: none;
-    height: 20px;
-    width: 20px;
-    padding: 0;
-    margin-right: 5px;
-    margin-top: 5px;
-    border-radius: 50%;
-    justify-content: center;
-    align-items: center;
+  display: flex;
+  background-color: transparent;
+  border: none;
+  height: 20px;
+  width: 20px;
+  padding: 0;
+  margin-right: 5px;
+  margin-top: 5px;
+  border-radius: 50%;
+  justify-content: center;
+  align-items: center;
 }
 
 .inputFieldElement button:hover {
-    -webkit-transition: background-color 100ms linear;
-    -ms-transition: background-color 100ms linear;
-    transition: background-color 100ms linear;
-    background-color: rgb(253, 91, 91);
+  -webkit-transition: background-color 100ms linear;
+  -ms-transition: background-color 100ms linear;
+  transition: background-color 100ms linear;
+  background-color: rgb(253, 91, 91);
 }
 
-.inputFieldElement button img{
-    height: 20px;
-    width: 20px;
+.inputFieldElement button img {
+  height: 20px;
+  width: 20px;
 }
 
 .fieldElement {
-    border-radius: 20px;
-    background: #61a3a0;
-    padding: 5px;
-    color: white;
-    
-  }
+  border-radius: 20px;
+  background: #61a3a0;
+  padding: 5px;
+  color: white;
+}
 
 .editSuite {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: flex-end;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-end;
 }
 
 .editButtonSuite {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    align-items: center;
-    justify-content: center;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
 }
 
-.editButtonSuite>div {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
+.editButtonSuite > div {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
 }
 
 #col-autosuggest-options {
-
-    margin: auto;
-    text-align: center;
-    
+  margin: auto;
+  text-align: center;
 }

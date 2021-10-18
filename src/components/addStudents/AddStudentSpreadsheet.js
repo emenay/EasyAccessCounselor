@@ -1,25 +1,26 @@
-import React from 'react';
-import '../../css/components.css';
+import React from 'react'
+import '../../css/components.css'
 
-import Button from '@material-ui/core/Button';
+import Button from '@material-ui/core/Button'
 
 class AddStudentSpreadsheet extends React.Component {
-  state = {
-
-  }
+  state = {}
 
   temp() {
-    alert("WIP! This functionality is currently not supported.")
+    alert('WIP! This functionality is currently not supported.')
   }
 
   render() {
     return (
       <div className="add-student-spreadsheet">
         <div>
-          <p>Work in Progress. This will allow the counselor to upload a spreadsheet of students.</p>
+          <p>
+            Work in Progress. This will allow the counselor to upload a
+            spreadsheet of students.
+          </p>
         </div>
         <div className="add-modal-btns">
-          <div style={{marginRight: 60}}>
+          <div style={{ marginRight: 60 }}>
             <Button variant="outlined" onClick={this.props.closeAddStudent}>
               Cancel
             </Button>
@@ -38,4 +39,4 @@ class AddStudentSpreadsheet extends React.Component {
   }
 }
 
-export default AddStudentSpreadsheet;
+export default AddStudentSpreadsheet

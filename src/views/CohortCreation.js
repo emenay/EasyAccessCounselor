@@ -73,12 +73,6 @@ import SubscribeModal from '../components/SubscribeModal.js'
 //   );
 // }
 
-
-
-
-
-
-
 class Login extends React.Component {
     constructor(props){
         super(props);
