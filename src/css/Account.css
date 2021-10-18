@@ -1,43 +1,40 @@
 .Login {
-    color: #3298CB;
-    text-align: center;
-    padding-top: 25px;
-    padding-right: 45px;
-    font-size: 37px;
-    margin: auto;
-    display: inline-block;
-    }
-
-
-
-body{
-text-align: center;
+  color: #3298cb;
+  text-align: center;
+  padding-top: 25px;
+  padding-right: 45px;
+  font-size: 37px;
+  margin: auto;
+  display: inline-block;
 }
 
+body {
+  text-align: center;
+}
 
 #email {
-    max-width: 420px;
-    width: 100%;
-    padding: 7px;
-    color: blue;
-  }
-
-  #or{
-    font-size: 15px;
-    color: black;
-    padding: 7px;
-  }
-
-button {
-	max-width: 420px;
-	color: white;
-	background-color: #3298CB;
-  font-weight: none;
-  padding: 9px;
-  border: 1px solid  blue;
-	width: 100%;
+  max-width: 420px;
+  width: 100%;
+  padding: 7px;
+  color: blue;
 }
 
-form{
+#or {
+  font-size: 15px;
+  color: black;
+  padding: 7px;
+}
+
+button {
+  max-width: 420px;
+  color: white;
+  background-color: #3298cb;
+  font-weight: none;
+  padding: 9px;
+  border: 1px solid blue;
+  width: 100%;
+}
+
+form {
   text-align: center;
 }

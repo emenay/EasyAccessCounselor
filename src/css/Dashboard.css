@@ -1,6 +1,6 @@
 :root {
-	--primary-color: #1E3957;
-  --secondary-color: #A5711A;
+  --primary-color: #1e3957;
+  --secondary-color: #a5711a;
   --tertiary-color: #494949;
 }
 
@@ -9,14 +9,14 @@
   font-size: 1.5em;
   margin-top: 0.4em;
   margin-left: 0;
-  margin-right: 0
+  margin-right: 0;
 }
 
 .dashboard-container {
   display: flex;
   flex-direction: row;
   width: 100%;
-  height: calc(100% - 165px)
+  height: calc(100% - 165px);
 }
 
 .dash-container-left {
@@ -24,7 +24,7 @@
   min-width: 275px;
   max-width: 400px;
   height: 100%;
-  padding: 25px 10px 25px 10px
+  padding: 25px 10px 25px 10px;
 }
 
 .dashboard-panel {
@@ -49,24 +49,24 @@
   border-bottom: 1px solid rgba(196, 196, 196, 0.5);
   display: flex;
   justify-content: center;
-  align-items: center
+  align-items: center;
 }
 
 .student-list {
   padding: 15px;
   width: 100%;
   height: calc(100% - 175px);
-  overflow-y: auto
+  overflow-y: auto;
 }
 
 .student-card {
-  background-color: #F9F9F9;
+  background-color: #f9f9f9;
   width: 100%;
   height: 75px;
   border-radius: 5px;
   box-shadow: 0px 0px 5px rgba(62, 62, 62, 0.2);
   margin-bottom: 15px;
-  overflow: auto
+  overflow: auto;
 }
 
 .card-name {
@@ -78,5 +78,5 @@
 .dash-container-right {
   width: 100%;
   height: 100%;
-  padding: 25px 10px 25px 10px
+  padding: 25px 10px 25px 10px;
 }

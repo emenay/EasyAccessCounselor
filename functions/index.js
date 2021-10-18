@@ -1,26 +1,24 @@
-const functions = require('firebase-functions');
-const admin = require('firebase-admin');
+const functions = require('firebase-functions')
+const admin = require('firebase-admin')
 
-admin.initializeApp();
+admin.initializeApp()
 
-const db = admin.firestore();
+const db = admin.firestore()
 
 /*
 Stripe
 */
 
 // TODO: Remember to set token using >> firebase functions:config:set stripe.token="SECRET_STRIPE_TOKEN_HERE"
-const stripe = require('stripe')(functions.config().stripe.token);
-
+const stripe = require('stripe')(functions.config().stripe.token)
 
 exports.createStripeCustomer = functions.auth.user().onCreate(async (user) => {
-  const customer = await stripe.customers.create({ email: user.email });
+  const customer = await stripe.customers.create({ email: user.email })
   await admin.firestore().collection('customers').doc(user.uid).set({
     customer_id: customer.id,
-  });
-  return;
-});
-
+  })
+  return
+})
 
 /**
  * Makes a copy of a student's document under their corresponding counselor
@@ -30,7 +28,7 @@ exports.createStripeCustomer = functions.auth.user().onCreate(async (user) => {
  */
 
 const copyStudent = (snap, context) => {
-  const { firstName, lastName, uid, cuid } = snap.data();
+  const { firstName, lastName, uid, cuid } = snap.data()
 
   if (cuid) {
     return db
@@ -39,37 +37,40 @@ const copyStudent = (snap, context) => {
       .collection('students')
       .doc(uid)
       .set({
-          firstName,
-          lastName,
-          uid
+        firstName,
+        lastName,
+        uid,
       })
-      .catch(console.error);
+      .catch(console.error)
   }
-};
+}
 
 // Deletes a student's profile under a counselor if the student is deleted from the Students collection
 const deleteStudent = (snap, context) => {
-  const { uid, cuid } = snap.data();
-  
+  const { uid, cuid } = snap.data()
+
   if (cuid) {
-    const studentProfile = db.collection('counselors').doc(cuid).collection('students').doc(uid);
+    const studentProfile = db
+      .collection('counselors')
+      .doc(cuid)
+      .collection('students')
+      .doc(uid)
     if (studentProfile) {
-      return studentProfile
-        .delete()
-        .catch(console.error);
+      return studentProfile.delete().catch(console.error)
     }
   }
 }
 
-
-const emailCode = (snap, context) => {  
-    const { email } = snap.data();
-    db.collection('mail').add({
+const emailCode = (snap, context) => {
+  const { email } = snap.data()
+  db.collection('mail').add({
     to: email,
     message: {
       subject: 'Hello from Firebase!',
-      html: 'This is an <code>HTML</code> email body.: ' + 
-       ' ' + context.params.cohortCode,
+      html:
+        'This is an <code>HTML</code> email body.: ' +
+        ' ' +
+        context.params.cohortCode,
     },
   })
 }
@@ -105,9 +106,15 @@ const emailCode = (snap, context) => {
 // }
 
 module.exports = {
-  onCreateStudent: functions.firestore.document('students/{studentId}').onCreate(copyStudent),
-  onDeleteStudent: functions.firestore.document('students/{studentId}').onDelete(deleteStudent),
-  onEmailCode: functions.firestore.document('cohortCode/{cohortCode}').onCreate(emailCode)
-};
+  onCreateStudent: functions.firestore
+    .document('students/{studentId}')
+    .onCreate(copyStudent),
+  onDeleteStudent: functions.firestore
+    .document('students/{studentId}')
+    .onDelete(deleteStudent),
+  onEmailCode: functions.firestore
+    .document('cohortCode/{cohortCode}')
+    .onCreate(emailCode),
+}
 
-  // onUpdateStudent: functions.firestore.document('students/{studentId}').onUpdate(updateStudent)
+// onUpdateStudent: functions.firestore.document('students/{studentId}').onUpdate(updateStudent)
