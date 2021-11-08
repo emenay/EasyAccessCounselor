@@ -1,9 +1,50 @@
-import React from 'react'
+import React, { Component } from "react";
 import 'bootstrap/dist/css/bootstrap.css';
 import ListGroup from 'react-bootstrap/ListGroup';
 import Button from  'react-bootstrap/Button'
 import edit_symbol from '../../assets/essentials_icons/svg/edit.svg';
 import { Alert } from 'reactstrap';
+import Table from 'react-bootstrap/Table'
+
+import { DataGrid } from '@mui/x-data-grid';
+
+const rows = [
+    { id: 1, lastName: 'Snow', firstName: 'Jon', age: 35 },
+    { id: 2, lastName: 'Lannister', firstName: 'Cersei', age: 42 },
+    { id: 3, lastName: 'Lannister', firstName: 'Jaime', age: 45 },
+    { id: 4, lastName: 'Stark', firstName: 'Arya', age: 16 },
+    { id: 5, lastName: 'Targaryen', firstName: 'Daenerys', age: null },
+    { id: 6, lastName: 'Melisandre', firstName: null, age: 150 },
+    { id: 7, lastName: 'Clifford', firstName: 'Ferrara', age: 44 },
+    { id: 8, lastName: 'Frances', firstName: 'Rossini', age: 36 },
+    { id: 9, lastName: 'Roxie', firstName: 'Harvey', age: 65 },
+  ];
+
+
+const columns = [
+  { field: 'id', headerName: 'ID', width: 70 },
+  { field: 'firstName', headerName: 'First name', width: 130 },
+  { field: 'lastName', headerName: 'Last name', width: 130 },
+  {
+    field: 'age',
+    headerName: 'Age',
+    type: 'number',
+    width: 90,
+  },
+  {
+    field: 'fullName',
+    headerName: 'Full name',
+    description: 'This column has a value getter and is not sortable.',
+    sortable: false,
+    width: 160,
+    valueGetter: (params) =>
+      `${params.getValue(params.id, 'firstName') || ''} ${
+        params.getValue(params.id, 'lastName') || ''
+      }`,
+  },
+];
+
+
 
 export default function CollegeListPanel(props) {
 
@@ -13,112 +54,17 @@ export default function CollegeListPanel(props) {
     var dbinfo = ["gpa", "classRank", "sat", "act", "efc", "payMismatch"];
     var dbinfo2 = ["major1", "major2", "distancefromHome", "region", "collegeSize", "collegeDiversity", "collegeType", "religion", "rotc", "athletics"];
 
-    let affordabilityView = [];
-    for (let i = 0; i < dbinfo.length; i++) {
-        affordabilityView.push(
-        <InputFieldElement
-            name = {affordabilityInfo[i]} 
-            editing={"editing"}  
-            info={"info[dbinfo[i]]"} 
-            studentinfo = {"studentinfo[dbinfo[i]]"}
-            dbField={"[dbinfo[i]]"}
-            updateValue={"updateValue"}
-            id = {"props.info.uid"}
-            />    
-    )}
-   
-    let collegeFitView = [];
-    for (let i = 0; i < dbinfo2.length; i++) {
-        collegeFitView.push(
-            <InputFieldElement
-                name = {fitInfo[i]} 
-                editing={"editing"}  
-                info={"info[dbinfo2[i]]"} 
-                studentinfo = {"studentinfo[dbinfo2[i]]"}
-                dbField={"dbinfo2[i]"}
-                updateValue={"updateValue"}
-                id = {"props.info.uid"}
-                />
-        )
-    }
-    return (
-               <table class = "colListTable" style = {{width: "100%"}}>
-                    <tbody>
-                        <tr>
-                        <th>
-                            <button 
-                                style = {{width: "50px", height: "50px", border: "None", backgroundColor: "transparent"}}
-                                data-tip="Customize what fields are shown" 
-                                onClick={()=> {props.setEdit(true)}}>
-                                <img src={edit_symbol} alt="edit"/>
-                            </button>
-                        </th>
-                        <th><b>Information</b></th>
-                        <th><b>Counselor</b><button class = "colListButton mediumbutton">Sync</button></th> 
-                        <th></th>
-                        <th></th>
-                        <th><b>Student</b></th>
-                        </tr>
-                    </tbody>
-
-                    <tbody>
-                        <tr>
-                        <th></th>
-                        <th>Affordabiity and Selectivity Info</th> 
-                        <th></th>
-                        <th></th>
-                        <th></th>
-                        </tr>
-                    </tbody>
-                    {affordabilityView}
-                    <Alert color="primary">
-                        This is a primary alert — check it out!
-                    </Alert>
-                    <tbody>
-                        <tr>
-                        <th></th>
-                        <th>Fit Information</th>
-                    
-                        <td></td> 
-                        <td><input type = "checkbox"/></td>
-                        <td></td>
-                        </tr>
-                    </tbody>
-                    {collegeFitView}      
-                </table>
-                        );
+return (
+        <div style={{ height: 400, width: '100%' }}>
+          <DataGrid
+            rows={rows}
+            columns={columns}
+            pageSize={5}
+            rowsPerPageOptions={[5]}
+            checkboxSelection
+          />
+        </div>
+)
 }
 
-function InputFieldElement({editing, dbField, info, studentinfo, name, field}) {
-    
-    return (
-        <tbody>
-        <tr className="inputFieldElement" id = {dbField}>
-        <td>
-            {/* If the user is in edit mode, display button to remove this field element */}
-            </td>
-            <td>
-            {name}
-            </td>
-            
-            <td>
-        <p key={info}><span>{field} </span>
-        {editing===true 
-                ? <input type="text" defaultValue={info} onChange={(e) => {}} />:
-                
-                info === undefined || info === ""
-                    ? <text>{info }</text> :
-                <text class = "fieldElement">{info}</text>}
 
-            </p>  
-            </td>  
-            <td><input type = "checkbox"/></td>
-            <td></td>
-            <td>{studentinfo === undefined || studentinfo === ""
-                    ? <text>{studentinfo }</text> : <text class = "fieldElement" >{studentinfo}</text>}
-            </td>
-        
-            </tr>
-        </tbody>
-    )
-}
