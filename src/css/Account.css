@@ -10,9 +10,9 @@
 
 
 
-body{
-text-align: center;
-}
+/* body{
+  text-align: center;
+} */
 
 
 #email {
@@ -22,13 +22,13 @@ text-align: center;
     color: blue;
   }
 
-  #or{
-    font-size: 15px;
-    color: black;
-    padding: 7px;
-  }
+#or{
+  font-size: 15px;
+  color: black;
+  padding: 7px;
+}
 
-button {
+/* button {
 	max-width: 420px;
 	color: white;
 	background-color: #3298CB;
@@ -36,7 +36,7 @@ button {
   padding: 9px;
   border: 1px solid  blue;
 	width: 100%;
-}
+} */
 
 form{
   text-align: center;

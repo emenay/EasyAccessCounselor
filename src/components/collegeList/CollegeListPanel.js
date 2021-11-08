@@ -1,7 +1,9 @@
 import React from 'react'
+import 'bootstrap/dist/css/bootstrap.css';
 import ListGroup from 'react-bootstrap/ListGroup';
 import Button from  'react-bootstrap/Button'
 import edit_symbol from '../../assets/essentials_icons/svg/edit.svg';
+import { Alert } from 'reactstrap';
 
 export default function CollegeListPanel(props) {
 
@@ -69,6 +71,9 @@ export default function CollegeListPanel(props) {
                         </tr>
                     </tbody>
                     {affordabilityView}
+                    <Alert color="primary">
+                        This is a primary alert — check it out!
+                    </Alert>
                     <tbody>
                         <tr>
                         <th></th>
