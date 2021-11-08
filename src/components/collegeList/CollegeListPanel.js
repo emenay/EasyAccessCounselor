@@ -27,13 +27,13 @@ export default function CollegeListPanel(props) {
             <th scope="row">1</th>
             <td>Mark</td>
             <td>Otto</td>
-            <td><Switch {...label} defaultChecked /></td>
+            <td>@<Switch {...label} defaultChecked /></td>
           </tr>
           <tr>
             <th scope="row">2</th>
             <td>Jacob</td>
             <td>Thornton</td>
-            <td><Switch {...label} defaultChecked /></td>
+            <td>@<Switch {...label} defaultChecked /></td>
           </tr>
           <tr>
             <th scope="row">3</th>
