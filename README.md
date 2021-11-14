@@ -7,10 +7,10 @@ This is a caseload management tool for high school counselors developed by UNC-C
 1. Install [Node.js and npm](https://www.npmjs.com/get-npm).
 2. Clone this repository and `cd` into the cloned directory on your machine. (If you do not have git, you must have just got a new computer)
 3. Run `npm install`. It will tell you it has a lot of vulnerabilities.. It should still work even if you don't run npm audit fix.
-4. In the firebase folder under src, create a file called `config.js`. So its: ./src/firebase/config.js
-   a. Once you reach this step, message one of the team leads for the config file.
-5. Run `npm start`.
-6. To make Stripe function, message the team leads for the secret token and run this command: `firebase functions:config:set stripe.token="SECRET_STRIPE_TOKEN_HERE"` (optinal if you are not dealing with Stripe)
+4. In the firebase folder under src, create a file called `config.js`. So its: ./src/firebase/config.js 
+5. Once you reach this step, message one of the team leads for the config file.
+6. Run `npm start`.
+7. To make Stripe function, message the team leads for the secret token and run this command: `firebase functions:config:set stripe.token="SECRET_STRIPE_TOKEN_HERE"` (optinal if you are not dealing with Stripe)
 
 Last updated November 14, 2021.
 
@@ -58,6 +58,12 @@ Note: As of May 2021, several of the tests written in 2020 fail due to snapshots
   - Used for payment processing, still barebones for now but it has been fully integrated into Firebase
 - Firebase: see below to get access to the Firebase
 - See ADR’s here: https://github.com/viradsky/EasyAccessCounselor/blob/master/ADR.md
+
+## Backend Redesign and Documentation.
+- Currently, the backend database is hosted on Firebase still. It has no schema to keep or organized and efficent.
+- In the documentation bellow is a redesign of the databse. 
+- https://docs.google.com/document/d/1w08dYKOnbREglLhP7xEJ8Huyv5diENpxM1cdyH1SDyI/edit?usp=sharing
+- We recomend implementing this using MongoDB and Sails.js.
 
 ## Project Structure
 
