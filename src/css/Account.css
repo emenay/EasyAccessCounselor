@@ -1,12 +1,20 @@
 .Login {
-  color: #3298cb;
+
+    color: #3298CB;
+    text-align: center;
+    padding-top: 25px;
+    padding-right: 45px;
+    font-size: 37px;
+    margin: auto;
+    display: inline-block;
+    }
+
+
+
+/* body{
   text-align: center;
-  padding-top: 25px;
-  padding-right: 45px;
-  font-size: 37px;
-  margin: auto;
-  display: inline-block;
-}
+} */
+
 
 body {
   text-align: center;
@@ -19,21 +27,23 @@ body {
   color: blue;
 }
 
-#or {
+
+#or{
   font-size: 15px;
   color: black;
   padding: 7px;
 }
 
-button {
-  max-width: 420px;
-  color: white;
-  background-color: #3298cb;
+/* button {
+	max-width: 420px;
+	color: white;
+	background-color: #3298CB;
   font-weight: none;
   padding: 9px;
-  border: 1px solid blue;
-  width: 100%;
-}
+  border: 1px solid  blue;
+	width: 100%;
+} */
+
 
 form {
   text-align: center;
