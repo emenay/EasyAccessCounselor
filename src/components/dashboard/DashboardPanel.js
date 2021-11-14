@@ -1,19 +1,25 @@
-import React from 'react';
-import '../../css/Dashboard.css';
+import React from 'react'
+import '../../css/Dashboard.css'
 
-import AddStudentsBtn from '../addStudents/AddStudentsBtn';
-import StudentCard from './StudentCard';
+import AddStudentsBtn from '../addStudents/AddStudentsBtn'
+import StudentCard from './StudentCard'
 
 function displayCards(data) {
-  let students = [];
-  data.forEach(student => students.push(student));
-  let cardList = 
+  let students = []
+  data.forEach((student) => students.push(student))
+  let cardList = (
     <div>
-      {students.map(student => <div key={student.uid}>
-        <StudentCard firstName={student.firstName} lastName={student.lastName} />
-      </div>)}
+      {students.map((student) => (
+        <div key={student.uid}>
+          <StudentCard
+            firstName={student.firstName}
+            lastName={student.lastName}
+          />
+        </div>
+      ))}
     </div>
-  return cardList;
+  )
+  return cardList
 }
 
 function DashboardPanel(props) {
@@ -24,13 +30,18 @@ function DashboardPanel(props) {
         <p>Students: [num]</p>
       </div>
       <div className="panel-section">
-        <AddStudentsBtn viewAddStudent={props.viewAddStudent} closeAddStudent={props.closeAddStudent}/>
+        <AddStudentsBtn
+          viewAddStudent={props.viewAddStudent}
+          closeAddStudent={props.closeAddStudent}
+        />
       </div>
       <div className="student-list">
-        {props.data ? displayCards(props.data) : "You do not have any students."}
+        {props.data
+          ? displayCards(props.data)
+          : 'You do not have any students.'}
       </div>
     </div>
   )
 }
 
-export default DashboardPanel;
+export default DashboardPanel

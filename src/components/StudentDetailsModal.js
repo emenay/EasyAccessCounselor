@@ -499,6 +499,7 @@ function categorizeButtonClick(){
     // if(validate() === true ){
     //     categorizeCollege()
     // }
+
 }
 
 async function categorizeColleges(props, collegeIDs) {
@@ -916,6 +917,7 @@ function EditButton(props) {
 
 // Helper component to accomodate for call to database
 function HandleEdit(props) {
+
         return <div className="editSuite" style = {{width: "250px", height: "40px"}}>
             {props.editing === true ? 
                 <EditButton editExit={props.setEdit} info={props.info} /> :
