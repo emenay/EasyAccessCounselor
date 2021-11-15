@@ -8,6 +8,7 @@ import Button from '@mui/material/Button';
 import { Table } from 'reactstrap';
 import Classification_table from './Classification_table';
 import Search_college from './Search_college';
+import Search_autocomplete from './Search_autocomplete';
 
 export default function CollegeListPanel(props) {
     const label = { inputProps: { 'aria-label': 'Switch demo' } };
@@ -91,7 +92,8 @@ export default function CollegeListPanel(props) {
           </tr>))}
         </tbody>
       </Table>
-      <Classification_table/>
-      <Search_college/>
+      <Search_autocomplete/>
+      {/* <Classification_table/> */}
+      {/* <Search_college/> */}
     </div>);
 }

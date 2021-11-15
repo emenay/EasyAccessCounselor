@@ -11,14 +11,11 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 
-
-
 export default function Classification_table() {
   let rows = [{"name" : "UNC"}, {"name" : "Duke"}];
 
   return (
     <div>
-      
         <Table>
             <thead>
                 <tr>
