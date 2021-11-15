@@ -1,6 +1,9 @@
-import React from 'react'
+import React, {useState} from 'react'
 import 'bootstrap/dist/css/bootstrap.css';
 import Switch from '@mui/material/Switch';
+import Checkbox from '@mui/material/Checkbox';
+import Button from '@mui/material/Button';
+
 
 import { Table } from 'reactstrap';
 import Classification_table from './Classification_table';
@@ -14,46 +17,72 @@ export default function CollegeListPanel(props) {
     let to_delete2=[2.5, 1, 1000, 23, 2040, "Mismatch", 27701]
     var dbinfo = ["gpa", "classRank", "sat", "act", "efc", "payMismatch"];
     var dbinfo2 = ["major1", "major2", "distancefromHome", "region", "collegeSize", "collegeDiversity", "collegeType", "religion", "rotc", "athletics"];
-
+    const [track_afford, set_track_afford] = useState(new Array(affordabilityInfo.length).fill(true))
+    const [track_fit, set_track_fit] = useState(new Array(fitInfo.length).fill(true))
+    const toggle_afford=(idx)=>{return(e)=>{let temp=[...track_afford];temp[idx]=e.target.checked; set_track_afford([...temp])}}
+    const toggle_fit=(idx)=>{return()=>{track_fit[idx]=!track_fit[idx]}}
     return (<div>
         <Table>
         <thead>
           <tr>
             <th>Information</th>
             <th>Counselor</th>
-            <th><button>sync</button></th>
+            <th>
+              <Button variant="outlined" size="medium">
+                Sync
+              </Button>
+            </th>
             <th>Student</th>
           </tr>
-          <br/>
-          <br/>
-          <tr>
+          
+          <tr style={{marginTop: "100px"}}>
             <th>Affordabiity&Selectivity</th>
             <th></th>
-            <th><button>check all</button></th>
+            <th>
+              <Button variant="outlined" size="small" onClick={()=>{
+                if (track_afford.reduce((first, second)=>first&&second, true)){
+                  let temp=track_afford.map(val=>false)
+                  set_track_afford([...temp])
+                } else {
+                  let temp=track_afford.map(val=>true)
+                  set_track_afford([...temp])
+                }
+                
+                alert(track_afford)
+                }}>
+                select/unselect
+              </Button>
+            </th>
             <th></th>
           </tr>
         </thead>
         <tbody>
-          {affordabilityInfo.map((ele, idx)=>(<tr>
+          {affordabilityInfo.map((ele, idx)=>(<tr key={'aff'+idx}>
             <th scope="row">{ele}</th>
             <td>{to_delete[idx]}</td>
-            <td><Switch {...label} defaultChecked /></td>
+            <td><Switch {...label} onChange={toggle_afford(idx)} checked={track_afford[idx]} /></td>
+            {/* <MySwitch toggle={toggle_afford(idx)} cur={track_afford[idx]} /> */}
+            {/* <Switch {...label} checked={track_afford[idx]===null?"":track_afford[idx]} onChange={toggle_afford(idx)}/> */}
             <td>{to_delete2[idx]}</td>
           </tr>))}
         </tbody>
-        <thead><br/><br/>
+        <thead><tr/><tr/>
         <tr>
             <th>Fit Information</th>
             <th></th>
-            <th><button>check all</button></th>
+            <th>
+              <Button variant="outlined" size="small" onClick={()=>{alert(track_fit)}}>
+                select all
+              </Button>
+            </th>
             <th></th>
         </tr>
         </thead>
         <tbody>
-          {fitInfo.map(ele=>(<tr>
+          {fitInfo.map((ele, idx)=>(<tr key={'fit'+idx}>
             <th scope="row">{ele}</th>
             <td>to fill</td>
-            <td><Switch {...label} defaultChecked /></td>
+            {/* <MySwitch toggle={toggle_fit(idx)} cur={track_fit[idx]} /> */}
             <td>to fill</td>
           </tr>))}
         </tbody>

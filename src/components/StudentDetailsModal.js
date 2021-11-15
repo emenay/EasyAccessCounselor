@@ -1308,6 +1308,7 @@ function GenInfoCol(props) {
         const processedField = processField(props.fields[i]);
         if (processedField) col.push(
             <ModalFieldElement 
+                key={'something_'+i}
                 editing={props.editing} 
                 removeFromPreferences={props.removeFromPreferences} 
                 field={processedField} 
