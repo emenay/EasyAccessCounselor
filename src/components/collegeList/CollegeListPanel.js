@@ -92,8 +92,8 @@ export default function CollegeListPanel(props) {
           </tr>))}
         </tbody>
       </Table>
-      <Search_autocomplete/>
-      {/* <Classification_table/> */}
-      {/* <Search_college/> */}
+      {<Classification_table/>}
+      {<Search_college/>}
+      {<Search_autocomplete/>}
     </div>);
 }
