@@ -1,5 +1,3 @@
-
-
 label {
   display: flex;
   flex-direction: row;
@@ -11,6 +9,7 @@ label {
   margin-left: 0;
 }
 
+
 input{
   padding: 15px;
 }
@@ -18,6 +17,7 @@ input{
 .formBlock{
   margin-bottom: 100px;
   color:  #3298CB;
+
 }
 .inputLabel {
   height: 20px;
@@ -28,4 +28,5 @@ input{
 #updateStatus {
   color: green;
   margin-left: 200px;
+
 }

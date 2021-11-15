@@ -1,4 +1,5 @@
 .Login {
+
     color: #3298CB;
     text-align: center;
     padding-top: 25px;
@@ -15,12 +16,17 @@
 } */
 
 
+body {
+  text-align: center;
+}
+
 #email {
-    max-width: 420px;
-    width: 100%;
-    padding: 7px;
-    color: blue;
-  }
+  max-width: 420px;
+  width: 100%;
+  padding: 7px;
+  color: blue;
+}
+
 
 #or{
   font-size: 15px;
@@ -38,6 +44,7 @@
 	width: 100%;
 } */
 
-form{
+
+form {
   text-align: center;
 }

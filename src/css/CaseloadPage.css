@@ -1,390 +1,390 @@
 .maintable {
-    max-width: 100%;
-    height: 100%;
-    overflow-x: auto;
-    overflow-y: auto;
+  max-width: 100%;
+  height: 100%;
+  overflow-x: auto;
+  overflow-y: auto;
 }
 
 .ag-theme-alpine .ag-header-cell-label {
-    font-size: 18px;
+  font-size: 18px;
 }
 
 .ag-cell-label-container {
-    /* Necessary to allow for text to grow vertically */
-    width: 100%;
+  /* Necessary to allow for text to grow vertically */
+  width: 100%;
 }
 
 .ag-theme-alpine .ag-header-cell {
-    border-right-color: black;
-    border-right-width: 1px;
-    border-right-style: solid;
-    border-bottom-color: black;
-    border-bottom-style: solid;
-    border-bottom-width: 1px;
+  border-right-color: black;
+  border-right-width: 1px;
+  border-right-style: solid;
+  border-bottom-color: black;
+  border-bottom-style: solid;
+  border-bottom-width: 1px;
 }
 
 .ag-theme-alpine .ag-ltr .ag-cell {
-    border-right-color: black;
-    border-right-width: 1px;
-    border-right-style: solid;
-    border-bottom-color: black;
-    border-bottom-style: solid;
-    border-bottom-width: 1px;
-    font-size: 18px;
+  border-right-color: black;
+  border-right-width: 1px;
+  border-right-style: solid;
+  border-bottom-color: black;
+  border-bottom-style: solid;
+  border-bottom-width: 1px;
+  font-size: 18px;
 }
 
 .ag-theme-alpine {
-    --ag-header-background-color: #3298CB;
-    --ag-header-foreground-color: white;
+  --ag-header-background-color: #3298cb;
+  --ag-header-foreground-color: white;
 }
 
 .ag-root ::-webkit-scrollbar {
-    width: 8px;
-    height: 8px;
-    background-color: white; /* or add it to the track */
+  width: 8px;
+  height: 8px;
+  background-color: white; /* or add it to the track */
 }
 
 .ag-root ::-webkit-scrollbar-thumb {
-    background: gray; 
-    border-radius: 20px
+  background: gray;
+  border-radius: 20px;
 }
 
 .ag-theme-alpine .ag-icon {
-    font-size: 24px
+  font-size: 24px;
 }
 
 .ag-header-icon.ag-header-cell-menu-button {
-    opacity: 1 !important;
+  opacity: 1 !important;
 }
 
 .ag-header-cell-resize {
-    opacity: 0;
+  opacity: 0;
 }
 
 .delete-column {
-    font-size: 20px;
-    margin-left: 20px;
-    padding-top: 50%;
-    padding-bottom: 50%;
+  font-size: 20px;
+  margin-left: 20px;
+  padding-top: 50%;
+  padding-bottom: 50%;
 }
 
 .icon_button {
-    width: 30px;
-    height: 30px;
-    background-size: 100% 100%;
-    background-color: white;
-    margin: 5px 5px;
-    border: none;
-    outline: none;
-    cursor: pointer;
-    text-align: center;
+  width: 30px;
+  height: 30px;
+  background-size: 100% 100%;
+  background-color: white;
+  margin: 5px 5px;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  text-align: center;
 }
 
 .right_icon_button {
-    width: 40px;
-    height: 40px;
-    background-size: 100% 100%;
-    background-color: white;
-    /* margin: 5px 5px; */
-    border: none;
-    outline: none;
-    cursor: pointer;
-    position: absolute;
-    right: 500;
+  width: 40px;
+  height: 40px;
+  background-size: 100% 100%;
+  background-color: white;
+  /* margin: 5px 5px; */
+  border: none;
+  outline: none;
+  cursor: pointer;
+  position: absolute;
+  right: 500;
 }
 
 .search_box {
-    text-align: center;
+  text-align: center;
 }
 
 .caseload-header {
-    width: 100%;
-    display: grid;
-    grid-template-columns: 32.5% 50px 50px 50px;
-    align-items: center;
-    background-color: white;
-    background: none;
-    justify-items: end;
-    position: relative;
+  width: 100%;
+  display: grid;
+  grid-template-columns: 32.5% 50px 50px 50px;
+  align-items: center;
+  background-color: white;
+  background: none;
+  justify-items: end;
+  position: relative;
 }
 
 .download-popup {
-    position: absolute;
-    display: none;
-    top: 10%;
-    bottom: 10%;
-    left:50%;
-    min-height: 600px;
-    min-width: 500px;
-    margin-left:-25%;   /* negative half of width above */
-    /* margin-bottom: 20%; */
-    border: 4px;
-    border-style: solid;
-    border-radius: 10px; 
-    border-color:rgb(83, 83, 83);
-    z-index: 1;
-    background-color: white;
+  position: absolute;
+  display: none;
+  top: 10%;
+  bottom: 10%;
+  left: 50%;
+  min-height: 600px;
+  min-width: 500px;
+  margin-left: -25%; /* negative half of width above */
+  /* margin-bottom: 20%; */
+  border: 4px;
+  border-style: solid;
+  border-radius: 10px;
+  border-color: rgb(83, 83, 83);
+  z-index: 1;
+  background-color: white;
 }
 
 .download-popup-content {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
 #popup-header {
-    display:flex;
-    flex-direction: row;
-    justify-content: space-between;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
 }
 
 #popup-header > span {
-    font-size: 20pt;
+  font-size: 20pt;
 }
 
 #popup-body {
-    display: flex;
-    flex-direction: row; 
-    justify-content: center;
-    height: 450px;
-    margin-top: 10px;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  height: 450px;
+  margin-top: 10px;
 }
 
 #field_list {
-    display: flex;
-    flex-direction: column; 
-    /* justify-content: flex-start; */
-    flex-wrap: wrap;
-    height: 450px;
-    margin: 10px;
-    margin-left: 20px;
-    margin-top: 20px;
-    overflow-y: scroll;
-    overflow-x: auto;
+  display: flex;
+  flex-direction: column;
+  /* justify-content: flex-start; */
+  flex-wrap: wrap;
+  height: 450px;
+  margin: 10px;
+  margin-left: 20px;
+  margin-top: 20px;
+  overflow-y: scroll;
+  overflow-x: auto;
 }
 
 #field_list label {
-    display: inline-block;
-    padding-right: 10px;
-    white-space: nowrap;
-    margin-left: 0;
-    text-align: left;
-    width: 300px;
+  display: inline-block;
+  padding-right: 10px;
+  white-space: nowrap;
+  margin-left: 0;
+  text-align: left;
+  width: 300px;
 }
 
 #field_list input {
-    vertical-align: middle;
+  vertical-align: middle;
 }
 
 #field_list label span {
-    margin-left: 10px;
-    vertical-align: middle;
+  margin-left: 10px;
+  vertical-align: middle;
 }
 
 #download-options {
-    display: flex; 
-    flex-direction: column;
-    width: 40%;
-    margin-left: 30px;
+  display: flex;
+  flex-direction: column;
+  width: 40%;
+  margin-left: 30px;
 }
 
 #popup-name-input {
-    /* margin-top: auto; */
-    outline: none;
-    border-style: solid;
-    border-width: 3px;
-    max-width: 100%;
-    height: 10px;
-    border-radius: 2px;
-    margin-right: auto;
-    /* margin-left: 20px; */
-    margin-top: auto;
+  /* margin-top: auto; */
+  outline: none;
+  border-style: solid;
+  border-width: 3px;
+  max-width: 100%;
+  height: 10px;
+  border-radius: 2px;
+  margin-right: auto;
+  /* margin-left: 20px; */
+  margin-top: auto;
 }
 
 .caseload-content {
-    position: relative;
-    max-width: 100%;
+  position: relative;
+  max-width: 100%;
 }
 
 #download-preview {
-    height: 100%;
-    width: 400px;;
-    border-style: solid;
-    border-width: 2px;
-    margin-left: auto;
-    margin-right: 20px;
-    justify-self: flex-end;
-    border-color: #cfcfcf;
+  height: 100%;
+  width: 400px;
+  border-style: solid;
+  border-width: 2px;
+  margin-left: auto;
+  margin-right: 20px;
+  justify-self: flex-end;
+  border-color: #cfcfcf;
 }
 
 .download-header {
-    width: 100%;
-    display: grid;
-    grid-template-columns: 32.5% 50px 50px 50px;
-    align-items: center;
-    background-color: white;
-    background: none;
-    justify-items: end;
-    position: relative; 
+  width: 100%;
+  display: grid;
+  grid-template-columns: 32.5% 50px 50px 50px;
+  align-items: center;
+  background-color: white;
+  background: none;
+  justify-items: end;
+  position: relative;
 }
 
 .close {
-    margin-right: 15px;
-    width: 15px;
-    height: 15px;
-    cursor: pointer;
+  margin-right: 15px;
+  width: 15px;
+  height: 15px;
+  cursor: pointer;
 }
 
 #popup-footer {
-    height: 100%;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-around;
-    /* justify-items: space-between; */
-    margin-top: 20px;
+  height: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  /* justify-items: space-between; */
+  margin-top: 20px;
 }
 
 #download-btn {
-    background-color:#3298CB;
-    height: 40px;
-    width: 150px;
-    border-radius: 5px; 
-    border-style: solid;
-    border-color: none;
-    font-size: 17pt;
-    color: #ffffff;
-    text-align: center;
-    margin-left: auto;
-    margin-right: 30%;
-    cursor: pointer;
-    position: absolute;
+  background-color: #3298cb;
+  height: 40px;
+  width: 150px;
+  border-radius: 5px;
+  border-style: solid;
+  border-color: none;
+  font-size: 17pt;
+  color: #ffffff;
+  text-align: center;
+  margin-left: auto;
+  margin-right: 30%;
+  cursor: pointer;
+  position: absolute;
 }
 
 #cancel-btn {
-    background-color:#6d6d6d;
-    height: 40px;
-    width: 150px;
-    border-radius: 5px; 
-    border-style: solid;
-    border-color: none;
-    font-size: 17pt;
-    color: #ffffff;
-    text-align: center;
-    margin-right: auto;
-    margin-left: 30%;
-    cursor: pointer;
-    position: absolute;
+  background-color: #6d6d6d;
+  height: 40px;
+  width: 150px;
+  border-radius: 5px;
+  border-style: solid;
+  border-color: none;
+  font-size: 17pt;
+  color: #ffffff;
+  text-align: center;
+  margin-right: auto;
+  margin-left: 30%;
+  cursor: pointer;
+  position: absolute;
 }
 
 .popup-column-filter {
-    position: absolute;
-    margin-top: 30px; 
-    z-index: 100;
-    border-style: none;
-    margin-right: 10px;
+  position: absolute;
+  margin-top: 30px;
+  z-index: 100;
+  border-style: none;
+  margin-right: 10px;
 }
 
 .popup-row-filter {
-    position: absolute;
-    margin-top: 50px;
-    z-index: 99;
-    margin-right: 10px;
+  position: absolute;
+  margin-top: 50px;
+  z-index: 99;
+  margin-right: 10px;
 }
 
 /* ag Grid custom column Header css */
 
 .customColumnHeader {
-    display: flex;
-    flex-direction: row; 
-    justify-content: space-around;
-    align-items: center;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
 }
 
 .customHeaderMenuButton {
-    float: left;
-    opacity: 1;
-    height: 20px; 
-    width: 20px;
-    text-align: center;
-    margin-right: 10px;
+  float: left;
+  opacity: 1;
+  height: 20px;
+  width: 20px;
+  text-align: center;
+  margin-right: 10px;
 }
 
 .columnMenuSvg:hover {
-    fill: white;
+  fill: white;
 }
 
 .sortAscendSvg:hover {
-    fill: white; 
+  fill: white;
 }
 
 .sortDescendSvg:hover {
-    fill: white;
+  fill: white;
 }
 
 .sortButton {
-    float: right;
-    height: 20px; 
-    width: 20px;
-    text-align: center;
-    background-color: 0; 
-    margin-left: auto;
-    margin-right: 0;
-    fill: black;
-    background: #ffffff00;
+  float: right;
+  height: 20px;
+  width: 20px;
+  text-align: center;
+  background-color: 0;
+  margin-left: auto;
+  margin-right: 0;
+  fill: black;
+  background: #ffffff00;
 }
 
 .clear {
-    height: 10px;
-    width: 10px;
+  height: 10px;
+  width: 10px;
 }
 
 .sortRemoveSvg {
-    fill: black;
-} 
+  fill: black;
+}
 
 .sortRemoveSvg:hover {
-    fill: white;
+  fill: white;
 }
 
 .customHeaderLabel {
-    float: left;
-    margin: 0 0 0 3px;
-    font-size: 12pt;
+  float: left;
+  margin: 0 0 0 3px;
+  font-size: 12pt;
 }
-  
+
 .on {
-    fill: white;
+  fill: white;
 }
 
 .field_management {
-    position: absolute;
-    top:10%;
-    left:50%;
-    min-height: 600px;
-    min-width: 500px;
-    margin-left:-25%;   /* negative half of width above */
-    /* margin-top:-20%;  */
-    /* margin-bottom: 20%; */
-    border: 4px;
-    border-style: solid;
-    border-radius: 10px; 
-    border-color:rgb(83, 83, 83);
-    z-index: 1;
-    background-color: white;
+  position: absolute;
+  top: 10%;
+  left: 50%;
+  min-height: 600px;
+  min-width: 500px;
+  margin-left: -25%; /* negative half of width above */
+  /* margin-top:-20%;  */
+  /* margin-bottom: 20%; */
+  border: 4px;
+  border-style: solid;
+  border-radius: 10px;
+  border-color: rgb(83, 83, 83);
+  z-index: 1;
+  background-color: white;
 }
 
 #save-btn {
-    background-color:#3298CB;
-    height: 40px;
-    width: 150px;
-    border-radius: 5px; 
-    border-style: solid;
-    border-color: none;
-    font-size: 17pt;
-    color: #ffffff;
-    text-align: center;
-    margin-left: auto;
-    margin-right: 30%;
-    cursor: pointer;
-    position: absolute;
+  background-color: #3298cb;
+  height: 40px;
+  width: 150px;
+  border-radius: 5px;
+  border-style: solid;
+  border-color: none;
+  font-size: 17pt;
+  color: #ffffff;
+  text-align: center;
+  margin-left: auto;
+  margin-right: 30%;
+  cursor: pointer;
+  position: absolute;
 }
