@@ -1,112 +1,55 @@
 import React, { useState } from 'react';
 import Button from '@mui/material/Button';
-import { Table } from 'reactstrap';
 import PropTypes from 'prop-types';
 import { styled } from '@mui/material/styles';
-import Dialog from '@mui/material/Dialog';
-import DialogTitle from '@mui/material/DialogTitle';
-import DialogContent from '@mui/material/DialogContent';
-import DialogActions from '@mui/material/DialogActions';
+import Chip from '@mui/material/Chip';
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableContainer from '@mui/material/TableContainer';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
+import Paper from '@mui/material/Paper';
 
-const BootstrapDialog = styled(Dialog)(({ theme }) => ({
-    '& .MuiDialogContent-root': {
-      padding: theme.spacing(2),
-    },
-    '& .MuiDialogActions-root': {
-      padding: theme.spacing(1),
-    },
-}));
-
-const BootstrapDialogTitle = (props) => {
-    const { children, onClose, ...other } = props;
-  
-    return (
-      <DialogTitle sx={{ m: 0, p: 2 }} {...other}>
-        {children}
-        
-      </DialogTitle>
-    );
-  };
-  
-  BootstrapDialogTitle.propTypes = {
-    children: PropTypes.node,
-    onClose: PropTypes.func.isRequired,
-  };
 
 
 export default function Classification_table() {
-    const [open, setOpen] = React.useState(false);
-
-    const handleClickOpen = () => {
-        setOpen(true);
-    };
-    const handleClose = () => {
-        setOpen(false);
-    };
+  let rows = [{"name" : "UNC"}, {"name" : "Duke"}];
 
   return (
     <div>
-      <Button variant="outlined" onClick={handleClickOpen}>
-        View college list
-      </Button>
-      <BootstrapDialog
-        onClose={handleClose}
-        aria-labelledby="customized-dialog-title"
-        open={open}
-      >
-        <BootstrapDialogTitle id="customized-dialog-title" onClose={handleClose}>
-          Modal title
-        </BootstrapDialogTitle>
-        <DialogContent dividers>
+      
         <Table>
             <thead>
                 <tr>
                     <th>college list</th>
-                    <th>student selected colleges</th>
-                    <th>counselor selected colleges</th>
+                    
+                    <th><Chip label="student selected colleges" color="primary" /><Chip label="student selected colleges" color="success" /></th>
                 </tr>
-                <br/>
-                <br/>
             </thead>
             
           </Table>
-          <Table>
-            <thead>
-                <tr>
-                    <th></th>
-                    <th>safety</th>
-                    <th>target</th>
-                    <th>reach</th>
-                </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <th>$</th>
-                        <th>NC state</th>
-                        <th>UNC</th>
-                        <th>Duke</th>
-                    </tr>
-                    <tr>
-                        <th>$$</th>
-                        <th>NC state</th>
-                        <th>UNC</th>
-                        <th>Duke</th>
-                    </tr>
-                    <tr>
-                        <th>$$$</th>
-                        <th>NC state</th>
-                        <th>UNC</th>
-                        <th>Duke</th>
-                    </tr>
-                </tbody>
-          </Table>
-        </DialogContent>
-        <DialogActions>
-          {/* <Button autoFocus onClick={handleClose}>
-            Save changes
-          </Button> */}
-        </DialogActions>
-      </BootstrapDialog>
+          <TableContainer component={Paper}>
+      <Table sx={{ minWidth: 650 }} aria-label="simple table">
+        <TableHead>
+          <TableRow>
+            <TableCell>Safety</TableCell>
+            <TableCell>Target</TableCell>
+            <TableCell>Reach</TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+        {rows.map((row) => (
+            <TableRow
+              key={row.name}
+              sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+            >
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+    </TableContainer>
+        
     </div>
   );
 }
