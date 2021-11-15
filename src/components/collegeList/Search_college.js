@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useEffect} from 'react'
 import { DataGrid } from '@mui/x-data-grid';
 
 const columns = [
@@ -45,6 +45,7 @@ export default function Search_college() {
                 checkboxSelection
             />
             </div>
+            <br/><br/><br/>
       </div>
     
   );

@@ -1,5 +1,6 @@
 import * as React from 'react';
 import TextField from '@mui/material/TextField';
+import { Box } from '@mui/system';
 import Autocomplete, { createFilterOptions } from '@mui/material/Autocomplete';
 
 const filter = createFilterOptions();
@@ -26,9 +27,6 @@ export default function Search_autocomplete() {
       }}
       filterOptions={(options, params) => {
         const filtered = filter(options, params);
-
-        const { inputValue } = params;
-        // Suggest the creation of a new value
         
 
         return filtered;
@@ -36,7 +34,7 @@ export default function Search_autocomplete() {
       selectOnFocus
       handleHomeEndKeys
       id="free-solo-with-text-demo"
-      options={top100Films}
+      options={university}
       getOptionLabel={(option) => {
         // Value selected with enter, right from the input
         if (typeof option === 'string') {
@@ -50,16 +48,15 @@ export default function Search_autocomplete() {
         return option.title;
       }}
       renderOption={(props, option) => <li style={{color:"gray"}} {...props}>{option.title}</li>}
-      sx={{ width: 300, color: "purple" }}
       freeSolo
       renderInput={(params) => (
-        <TextField {...params} label="" />
+        <TextField {...params} style={{position: "relative", left:"25%", width: "50%"}} label="" />
       )}
     />
   );
 }
 
-const top100Films = [
+const university = [
   { title: 'University of North Carolina at Chapel hill'},
   { title: 'Duke University'},
   { title: 'University of Texas at Austin'},

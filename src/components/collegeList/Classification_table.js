@@ -29,8 +29,8 @@ export default function Classification_table() {
             <thead>
                 <tr>
                     <th>college list</th>
-                    
-                    <th><Chip label="student selected colleges" color="primary" /><Chip label="professor selected colleges" color="success" /></th>
+                    <th><Chip label="student selected colleges" color="primary" /></th>
+                    <th><Chip label="professor selected colleges" color="success" /></th>
                 </tr>
             </thead>
             
