@@ -2,31 +2,31 @@
 
 This is a caseload management tool for high school counselors developed by UNC-Chapel Hill CS+Social Good and COMP 523 in partnership with Vitaly Radsky and Rocky Moon.
 
-## Installation & Set-Up
+## Set-up
 
-1. Install [Node.js and npm](https://www.npmjs.com/get-npm).
-2. Clone this repository and `cd` into the cloned directory on your machine. (If you do not have git, you must have just got a new computer)
-3. Run `npm install`. It will tell you it has a lot of vulnerabilities.. It should still work even if you don't run npm audit fix.
-4. In the firebase folder under src, create a file called `config.js`. So its: ./src/firebase/config.js 
+1. Install [Node.js](https://www.npmjs.com/get-npm) and [git](https://git-scm.com/downloads).
+2. Clone this repository and `cd` into the cloned directory on your machine.
+3. Install all of the dependencies by running `npm install`. It will tell you it has a lot of vulnerabilities but it should still work even if you don't run npm audit fix.
+4. In the firebase folder under src, create a file called `config.js`. So its: ./src/firebase/config.js
 5. Once you reach this step, message one of the team leads for the config file.
-6. Run `npm start`.
-7. To make Stripe function, message the team leads for the secret token and run this command: `firebase functions:config:set stripe.token="SECRET_STRIPE_TOKEN_HERE"` (optinal if you are not dealing with Stripe)
+6. To start your local testing server, run `npm start` and the local server should be accessible at localhost:3000.
+7. (optinal) To make Stripe function, message the team leads for the secret token and run this command: `firebase functions:config:set stripe.token="SECRET_STRIPE_TOKEN_HERE"`
 
 Last updated November 14, 2021.
 
-### Troubleshooting Common Installation Problems
+### Troubleshooting Common Installation Problems:
 
-If you get any "unable to resolve **\_** module" errors, try deleting the node_modules folder and running `npm install` again.
+- If you get any "unable to resolve **\_** module" errors, try deleting the node_modules folder and running `npm install` again.
+- If your server still cannot start, it might be a dependency being too old and no longer supported. Try running `npm audit fix` and see if this works.
 
 ## Testing
 
-Testing is in need of a lot of work. Currently there are some boiler plate tests implemented that mostly focus on comparing snapshots of the code the previous dev team worked on but these tests are far from robust and it is strongly recommended that the next dev team devotes a considerable amount of time to implementing proper testing. Tests are simply run using the command `npm test` while in the project directory in terminal, for coverage reports use `npm test -- --coverage`
+- Testing still needs a lot of work. Currently there are some boiler plate tests implemented that mostly focus on comparing snapshots of the code. However, as the file structure and everything changes, these tests might be no longer valid. So we strongly recomend that the future teams put some more time into testing. You can use the existing code to help you add more test cases and create more snapshots of the project to compare with.
+- Tests are simply run using the command `npm test` while in the project directory in terminal, for coverage reports use `npm test --coverage`
 
 Note: As of May 2021, several of the tests written in 2020 fail due to snapshots not matching after our edits to several files
 
 ## Deployment
-
-### By: Jeremy Venerella
 
 - Install the Firebase CLI tools
   - The easiest way is to run the command `npm install -g firebase-tools`
@@ -48,6 +48,12 @@ Note: As of May 2021, several of the tests written in 2020 fail due to snapshots
 - If asked to delete any functions just type `n` and hit `enter`.
 - After the deploy process finishes, the website should now be available at https://easyaccess-9ffaa.web.app/ or https://easyaccess-9ffaa.web.app/index if there is a routing issue
 
+### Deplying a staging server
+
+- Firebase now supports what they call preview channels, so you can use this to deploy a temporarily URL and firebase will delete it after a few weeks.
+- To do so, after setting up the firebase set up in the previous section, run the following command: `firebase hosting:channel:deploy preview_name`
+- Now go to firebase and under EasyAccess console and hosting, you should be able to see the new preview channel URL.
+
 ## Technologies Used
 
 - Create React App: https://create-react-app.dev/
@@ -56,25 +62,28 @@ Note: As of May 2021, several of the tests written in 2020 fail due to snapshots
   - Note: the counselor portal uses the community version of AG-grid and is restricted from features of the enterprise edition of AG-grid
 - Stripe: https://stripe.com/
   - Used for payment processing, still barebones for now but it has been fully integrated into Firebase
-- Firebase: see below to get access to the Firebase
+- Firebase: Hosting the current backend database and the webapp frontend. The future backend should move out of Firebase. See below to get access to the Firebase.
+- MongoDB: The database to host the new backend.
+- Sails.js: Recommend using this framework's backend to create the new backend database.
 - See ADR’s here: https://github.com/viradsky/EasyAccessCounselor/blob/master/ADR.md
-
-## Backend Redesign and Documentation.
-- Currently, the backend database is hosted on Firebase still. It has no schema to keep or organized and efficent.
-- In the documentation bellow is a redesign of the databse. 
-- https://docs.google.com/document/d/1w08dYKOnbREglLhP7xEJ8Huyv5diENpxM1cdyH1SDyI/edit?usp=sharing
-- We recomend implementing this using MongoDB and Sails.js.
 
 ## Project Structure
 
-This section outlines some of the major sections of the project:
+### Frontend structure
 
 - `assets`: This folder contains images, audio, and other media for the project.
-- `components`: Components are the building blocks of a React app. This folder should contain components that make up parts of a page, such as navbars, headers, buttons, etc.
-- `css`: This folder contains stylesheets for views and components.
+- `components`: Components are the building blocks of a React app. This folder should contain components that make up parts of a page, such as navbars, headers, buttons, etc. Each individual component should be in their own file. So each file should on average be around a hundred to three hundred lines of code. No components should be more than a thousand lines. If it is the case, then it is very likely that one component is doing way too much and should be broken down further.
+- `css`: This folder contains stylesheets for views and components (Although I recomend using styled components for each components which can avoid css polution. For more information on what it is check [here](https://styled-components.com/)).
 - `views`: Views are components that are also used in routing. You can think of these as pages.
 
-## Contributors
+### Backend Redesign and Documentation
+
+- Currently, the backend database is hosted on Firebase still. It has no schema to keep or organized and efficent.
+- In the documentation bellow is a redesign of the databse.
+- https://docs.google.com/document/d/1w08dYKOnbREglLhP7xEJ8Huyv5diENpxM1cdyH1SDyI/edit?usp=sharing
+- We recomend implementing this using MongoDB and Sails.js.
+
+## Contributing
 
 For an unrestricted development process, be sure to get access to the associated service accounts used with the counselor portal React app:
 
@@ -106,7 +115,8 @@ For an unrestricted development process, be sure to get access to the associated
 - COMP 523 Fall 2020: Tanner Bluhm, Ian Dershem, Kipp Williams
 - COMP 523 Spring 2021: Hannah Bodnar, Gaurachandra Das, Nada Rahmouni, Emily Stahle
 - Innovate Carolina Summer 2021: Owen Stegall, Jackson Lei, Emily Menay, Kenny Moore
-- COMP 523 Fall 2021: Peter Liu, Leo Huang, Mike Zhang
+- COMP 523 Fall 2021: Peter Liu, Leo Huang, Mike Zhang (Redesigned the backend, cleaned up the code for the frontend so no more 2000+ lines of code per components, & college list functionality)
+
 ## License
 
 Copyright 2020 Vitaly Radsky
