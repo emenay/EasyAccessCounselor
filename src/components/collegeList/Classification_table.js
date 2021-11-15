@@ -7,6 +7,7 @@ import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
+import Box from '@mui/material/Box';
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
     '& .MuiDialogContent-root': {
@@ -16,6 +17,19 @@ const BootstrapDialog = styled(Dialog)(({ theme }) => ({
       padding: theme.spacing(1),
     },
 }));
+
+const style = {
+  position: 'absolute',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  width: 1000,
+  height:1000,
+  bgcolor: 'background.paper',
+  border: '2px solid #000',
+  boxShadow: 24,
+  p: 4,
+};
 
 const BootstrapDialogTitle = (props) => {
     const { children, onClose, ...other } = props;
@@ -53,11 +67,13 @@ export default function Classification_table() {
         onClose={handleClose}
         aria-labelledby="customized-dialog-title"
         open={open}
+        className="modal-dialog modal-xl"
       >
         <BootstrapDialogTitle id="customized-dialog-title" onClose={handleClose}>
           Modal title
         </BootstrapDialogTitle>
         <DialogContent dividers>
+        <Box sx={style}></Box>
         <Table>
             <thead>
                 <tr>
