@@ -35,7 +35,7 @@ export default function CollegeListPanel(props) {
             <th>Student</th>
           </tr>
           
-          <tr style={{marginTop: "100px"}}>
+          <tr>
             <th>Affordabiity&Selectivity</th>
             <th></th>
             <th>
@@ -47,8 +47,6 @@ export default function CollegeListPanel(props) {
                   let temp=track_afford.map(val=>true)
                   set_track_afford([...temp])
                 }
-                
-                alert(track_afford)
                 }}>
                 select/unselect
               </Button>
@@ -61,18 +59,24 @@ export default function CollegeListPanel(props) {
             <th scope="row">{ele}</th>
             <td>{to_delete[idx]}</td>
             <td><Switch {...label} onChange={toggle_afford(idx)} checked={track_afford[idx]} /></td>
-            {/* <MySwitch toggle={toggle_afford(idx)} cur={track_afford[idx]} /> */}
-            {/* <Switch {...label} checked={track_afford[idx]===null?"":track_afford[idx]} onChange={toggle_afford(idx)}/> */}
             <td>{to_delete2[idx]}</td>
           </tr>))}
         </tbody>
-        <thead><tr/><tr/>
+        <thead><br/><br/>
         <tr>
             <th>Fit Information</th>
             <th></th>
             <th>
-              <Button variant="outlined" size="small" onClick={()=>{alert(track_fit)}}>
-                select all
+              <Button variant="outlined" size="small" onClick={()=>{
+                if (track_fit.reduce((first, second)=>first&&second, true)){
+                  let temp=track_fit.map(val=>false)
+                  set_track_fit([...temp])
+                } else {
+                  let temp=track_fit.map(val=>true)
+                  set_track_fit([...temp])
+                }
+                }}>
+                select/unselect
               </Button>
             </th>
             <th></th>
@@ -82,7 +86,7 @@ export default function CollegeListPanel(props) {
           {fitInfo.map((ele, idx)=>(<tr key={'fit'+idx}>
             <th scope="row">{ele}</th>
             <td>to fill</td>
-            {/* <MySwitch toggle={toggle_fit(idx)} cur={track_fit[idx]} /> */}
+            <td><Switch {...label} onChange={toggle_fit(idx)} checked={track_fit[idx]} /></td>
             <td>to fill</td>
           </tr>))}
         </tbody>
