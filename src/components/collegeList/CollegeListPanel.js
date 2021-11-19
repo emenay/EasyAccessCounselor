@@ -16,12 +16,12 @@ export default function CollegeListPanel(props) {
     let fitInfo = ["Major 1", "Major 2", "Distance from Home", "Region", "College Size", "College Diversity", "College Type", "Religion", "Military/ROTC", "Athletics"];
     let to_delete=[2.5, '1 out of 200', 1000, 23, 2040, "Mismatch", 27701]
     let to_delete2=[2.5, 1, 1000, 23, 2040, "Mismatch", 27701]
-    var dbinfo = ["gpa", "classRank", "sat", "act", "efc", "payMismatch"];
-    var dbinfo2 = ["major1", "major2", "distancefromHome", "region", "collegeSize", "collegeDiversity", "collegeType", "religion", "rotc", "athletics"];
+    // var dbinfo = ["gpa", "classRank", "sat", "act", "efc", "payMismatch"];
+    // var dbinfo2 = ["major1", "major2", "distancefromHome", "region", "collegeSize", "collegeDiversity", "collegeType", "religion", "rotc", "athletics"];
     const [track_afford, set_track_afford] = useState(new Array(affordabilityInfo.length).fill(true))
     const [track_fit, set_track_fit] = useState(new Array(fitInfo.length).fill(true))
     const toggle_afford=(idx)=>{return(e)=>{let temp=[...track_afford];temp[idx]=e.target.checked; set_track_afford([...temp])}}
-    const toggle_fit=(idx)=>{return()=>{track_fit[idx]=!track_fit[idx]}}
+    const toggle_fit=(idx)=>{return(e)=>{let temp=[...track_fit];temp[idx]=e.target.checked; set_track_fit([...temp])}}
     return (<div>
         <Table>
         <thead>
@@ -63,7 +63,7 @@ export default function CollegeListPanel(props) {
             <td>{to_delete2[idx]}</td>
           </tr>))}
         </tbody>
-        <thead><br/><br/>
+        <thead>
         <tr>
             <th>Fit Information</th>
             <th></th>
@@ -87,13 +87,11 @@ export default function CollegeListPanel(props) {
           {fitInfo.map((ele, idx)=>(<tr key={'fit'+idx}>
             <th scope="row">{ele}</th>
             <td>to fill</td>
-            <td><Switch {...label} onChange={toggle_fit(idx)} checked={track_fit[idx]} /></td>
+            <td><Switch {...label} onChange={toggle_fit(idx)} checked={track_fit[idx]}/></td>
             <td>to fill</td>
           </tr>))}
         </tbody>
       </Table>
-      {<Classification_table/>}
-      {<Search_college/>}
-      {<Search_autocomplete/>}
+      <Classification_table/>
     </div>);
 }

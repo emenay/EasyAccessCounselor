@@ -10,27 +10,36 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
+import Search_college from './Search_college';
+
+const style_college={marginTop: "5px", marginRight: "5px"}
+
 
 export default function Classification_table() {
 
-  function createData(name, school1, school2, school3, selector) {
-    return { name, school1, school2, school3, selector};
+  const [p1_1, set1_1] = useState([]);const [p1_2, set1_2] = useState([{college_name: "University of North Carolina at Chapel hill", from: "student"}]);const [p1_3, set1_3] = useState([{college_name: "University of North Carolina at Chapel hill", from: "student"}]);
+  const [p2_1, set2_1] = useState([{college_name: "Stanford University", from: "student"}]);const [p2_2, set2_2] = useState([{college_name: "Harvard University", from: "student"}]);const [p2_3, set2_3] = useState([{college_name: "NC State University", from: "student"}]);
+  const [p3_1, set3_1] = useState([{college_name: "Duke University", from: "student"}]);const [p3_2, set3_2] = useState([]);const [p3_3, set3_3] = useState([]);
+  const addRows=(selected)=>{
+    selected.forEach((obj)=>{obj.from="counselor"})
+    let temp = [...p1_1]
+    selected.forEach((col)=>{
+      if(!temp.includes(col)){
+        temp.push(col)
+      }
+    })
+    set1_1([...temp])
   }
   
-  const rows = [
-    createData('$', "UNC-Chapel Hill", "", "Duke University", "student"),
-    createData('$$', "Gilford College", "", "", "professor"),
-    createData('$$$', "", "Virginia Tech", "Harvard University", "professor")
-  ];
-
   return (
     <div>
+        <Search_college addRows={addRows}/>
         <Table>
             <thead>
                 <tr>
                     <th>college list</th>
                     <th><Chip label="student selected colleges" color="primary" /></th>
-                    <th><Chip label="professor selected colleges" color="success" /></th>
+                    <th><Chip label="counselor selected colleges" color="success" /></th>
                 </tr>
             </thead>
             
@@ -47,24 +56,63 @@ export default function Classification_table() {
           </TableRow>
         </TableHead>
         <TableBody>
-        {rows.map((row) => (
-          <TableRow
-              key={row.name}
+          < TableRow
+              key={"$"}
               sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
             >
             <TableCell component="th" scope="row">
-              {row.name}
+              $
             </TableCell>
-            <TableCell align="right"><Chip label={row.school1} color= {row.selector == "professor" ? "primary" : "success"} /></TableCell>
-            <TableCell align="right"><Chip label={row.school2} color= {row.selector == "professor" ? "primary" : "success"} /></TableCell>
-            <TableCell align="right"><Chip label={row.school3} color= {row.selector == "professor" ? "primary" : "success"} /></TableCell>
+            <TableCell >
+              {p1_1.map((university)=><Chip style={style_college} label={university.college_name} color= {university.from == "counselor" ? "primary" : "success"} />)}
+            </TableCell>
+            <TableCell>
+              {p1_2.map((university)=><Chip style={style_college} label={university.college_name} color= {university.from == "counselor" ? "primary" : "success"} />)}
+            </TableCell>
+            <TableCell>
+              {p1_3.map((university)=><Chip style={style_college} label={university.college_name} color= {university.from == "counselor" ? "primary" : "success"} />)}
+            </TableCell>
           </TableRow>
-          ))}
+          < TableRow
+              key={"$$"}
+              sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+            >
+            <TableCell component="th" scope="row">
+              $$
+            </TableCell>
+            <TableCell>
+              {p2_1.map((university)=><Chip style={style_college} label={university.college_name} color= {university.from == "counselor" ? "primary" : "success"} />)}
+            </TableCell>
+            <TableCell>
+              {p2_2.map((university)=><Chip style={style_college} label={university.college_name} color= {university.from == "counselor" ? "primary" : "success"} />)}
+            </TableCell>
+            <TableCell>
+              {p2_3.map((university)=><Chip style={style_college} label={university.college_name} color= {university.from == "counselor" ? "primary" : "success"} />)}
+            </TableCell>
+          </TableRow>
+            < TableRow
+              key={"$$$"}
+              sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+            >
+            <TableCell component="th" scope="row">
+              $$$
+            </TableCell>
+            <TableCell>
+              {p3_1.map((university)=><Chip style={style_college} label={university.college_name} color= {university.from == "counselor" ? "primary" : "success"} />)}
+            </TableCell>
+            <TableCell>
+            {p3_2.map((university)=><Chip style={style_college} label={university.college_name} color= {university.from == "counselor" ? "primary" : "success"} />)}
+            </TableCell>
+            <TableCell>
+            {p3_3.map((university)=><Chip style={style_college} label={university.college_name} color= {university.from == "counselor" ? "primary" : "success"} />)}
+            </TableCell>
+          </TableRow>
         </TableBody>
       </Table>
     </TableContainer>
     <br/>
     <br/>
+    
     </div>
   );
 }
