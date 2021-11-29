@@ -1,14 +1,12 @@
-import React, {useState} from 'react'
+import React, {useState, useEffect} from 'react'
 import 'bootstrap/dist/css/bootstrap.css';
 import Switch from '@mui/material/Switch';
-import Checkbox from '@mui/material/Checkbox';
 import Button from '@mui/material/Button';
 
 
 import { Table } from 'reactstrap';
 import Classification_table from './Classification_table';
-import Search_college from './Search_college';
-import Search_autocomplete from './Search_autocomplete';
+import Show_hide_modal from './Show_hide_modal';
 
 export default function CollegeListPanel(props) {
     const label = { inputProps: { 'aria-label': 'Switch demo' } };
@@ -16,12 +14,20 @@ export default function CollegeListPanel(props) {
     let fitInfo = ["Major 1", "Major 2", "Distance from Home", "Region", "College Size", "College Diversity", "College Type", "Religion", "Military/ROTC", "Athletics"];
     let to_delete=[2.5, '1 out of 200', 1000, 23, 2040, "Mismatch", 27701]
     let to_delete2=[2.5, 1, 1000, 23, 2040, "Mismatch", 27701]
+    const [affor_show_hide, set_affor_show_hide] = useState(new Array(affordabilityInfo.length).fill(false))
+    const [fit_show_hide, set_fit_show_hide] = useState(new Array(fitInfo.length).fill(false))
     // var dbinfo = ["gpa", "classRank", "sat", "act", "efc", "payMismatch"];
     // var dbinfo2 = ["major1", "major2", "distancefromHome", "region", "collegeSize", "collegeDiversity", "collegeType", "religion", "rotc", "athletics"];
     const [track_afford, set_track_afford] = useState(new Array(affordabilityInfo.length).fill(true))
     const [track_fit, set_track_fit] = useState(new Array(fitInfo.length).fill(true))
     const toggle_afford=(idx)=>{return(e)=>{let temp=[...track_afford];temp[idx]=e.target.checked; set_track_afford([...temp])}}
     const toggle_fit=(idx)=>{return(e)=>{let temp=[...track_fit];temp[idx]=e.target.checked; set_track_fit([...temp])}}
+    const affor_handle_show_hide=(arr)=>{set_affor_show_hide(arr)}
+    const fit_handle_show_hide=(arr)=>{set_fit_show_hide(arr)}
+
+    // useEffect(()=>{
+    //   set_affor_show_hide()
+    // }, [])
     return (<div>
         <Table>
         <thead>
@@ -52,11 +58,11 @@ export default function CollegeListPanel(props) {
                 select/unselect
               </Button>
             </th>
-            <th></th>
+            <th><Show_hide_modal checked={affor_show_hide.length == 1? affor_show_hide[0] : affor_show_hide} list={affordabilityInfo} handle={affor_handle_show_hide}/></th>
           </tr>
         </thead>
         <tbody>
-          {affordabilityInfo.map((ele, idx)=>(<tr key={'aff'+idx}>
+          {affordabilityInfo.filter((ele, idx)=>!affor_show_hide[idx]).map((ele, idx)=>(<tr key={'aff'+idx}>
             <th scope="row">{ele}</th>
             <td>{to_delete[idx]}</td>
             <td><Switch {...label} onChange={toggle_afford(idx)} checked={track_afford[idx]} /></td>
@@ -80,11 +86,11 @@ export default function CollegeListPanel(props) {
                 select/unselect
               </Button>
             </th>
-            <th></th>
+            <th><Show_hide_modal checked={fit_show_hide.length == 1? fit_show_hide[0] : fit_show_hide} list={fitInfo} handle={fit_handle_show_hide}/></th>
         </tr>
         </thead>
         <tbody>
-          {fitInfo.map((ele, idx)=>(<tr key={'fit'+idx}>
+          {fitInfo.filter((ele, idx)=>!fit_show_hide[idx]).map((ele, idx)=>(<tr key={'fit'+idx}>
             <th scope="row">{ele}</th>
             <td>to fill</td>
             <td><Switch {...label} onChange={toggle_fit(idx)} checked={track_fit[idx]}/></td>

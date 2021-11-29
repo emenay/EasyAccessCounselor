@@ -1,7 +1,4 @@
 import React, { useState } from 'react';
-import Button from '@mui/material/Button';
-import PropTypes from 'prop-types';
-import { styled } from '@mui/material/styles';
 import Chip from '@mui/material/Chip';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -11,7 +8,6 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import Search_college from './Search_college';
-
 const style_college={marginTop: "5px", marginRight: "5px"}
 
 
@@ -64,13 +60,13 @@ export default function Classification_table() {
               $
             </TableCell>
             <TableCell >
-              {p1_1.map((university)=><Chip style={style_college} label={university.college_name} color= {university.from == "counselor" ? "primary" : "success"} />)}
+              {p1_1.map((university, idx)=><Chip key={idx+"1.1"} style={style_college} label={university.college_name} color= {university.from == "counselor" ? "primary" : "success"} />)}
             </TableCell>
             <TableCell>
-              {p1_2.map((university)=><Chip style={style_college} label={university.college_name} color= {university.from == "counselor" ? "primary" : "success"} />)}
+              {p1_2.map((university, idx)=><Chip key={idx+"1.2"} style={style_college} label={university.college_name} color= {university.from == "counselor" ? "primary" : "success"} />)}
             </TableCell>
             <TableCell>
-              {p1_3.map((university)=><Chip style={style_college} label={university.college_name} color= {university.from == "counselor" ? "primary" : "success"} />)}
+              {p1_3.map((university, idx)=><Chip key={idx+"1.3"} style={style_college} label={university.college_name} color= {university.from == "counselor" ? "primary" : "success"} />)}
             </TableCell>
           </TableRow>
           < TableRow
@@ -81,13 +77,13 @@ export default function Classification_table() {
               $$
             </TableCell>
             <TableCell>
-              {p2_1.map((university)=><Chip style={style_college} label={university.college_name} color= {university.from == "counselor" ? "primary" : "success"} />)}
+              {p2_1.map((university, idx)=><Chip key={idx+"2.1"} style={style_college} label={university.college_name} color= {university.from == "counselor" ? "primary" : "success"} />)}
             </TableCell>
             <TableCell>
-              {p2_2.map((university)=><Chip style={style_college} label={university.college_name} color= {university.from == "counselor" ? "primary" : "success"} />)}
+              {p2_2.map((university, idx)=><Chip key={idx+"2.2"} style={style_college} label={university.college_name} color= {university.from == "counselor" ? "primary" : "success"} />)}
             </TableCell>
             <TableCell>
-              {p2_3.map((university)=><Chip style={style_college} label={university.college_name} color= {university.from == "counselor" ? "primary" : "success"} />)}
+              {p2_3.map((university, idx)=><Chip key={idx+"2.3"} style={style_college} label={university.college_name} color= {university.from == "counselor" ? "primary" : "success"} />)}
             </TableCell>
           </TableRow>
             < TableRow
@@ -98,13 +94,13 @@ export default function Classification_table() {
               $$$
             </TableCell>
             <TableCell>
-              {p3_1.map((university)=><Chip style={style_college} label={university.college_name} color= {university.from == "counselor" ? "primary" : "success"} />)}
+              {p3_1.map((university, idx)=><Chip key={idx+"3.1"} style={style_college} label={university.college_name} color= {university.from == "counselor" ? "primary" : "success"} />)}
             </TableCell>
             <TableCell>
-            {p3_2.map((university)=><Chip style={style_college} label={university.college_name} color= {university.from == "counselor" ? "primary" : "success"} />)}
+            {p3_2.map((university, idx)=><Chip key={idx+"3.2"} style={style_college} label={university.college_name} color= {university.from == "counselor" ? "primary" : "success"} />)}
             </TableCell>
             <TableCell>
-            {p3_3.map((university)=><Chip style={style_college} label={university.college_name} color= {university.from == "counselor" ? "primary" : "success"} />)}
+            {p3_3.map((university, idx)=><Chip key={idx+"3.3"} style={style_college} label={university.college_name} color= {university.from == "counselor" ? "primary" : "success"} />)}
             </TableCell>
           </TableRow>
         </TableBody>
