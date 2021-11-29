@@ -6,6 +6,7 @@ import Button from '@mui/material/Button';
 
 import { Table } from 'reactstrap';
 import Classification_table from './Classification_table';
+import CollegeSearchByAttributes from './CollegeSearchByAttributes.js';
 import Show_hide_modal from './Show_hide_modal';
 
 export default function CollegeListPanel(props) {
@@ -99,5 +100,6 @@ export default function CollegeListPanel(props) {
         </tbody>
       </Table>
       <Classification_table/>
+      <CollegeSearchByAttributes/>
     </div>);
 }
