@@ -49,11 +49,13 @@
 }
 
 .login-button {
+  cursor: pointer;
   width: 100%;
   max-width: 100%;
   font-size: 24px;
   text-align: center;
   color: white;
+  background-color: rgb(50,152,202);
   display: inline-block;
 }
 
