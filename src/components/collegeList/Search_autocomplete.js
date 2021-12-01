@@ -40,8 +40,8 @@ export default function Search_autocomplete({addToGrid, sync}) {
         <div>
           <TextField {...params} style={{position: "relative", left:"25%", width: "50%"}} label="" />
           <Button variant="outlined" color="success" style={{position:"absolute", right:"150px"}} onClick={()=>{
-            addToGrid(value)}}>add</Button>
-            <Button variant="outlined" style={{position:"absolute", right:"62px"}} onClick={sync}>sync</Button>
+            addToGrid(value)}}>search</Button>
+            <Button variant="outlined" style={{position:"absolute", right:"62px"}} onClick={sync}>add</Button>
           <br/>
           <br/>
         </div>
