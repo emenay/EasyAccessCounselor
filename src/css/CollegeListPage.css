@@ -29,18 +29,17 @@
 }
 
 .colListButton {
-
-    background-color:#0E1030;
-    border-radius: 15px;
-    text-align: center;
-    font-weight: bold;
-    font-size: large;
-    margin-left: 10px;
-    padding: 3px;
+  background-color: #0e1030;
+  border-radius: 15px;
+  text-align: center;
+  font-weight: bold;
+  font-size: large;
+  margin-left: 10px;
+  padding: 3px;
 }
 
-.colListButton:hover{
-    cursor: pointer;
+.colListButton:hover {
+  cursor: pointer;
 }
 
 .bigbutton {
