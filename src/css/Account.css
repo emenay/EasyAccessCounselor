@@ -1,20 +1,16 @@
 .Login {
-
-    color: #3298CB;
-    text-align: center;
-    padding-top: 25px;
-    padding-right: 45px;
-    font-size: 37px;
-    margin: auto;
-    display: inline-block;
-    }
-
-
+  color: #3298cb;
+  text-align: center;
+  padding-top: 25px;
+  padding-right: 45px;
+  font-size: 37px;
+  margin: auto;
+  display: inline-block;
+}
 
 /* body{
   text-align: center;
 } */
-
 
 body {
   text-align: center;
@@ -27,8 +23,7 @@ body {
   color: blue;
 }
 
-
-#or{
+#or {
   font-size: 15px;
   color: black;
   padding: 7px;
@@ -43,7 +38,6 @@ body {
   border: 1px solid  blue;
 	width: 100%;
 } */
-
 
 form {
   text-align: center;
