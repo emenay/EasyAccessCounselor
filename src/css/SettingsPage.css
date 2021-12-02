@@ -9,13 +9,15 @@ label {
   margin-left: 0;
 }
 
-input {
+
+input{
   padding: 15px;
 }
 
-.formBlock {
+.formBlock{
   margin-bottom: 100px;
-  color: #3298cb;
+  color:  #3298CB;
+
 }
 .inputLabel {
   height: 20px;
@@ -26,4 +28,5 @@ input {
 #updateStatus {
   color: green;
   margin-left: 200px;
+
 }
