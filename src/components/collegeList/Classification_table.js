@@ -75,74 +75,76 @@ export default function Classification_table(inpts) {
     },      
   ]
 
-  let array1_1 = [];
-  let array1_2 = [];
-  let array1_3 = [];
-  let array2_1 = [];
-  let array2_2 = [];
-  let array2_3 = [];
-  let array3_1 = [];
-  let array3_2 = [];
-  let array3_3 = [];
+  let a1_1 = [];
+  let a1_2 = [];
+  let a1_3 = [];
+  let a2_1 = [];
+  let a2_2 = [];
+  let a2_3 = [];
+  let a3_1 = [];
+  let a3_2 = [];
+  let a3_3 = [];
 
-  for(let i = 0; i < schools.length; i++){
-    if (schools[i].selectivity == 'safety'){
-      if (schools[i].cost == 'low'){
-        array1_1.push(schools[i]);
-      }
-      else if (schools[i].cost == 'medium'){
-        array1_2.push(schools[i]);
-      }
-      else if (schools[i].cost == 'high'){
-        array1_3.push(schools[i]);
-      }
+  // for(let i = 0; i < schools.length; i++){
+  //   if (schools[i].selectivity == 'safety'){
+  //     if (schools[i].cost == 'low'){
+  //       array1_1.push(schools[i]);
+  //     }
+  //     else if (schools[i].cost == 'medium'){
+  //       array1_2.push(schools[i]);
+  //     }
+  //     else if (schools[i].cost == 'high'){
+  //       array1_3.push(schools[i]);
+  //     }
+  //   }
+  //   else if (schools[i].selectivity == 'target'){
+  //     if (schools[i].cost == 'low'){
+  //       array2_1.push(schools[i]);
+  //     }
+  //     else if (schools[i].cost == 'medium'){
+  //       array2_2.push(schools[i]);
+  //     }
+  //     else if (schools[i].cost == 'high'){
+  //       array2_3.push(schools[i]);
+  //     }
+  //   }
+  //   else if (schools[i].selectivity == 'reach'){
+  //     if (schools[i].cost == 'low'){
+  //       array3_1.push(schools[i]);
+  //     }
+  //     else if (schools[i].cost == 'medium'){
+  //       array3_2.push(schools[i]);
+  //     }
+  //     else if (schools[i].cost == 'high'){
+  //       array3_3.push(schools[i]);
+  //     }
+  //   }
+  // }
+  const [dumb, setDumb] = useState(false)
+  const [class_obj, setNothing] = useState({a1_1, a1_2, a1_3, a2_1, a2_2, a2_3, a3_1, a3_2, a3_3})
+  // const [p1_1, set1_1] = useState(array1_1)
+  // const [p1_2, set1_2] = useState(array1_2)
+  // const [p1_3, set1_3] = useState(array1_3)
+  // const [p2_1, set2_1] = useState(array2_1)
+  // const [p2_2, set2_2] = useState(array2_2)
+  // const [p2_3, set2_3] = useState(array2_3)
+  // const [p3_1, set3_1] = useState(array3_1)
+  // const [p3_2, set3_2] = useState(array3_2)
+  // const [p3_3, set3_3] = useState(array3_3)
+  const deal = (college)=>{
+    // codd algorithm here
+    if (!class_obj["a1_1"].includes(college)) {
+      class_obj["a1_1"].push(college)
     }
-    else if (schools[i].selectivity == 'target'){
-      if (schools[i].cost == 'low'){
-        array2_1.push(schools[i]);
-      }
-      else if (schools[i].cost == 'medium'){
-        array2_2.push(schools[i]);
-      }
-      else if (schools[i].cost == 'high'){
-        array2_3.push(schools[i]);
-      }
-    }
-    else if (schools[i].selectivity == 'reach'){
-      if (schools[i].cost == 'low'){
-        array3_1.push(schools[i]);
-      }
-      else if (schools[i].cost == 'medium'){
-        array3_2.push(schools[i]);
-      }
-      else if (schools[i].cost == 'high'){
-        array3_3.push(schools[i]);
-      }
-    }
+    
   }
-
-  const [p1_1, set1_1] = useState(array1_1)
-  const [p1_2, set1_2] = useState(array1_2)
-  const [p1_3, set1_3] = useState(array1_3)
-  const [p2_1, set2_1] = useState(array2_1)
-  const [p2_2, set2_2] = useState(array2_2)
-  const [p2_3, set2_3] = useState(array2_3)
-  const [p3_1, set3_1] = useState(array3_1)
-  const [p3_2, set3_2] = useState(array3_2)
-  const [p3_3, set3_3] = useState(array3_3)
-
 
   const addRows = (selected) => {
     selected.forEach((obj) => {
       obj.from = 'counselor'
+      deal(obj)
     })
-    let temp = [...p1_1]
-    selected.forEach((col) => {
-      if (!temp.includes(col)) {
-        temp.push(col)
-      }
-    })
-    set1_1([...temp])
+    setDumb(!dumb)
   }
 
   console.log(getColleges())
@@ -169,9 +171,9 @@ export default function Classification_table(inpts) {
           <TableHead>
             <TableRow>
               <TableCell></TableCell>
-              <TableCell>Safety</TableCell>
-              <TableCell>Target</TableCell>
-              <TableCell>Reach</TableCell>
+              <TableCell style={{margin: 'auto'}}>Safety</TableCell>
+              <TableCell style={{margin: 'auto'}}>Target</TableCell>
+              <TableCell style={{margin: 'auto'}}>Reach</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -182,7 +184,7 @@ export default function Classification_table(inpts) {
                 $
               </TableCell>
               <TableCell>
-                {p1_1.map((university, idx) => (
+                {class_obj["a1_1"].map((university, idx) => (
                   <Chip
                     key={idx + '1.1'}
                     style={style_college}
@@ -194,7 +196,7 @@ export default function Classification_table(inpts) {
                 ))}
               </TableCell>
               <TableCell>
-                {p1_2.map((university, idx) => (
+                {class_obj["a1_2"].map((university, idx) => (
                   <Chip
                     key={idx + '1.2'}
                     style={style_college}
@@ -206,7 +208,7 @@ export default function Classification_table(inpts) {
                 ))}
               </TableCell>
               <TableCell>
-                {p1_3.map((university, idx) => (
+                {class_obj["a1_3"].map((university, idx) => (
                   <Chip
                     key={idx + '1.3'}
                     style={style_college}
@@ -225,7 +227,7 @@ export default function Classification_table(inpts) {
                 $$
               </TableCell>
               <TableCell>
-                {p2_1.map((university, idx) => (
+                {class_obj["a2_1"].map((university, idx) => (
                   <Chip
                     key={idx + '2.1'}
                     style={style_college}
@@ -237,7 +239,7 @@ export default function Classification_table(inpts) {
                 ))}
               </TableCell>
               <TableCell>
-                {p2_2.map((university, idx) => (
+                {class_obj["a2_2"].map((university, idx) => (
                   <Chip
                     key={idx + '2.2'}
                     style={style_college}
@@ -249,7 +251,7 @@ export default function Classification_table(inpts) {
                 ))}
               </TableCell>
               <TableCell>
-                {p2_3.map((university, idx) => (
+                {class_obj["a2_3"].map((university, idx) => (
                   <Chip
                     key={idx + '2.3'}
                     style={style_college}
@@ -268,7 +270,7 @@ export default function Classification_table(inpts) {
                 $$$
               </TableCell>
               <TableCell>
-                {p3_1.map((university, idx) => (
+                {class_obj["a3_1"].map((university, idx) => (
                   <Chip
                     key={idx + '3.1'}
                     style={style_college}
@@ -280,7 +282,7 @@ export default function Classification_table(inpts) {
                 ))}
               </TableCell>
               <TableCell>
-                {p3_2.map((university, idx) => (
+                {class_obj["a3_2"].map((university, idx) => (
                   <Chip
                     key={idx + '3.2'}
                     style={style_college}
@@ -292,7 +294,7 @@ export default function Classification_table(inpts) {
                 ))}
               </TableCell>
               <TableCell>
-                {p3_3.map((university, idx) => (
+                {class_obj["a3_3"].map((university, idx) => (
                   <Chip
                     key={idx + '3.3'}
                     style={style_college}
