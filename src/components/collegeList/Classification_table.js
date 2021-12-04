@@ -123,13 +123,31 @@ export default function Classification_table(inpts) {
     selected.forEach((obj) => {
       obj.from = 'counselor'
     })
-    let temp = [...p1_1]
+
+    let temp = [];
+    if(selected[0].college_name == "Yale University"){
+      temp = [...p3_3]
+      set3_3([...temp])
+    }else if(selected[0].college_name == "University of North Carolina at Chapel hill"){
+      temp = [...p1_2]
+      set1_2([...temp])
+    }else if(selected[0].college_name == "University of Florida"){
+      temp = [...p1_1]
+      set1_1([...temp])
+    } else {
+      temp = [...p2_2]
+      set2_2([...temp])
+    }
+
+
+   
     selected.forEach((col) => {
       if (!temp.includes(col)) {
         temp.push(col)
       }
     })
-
+    console.log("????")
+    console.log(selected)
     if(selected[0].college_name == "Yale University"){
       set3_3([...temp])
     }else if(selected[0].college_name == "University of North Carolina at Chapel hill"){
