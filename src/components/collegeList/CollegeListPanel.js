@@ -9,7 +9,6 @@ import CollegeSearchByAttributes from './CollegeSearchByAttributes.js'
 import Show_hide_modal from './Show_hide_modal'
 
 export default function CollegeListPanel(props) {
-  console.log('this', props.info)
   const label = { inputProps: { 'aria-label': 'Switch demo' } }
   let affordabilityInfo = [
     'GPA',
