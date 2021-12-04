@@ -10,27 +10,31 @@ import Paper from '@mui/material/Paper'
 import Search_college from './Search_college'
 const style_college = { marginTop: '5px', marginRight: '5px' }
 
-
 async function getColleges() {
-  let base_url = "https://api.data.gov/ed/collegescorecard/v1/"
-  let dataset = "schools.json?"
-  let filter_params = "latest.student.size__range=25000.."
-  let fields = "&fields=" + 
-              "id," +
-              "school.name," + 
-              "latest.admissions.sat_scores"
-  let options = "&per_page=100&page=0"
-  let api_key = "&api_key=gD3AnaoQAAcJLYBrWHmNGzFePeGyggA04s25m2xq"        
+  let base_url = 'https://api.data.gov/ed/collegescorecard/v1/'
+  let dataset = 'schools.json?'
+  let filter_params = 'latest.student.size__range=25000..'
+  let fields =
+    '&fields=' + 'id,' + 'school.name,' + 'latest.admissions.sat_scores'
+  let options = '&per_page=100&page=0'
+  let api_key = '&api_key=gD3AnaoQAAcJLYBrWHmNGzFePeGyggA04s25m2xq'
 
-  let request_url = base_url + dataset + filter_params +
-              "&fields=" + "," + fields + options + api_key
+  let request_url =
+    base_url +
+    dataset +
+    filter_params +
+    '&fields=' +
+    ',' +
+    fields +
+    options +
+    api_key
 
   console.log(request_url)
-  let result = await fetch(request_url).then(function(response) {
-    return response.json();
-  });
+  let result = await fetch(request_url).then(function (response) {
+    return response.json()
+  })
   console.log(result)
-  return result;
+  return result
 }
 
 async function sortSchools(schools) {
@@ -39,78 +43,68 @@ async function sortSchools(schools) {
   // }
 }
 
-
-
 export default function Classification_table(inpts) {
   let schools = [
     {
       college_name: 'Stanford University',
       from: 'counselor',
       selectivity: 'reach',
-      cost: "high",
-    },  
+      cost: 'high',
+    },
     {
       college_name: 'Harvard University',
       from: 'counselor',
       selectivity: 'reach',
-      cost: "high",
-    }, 
+      cost: 'high',
+    },
     {
       college_name: 'NC State University',
       from: 'student',
       selectivity: 'safety',
-      cost: "low",
+      cost: 'low',
     },
     {
       college_name: 'Duke University',
       from: 'student',
       selectivity: 'safety',
-      cost: "high",
-    },      
+      cost: 'high',
+    },
   ]
 
-  let array1_1 = [];
-  let array1_2 = [];
-  let array1_3 = [];
-  let array2_1 = [];
-  let array2_2 = [];
-  let array2_3 = [];
-  let array3_1 = [];
-  let array3_2 = [];
-  let array3_3 = [];
+  let array1_1 = []
+  let array1_2 = []
+  let array1_3 = []
+  let array2_1 = []
+  let array2_2 = []
+  let array2_3 = []
+  let array3_1 = []
+  let array3_2 = []
+  let array3_3 = []
 
-  for(let i = 0; i < schools.length; i++){
-    if (schools[i].selectivity == 'safety'){
-      if (schools[i].cost == 'low'){
-        array1_1.push(schools[i]);
+  for (let i = 0; i < schools.length; i++) {
+    if (schools[i].selectivity == 'safety') {
+      if (schools[i].cost == 'low') {
+        array1_1.push(schools[i])
+      } else if (schools[i].cost == 'medium') {
+        array1_2.push(schools[i])
+      } else if (schools[i].cost == 'high') {
+        array1_3.push(schools[i])
       }
-      else if (schools[i].cost == 'medium'){
-        array1_2.push(schools[i]);
+    } else if (schools[i].selectivity == 'target') {
+      if (schools[i].cost == 'low') {
+        array2_1.push(schools[i])
+      } else if (schools[i].cost == 'medium') {
+        array2_2.push(schools[i])
+      } else if (schools[i].cost == 'high') {
+        array2_3.push(schools[i])
       }
-      else if (schools[i].cost == 'high'){
-        array1_3.push(schools[i]);
-      }
-    }
-    else if (schools[i].selectivity == 'target'){
-      if (schools[i].cost == 'low'){
-        array2_1.push(schools[i]);
-      }
-      else if (schools[i].cost == 'medium'){
-        array2_2.push(schools[i]);
-      }
-      else if (schools[i].cost == 'high'){
-        array2_3.push(schools[i]);
-      }
-    }
-    else if (schools[i].selectivity == 'reach'){
-      if (schools[i].cost == 'low'){
-        array3_1.push(schools[i]);
-      }
-      else if (schools[i].cost == 'medium'){
-        array3_2.push(schools[i]);
-      }
-      else if (schools[i].cost == 'high'){
-        array3_3.push(schools[i]);
+    } else if (schools[i].selectivity == 'reach') {
+      if (schools[i].cost == 'low') {
+        array3_1.push(schools[i])
+      } else if (schools[i].cost == 'medium') {
+        array3_2.push(schools[i])
+      } else if (schools[i].cost == 'high') {
+        array3_3.push(schools[i])
       }
     }
   }
@@ -124,7 +118,6 @@ export default function Classification_table(inpts) {
   const [p3_1, set3_1] = useState(array3_1)
   const [p3_2, set3_2] = useState(array3_2)
   const [p3_3, set3_3] = useState(array3_3)
-
 
   const addRows = (selected) => {
     selected.forEach((obj) => {
