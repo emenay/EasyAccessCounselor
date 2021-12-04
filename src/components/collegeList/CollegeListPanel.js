@@ -9,7 +9,7 @@ import CollegeSearchByAttributes from './CollegeSearchByAttributes.js'
 import Show_hide_modal from './Show_hide_modal'
 
 export default function CollegeListPanel(props) {
-  console.log(props)
+  console.log('this', props.info)
   const label = { inputProps: { 'aria-label': 'Switch demo' } }
   let affordabilityInfo = [
     'GPA',
@@ -31,8 +31,24 @@ export default function CollegeListPanel(props) {
     'Military/ROTC',
     'Athletics',
   ]
-  let to_delete = [2.5, '1 out of 200', 1000, 23, 2040, 'Mismatch', 27701]
-  let to_delete2 = [2.5, 1, 1000, 23, 2040, 'Mismatch', 27701]
+  let to_delete = [
+    props.info.gpa,
+    props.info.classRank,
+    props.info.sat,
+    props.info.act,
+    2040,
+    'Mismatch',
+    27701,
+  ]
+  let to_delete2 = [
+    props.info.gpa,
+    props.info.classRank,
+    props.info.sat,
+    props.info.act,
+    2040,
+    'Mismatch',
+    27701,
+  ]
   const [affor_show_hide, set_affor_show_hide] = useState(
     new Array(affordabilityInfo.length).fill(false)
   )
@@ -79,8 +95,8 @@ export default function CollegeListPanel(props) {
             <th>Information</th>
             <th>Counselor</th>
             <th>
-              <Button 
-                variant="outlined" 
+              <Button
+                variant="outlined"
                 size="medium"
                 onClick={() => {
                   //TODO: connect with backend
@@ -89,7 +105,7 @@ export default function CollegeListPanel(props) {
                     set_track_afford([...temp])
                     let temp1 = track_fit.map((val) => false)
                     set_track_fit([...temp])
-                  } 
+                  }
                 }}>
                 Sync
               </Button>
@@ -209,5 +225,3 @@ export default function CollegeListPanel(props) {
     </div>
   )
 }
-
-
