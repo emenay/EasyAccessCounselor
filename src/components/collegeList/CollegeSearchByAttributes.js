@@ -3,8 +3,11 @@ import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import TextField from '@mui/material/TextField'
 import MenuItem from '@mui/material/MenuItem'
-import { Card } from 'reactstrap'
-import { CardContent } from '@mui/material'
+// import { Card } from 'reactstrap'
+// import { CardContent } from '@mui/material'
+// import Search_college from './Search_college'
+import Typography from '@mui/material/Typography';
+import Popover from '@mui/material/Popover';
 
 const schoolTypes = [
   {
@@ -231,6 +234,60 @@ const states = [
   },
 ]
 
+const sats = [
+  {
+    value: '1500+',
+    label: '1500+',
+  },
+  {
+    value: '1400+',
+    label: '1400+',
+  },
+  {
+    value: '1300+',
+    label: '1300+',
+  },
+  {
+    value: '1200+',
+    label: '1200+',
+  },
+  {
+    value: '1000+',
+    label: '1000+',
+  },
+  {
+    value: '1000-',
+    label: '1000-',
+  },
+]
+
+const acts = [
+  {
+    value: '35+',
+    label: '35+',
+  },
+  {
+    value: '30+',
+    label: '30+',
+  },
+  {
+    value: '25+',
+    label: '25+',
+  },
+  {
+    value: '20+',
+    label: '20+',
+  },
+  {
+    value: '10+',
+    label: '10+',
+  },
+  {
+    value: '10-',
+    label: '10-',
+  },
+]
+
 export default function CollegeSearchByAttributes() {
   const [schoolType, setSchoolType] = React.useState('Public')
 
@@ -249,6 +306,32 @@ export default function CollegeSearchByAttributes() {
   const handleChangeYear = (event) => {
     setYear(event.target.value)
   }
+
+  const [sat, setSat] = React.useState('1300+')
+
+  const handleChangeSat = (event) => {
+    setSat(event.target.value)
+  }
+
+  const [act, setAct] = React.useState('25+')
+
+  const handleChangeAct = (event) => {
+    setAct(event.target.value)
+  }
+
+  const [anchorEl, setAnchorEl] = React.useState(null);
+
+  const SeachByAttribute = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const open = Boolean(anchorEl);
+  const id = open ? 'simple-popover' : undefined;
+
   return (
     <Box
       component="form"
@@ -308,10 +391,61 @@ export default function CollegeSearchByAttributes() {
           ))}
         </TextField>
       </div>
-
-      <Button variant="contained" color="success">
+      <div>
+        <TextField
+          required
+          id="select-sat"
+          select
+          label="Select"
+          value={sat}
+          variant="filled"
+          onChange={handleChangeSat}
+          helperText="Please select the SAT range">
+          {sats.map((option) => (
+            <MenuItem key={option.value} value={option.value}>
+              {option.label}
+            </MenuItem>
+          ))}
+        </TextField>
+      </div>
+      <div>
+        <TextField
+          required
+          id="select-act"
+          select
+          label="Select"
+          value={act}
+          variant="filled"
+          onChange={handleChangeAct}
+          helperText="Please select the ACT range">
+          {acts.map((option) => (
+            <MenuItem key={option.value} value={option.value}>
+              {option.label}
+            </MenuItem>
+          ))}
+        </TextField>
+      </div>
+      <div>
+      <Button variant="contained" color="success" onClick={SeachByAttribute}>
         Search
       </Button>
+
+      <Popover
+        id={id}
+        open={open}
+        anchorEl={anchorEl}
+        onClose={handleClose}
+        anchorOrigin={{
+          vertical: 'bottom',
+          horizontal: 'left',
+        }}
+      >
+        <Typography sx={{ p: 2 }}>Should Search for Colleges base on Input</Typography>
+      </Popover>
+
+      </div>
+
     </Box>
   )
 }
+

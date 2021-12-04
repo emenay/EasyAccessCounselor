@@ -1,7 +1,6 @@
 import React, { useState } from 'react'
 import { DataGrid } from '@mui/x-data-grid'
 import Search_autocomplete from './Search_autocomplete'
-import { Button } from '@mui/material/Button'
 
 const columns = [
   { field: 'id', headerName: 'ID', width: 70 },

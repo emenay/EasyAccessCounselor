@@ -9,6 +9,7 @@ import CollegeSearchByAttributes from './CollegeSearchByAttributes.js'
 import Show_hide_modal from './Show_hide_modal'
 
 export default function CollegeListPanel(props) {
+  console.log(props)
   const label = { inputProps: { 'aria-label': 'Switch demo' } }
   let affordabilityInfo = [
     'GPA',
@@ -78,7 +79,18 @@ export default function CollegeListPanel(props) {
             <th>Information</th>
             <th>Counselor</th>
             <th>
-              <Button variant="outlined" size="medium">
+              <Button 
+                variant="outlined" 
+                size="medium"
+                onClick={() => {
+                  //TODO: connect with backend
+                  {
+                    let temp = track_afford.map((val) => false)
+                    set_track_afford([...temp])
+                    let temp1 = track_fit.map((val) => false)
+                    set_track_fit([...temp])
+                  } 
+                }}>
                 Sync
               </Button>
             </th>
@@ -197,3 +209,5 @@ export default function CollegeListPanel(props) {
     </div>
   )
 }
+
+

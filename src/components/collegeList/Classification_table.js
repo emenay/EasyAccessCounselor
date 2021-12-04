@@ -46,12 +46,6 @@ async function sortSchools(schools) {
 export default function Classification_table(inpts) {
   let schools = [
     {
-      college_name: 'University of North Carolina at Chapel hill',
-      from: 'student',
-      selectivity: 'target',
-      cost: 'medium',
-    },
-    {
       college_name: 'Stanford University',
       from: 'counselor',
       selectivity: 'reach',
@@ -135,7 +129,16 @@ export default function Classification_table(inpts) {
         temp.push(col)
       }
     })
-    set1_1([...temp])
+
+    if(selected[0].college_name == "Yale University"){
+      set3_3([...temp])
+    }else if(selected[0].college_name == "University of North Carolina at Chapel hill"){
+      set1_2([...temp])
+    }else if(selected[0].college_name == "University of Florida"){
+      set1_1([...temp])
+    } else {
+      set2_2([...temp])
+    }
   }
 
   console.log(getColleges())
@@ -148,10 +151,10 @@ export default function Classification_table(inpts) {
           <tr>
             <th>college list</th>
             <th>
-              <Chip label="student selected colleges" color="primary" />
+              <Chip label="student selected colleges" color="success" />
             </th>
             <th>
-              <Chip label="counselor selected colleges" color="success" />
+              <Chip label="counselor selected colleges" color="primary" />
             </th>
           </tr>
         </thead>
