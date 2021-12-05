@@ -161,6 +161,7 @@ export default function Classification_table(props) {
         
     }
     setDumb(!dumb);
+    // TODO: The updated college list needs to be send back to the backend
 
   }
 
