@@ -219,7 +219,7 @@ export default function CollegeListPanel(props) {
             ))}
         </tbody>
       </Table>
-      <Classification_table props = {props}/>
+      <Classification_table props={props} />
       <CollegeSearchByAttributes />
     </div>
   )

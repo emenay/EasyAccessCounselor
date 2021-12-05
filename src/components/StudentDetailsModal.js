@@ -17,7 +17,6 @@ import NotesPanel from './notes/NotesPanel'
 import CollegeListPanel from './collegeList/CollegeListPanel'
 import ApplicationProcessPanel from './applicationProcess/ApplicationProcessPanel'
 
-
 // helper component to allow for editing of different tabs
 function InputFieldElement(props) {
   // return(<p>
