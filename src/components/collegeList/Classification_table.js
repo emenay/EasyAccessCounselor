@@ -18,11 +18,11 @@ const style_college = { marginTop: '5px', marginRight: '5px' }
 // however its still in a very messy state (worse when we got it)
 // if you are going to change anything, sorry for what you need to read but, we tried to clean it up
 function sortSchools(schools, props) {
-  let resultScores = [];
-  for(let i = 0; i <schools.length; i++) {
+  let resultScores = []
+  for (let i = 0; i < schools.length; i++) {
     resultScores.push(getCollegeScores(schools[i], props))
   }
-  return resultScores;
+  return resultScores
 }
 
 export default function Classification_table(props) {
@@ -30,9 +30,9 @@ export default function Classification_table(props) {
   // but you will need to set up account for each student
   // Hopefully you are using the new backend now
   let schoolList
-  if (!props.studentInfo == null && !props.studentInfo.schools == null){
-    schoolList = props.studentInfo.schools;
-    console.log("no schools are previously added")
+  if (!props.studentInfo == null && !props.studentInfo.schools == null) {
+    schoolList = props.studentInfo.schools
+    console.log('no schools are previously added')
   }
   // these are fake data for testing
   let schools = [
@@ -47,7 +47,7 @@ export default function Classification_table(props) {
       from: 'student',
       selectivity: 'safety',
       cost: 'low',
-    }
+    },
   ]
 
   let a1_1 = []
@@ -99,7 +99,17 @@ export default function Classification_table(props) {
   // const [p3_3, set3_3] = useState(array3_3)
 
   const [dumb, setDumb] = useState(false)
-  const [class_obj, setNothing] = useState({a1_1, a1_2, a1_3, a2_1, a2_2, a2_3, a3_1, a3_2, a3_3})
+  const [class_obj, setNothing] = useState({
+    a1_1,
+    a1_2,
+    a1_3,
+    a2_1,
+    a2_2,
+    a2_3,
+    a3_1,
+    a3_2,
+    a3_3,
+  })
   // class_obj["a1_1"].push()
 
   const addRows = (selected) => {
@@ -113,56 +123,53 @@ export default function Classification_table(props) {
     console.log(selected.length)
     console.log(resultPosition.length)
 
-    for(let i = 0; i < resultPosition.length; i++){
-      if(resultPosition[i].selectivityScore == 'safety'){
-        if(resultPosition[i].affordabilityScore == 'low'){
-          if(!class_obj['a1_1'].includes(selected[i])){
+    for (let i = 0; i < resultPosition.length; i++) {
+      if (resultPosition[i].selectivityScore == 'safety') {
+        if (resultPosition[i].affordabilityScore == 'low') {
+          if (!class_obj['a1_1'].includes(selected[i])) {
             class_obj['a1_1'].push(selected[i])
           }
-        } else if (resultPosition[i].affordabilityScore == 'medium'){
-          if(!class_obj['a2_1'].includes(selected[i])){
+        } else if (resultPosition[i].affordabilityScore == 'medium') {
+          if (!class_obj['a2_1'].includes(selected[i])) {
             class_obj['a2_1'].push(selected[i])
           }
         } else {
-          if(!class_obj['a3_1'].includes(selected[i])){
+          if (!class_obj['a3_1'].includes(selected[i])) {
             class_obj['a3_1'].push(selected[i])
           }
         }
-      } else if(resultPosition[i].selectivityScore == 'target'){
-        if(resultPosition[i].affordabilityScore == 'low'){
-          if(!class_obj['a1_2'].includes(selected[i])){
+      } else if (resultPosition[i].selectivityScore == 'target') {
+        if (resultPosition[i].affordabilityScore == 'low') {
+          if (!class_obj['a1_2'].includes(selected[i])) {
             class_obj['a1_2'].push(selected[i])
           }
-        } else if (resultPosition[i].affordabilityScore == 'medium'){
-          if(!class_obj['a2_2'].includes(selected[i])){
+        } else if (resultPosition[i].affordabilityScore == 'medium') {
+          if (!class_obj['a2_2'].includes(selected[i])) {
             class_obj['a2_2'].push(selected[i])
           }
         } else {
-          if(!class_obj['a3_2'].includes(selected[i])){
+          if (!class_obj['a3_2'].includes(selected[i])) {
             class_obj['a3_2'].push(selected[i])
           }
         }
-      } else if(resultPosition[i].selectivityScore == 'reach'){
-        if(resultPosition[i].affordabilityScore == 'low'){
-          if(!class_obj['a1_3'].includes(selected[i])){
+      } else if (resultPosition[i].selectivityScore == 'reach') {
+        if (resultPosition[i].affordabilityScore == 'low') {
+          if (!class_obj['a1_3'].includes(selected[i])) {
             class_obj['a1_3'].push(selected[i])
           }
-        } else if (resultPosition[i].affordabilityScore == 'medium'){
-          if(!class_obj['a2_3'].includes(selected[i])){
+        } else if (resultPosition[i].affordabilityScore == 'medium') {
+          if (!class_obj['a2_3'].includes(selected[i])) {
             class_obj['a2_3'].push(selected[i])
           }
         } else {
-          if(!class_obj['a3_3'].includes(selected[i])){
+          if (!class_obj['a3_3'].includes(selected[i])) {
             class_obj['a3_3'].push(selected[i])
           }
         }
       }
-      
-        
     }
-    setDumb(!dumb);
+    setDumb(!dumb)
     // TODO: The updated college list needs to be send back to the backend
-
   }
 
   return (
@@ -201,7 +208,7 @@ export default function Classification_table(props) {
                 $
               </TableCell>
               <TableCell>
-                {class_obj["a1_1"].map((university, idx) => (
+                {class_obj['a1_1'].map((university, idx) => (
                   <Chip
                     key={idx + '1.1'}
                     style={style_college}
@@ -213,7 +220,7 @@ export default function Classification_table(props) {
                 ))}
               </TableCell>
               <TableCell>
-                {class_obj["a1_2"].map((university, idx) => (
+                {class_obj['a1_2'].map((university, idx) => (
                   <Chip
                     key={idx + '1.2'}
                     style={style_college}
@@ -225,7 +232,7 @@ export default function Classification_table(props) {
                 ))}
               </TableCell>
               <TableCell>
-                {class_obj["a1_3"].map((university, idx) => (
+                {class_obj['a1_3'].map((university, idx) => (
                   <Chip
                     key={idx + '1.3'}
                     style={style_college}
@@ -244,7 +251,7 @@ export default function Classification_table(props) {
                 $$
               </TableCell>
               <TableCell>
-                {class_obj["a2_1"].map((university, idx) => (
+                {class_obj['a2_1'].map((university, idx) => (
                   <Chip
                     key={idx + '2.1'}
                     style={style_college}
@@ -256,7 +263,7 @@ export default function Classification_table(props) {
                 ))}
               </TableCell>
               <TableCell>
-                {class_obj["a2_2"].map((university, idx) => (
+                {class_obj['a2_2'].map((university, idx) => (
                   <Chip
                     key={idx + '2.2'}
                     style={style_college}
@@ -268,7 +275,7 @@ export default function Classification_table(props) {
                 ))}
               </TableCell>
               <TableCell>
-                {class_obj["a2_3"].map((university, idx) => (
+                {class_obj['a2_3'].map((university, idx) => (
                   <Chip
                     key={idx + '2.3'}
                     style={style_college}
@@ -287,7 +294,7 @@ export default function Classification_table(props) {
                 $$$
               </TableCell>
               <TableCell>
-                {class_obj["a3_1"].map((university, idx) => (
+                {class_obj['a3_1'].map((university, idx) => (
                   <Chip
                     key={idx + '3.1'}
                     style={style_college}
@@ -299,7 +306,7 @@ export default function Classification_table(props) {
                 ))}
               </TableCell>
               <TableCell>
-                {class_obj["a3_2"].map((university, idx) => (
+                {class_obj['a3_2'].map((university, idx) => (
                   <Chip
                     key={idx + '3.2'}
                     style={style_college}
@@ -311,7 +318,7 @@ export default function Classification_table(props) {
                 ))}
               </TableCell>
               <TableCell>
-                {class_obj["a3_3"].map((university, idx) => (
+                {class_obj['a3_3'].map((university, idx) => (
                   <Chip
                     key={idx + '3.3'}
                     style={style_college}

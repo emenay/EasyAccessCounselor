@@ -6,9 +6,8 @@ import MenuItem from '@mui/material/MenuItem'
 // import { Card } from 'reactstrap'
 // import { CardContent } from '@mui/material'
 // import Search_college from './Search_college'
-import Typography from '@mui/material/Typography';
-import Popover from '@mui/material/Popover';
-
+import Typography from '@mui/material/Typography'
+import Popover from '@mui/material/Popover'
 
 const schoolTypes = [
   {
@@ -320,18 +319,18 @@ export default function CollegeSearchByAttributes() {
     setAct(event.target.value)
   }
 
-  const [anchorEl, setAnchorEl] = React.useState(null);
+  const [anchorEl, setAnchorEl] = React.useState(null)
 
   const SeachByAttribute = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
+    setAnchorEl(event.currentTarget)
+  }
 
   const handleClose = () => {
-    setAnchorEl(null);
-  };
+    setAnchorEl(null)
+  }
 
-  const open = Boolean(anchorEl);
-  const id = open ? 'simple-popover' : undefined;
+  const open = Boolean(anchorEl)
+  const id = open ? 'simple-popover' : undefined
 
   return (
     <Box
@@ -427,26 +426,24 @@ export default function CollegeSearchByAttributes() {
         </TextField>
       </div>
       <div>
-      <Button variant="contained" color="success" onClick={SeachByAttribute}>
-        Search
-      </Button>
+        <Button variant="contained" color="success" onClick={SeachByAttribute}>
+          Search
+        </Button>
 
-      <Popover
-        id={id}
-        open={open}
-        anchorEl={anchorEl}
-        onClose={handleClose}
-        anchorOrigin={{
-          vertical: 'bottom',
-          horizontal: 'left',
-        }}
-      >
-        <Typography sx={{ p: 2 }}>Should Search for Colleges base on Input</Typography>
-      </Popover>
-
+        <Popover
+          id={id}
+          open={open}
+          anchorEl={anchorEl}
+          onClose={handleClose}
+          anchorOrigin={{
+            vertical: 'bottom',
+            horizontal: 'left',
+          }}>
+          <Typography sx={{ p: 2 }}>
+            Should Search for Colleges base on Input
+          </Typography>
+        </Popover>
       </div>
-
     </Box>
   )
 }
-
