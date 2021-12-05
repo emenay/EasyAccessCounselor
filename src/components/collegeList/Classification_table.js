@@ -10,32 +10,33 @@ import Paper from '@mui/material/Paper'
 import Search_college from './Search_college'
 const style_college = { marginTop: '5px', marginRight: '5px' }
 
-async function getColleges() {
-  let base_url = 'https://api.data.gov/ed/collegescorecard/v1/'
-  let dataset = 'schools.json?'
-  let filter_params = 'latest.student.size__range=25000..'
-  let fields =
-    '&fields=' + 'id,' + 'school.name,' + 'latest.admissions.sat_scores'
-  let options = '&per_page=100&page=0'
-  let api_key = '&api_key=gD3AnaoQAAcJLYBrWHmNGzFePeGyggA04s25m2xq'
+// maybe delete
+// async function getColleges() {
+//   let base_url = 'https://api.data.gov/ed/collegescorecard/v1/'
+//   let dataset = 'schools.json?'
+//   let filter_params = 'latest.student.size__range=25000..'
+//   let fields =
+//     '&fields=' + 'id,' + 'school.name,' + 'latest.admissions.sat_scores'
+//   let options = '&per_page=100&page=0'
+//   let api_key = '&api_key=gD3AnaoQAAcJLYBrWHmNGzFePeGyggA04s25m2xq'
 
-  let request_url =
-    base_url +
-    dataset +
-    filter_params +
-    '&fields=' +
-    ',' +
-    fields +
-    options +
-    api_key
+//   let request_url =
+//     base_url +
+//     dataset +
+//     filter_params +
+//     '&fields=' +
+//     ',' +
+//     fields +
+//     options +
+//     api_key
 
-  console.log(request_url)
-  let result = await fetch(request_url).then(function (response) {
-    return response.json()
-  })
-  console.log(result)
-  return result
-}
+//   console.log(request_url)
+//   let result = await fetch(request_url).then(function (response) {
+//     return response.json()
+//   })
+//   console.log(result)
+//   return result
+// }
 
 async function sortSchools(schools) {
   // for(i in schools) {
@@ -138,25 +139,23 @@ export default function Classification_table(inpts) {
       temp = [...p2_2]
       set2_2([...temp])
     }
-    
+
     selected.forEach((col) => {
       if (!temp.includes(col)) {
         temp.push(col)
       }
     })
     
-    if(selected[0].college_name == "Yale University"){
+    if(selected[0].instnm == "Yale University"){
       set3_3([...temp])
-    }else if(selected[0].college_name == "University of North Carolina at Chapel hill"){
+    }else if(selected[0].instnm == "University of North Carolina at Chapel hill"){
       set1_2([...temp])
-    }else if(selected[0].college_name == "University of Florida"){
+    }else if(selected[0].instnm == "University of Florida"){
       set1_1([...temp])
     } else {
       set2_2([...temp])
     }
   }
-
-  console.log(getColleges())
 
   return (
     <div>
