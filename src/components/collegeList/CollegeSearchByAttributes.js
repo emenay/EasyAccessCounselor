@@ -9,6 +9,7 @@ import MenuItem from '@mui/material/MenuItem'
 import Typography from '@mui/material/Typography';
 import Popover from '@mui/material/Popover';
 
+
 const schoolTypes = [
   {
     value: 'Public',
