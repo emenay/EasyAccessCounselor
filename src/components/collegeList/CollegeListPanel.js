@@ -98,6 +98,7 @@ export default function CollegeListPanel(props) {
                 size="medium"
                 onClick={() => {
                   //TODO: connect with backend
+                  //Right now sync only unselect, not connected with student side yet
                   {
                     let temp = track_afford.map((val) => false)
                     set_track_afford([...temp])
@@ -218,7 +219,7 @@ export default function CollegeListPanel(props) {
             ))}
         </tbody>
       </Table>
-      <Classification_table />
+      <Classification_table props = {props}/>
       <CollegeSearchByAttributes />
     </div>
   )

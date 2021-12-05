@@ -4,9 +4,11 @@ import Search_autocomplete from './Search_autocomplete'
 
 const columns = [
   { field: 'id', headerName: 'ID', width: 70 },
-  { field: 'instnm', headerName: 'College', width: 330 },
+  { field: 'instnm', headerName: 'College', width: 200 },
   { field: 'stabbr', headerName: 'State', width: 130 },
-  { field: 'insturl', headerName: 'Website', width: 130 },
+  { field: 'insturl', headerName: 'Website', width: 200 },
+  { field: 'selectivity_char', headerName: 'Selectivity (General)', width: 220},
+  { field: 'afford_cat', headerName: 'affordability (General)', width: 220}
  ]
 
  // this addRows function is from Classification_table.js

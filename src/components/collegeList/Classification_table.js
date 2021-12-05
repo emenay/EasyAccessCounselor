@@ -8,53 +8,37 @@ import TableHead from '@mui/material/TableHead'
 import TableRow from '@mui/material/TableRow'
 import Paper from '@mui/material/Paper'
 import Search_college from './Search_college'
+import getCollegeScores from './ClassificationHelper'
 const style_college = { marginTop: '5px', marginRight: '5px' }
 
-// maybe delete
-// async function getColleges() {
-//   let base_url = 'https://api.data.gov/ed/collegescorecard/v1/'
-//   let dataset = 'schools.json?'
-//   let filter_params = 'latest.student.size__range=25000..'
-//   let fields =
-//     '&fields=' + 'id,' + 'school.name,' + 'latest.admissions.sat_scores'
-//   let options = '&per_page=100&page=0'
-//   let api_key = '&api_key=gD3AnaoQAAcJLYBrWHmNGzFePeGyggA04s25m2xq'
-
-//   let request_url =
-//     base_url +
-//     dataset +
-//     filter_params +
-//     '&fields=' +
-//     ',' +
-//     fields +
-//     options +
-//     api_key
-
-//   console.log(request_url)
-//   let result = await fetch(request_url).then(function (response) {
-//     return response.json()
-//   })
-//   console.log(result)
-//   return result
-// }
-
-async function sortSchools(schools) {
-  // for(i in schools) {
-  //   print(i)
-  // }
+// this function calls the getCollegeScores() function from ClassificationHelper, which computes
+// "safety" "reach" and "target" for selectivity
+// "low" "medium" and "high" for affordability
+// functions in ClassificationHelper are organized, to my best
+// however its still in a very messy state (worse when we got it)
+// if you are going to change anything, sorry for what you need to read but, we tried to clean it up
+function sortSchools(schools, props) {
+  let resultScores = [];
+  for(let i = 0; i <schools.length; i++) {
+    resultScores.push(getCollegeScores(schools[i], props))
+  }
+  return resultScores;
 }
 
-export default function Classification_table(inpts) {
+export default function Classification_table(props) {
+  // Schools which are already there should be pulled from backend, studentInfo
+  // but you will need to set up account for each student
+  // Hopefully you are using the new backend now
+  let schoolList
+  if (!props.studentInfo == null && !props.studentInfo.schools == null){
+    schoolList = props.studentInfo.schools;
+    console.log("no schools are previously added")
+  }
+  // these are fake data for testing
   let schools = [
     {
-      instnm: 'Stanford University',
-      from: 'counselor',
-      selectivity: 'reach',
-      cost: 'high',
-    },
-    {
       instnm: 'Harvard University',
-      from: 'counselor',
+      from: 'student',
       selectivity: 'reach',
       cost: 'high',
     },
@@ -63,98 +47,121 @@ export default function Classification_table(inpts) {
       from: 'student',
       selectivity: 'safety',
       cost: 'low',
-    },
-    {
-      instnm: 'Duke University',
-      from: 'student',
-      selectivity: 'safety',
-      cost: 'high',
-    },
+    }
   ]
 
-  let array1_1 = []
-  let array1_2 = []
-  let array1_3 = []
-  let array2_1 = []
-  let array2_2 = []
-  let array2_3 = []
-  let array3_1 = []
-  let array3_2 = []
-  let array3_3 = []
+  let a1_1 = []
+  let a1_2 = []
+  let a1_3 = []
+  let a2_1 = []
+  let a2_2 = []
+  let a2_3 = []
+  let a3_1 = []
+  let a3_2 = []
+  let a3_3 = []
 
   for (let i = 0; i < schools.length; i++) {
     if (schools[i].selectivity == 'safety') {
       if (schools[i].cost == 'low') {
-        array1_1.push(schools[i])
+        a1_1.push(schools[i])
       } else if (schools[i].cost == 'medium') {
-        array1_2.push(schools[i])
+        a2_1.push(schools[i])
       } else if (schools[i].cost == 'high') {
-        array1_3.push(schools[i])
+        a3_1.push(schools[i])
       }
     } else if (schools[i].selectivity == 'target') {
       if (schools[i].cost == 'low') {
-        array2_1.push(schools[i])
+        a1_2.push(schools[i])
       } else if (schools[i].cost == 'medium') {
-        array2_2.push(schools[i])
+        a2_2.push(schools[i])
       } else if (schools[i].cost == 'high') {
-        array2_3.push(schools[i])
+        a3_2.push(schools[i])
       }
     } else if (schools[i].selectivity == 'reach') {
       if (schools[i].cost == 'low') {
-        array3_1.push(schools[i])
+        a1_3.push(schools[i])
       } else if (schools[i].cost == 'medium') {
-        array3_2.push(schools[i])
+        a2_3.push(schools[i])
       } else if (schools[i].cost == 'high') {
-        array3_3.push(schools[i])
+        a3_3.push(schools[i])
       }
     }
   }
 
-  const [p1_1, set1_1] = useState(array1_1)
-  const [p1_2, set1_2] = useState(array1_2)
-  const [p1_3, set1_3] = useState(array1_3)
-  const [p2_1, set2_1] = useState(array2_1)
-  const [p2_2, set2_2] = useState(array2_2)
-  const [p2_3, set2_3] = useState(array2_3)
-  const [p3_1, set3_1] = useState(array3_1)
-  const [p3_2, set3_2] = useState(array3_2)
-  const [p3_3, set3_3] = useState(array3_3)
+  // const [p1_1, set1_1] = useState(array1_1)
+  // const [p1_2, set1_2] = useState(array1_2)
+  // const [p1_3, set1_3] = useState(array1_3)
+  // const [p2_1, set2_1] = useState(array2_1)
+  // const [p2_2, set2_2] = useState(array2_2)
+  // const [p2_3, set2_3] = useState(array2_3)
+  // const [p3_1, set3_1] = useState(array3_1)
+  // const [p3_2, set3_2] = useState(array3_2)
+  // const [p3_3, set3_3] = useState(array3_3)
+
+  const [dumb, setDumb] = useState(false)
+  const [class_obj, setNothing] = useState({a1_1, a1_2, a1_3, a2_1, a2_2, a2_3, a3_1, a3_2, a3_3})
+  // class_obj["a1_1"].push()
 
   const addRows = (selected) => {
     selected.forEach((obj) => {
       obj.from = 'counselor'
     })
 
-    let temp = [];
-    if(selected[0].instnm == "Yale University"){
-      temp = [...p3_3]
-      set3_3([...temp])
-    }else if(selected[0].instnm == "University of North Carolina at Chapel hill"){
-      temp = [...p1_2]
-      set1_2([...temp])
-    }else if(selected[0].instnm == "University of Florida"){
-      temp = [...p1_1]
-      set1_1([...temp])
-    } else {
-      temp = [...p2_2]
-      set2_2([...temp])
-    }
+    let resultPosition = sortSchools(selected, props)
+    // console.log("resultPosition")
+    // console.log(resultPosition)
+    console.log(selected.length)
+    console.log(resultPosition.length)
 
-    selected.forEach((col) => {
-      if (!temp.includes(col)) {
-        temp.push(col)
+    for(let i = 0; i < resultPosition.length; i++){
+      if(resultPosition[i].selectivityScore == 'safety'){
+        if(resultPosition[i].affordabilityScore == 'low'){
+          if(!class_obj['a1_1'].includes(selected[i])){
+            class_obj['a1_1'].push(selected[i])
+          }
+        } else if (resultPosition[i].affordabilityScore == 'medium'){
+          if(!class_obj['a2_1'].includes(selected[i])){
+            class_obj['a2_1'].push(selected[i])
+          }
+        } else {
+          if(!class_obj['a3_1'].includes(selected[i])){
+            class_obj['a3_1'].push(selected[i])
+          }
+        }
+      } else if(resultPosition[i].selectivityScore == 'target'){
+        if(resultPosition[i].affordabilityScore == 'low'){
+          if(!class_obj['a1_2'].includes(selected[i])){
+            class_obj['a1_2'].push(selected[i])
+          }
+        } else if (resultPosition[i].affordabilityScore == 'medium'){
+          if(!class_obj['a2_2'].includes(selected[i])){
+            class_obj['a2_2'].push(selected[i])
+          }
+        } else {
+          if(!class_obj['a3_2'].includes(selected[i])){
+            class_obj['a3_2'].push(selected[i])
+          }
+        }
+      } else if(resultPosition[i].selectivityScore == 'reach'){
+        if(resultPosition[i].affordabilityScore == 'low'){
+          if(!class_obj['a1_3'].includes(selected[i])){
+            class_obj['a1_3'].push(selected[i])
+          }
+        } else if (resultPosition[i].affordabilityScore == 'medium'){
+          if(!class_obj['a2_3'].includes(selected[i])){
+            class_obj['a2_3'].push(selected[i])
+          }
+        } else {
+          if(!class_obj['a3_3'].includes(selected[i])){
+            class_obj['a3_3'].push(selected[i])
+          }
+        }
       }
-    })
-    
-    if(selected[0].instnm == "Yale University"){
-      set3_3([...temp])
-    }else if(selected[0].instnm == "University of North Carolina at Chapel hill"){
-      set1_2([...temp])
-    }else if(selected[0].instnm == "University of Florida"){
-      set1_1([...temp])
-    } else {
-      set2_2([...temp])
+      
+        
     }
+    setDumb(!dumb);
+
   }
 
   return (
@@ -171,6 +178,7 @@ export default function Classification_table(inpts) {
               <Chip label="counselor selected colleges" color="primary" />
             </th>
           </tr>
+          <br />
         </thead>
       </Table>
       <br />
@@ -192,7 +200,7 @@ export default function Classification_table(inpts) {
                 $
               </TableCell>
               <TableCell>
-                {p1_1.map((university, idx) => (
+                {class_obj["a1_1"].map((university, idx) => (
                   <Chip
                     key={idx + '1.1'}
                     style={style_college}
@@ -204,7 +212,7 @@ export default function Classification_table(inpts) {
                 ))}
               </TableCell>
               <TableCell>
-                {p1_2.map((university, idx) => (
+                {class_obj["a1_2"].map((university, idx) => (
                   <Chip
                     key={idx + '1.2'}
                     style={style_college}
@@ -216,7 +224,7 @@ export default function Classification_table(inpts) {
                 ))}
               </TableCell>
               <TableCell>
-                {p1_3.map((university, idx) => (
+                {class_obj["a1_3"].map((university, idx) => (
                   <Chip
                     key={idx + '1.3'}
                     style={style_college}
@@ -235,7 +243,7 @@ export default function Classification_table(inpts) {
                 $$
               </TableCell>
               <TableCell>
-                {p2_1.map((university, idx) => (
+                {class_obj["a2_1"].map((university, idx) => (
                   <Chip
                     key={idx + '2.1'}
                     style={style_college}
@@ -247,7 +255,7 @@ export default function Classification_table(inpts) {
                 ))}
               </TableCell>
               <TableCell>
-                {p2_2.map((university, idx) => (
+                {class_obj["a2_2"].map((university, idx) => (
                   <Chip
                     key={idx + '2.2'}
                     style={style_college}
@@ -259,7 +267,7 @@ export default function Classification_table(inpts) {
                 ))}
               </TableCell>
               <TableCell>
-                {p2_3.map((university, idx) => (
+                {class_obj["a2_3"].map((university, idx) => (
                   <Chip
                     key={idx + '2.3'}
                     style={style_college}
@@ -278,7 +286,7 @@ export default function Classification_table(inpts) {
                 $$$
               </TableCell>
               <TableCell>
-                {p3_1.map((university, idx) => (
+                {class_obj["a3_1"].map((university, idx) => (
                   <Chip
                     key={idx + '3.1'}
                     style={style_college}
@@ -290,7 +298,7 @@ export default function Classification_table(inpts) {
                 ))}
               </TableCell>
               <TableCell>
-                {p3_2.map((university, idx) => (
+                {class_obj["a3_2"].map((university, idx) => (
                   <Chip
                     key={idx + '3.2'}
                     style={style_college}
@@ -302,7 +310,7 @@ export default function Classification_table(inpts) {
                 ))}
               </TableCell>
               <TableCell>
-                {p3_3.map((university, idx) => (
+                {class_obj["a3_3"].map((university, idx) => (
                   <Chip
                     key={idx + '3.3'}
                     style={style_college}

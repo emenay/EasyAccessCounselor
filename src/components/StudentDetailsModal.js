@@ -11,7 +11,6 @@ import Select from 'react-select'
 import Popup from 'reactjs-popup'
 import $ from 'jquery'
 import '../css/CollegeListPage.css'
-import { colleges } from './CollegeArray.js'
 import axios from 'axios'
 
 import NotesPanel from './notes/NotesPanel'
