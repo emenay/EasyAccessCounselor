@@ -9,7 +9,7 @@ import CollegeSearchByAttributes from './CollegeSearchByAttributes.js'
 import Show_hide_modal from './Show_hide_modal'
 
 export default function CollegeListPanel(props) {
-  console.log('this', props.info)
+  // console.log('CollegeListPanel props.info', props.info)
   const label = { inputProps: { 'aria-label': 'Switch demo' } }
   let affordabilityInfo = [
     'GPA',
@@ -36,18 +36,16 @@ export default function CollegeListPanel(props) {
     props.info.classRank,
     props.info.sat,
     props.info.act,
-    2040,
-    'Mismatch',
-    27701,
+    props.info.efc,
+    props.info.payMismatch,
   ]
   let to_delete2 = [
     props.info.gpa,
     props.info.classRank,
     props.info.sat,
     props.info.act,
-    2040,
-    'Mismatch',
-    27701,
+    props.info.efc,
+    props.info.payMismatch,
   ]
   const [affor_show_hide, set_affor_show_hide] = useState(
     new Array(affordabilityInfo.length).fill(false)
