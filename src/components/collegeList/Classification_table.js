@@ -46,25 +46,25 @@ async function sortSchools(schools) {
 export default function Classification_table(inpts) {
   let schools = [
     {
-      college_name: 'Stanford University',
+      instnm: 'Stanford University',
       from: 'counselor',
       selectivity: 'reach',
       cost: 'high',
     },
     {
-      college_name: 'Harvard University',
+      instnm: 'Harvard University',
       from: 'counselor',
       selectivity: 'reach',
       cost: 'high',
     },
     {
-      college_name: 'NC State University',
+      instnm: 'NC State University',
       from: 'student',
       selectivity: 'safety',
       cost: 'low',
     },
     {
-      college_name: 'Duke University',
+      instnm: 'Duke University',
       from: 'student',
       selectivity: 'safety',
       cost: 'high',
@@ -125,29 +125,26 @@ export default function Classification_table(inpts) {
     })
 
     let temp = [];
-    if(selected[0].college_name == "Yale University"){
+    if(selected[0].instnm == "Yale University"){
       temp = [...p3_3]
       set3_3([...temp])
-    }else if(selected[0].college_name == "University of North Carolina at Chapel hill"){
+    }else if(selected[0].instnm == "University of North Carolina at Chapel hill"){
       temp = [...p1_2]
       set1_2([...temp])
-    }else if(selected[0].college_name == "University of Florida"){
+    }else if(selected[0].instnm == "University of Florida"){
       temp = [...p1_1]
       set1_1([...temp])
     } else {
       temp = [...p2_2]
       set2_2([...temp])
     }
-
-
-   
+    
     selected.forEach((col) => {
       if (!temp.includes(col)) {
         temp.push(col)
       }
     })
-    console.log("????")
-    console.log(selected)
+    
     if(selected[0].college_name == "Yale University"){
       set3_3([...temp])
     }else if(selected[0].college_name == "University of North Carolina at Chapel hill"){
@@ -200,7 +197,7 @@ export default function Classification_table(inpts) {
                   <Chip
                     key={idx + '1.1'}
                     style={style_college}
-                    label={university.college_name}
+                    label={university.instnm}
                     color={
                       university.from == 'counselor' ? 'primary' : 'success'
                     }
@@ -212,7 +209,7 @@ export default function Classification_table(inpts) {
                   <Chip
                     key={idx + '1.2'}
                     style={style_college}
-                    label={university.college_name}
+                    label={university.instnm}
                     color={
                       university.from == 'counselor' ? 'primary' : 'success'
                     }
@@ -224,7 +221,7 @@ export default function Classification_table(inpts) {
                   <Chip
                     key={idx + '1.3'}
                     style={style_college}
-                    label={university.college_name}
+                    label={university.instnm}
                     color={
                       university.from == 'counselor' ? 'primary' : 'success'
                     }
@@ -243,7 +240,7 @@ export default function Classification_table(inpts) {
                   <Chip
                     key={idx + '2.1'}
                     style={style_college}
-                    label={university.college_name}
+                    label={university.instnm}
                     color={
                       university.from == 'counselor' ? 'primary' : 'success'
                     }
@@ -255,7 +252,7 @@ export default function Classification_table(inpts) {
                   <Chip
                     key={idx + '2.2'}
                     style={style_college}
-                    label={university.college_name}
+                    label={university.instnm}
                     color={
                       university.from == 'counselor' ? 'primary' : 'success'
                     }
@@ -267,7 +264,7 @@ export default function Classification_table(inpts) {
                   <Chip
                     key={idx + '2.3'}
                     style={style_college}
-                    label={university.college_name}
+                    label={university.instnm}
                     color={
                       university.from == 'counselor' ? 'primary' : 'success'
                     }
@@ -286,7 +283,7 @@ export default function Classification_table(inpts) {
                   <Chip
                     key={idx + '3.1'}
                     style={style_college}
-                    label={university.college_name}
+                    label={university.instnm}
                     color={
                       university.from == 'counselor' ? 'primary' : 'success'
                     }
@@ -298,7 +295,7 @@ export default function Classification_table(inpts) {
                   <Chip
                     key={idx + '3.2'}
                     style={style_college}
-                    label={university.college_name}
+                    label={university.instnm}
                     color={
                       university.from == 'counselor' ? 'primary' : 'success'
                     }
@@ -310,7 +307,7 @@ export default function Classification_table(inpts) {
                   <Chip
                     key={idx + '3.3'}
                     style={style_college}
-                    label={university.college_name}
+                    label={university.instnm}
                     color={
                       university.from == 'counselor' ? 'primary' : 'success'
                     }

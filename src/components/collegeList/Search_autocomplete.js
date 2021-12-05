@@ -2,6 +2,7 @@ import * as React from 'react'
 import TextField from '@mui/material/TextField'
 import Autocomplete, { createFilterOptions } from '@mui/material/Autocomplete'
 import Button from '@mui/material/Button'
+import axios from 'axios';
 
 const filter = createFilterOptions()
 
@@ -51,8 +52,10 @@ export default function Search_autocomplete({ addToGrid, sync }) {
             variant="outlined"
             color="success"
             style={{ position: 'absolute', right: '150px' }}
-            onClick={() => {
-              addToGrid(value)
+            onClick={async () => {
+              let listToAdd = await setUniversities(value);
+              console.log(listToAdd)
+              addToGrid(listToAdd)
             }}>
             search
           </Button>
@@ -70,96 +73,84 @@ export default function Search_autocomplete({ addToGrid, sync }) {
   )
 }
 
+let universities = [];
+
+async function setUniversities(college){
+  console.log(college)
+  let res = await axios.get("https://collegerestapijs.herokuapp.com/colleges/name?name=" + college.college_name.replace(/[^A-Za-z0-9]/g, '').toLowerCase())
+  // console.log(res.data);
+  let curr = {college_name: '', state: '', type: '',};
+  // curr.college_name = 
+  universities = res.data[0];
+  // console.log(universities)
+  return universities
+}
+
 const university = [
   {
     college_name: 'University of North Carolina at Chapel hill',
     state: 'NC',
     type: 'public',
-    percent: 100,
-    to_add: true,
   },
   {
     college_name: 'Stanford University',
     state: 'CA',
     type: 'private',
-    percent: 60,
-    to_add: true,
   },
   {
     college_name: 'University of California, Los Angeles',
     state: 'CA',
     type: 'public',
-    percent: 70,
-    to_add: true,
   },
   {
     college_name: 'Harvard University',
     state: 'MA',
     type: 'private',
-    percent: 83,
-    to_add: true,
   },
   {
     college_name: 'Cornell University',
     state: 'NY',
     type: 'private',
-    percent: 66,
-    to_add: true,
   },
   {
     college_name: 'Duke University',
     state: 'NC',
     type: 'private',
-    percent: 92,
-    to_add: true,
   },
   {
     college_name: 'NC State University',
     state: 'NC',
     type: 'public',
-    percent: 54,
-    to_add: true,
   },
   {
     college_name: 'Columbia University',
     state: 'NY',
     type: 'private',
-    percent: 21,
-    to_add: true,
   },
   {
     college_name: 'The University of Chicago',
     state: 'IL',
     type: 'private',
-    percent: 15,
-    to_add: true,
   },
   {
     college_name: 'Yale University',
     state: 'CT',
     type: 'private',
-    percent: 5,
-    to_add: true,
   },
   {
     college_name: 'American University',
     state: 'DC',
     type: 'private',
-    percent: 67,
-    to_add: true,
   },
   {
     college_name: 'University of Michigan, Ann Arbor',
     state: 'MI',
     type: 'public',
-    percent: 47,
-    to_add: true,
   },
   {
     college_name: 'University of Florida',
     state: 'FL',
     type: 'public',
-    percent: 27,
-    to_add: true,
   },
 ]
+
