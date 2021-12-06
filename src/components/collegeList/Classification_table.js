@@ -204,7 +204,7 @@ export default function Classification_table(props) {
                   Information needed for classification (Add them in Overview):
                   gpa, zip, famAfford, and State. For now, all attributes must
                   follow the naming style above. You can add/edit these fields
-                  in the General tab!
+                  in the Caseload Management page.
                 </Alert>
               </TableCell>
             </TableRow>
