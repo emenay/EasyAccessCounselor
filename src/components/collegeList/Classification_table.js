@@ -74,12 +74,10 @@ console.log((props.props));
   //   },
   // ]
 
-
   if (!props.studentInfo == null && !props.studentInfo.schools == null) {
     let schoolsByStudents = props.studentInfo.schools
     console.log('no schools are previously added by the students')
   }
-  
 
   let a1_1 = []
   let a1_2 = []
@@ -253,7 +251,7 @@ console.log((props.props));
                   Information needed for classification (Add them in Overview):
                   gpa, zip, famAfford, and State. For now, all attributes must
                   follow the naming style above. You can add/edit these fields
-                  in the General tab!
+                  in the Caseload Management page.
                 </Alert>
               </TableCell>
             </TableRow>
@@ -401,7 +399,8 @@ console.log((props.props));
                 Uncategorized
               </TableCell>
               <TableCell component="th" scope="row" colSpan={3}>
-                These schools BELOW cannot be classified beacuse of missing personal information
+                These schools BELOW cannot be classified beacuse of missing
+                personal information
               </TableCell>
             </TableRow>
             <TableRow
