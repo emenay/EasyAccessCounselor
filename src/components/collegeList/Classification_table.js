@@ -3,6 +3,7 @@ import Chip from '@mui/material/Chip'
 import Table from '@mui/material/Table'
 import TableBody from '@mui/material/TableBody'
 import TableCell from '@mui/material/TableCell'
+import Alert from '@mui/material/Alert';
 import TableContainer from '@mui/material/TableContainer'
 import TableHead from '@mui/material/TableHead'
 import TableRow from '@mui/material/TableRow'
@@ -59,6 +60,7 @@ export default function Classification_table(props) {
   let a3_1 = []
   let a3_2 = []
   let a3_3 = []
+  let unclassified_schools = []
 
   for (let i = 0; i < schools.length; i++) {
     if (schools[i].selectivity == 'safety') {
@@ -88,79 +90,75 @@ export default function Classification_table(props) {
     }
   }
 
-  // const [p1_1, set1_1] = useState(array1_1)
-  // const [p1_2, set1_2] = useState(array1_2)
-  // const [p1_3, set1_3] = useState(array1_3)
-  // const [p2_1, set2_1] = useState(array2_1)
-  // const [p2_2, set2_2] = useState(array2_2)
-  // const [p2_3, set2_3] = useState(array2_3)
-  // const [p3_1, set3_1] = useState(array3_1)
-  // const [p3_2, set3_2] = useState(array3_2)
-  // const [p3_3, set3_3] = useState(array3_3)
-
   const [dumb, setDumb] = useState(false)
-  const [class_obj, setNothing] = useState({a1_1, a1_2, a1_3, a2_1, a2_2, a2_3, a3_1, a3_2, a3_3})
-  // class_obj["a1_1"].push()
+  const [class_obj, setNothing] = useState({a1_1, a1_2, a1_3, a2_1, a2_2, a2_3, a3_1, a3_2, a3_3, unclassified_schools})
+
 
   const addRows = (selected) => {
     selected.forEach((obj) => {
       obj.from = 'counselor'
     })
+    
+    // console.log(props)
+    // console.log(props.props.info.gpa , props.props.info.zip , props.props.info.famAfford , props.props.info.State)
+    if(props.props.info.gpa && props.props.info.zip && props.props.info.famAfford && props.props.info.State) {
+      let resultPosition = sortSchools(selected, props)
 
-    let resultPosition = sortSchools(selected, props)
-    // console.log("resultPosition")
-    // console.log(resultPosition)
-    console.log(selected.length)
-    console.log(resultPosition.length)
+      console.log(selected.length)
+      console.log(resultPosition.length)
 
-    for(let i = 0; i < resultPosition.length; i++){
-      if(resultPosition[i].selectivityScore == 'safety'){
-        if(resultPosition[i].affordabilityScore == 'low'){
-          if(!class_obj['a1_1'].includes(selected[i])){
-            class_obj['a1_1'].push(selected[i])
+      for(let i = 0; i < resultPosition.length; i++){
+        if(resultPosition[i].selectivityScore == 'safety'){
+          if(resultPosition[i].affordabilityScore == 'low'){
+            if(!class_obj['a1_1'].includes(selected[i])){
+              class_obj['a1_1'].push(selected[i])
+            }
+          } else if (resultPosition[i].affordabilityScore == 'medium'){
+            if(!class_obj['a2_1'].includes(selected[i])){
+              class_obj['a2_1'].push(selected[i])
+            }
+          } else {
+            if(!class_obj['a3_1'].includes(selected[i])){
+              class_obj['a3_1'].push(selected[i])
+            }
           }
-        } else if (resultPosition[i].affordabilityScore == 'medium'){
-          if(!class_obj['a2_1'].includes(selected[i])){
-            class_obj['a2_1'].push(selected[i])
+        } else if(resultPosition[i].selectivityScore == 'target'){
+          if(resultPosition[i].affordabilityScore == 'low'){
+            if(!class_obj['a1_2'].includes(selected[i])){
+              class_obj['a1_2'].push(selected[i])
+            }
+          } else if (resultPosition[i].affordabilityScore == 'medium'){
+            if(!class_obj['a2_2'].includes(selected[i])){
+              class_obj['a2_2'].push(selected[i])
+            }
+          } else {
+            if(!class_obj['a3_2'].includes(selected[i])){
+              class_obj['a3_2'].push(selected[i])
+            }
           }
-        } else {
-          if(!class_obj['a3_1'].includes(selected[i])){
-            class_obj['a3_1'].push(selected[i])
-          }
-        }
-      } else if(resultPosition[i].selectivityScore == 'target'){
-        if(resultPosition[i].affordabilityScore == 'low'){
-          if(!class_obj['a1_2'].includes(selected[i])){
-            class_obj['a1_2'].push(selected[i])
-          }
-        } else if (resultPosition[i].affordabilityScore == 'medium'){
-          if(!class_obj['a2_2'].includes(selected[i])){
-            class_obj['a2_2'].push(selected[i])
-          }
-        } else {
-          if(!class_obj['a3_2'].includes(selected[i])){
-            class_obj['a3_2'].push(selected[i])
-          }
-        }
-      } else if(resultPosition[i].selectivityScore == 'reach'){
-        if(resultPosition[i].affordabilityScore == 'low'){
-          if(!class_obj['a1_3'].includes(selected[i])){
-            class_obj['a1_3'].push(selected[i])
-          }
-        } else if (resultPosition[i].affordabilityScore == 'medium'){
-          if(!class_obj['a2_3'].includes(selected[i])){
-            class_obj['a2_3'].push(selected[i])
-          }
-        } else {
-          if(!class_obj['a3_3'].includes(selected[i])){
-            class_obj['a3_3'].push(selected[i])
+        } else if(resultPosition[i].selectivityScore == 'reach'){
+          if(resultPosition[i].affordabilityScore == 'low'){
+            if(!class_obj['a1_3'].includes(selected[i])){
+              class_obj['a1_3'].push(selected[i])
+            }
+          } else if (resultPosition[i].affordabilityScore == 'medium'){
+            if(!class_obj['a2_3'].includes(selected[i])){
+              class_obj['a2_3'].push(selected[i])
+            }
+          } else {
+            if(!class_obj['a3_3'].includes(selected[i])){
+              class_obj['a3_3'].push(selected[i])
+            }
           }
         }
       }
-      
         
+    } else {
+      selected.forEach((school) => class_obj['unclassified_schools'].push(school))
+    
     }
     setDumb(!dumb);
+    
     // TODO: The updated college list needs to be send back to the backend
 
   }
@@ -187,7 +185,14 @@ export default function Classification_table(props) {
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
           <TableHead>
             <TableRow>
-              <TableCell></TableCell>
+              <TableCell component="th" scope="row" colSpan={4}>
+                <Alert severity="warning">
+                  Information needed for classification (Add them in Overview): gpa, zip, famAfford, and State. 
+                  For now, all attributes must follow the naming style above
+                </Alert>
+              </TableCell>
+            </TableRow>
+            <TableRow>
               <TableCell>Safety</TableCell>
               <TableCell>Target</TableCell>
               <TableCell>Reach</TableCell>
@@ -312,6 +317,32 @@ export default function Classification_table(props) {
               </TableCell>
               <TableCell>
                 {class_obj["a3_3"].map((university, idx) => (
+                  <Chip
+                    key={idx + '3.3'}
+                    style={style_college}
+                    label={university.instnm}
+                    color={
+                      university.from == 'counselor' ? 'primary' : 'success'
+                    }
+                  />
+                ))}
+              </TableCell>
+            </TableRow>
+            <TableRow
+              key={'unclassified_title'}
+              sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
+              <TableCell component="th" scope="row">
+                Uncategorized
+              </TableCell>
+              <TableCell component="th" scope="row">
+                These schools BELOW cannot be classified beacuse of missing personal information
+              </TableCell>
+            </TableRow>
+            <TableRow
+              key={'unclassified_list'}
+              sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
+              <TableCell component="th" scope="row" colSpan={4}>
+              {class_obj["unclassified_schools"].map((university, idx) => (
                   <Chip
                     key={idx + '3.3'}
                     style={style_college}

@@ -6,7 +6,7 @@ import axios from 'axios';
 import getCollegeNamesLocal from './us_institutions'
 
 const filter = createFilterOptions()
-
+// this addToGrid function is from Search_college.js
 export default function Search_autocomplete({ addToGrid, sync }) {
   const [value, setValue] = React.useState(null)
 
@@ -55,7 +55,7 @@ export default function Search_autocomplete({ addToGrid, sync }) {
             style={{ position: 'absolute', right: '150px' }}
             onClick={async () => {
               let listToAdd = await setUniversities(value);
-              console.log(listToAdd)
+              // console.log(listToAdd)
               addToGrid(listToAdd)
             }}>
             search
