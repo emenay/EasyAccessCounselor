@@ -21,11 +21,11 @@ export default function Search_college({ addRows }) {
   const [selected, setSelected] = useState([])
   const addToGrid = (row) => {
     if (!row) {
-      alert("This college has not been added to our database yet...")
+      alert('This college has not been added to our database yet...')
       return
     }
-    for (let i = 0; i < rows.length; i++){
-      if(rows[i].unitid == row.unitid) return 
+    for (let i = 0; i < rows.length; i++) {
+      if (rows[i].unitid == row.unitid) return
     }
     row.id = rows.length + 1
     let temp = [...rows]

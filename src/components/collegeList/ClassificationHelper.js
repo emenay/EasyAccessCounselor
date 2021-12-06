@@ -182,9 +182,9 @@ function affordabilityUniverse(universe) {
   }
 }
 function affordabilityCommuting(zipcode, state) {
-    //TODO: zip code comparison to get miles 
-    //Probably needs an api
-    const MAX_COMMUTING_DISTANCE = 25;//miles
+  //TODO: zip code comparison to get miles
+  //Probably needs an api
+  const MAX_COMMUTING_DISTANCE = 25 //miles
 }
 function affordabilityInStatePublic(stateScore, selectivity, ability) {
   if (
