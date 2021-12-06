@@ -49,12 +49,10 @@ export default function Classification_table(props) {
     },
   ]
 
-
   if (!props.studentInfo == null && !props.studentInfo.schools == null) {
     schoolList = props.studentInfo.schools
     console.log('no schools are previously added')
   }
-  
 
   let a1_1 = []
   let a1_2 = []
@@ -357,7 +355,8 @@ export default function Classification_table(props) {
                 Uncategorized
               </TableCell>
               <TableCell component="th" scope="row" colSpan={3}>
-                These schools BELOW cannot be classified beacuse of missing personal information
+                These schools BELOW cannot be classified beacuse of missing
+                personal information
               </TableCell>
             </TableRow>
             <TableRow
