@@ -32,7 +32,7 @@ Note: As of May 2021, several of the tests written in 2020 fail due to snapshots
   - The easiest way is to run the command `npm install -g firebase-tools`
   - Other options https://firebase.google.com/docs/cli
 - From the terminal run `firebase login` and login to the rockymoon firebase Gmail account.
-- From the terminal navigate to the GlobalCollege directory
+- From the terminal navigate to the project's root directory (not your laptop's root directory.)
 - If you have not already, run the command `npm run build` in the GlobalCollege directory. \* \* This will build a deployable project into the folder /build.
 - Now run the command `firebase init` , This will present you with the following:
 
@@ -43,7 +43,7 @@ Note: As of May 2021, several of the tests written in 2020 fail due to snapshots
 - You will then be prompted to configure it as a single page app. Type `y` for this option and press `enter`.
 - If asked to set up automatic builds and deploys with GiHub? Type `n'
 - If asked to overwrite index.html, type `n` and press `enter`.
-- The command `firebase serve` can be run to test the website before deployment. This will start a local server similar to running npm start. You can press `ctrl+c` in the terminal to stop the server.
+- Before deploying to the main app URL, you can deploy it to a preview channel. You can find details about it in the next section.
 - After confirming the website runs normally, run the command `firebase deploy` to deploy the site to firebase.
 - If asked to delete any functions just type `n` and hit `enter`.
 - After the deploy process finishes, the website should now be available at https://easyaccess-9ffaa.web.app/ or https://easyaccess-9ffaa.web.app/index if there is a routing issue
@@ -52,7 +52,7 @@ Note: As of May 2021, several of the tests written in 2020 fail due to snapshots
 
 - Firebase now supports what they call preview channels, so you can use this to deploy a temporarily URL and firebase will delete it after a few weeks.
 - To do so, after setting up the firebase set up in the previous section, run the following command: `firebase hosting:channel:deploy preview_name`
-- Now go to firebase and under EasyAccess console and hosting, you should be able to see the new preview channel URL.
+- You should see the preview URL in your terminal after it is done. These channels will self delete after a certain amount of time. You still have to deploy to the main channel afterwards.
 
 ## Technologies Used
 
