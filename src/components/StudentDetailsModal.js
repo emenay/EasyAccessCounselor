@@ -140,6 +140,7 @@ function ProcessPanelElement(props) {
 
 // Generate the card information depending on editing or not
 function GenInfoCol(props) {
+  console.log(props.info)
   let col = []
   for (let i = 0; i < props.fields.length; i++) {
     const processedField = processField(props.fields[i])

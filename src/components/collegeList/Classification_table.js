@@ -33,25 +33,50 @@ export default function Classification_table(props) {
   // but you will need to set up account for each student
   // Hopefully you are using the new backend now
   // these are fake data for testing
-  let schoolList
-  let schools = [
-    {
-      instnm: 'Harvard University',
-      from: 'student',
-      selectivity: 'reach',
-      cost: 'high',
-    },
-    {
-      instnm: 'NC State University',
-      from: 'student',
-      selectivity: 'safety',
-      cost: 'low',
-    },
-  ]
+  let schools = [];
+
+ if(! props.props.info.colleges){
+  db.collection('student_counselors')
+        .doc(props.props.cohort)
+        .collection('students')
+        .doc(props.props.info.uid)
+        .update({"colleges" : []})
+        .then(() => {
+          
+            db.collection('student_counselors')
+              .doc(props.props.cohort)
+              .update({
+                addedFields: firebase.firestore.FieldValue.arrayUnion (
+                  ...['colleges']
+                ),
+              })
+              .catch((error) => console.log(error))
+        })
+ } else {
+    schools = props.props.info.colleges;
+ }
+  
+
+console.log((props.props));
+
+  // let schools = [
+  //   {
+  //     instnm: 'Harvard University',
+  //     from: 'student',
+  //     selectivity: 'reach',
+  //     cost: 'high',
+  //   },
+  //   {
+  //     instnm: 'NC State University',
+  //     from: 'student',
+  //     selectivity: 'safety',
+  //     cost: 'low',
+  //   },
+  // ]
 
   if (!props.studentInfo == null && !props.studentInfo.schools == null) {
-    schoolList = props.studentInfo.schools
-    console.log('no schools are previously added')
+    let schoolsByStudents = props.studentInfo.schools
+    console.log('no schools are previously added by the students')
   }
 
   let a1_1 = []
@@ -65,34 +90,37 @@ export default function Classification_table(props) {
   let a3_3 = []
   let unclassified_schools = []
 
-  for (let i = 0; i < schools.length; i++) {
-    if (schools[i].selectivity == 'safety') {
-      if (schools[i].cost == 'low') {
-        a1_1.push(schools[i])
-      } else if (schools[i].cost == 'medium') {
-        a2_1.push(schools[i])
-      } else if (schools[i].cost == 'high') {
-        a3_1.push(schools[i])
-      }
-    } else if (schools[i].selectivity == 'target') {
-      if (schools[i].cost == 'low') {
-        a1_2.push(schools[i])
-      } else if (schools[i].cost == 'medium') {
-        a2_2.push(schools[i])
-      } else if (schools[i].cost == 'high') {
-        a3_2.push(schools[i])
-      }
-    } else if (schools[i].selectivity == 'reach') {
-      if (schools[i].cost == 'low') {
-        a1_3.push(schools[i])
-      } else if (schools[i].cost == 'medium') {
-        a2_3.push(schools[i])
-      } else if (schools[i].cost == 'high') {
-        a3_3.push(schools[i])
+  if (schools.length != 0) {
+    for (let i = 0; i < schools.length; i++) {
+      if (schools[i].selectivity == 'safety') {
+        if (schools[i].cost == 'low') {
+          a1_1.push(schools[i])
+        } else if (schools[i].cost == 'medium') {
+          a2_1.push(schools[i])
+        } else if (schools[i].cost == 'high') {
+          a3_1.push(schools[i])
+        }
+      } else if (schools[i].selectivity == 'target') {
+        if (schools[i].cost == 'low') {
+          a1_2.push(schools[i])
+        } else if (schools[i].cost == 'medium') {
+          a2_2.push(schools[i])
+        } else if (schools[i].cost == 'high') {
+          a3_2.push(schools[i])
+        }
+      } else if (schools[i].selectivity == 'reach') {
+        if (schools[i].cost == 'low') {
+          a1_3.push(schools[i])
+        } else if (schools[i].cost == 'medium') {
+          a2_3.push(schools[i])
+        } else if (schools[i].cost == 'high') {
+          a3_3.push(schools[i])
+        }
       }
     }
+  
   }
-
+  
   const [dumb, setDumb] = useState(false)
   const [class_obj, setNothing] = useState({
     a1_1,
@@ -169,6 +197,16 @@ export default function Classification_table(props) {
             }
           }
         }
+
+        schools.push(
+          {
+              instnm: selected[i].instnm,
+              from: 'counselor',
+              selectivity: resultPosition[i].selectivityScore,
+              cost: resultPosition[i].affordabilityScore,
+          }
+        );
+        console.log(schools)
       }
     } else {
       selected.forEach((school) =>
@@ -177,7 +215,13 @@ export default function Classification_table(props) {
     }
     setDumb(!dumb)
 
+    // db.collection('student_counselors')
+    //     .doc(props.props.cohort)
+    //     .collection('students')
+    //     .doc(props.props.info.uid)
+    //     .update({"colleges" : schools});
     // TODO: The updated college list needs to be send back to the backend
+    // Overview cannot add "objects"
   }
 
   return (
