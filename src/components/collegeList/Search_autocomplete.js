@@ -2,7 +2,7 @@ import * as React from 'react'
 import TextField from '@mui/material/TextField'
 import Autocomplete, { createFilterOptions } from '@mui/material/Autocomplete'
 import Button from '@mui/material/Button'
-import axios from 'axios';
+import axios from 'axios'
 import getCollegeNamesLocal from './us_institutions'
 
 const filter = createFilterOptions()
@@ -74,15 +74,16 @@ export default function Search_autocomplete({ addToGrid, sync }) {
   )
 }
 
-
-
-async function setUniversities(college){
+async function setUniversities(college) {
   // console.log(college)
-  let res = await axios.get("https://collegerestapijs.herokuapp.com/colleges/name?name=" + college.institution.replace(/[^A-Za-z0-9]/g, '').toLowerCase())
-  return res.data[0];
+  let res = await axios.get(
+    'https://collegerestapijs.herokuapp.com/colleges/name?name=' +
+      college.institution.replace(/[^A-Za-z0-9]/g, '').toLowerCase()
+  )
+  return res.data[0]
 }
 
-const universitiesNameLocal = getCollegeNamesLocal();
+const universitiesNameLocal = getCollegeNamesLocal()
 // const university = [
 //   {
 //     college_name: 'University of North Carolina at Chapel hill',
@@ -90,4 +91,3 @@ const universitiesNameLocal = getCollegeNamesLocal();
 //     type: 'public',
 //   },
 // ]
-
