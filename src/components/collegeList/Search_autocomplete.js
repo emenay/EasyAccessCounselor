@@ -54,7 +54,7 @@ export default function Search_autocomplete({ addToGrid, sync }) {
             color="success"
             style={{ position: 'absolute', right: '150px' }}
             onClick={async () => {
-              let listToAdd = await setUniversities(value);
+              let listToAdd = await setUniversities(value)
               // console.log(listToAdd)
               addToGrid(listToAdd)
             }}>

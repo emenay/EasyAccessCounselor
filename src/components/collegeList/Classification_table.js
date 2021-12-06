@@ -3,7 +3,7 @@ import Chip from '@mui/material/Chip'
 import Table from '@mui/material/Table'
 import TableBody from '@mui/material/TableBody'
 import TableCell from '@mui/material/TableCell'
-import Alert from '@mui/material/Alert';
+import Alert from '@mui/material/Alert'
 import TableContainer from '@mui/material/TableContainer'
 import TableHead from '@mui/material/TableHead'
 import TableRow from '@mui/material/TableRow'
@@ -91,74 +91,89 @@ export default function Classification_table(props) {
   }
 
   const [dumb, setDumb] = useState(false)
-  const [class_obj, setNothing] = useState({a1_1, a1_2, a1_3, a2_1, a2_2, a2_3, a3_1, a3_2, a3_3, unclassified_schools})
-
+  const [class_obj, setNothing] = useState({
+    a1_1,
+    a1_2,
+    a1_3,
+    a2_1,
+    a2_2,
+    a2_3,
+    a3_1,
+    a3_2,
+    a3_3,
+    unclassified_schools,
+  })
 
   const addRows = (selected) => {
     selected.forEach((obj) => {
       obj.from = 'counselor'
     })
-    
+
     // console.log(props)
     // console.log(props.props.info.gpa , props.props.info.zip , props.props.info.famAfford , props.props.info.State)
-    if(props.props.info.gpa && props.props.info.zip && props.props.info.famAfford && props.props.info.State) {
+    if (
+      props.props.info.gpa &&
+      props.props.info.zip &&
+      props.props.info.famAfford &&
+      props.props.info.State
+    ) {
       let resultPosition = sortSchools(selected, props)
 
       console.log(selected.length)
       console.log(resultPosition.length)
 
-      for(let i = 0; i < resultPosition.length; i++){
-        if(resultPosition[i].selectivityScore == 'safety'){
-          if(resultPosition[i].affordabilityScore == 'low'){
-            if(!class_obj['a1_1'].includes(selected[i])){
+      for (let i = 0; i < resultPosition.length; i++) {
+        if (resultPosition[i].selectivityScore == 'safety') {
+          if (resultPosition[i].affordabilityScore == 'low') {
+            if (!class_obj['a1_1'].includes(selected[i])) {
               class_obj['a1_1'].push(selected[i])
             }
-          } else if (resultPosition[i].affordabilityScore == 'medium'){
-            if(!class_obj['a2_1'].includes(selected[i])){
+          } else if (resultPosition[i].affordabilityScore == 'medium') {
+            if (!class_obj['a2_1'].includes(selected[i])) {
               class_obj['a2_1'].push(selected[i])
             }
           } else {
-            if(!class_obj['a3_1'].includes(selected[i])){
+            if (!class_obj['a3_1'].includes(selected[i])) {
               class_obj['a3_1'].push(selected[i])
             }
           }
-        } else if(resultPosition[i].selectivityScore == 'target'){
-          if(resultPosition[i].affordabilityScore == 'low'){
-            if(!class_obj['a1_2'].includes(selected[i])){
+        } else if (resultPosition[i].selectivityScore == 'target') {
+          if (resultPosition[i].affordabilityScore == 'low') {
+            if (!class_obj['a1_2'].includes(selected[i])) {
               class_obj['a1_2'].push(selected[i])
             }
-          } else if (resultPosition[i].affordabilityScore == 'medium'){
-            if(!class_obj['a2_2'].includes(selected[i])){
+          } else if (resultPosition[i].affordabilityScore == 'medium') {
+            if (!class_obj['a2_2'].includes(selected[i])) {
               class_obj['a2_2'].push(selected[i])
             }
           } else {
-            if(!class_obj['a3_2'].includes(selected[i])){
+            if (!class_obj['a3_2'].includes(selected[i])) {
               class_obj['a3_2'].push(selected[i])
             }
           }
-        } else if(resultPosition[i].selectivityScore == 'reach'){
-          if(resultPosition[i].affordabilityScore == 'low'){
-            if(!class_obj['a1_3'].includes(selected[i])){
+        } else if (resultPosition[i].selectivityScore == 'reach') {
+          if (resultPosition[i].affordabilityScore == 'low') {
+            if (!class_obj['a1_3'].includes(selected[i])) {
               class_obj['a1_3'].push(selected[i])
             }
-          } else if (resultPosition[i].affordabilityScore == 'medium'){
-            if(!class_obj['a2_3'].includes(selected[i])){
+          } else if (resultPosition[i].affordabilityScore == 'medium') {
+            if (!class_obj['a2_3'].includes(selected[i])) {
               class_obj['a2_3'].push(selected[i])
             }
           } else {
-            if(!class_obj['a3_3'].includes(selected[i])){
+            if (!class_obj['a3_3'].includes(selected[i])) {
               class_obj['a3_3'].push(selected[i])
             }
           }
         }
       }
-        
     } else {
-      selected.forEach((school) => class_obj['unclassified_schools'].push(school))
-    
+      selected.forEach((school) =>
+        class_obj['unclassified_schools'].push(school)
+      )
     }
-    setDumb(!dumb);
-    
+    setDumb(!dumb)
+
     // TODO: The updated college list needs to be send back to the backend
   }
 
@@ -186,8 +201,10 @@ export default function Classification_table(props) {
             <TableRow>
               <TableCell component="th" scope="row" colSpan={4}>
                 <Alert severity="warning">
-                  Information needed for classification (Add them in Overview): gpa, zip, famAfford, and State. 
-                  For now, all attributes must follow the naming style above
+                  Information needed for classification (Add them in Overview):
+                  gpa, zip, famAfford, and State. For now, all attributes must
+                  follow the naming style above. You can add/edit these fields
+                  in the General tab!
                 </Alert>
               </TableCell>
             </TableRow>
@@ -334,14 +351,15 @@ export default function Classification_table(props) {
                 Uncategorized
               </TableCell>
               <TableCell component="th" scope="row">
-                These schools BELOW cannot be classified beacuse of missing personal information
+                These schools BELOW cannot be classified beacuse of missing
+                personal information
               </TableCell>
             </TableRow>
             <TableRow
               key={'unclassified_list'}
               sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
               <TableCell component="th" scope="row" colSpan={4}>
-              {class_obj["unclassified_schools"].map((university, idx) => (
+                {class_obj['unclassified_schools'].map((university, idx) => (
                   <Chip
                     key={idx + '3.3'}
                     style={style_college}
