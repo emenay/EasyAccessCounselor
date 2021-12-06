@@ -10,6 +10,8 @@ import TableRow from '@mui/material/TableRow'
 import Paper from '@mui/material/Paper'
 import Search_college from './Search_college'
 import getCollegeScores from './ClassificationHelper'
+import { db } from '../../firebase/firebase'
+import firebase from 'firebase/app'
 const style_college = { marginTop: '5px', marginRight: '5px' }
 
 // this function calls the getCollegeScores() function from ClassificationHelper, which computes
@@ -30,12 +32,8 @@ export default function Classification_table(props) {
   // Schools which are already there should be pulled from backend, studentInfo
   // but you will need to set up account for each student
   // Hopefully you are using the new backend now
-  let schoolList
-  if (!props.studentInfo == null && !props.studentInfo.schools == null) {
-    schoolList = props.studentInfo.schools
-    console.log('no schools are previously added')
-  }
   // these are fake data for testing
+  let schoolList
   let schools = [
     {
       instnm: 'Harvard University',
@@ -50,6 +48,13 @@ export default function Classification_table(props) {
       cost: 'low',
     },
   ]
+
+
+  if (!props.studentInfo == null && !props.studentInfo.schools == null) {
+    schoolList = props.studentInfo.schools
+    console.log('no schools are previously added')
+  }
+  
 
   let a1_1 = []
   let a1_2 = []
@@ -192,9 +197,10 @@ export default function Classification_table(props) {
               </TableCell>
             </TableRow>
             <TableRow>
-              <TableCell>Safety</TableCell>
-              <TableCell>Target</TableCell>
-              <TableCell>Reach</TableCell>
+              <TableCell colspan={1}></TableCell>
+              <TableCell colspan={1}>Safety</TableCell>
+              <TableCell colspan={1}>Target</TableCell>
+              <TableCell colspan={1}>Reach</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -330,10 +336,10 @@ export default function Classification_table(props) {
             <TableRow
               key={'unclassified_title'}
               sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
-              <TableCell component="th" scope="row">
+              <TableCell component="th" scope="row" colSpan={1}>
                 Uncategorized
               </TableCell>
-              <TableCell component="th" scope="row">
+              <TableCell component="th" scope="row" colSpan={3}>
                 These schools BELOW cannot be classified beacuse of missing personal information
               </TableCell>
             </TableRow>
