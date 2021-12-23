@@ -100,7 +100,7 @@ For an unrestricted development process, be sure to get access to the associated
   - For details on weekly accomplishments, see the Journals page.
   - For details on course work associated with the Easy Access project, see the Deliverables page.
 - `COMP 523 Spring 2021 Team Website`: https://tarheels.live/comp523teamm/
-- `COMP 523 Fall 2021 Team Website`: https://comp523-fall21-h.herokuapp.com/ (You can publish static websites to heroku by wrapping a php wrapper around the HTML index file.)
+- `COMP 523 Fall 2021 Team Website`: https://comp523-h.web.app/
 
 ### Contributing Resources
 
