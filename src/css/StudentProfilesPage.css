@@ -1,354 +1,347 @@
-
 .profiles-header {
-    width: 100%;
-    display: grid;
-    grid-template-columns: 32.5% 50px 50px 50px;
-    align-items: center;
-    background-color: white;
-    background: none;
-    justify-items: end;
+  width: 100%;
+  display: grid;
+  grid-template-columns: 32.5% 50px 50px 50px;
+  align-items: center;
+  background-color: white;
+  background: none;
+  justify-items: end;
 }
 
 .dropdown-submenu {
-    position: absolute;
-    left: 192px;
-    top: 45px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    background-color: white;
-    border: 1px solid black;
-    z-index: 1;
-    width: 250px;
-    padding: 10px 20px;
+  position: absolute;
+  left: 192px;
+  top: 45px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background-color: white;
+  border: 1px solid black;
+  z-index: 1;
+  width: 250px;
+  padding: 10px 20px;
 }
 
 .flag-wrapper {
-    display: flex;
-    justify-content: space-between;
-    width: 100%;
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
 }
 
 .flag-image {
-    width: 90%;
-    height: 90%;
-    background: white;
+  width: 90%;
+  height: 90%;
+  background: white;
 }
 .flag {
-    position: absolute;
-    top: 8px;
-    right: 8px;
-    width: 30px;
-    height: 30px;
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 30px;
+  height: 30px;
 }
 
 .edit {
-    position: absolute;
-    bottom: 8px;
-    right: 8px;
-    width: 30px;
-    height: 30px;
+  position: absolute;
+  bottom: 8px;
+  right: 8px;
+  width: 30px;
+  height: 30px;
 }
 
 .minus {
-    position: absolute;
-    width: 20px;
-    height: 20px;
+  position: absolute;
+  width: 20px;
+  height: 20px;
 }
 
 .dropdown {
-    outline: none;
+  outline: none;
 }
 
 .sort-status {
-    font-size: 20px;
-    margin-right: 10px;
+  font-size: 20px;
+  margin-right: 10px;
 }
 
 .dropdown-trigger {
-    outline: none;
-    margin: auto;
+  outline: none;
+  margin: auto;
 }
 
 .dropdown-btn {
-    width: 100%;
-    height: 100%;
-    background-color: white;
-    color: #363636;
-    border: none;
-    margin: 0;
-    text-decoration: none;
-    cursor: pointer;
-    justify-content: center;
-    text-align: center;
-    white-space: nowrap;
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    outline: none;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
+  width: 100%;
+  height: 100%;
+  background-color: white;
+  color: #363636;
+  border: none;
+  margin: 0;
+  text-decoration: none;
+  cursor: pointer;
+  justify-content: center;
+  text-align: center;
+  white-space: nowrap;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  outline: none;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
-
 .sortbutton-items {
-    width: 100%;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
 }
 
 .sortbutton-items:hover span {
-    color: orangered;
+  color: orangered;
 }
 
 .filter-icon {
-    width: 30px;
-    height: 30px;
+  width: 30px;
+  height: 30px;
 }
 
 .flag-button {
-    width: 30px;
-    height: 30px;
-    display: inline-block;
-    border: none;
-    margin: 0;
-    padding: 0;
-    text-decoration: none;
-    background: white;
-    color: #ffffff;
-    font-family: sans-serif;
-    font-size: 1rem;
-    cursor: pointer;
-    text-align: center;
-    transition: background 250ms ease-in-out, 
-                transform 150ms ease;
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    outline: none;
+  width: 30px;
+  height: 30px;
+  display: inline-block;
+  border: none;
+  margin: 0;
+  padding: 0;
+  text-decoration: none;
+  background: white;
+  color: #ffffff;
+  font-family: sans-serif;
+  font-size: 1rem;
+  cursor: pointer;
+  text-align: center;
+  transition: background 250ms ease-in-out, transform 150ms ease;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  outline: none;
 }
 
 .scard-detail {
-    line-height: 1.6;
-    font-size: 16px;
-    font-family: "Open Sans";
+  line-height: 1.6;
+  font-size: 16px;
+  font-family: 'Open Sans';
 }
 
 .scard-detail-edit {
-    position: relative;
-    line-height: 1.6;
-    font-size: 16px;
-    font-family: "Open Sans";
-    left: 25px;
+  position: relative;
+  line-height: 1.6;
+  font-size: 16px;
+  font-family: 'Open Sans';
+  left: 25px;
 }
 
 .scard-content {
-    margin: auto;
-    padding: 1rem 1.5rem;
+  margin: auto;
+  padding: 1rem 1.5rem;
 }
 
 .scard-edit {
-    position: absolute;
-    bottom: 0;
-    right: 0;
-    width: 40%;
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 40%;
 }
 
 .scard-edit-buttons {
-    display: grid;
-    grid-template-columns: 50px 300px;
-    column-gap: 20px;
+  display: grid;
+  grid-template-columns: 50px 300px;
+  column-gap: 20px;
 }
 
 /* Taken from https://www.w3schools.com/howto/howto_css_modals.asp example*/
 .studentdetails-modal {
-    position: fixed; /* Stay in place */
-    z-index: 999; /* Sit on top */
-    left: 0;
-    top: 0;
-    width: 100%; /* Full width */
-    height: 100%; /* Full height */
-    overflow: none; 
-    text-align: left;
-    background-color: rgb(0,0,0); /* Fallback color */
-    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+  position: fixed; /* Stay in place */
+  z-index: 999; /* Sit on top */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: none;
+  text-align: left;
+  background-color: rgb(0, 0, 0); /* Fallback color */
+  background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
 }
 
-.studentdetails-content b{
-    font-size: 23px;
+.studentdetails-content b {
+  font-size: 23px;
 }
-
 
 .studentdetails-background {
-    position: relative;
-    margin: 10vh auto;
-    width: 80%;
-    height: 80vh;
-    border-radius: 5px;
-    opacity: 1;
-    background: #0E1030 0% 0% no-repeat padding-box;
+  position: relative;
+  margin: 10vh auto;
+  width: 80%;
+  height: 80vh;
+  border-radius: 5px;
+  opacity: 1;
+  background: #0e1030 0% 0% no-repeat padding-box;
 }
 
 .studentdetails-content::-webkit-scrollbar {
-    width: 8px;
-    height: 8px;
-    background-color: white; /* or add it to the track */
+  width: 8px;
+  height: 8px;
+  background-color: white; /* or add it to the track */
 }
 
 .studentdetails-content::-webkit-scrollbar-thumb {
-    background: gray; 
-    border-radius: 20px
+  background: gray;
+  border-radius: 20px;
 }
 
 .studentdetails-content {
-    position: absolute;
-    background-color: #fefefe;
-    border-radius: 5px;
-    padding: 20px;
-    height: 73%;
-    bottom: 4%;
-    left: 0; right: 0;
-    width: 95%;
-    margin: auto;
-    overflow-y: auto;
-    border: 1px solid #888;
+  position: absolute;
+  background-color: #fefefe;
+  border-radius: 5px;
+  padding: 20px;
+  height: 73%;
+  bottom: 4%;
+  left: 0;
+  right: 0;
+  width: 95%;
+  margin: auto;
+  overflow-y: auto;
+  border: 1px solid #888;
 }
 
 .caseloadContents {
-    border: 0;
-    padding: 0;
+  border: 0;
+  padding: 0;
 }
 
 .studentdetails-tab-wrapper {
-    position: absolute;
-    width: 100%;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    bottom: 80%;
-    height: 50px;
+  position: absolute;
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  bottom: 80%;
+  height: 50px;
 }
 
 .studentdetails-editbutton {
-    position: relative;
-    bottom: 0;
-    right: 0;
-    width: 65px;
-    height: 65px;
-    border: none;
-    margin-top: 16px;
-    margin-bottom: 0;
-    background-color:  #fefefe;
-    border-radius: 50%;
+  position: relative;
+  bottom: 0;
+  right: 0;
+  width: 65px;
+  height: 65px;
+  border: none;
+  margin-top: 16px;
+  margin-bottom: 0;
+  background-color: #fefefe;
+  border-radius: 50%;
 }
 
 .studentdetails-editbutton img {
-    height: 100%;
-    width: 100%;
+  height: 100%;
+  width: 100%;
 }
 
 .studentdetails-editbutton:hover {
-    /* background-image: url('../assets/edit_symbol.png'); */
-    background-color: #AD310B;
-    -webkit-transition: background-color 100ms linear;
-    -ms-transition: background-color 100ms linear;
-    transition: background-color 100ms linear;
-    background-size: 100% 100%;
-    background-color:  #dadada;
+  /* background-image: url('../assets/edit_symbol.png'); */
+  background-color: #ad310b;
+  -webkit-transition: background-color 100ms linear;
+  -ms-transition: background-color 100ms linear;
+  transition: background-color 100ms linear;
+  background-size: 100% 100%;
+  background-color: #dadada;
 }
 
-
 .studentdetails-tab {
-    position: absolute;
-    bottom: 82%;
-    width: 24.8%;
-    height: 40px;
-    float: left;
-    z-index: 998;
-    border-top-left-radius: 5px;
-    border-top-right-radius: 5px;
-    background-color: #3298CB;
-    border-bottom: 2px solid #0E1030;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    cursor: pointer;
-    transition: height 0.1s;
+  position: absolute;
+  bottom: 82%;
+  width: 24.8%;
+  height: 40px;
+  float: left;
+  z-index: 998;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+  background-color: #3298cb;
+  border-bottom: 2px solid #0e1030;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  cursor: pointer;
+  transition: height 0.1s;
 }
 
 .studentdetails-tab:hover {
-    height: 45px;
+  height: 45px;
 }
 
 .tab-text {
-    text-align: center;
-    margin-bottom: 2px;
-    color: white;
-    font-size: 20px;
+  text-align: center;
+  margin-bottom: 2px;
+  color: white;
+  font-size: 20px;
 }
 
 .tab-selected {
-    height: 45px;
-    border-bottom: 0px solid black;
+  height: 45px;
+  border-bottom: 0px solid black;
 }
 
 .studentdetails-innerbackground {
-    background-color: #3298CB;
-    position: absolute;
-    border-bottom-right-radius: 5px;
-    border-bottom-left-radius: 5px;
-    min-height: 82%;
-    width: 100%;
-    bottom: 0px;
-
+  background-color: #3298cb;
+  position: absolute;
+  border-bottom-right-radius: 5px;
+  border-bottom-left-radius: 5px;
+  min-height: 82%;
+  width: 100%;
+  bottom: 0px;
 }
 
 .studentdetails-avatar {
-    height: 200px;
-    width: 190px;
+  height: 200px;
+  width: 190px;
 }
 
 .studentdetails-title {
-    color: white;
-    font-size: 30px;
-
+  color: white;
+  font-size: 30px;
 }
 
 .studentdetails-titleflag {
-    display: flex;
-    padding-top: 5px;
-    margin-left: 10px;
+  display: flex;
+  padding-top: 5px;
+  margin-left: 10px;
 }
 
 .studentdetails-flag {
-    z-index: 997;
-    margin-left: 20px;
-    margin-top: 10px;
-    width: 30px;
-    height: 30px;
+  z-index: 997;
+  margin-left: 20px;
+  margin-top: 10px;
+  width: 30px;
+  height: 30px;
 }
 
 .studentdetails-goal {
-    position: absolute;
-    top: 15px;
-    right: 15px;
-    color: white;
-    font-size: 20px;
-
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  color: white;
+  font-size: 20px;
 }
 
 .geninfo-panel {
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    row-gap: 20px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  row-gap: 20px;
 }
 
 .geninfo-row1 {
-    display: flex;
-    flex-direction: row;
-    margin-bottom: 15px;
+  display: flex;
+  flex-direction: row;
+  margin-bottom: 15px;
 }
 
 /* .geninfo-row1 div {
@@ -356,105 +349,106 @@
 } */
 
 .geninfo-panel p {
-    font-size: 20px;
+  font-size: 20px;
 }
 
-.geninfo-panel span, .college-side span {
-    font-weight: bold;
-    font-size: 18px;
+.geninfo-panel span,
+.college-side span {
+  font-weight: bold;
+  font-size: 18px;
 }
 
 .genInfoRow {
-    display: flex;
-    flex-direction: row;
-    justify-content: left;
-    width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: left;
+  width: 100%;
 }
 
 .genInfoRow p {
-    width: 50%;
+  width: 50%;
 }
 
 .fieldsSection {
-    width: 75%;
-    height: 100%;
-    display: grid;
-    grid-template-rows: auto;
-    grid-template-columns: 50% 50%;
-    grid-column-gap: 0;
+  width: 75%;
+  height: 100%;
+  display: grid;
+  grid-template-rows: auto;
+  grid-template-columns: 50% 50%;
+  grid-column-gap: 0;
 }
 
 .modalFieldElement {
-    display: flex;
-    width: 100%;
-    justify-content: center;
-    align-items: center;
-    padding: 5px;
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+  padding: 5px;
 }
 
 .modalFieldElement p {
-    display: flex;
-    flex-direction: row;
-    justify-content: left;
-    align-items: center;
-    text-align: justify;
-    width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: left;
+  align-items: center;
+  text-align: justify;
+  width: 100%;
 }
 
 .modalFieldElement p span {
-    display: block;
-    width: fit-content;
-    text-align: center;
-    padding-top: 3px;
-    padding-right: 5px;
+  display: block;
+  width: fit-content;
+  text-align: center;
+  padding-top: 3px;
+  padding-right: 5px;
 }
 
 .modalFieldElement button {
-    display: flex;
-    background-color: transparent;
-    border: none;
-    height: 20px;
-    width: 20px;
-    padding: 0;
-    margin-right: 5px;
-    margin-top: 5px;
-    border-radius: 50%;
-    justify-content: center;
-    align-items: center;
+  display: flex;
+  background-color: transparent;
+  border: none;
+  height: 20px;
+  width: 20px;
+  padding: 0;
+  margin-right: 5px;
+  margin-top: 5px;
+  border-radius: 50%;
+  justify-content: center;
+  align-items: center;
 }
 
 .modalFieldElement button:hover {
-    -webkit-transition: background-color 100ms linear;
-    -ms-transition: background-color 100ms linear;
-    transition: background-color 100ms linear;
-    background-color: rgb(253, 91, 91);
+  -webkit-transition: background-color 100ms linear;
+  -ms-transition: background-color 100ms linear;
+  transition: background-color 100ms linear;
+  background-color: rgb(253, 91, 91);
 }
 
-.modalFieldElement button img{
-    height: 20px;
-    width: 20px;
+.modalFieldElement button img {
+  height: 20px;
+  width: 20px;
 }
 
 .editSuite {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: flex-end;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-end;
 }
 
 .editButtonSuite {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    align-items: center;
-    justify-content: center;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
 }
 
-.editButtonSuite>div {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
+.editButtonSuite > div {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
 }
 
 /* .editSuite {
@@ -462,379 +456,400 @@
 } */
 
 .addFieldButton {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    font-size: 150%;
-    color: black;
-    background-color: transparent;
-    border-style: none;
-    padding: 2px 0px 2px 0px; /* top right bottom left*/
-    border-radius: 3px;
-    width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  font-size: 150%;
+  color: black;
+  background-color: transparent;
+  border-style: none;
+  padding: 2px 0px 2px 0px; /* top right bottom left*/
+  border-radius: 3px;
+  width: 100%;
 }
 
 .addFieldButton:hover {
-    -webkit-transition: background-color 100ms linear;
-    -ms-transition: background-color 100ms linear;
-    transition: background-color 100ms linear;
-    background-color: rgb(211, 211, 211);
+  -webkit-transition: background-color 100ms linear;
+  -ms-transition: background-color 100ms linear;
+  transition: background-color 100ms linear;
+  background-color: rgb(211, 211, 211);
 }
 
 .addFieldButton img {
-    height: 25px;
-    width: 25px;
-    margin-right: 3%;
+  height: 25px;
+  width: 25px;
+  margin-right: 3%;
 }
 
 .disabledAddFieldButton {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    font-size: 150%;
-    color: grey;
-    background-color: transparent;
-    border-style: none;
-    padding: 2px 0px 2px 0px; /* top right bottom left*/
-    border-radius: 3px;
-    width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  font-size: 150%;
+  color: grey;
+  background-color: transparent;
+  border-style: none;
+  padding: 2px 0px 2px 0px; /* top right bottom left*/
+  border-radius: 3px;
+  width: 100%;
 }
 
 .disabledAddFieldButton img {
-    height: 25px;
-    width: 25px;
-    margin-right: 3%;
+  height: 25px;
+  width: 25px;
+  margin-right: 3%;
 }
 
 .saveCancelContainer {
-    display: flex;
-    flex-direction: row;
-    width: 100%;
-    justify-content: center;
-    align-items: center;
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
 }
 
 .saveCancelContainer button {
-    margin-top: 10px;
-    border-style: none;
-    border-radius: 3px;
+  margin-top: 10px;
+  border-style: none;
+  border-radius: 3px;
 }
 
 .save {
-    margin-right: 5px;
-    background-color: rgb(77, 165, 77);
+  margin-right: 5px;
+  background-color: rgb(77, 165, 77);
 }
 
 .saveField {
-    margin-right: 5px;
-    background-color: rgb(77, 165, 77);
-    width: 50px;
+  margin-right: 5px;
+  background-color: rgb(77, 165, 77);
+  width: 50px;
 }
 
 .save:hover {
-    -webkit-transition: background-color 100ms linear;
-    -ms-transition: background-color 100ms linear;
-    transition: background-color 100ms linear;
-    background-color: rgb(68, 146, 68);
+  -webkit-transition: background-color 100ms linear;
+  -ms-transition: background-color 100ms linear;
+  transition: background-color 100ms linear;
+  background-color: rgb(68, 146, 68);
 }
 
 .cancel {
-    margin-left: 5px;
-    background-color: rgb(202, 70, 70);
+  margin-left: 5px;
+  background-color: rgb(202, 70, 70);
 }
 
 .cancel:hover {
-    -webkit-transition: background-color 100ms linear;
-    -ms-transition: background-color 100ms linear;
-    transition: background-color 100ms linear;
-    background-color: rgb(165, 57, 57);
+  -webkit-transition: background-color 100ms linear;
+  -ms-transition: background-color 100ms linear;
+  transition: background-color 100ms linear;
+  background-color: rgb(165, 57, 57);
 }
 
 .addFieldElt {
-    display: flex;
-    flex-direction: row;
+  display: flex;
+  flex-direction: row;
 }
 
 .addFieldElt span {
-    padding-left: 2px;
-    padding-right: 4px;
+  padding-left: 2px;
+  padding-right: 4px;
 }
 
 .dropdownContainer {
-    width: 40%;
+  width: 40%;
 }
 
 .geninfo-col3 {
-    width: 25%;
-    text-align: right;
+  width: 25%;
+  text-align: right;
 }
 
 .mainFieldBreak {
-    border: 1px solid rgb(173, 173, 173);
-    width: 90%;
-    align-self: center;
-    margin: 0;
+  border: 1px solid rgb(173, 173, 173);
+  width: 90%;
+  align-self: center;
+  margin: 0;
 }
 
 /* application process panel css */
 
 .appproc-panel {
-    width: 100%;
-    display: flex;
-    flex-direction: row;
-    position: relative;
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  position: relative;
 }
 
 .appproc-col {
-    width: 50%;
-    margin-left: 20px;
-    overflow-x: wrap;
+  width: 50%;
+  margin-left: 20px;
+  overflow-x: wrap;
 }
 
-.appproc-col p, .college-side p {
-    font-size: 18px;
+.appproc-col p,
+.college-side p {
+  font-size: 18px;
 }
-
 
 .app-circle {
-    position: absolute;
-    top: 0;
-    left: -16.5px;
-    width: 30px;
-    height: 30px;
-    border-radius: 15px;
-    border: 3px solid #68A9CB;
-    background-color: #3298CB;
+  position: absolute;
+  top: 0;
+  left: -16.5px;
+  width: 30px;
+  height: 30px;
+  border-radius: 15px;
+  border: 3px solid #68a9cb;
+  background-color: #3298cb;
 }
 
-
 .app-group {
-    position: relative;
-    padding-bottom: 20px;
-    padding-left: 25px;
-    overflow-x: wrap;
-    border-left: 3px solid #3298CB;
+  position: relative;
+  padding-bottom: 20px;
+  padding-left: 25px;
+  overflow-x: wrap;
+  border-left: 3px solid #3298cb;
 }
 
 /* Caseload css */
 
 .caseload-meetingsnum {
-    width: 100%;
-    margin: auto;
-    display: flex;
-    justify-content: space-between;
-    background-color: #3298CB;
-    color: white;
-    padding: 15px 5%;
+  width: 100%;
+  margin: auto;
+  display: flex;
+  justify-content: space-between;
+  background-color: #3298cb;
+  color: white;
+  padding: 15px 5%;
 }
 
 .caseload-meetingsnum > p {
-    font-size: 20px!important;
+  font-size: 20px !important;
 }
 
 .caseload-panel p {
-    font-size: 18px;
+  font-size: 18px;
 }
 
 .caseload-noteitem {
-    display: grid;
-    column-gap: 10%;
-    width: 90%;
-    margin: auto;
-    margin-bottom: 20px;
-    grid-template-columns: 20% 20% 40%;
-
+  display: grid;
+  column-gap: 10%;
+  width: 90%;
+  margin: auto;
+  margin-bottom: 20px;
+  grid-template-columns: 20% 20% 40%;
 }
 
 .caseload-notetype {
-    height: 34px;
+  height: 34px;
 }
 
 .caseload-textitem {
-    outline: 1px solid gray;
-    height: 28px;
-    padding-left: 3px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    cursor: pointer;
+  outline: 1px solid gray;
+  height: 28px;
+  padding-left: 3px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  cursor: pointer;
 }
 
 .itemhoverable {
-    font-size: 16px!important;
+  font-size: 16px !important;
 }
 
 .itemhoverable:hover {
-    outline: 2px solid black;
-    cursor: pointer;
+  outline: 2px solid black;
+  cursor: pointer;
 }
 
 .caseload-enterdate {
-    height: 30px;
+  height: 30px;
 }
 
 .caseload-notetext {
-    width: 100%;
-    height: 60px;
+  width: 100%;
+  height: 60px;
 }
 
 .viewingNote {
-    white-space: normal;
-    text-overflow: clip;
-    height: auto;
+  white-space: normal;
+  text-overflow: clip;
+  height: auto;
 }
 
 .caseload-savebutton {
-    background: #3298CB 0% 0% no-repeat padding-box;
-    border-radius: 5px;
-    font-size: 15px;
-    border: none;
-    text-decoration: none;
-    outline: none;
-    opacity: 1;
-    color: white;
-    width: 20%;
+  background: #3298cb 0% 0% no-repeat padding-box;
+  border-radius: 5px;
+  font-size: 15px;
+  border: none;
+  text-decoration: none;
+  outline: none;
+  opacity: 1;
+  color: white;
+  width: 20%;
 }
 
 .caseload-maincontent {
-    padding: 20px;
+  padding: 20px;
 }
 
 /* College List Panel */
 
 .college-side {
-    width: 50%;
-    overflow-x: wrap;
+  width: 50%;
+  overflow-x: wrap;
 }
 
 .college-panel {
-    display: flex;
+  display: flex;
 }
 
 #root {
-    width: auto;
-    margin: auto;
+  width: auto;
+  margin: auto;
 }
 
-
 #grid {
-    text-align: center;
-    display: grid;
-    gap: 30px 1.25%;
-    grid-template-columns: 32.5% 32.5% 32.5%;
-    margin: auto;
-    margin-top: 20px;
+  text-align: center;
+  display: grid;
+  gap: 30px 1.25%;
+  grid-template-columns: 32.5% 32.5% 32.5%;
+  margin: auto;
+  margin-top: 20px;
 }
 
 #blockview {
-    margin-top: 30px;
+  margin-top: 30px;
 }
 
-.filter-button{
-    margin-left: 20px;
+.filter-button {
+  margin-left: 20px;
 }
 
-.filter-label{
-    font-size: 17px;
-    line-height: 39px;
-    margin-left: 20px;
+.filter-label {
+  font-size: 17px;
+  line-height: 39px;
+  margin-left: 20px;
 }
 
 .card-title {
-    font-size: 26px;
+  font-size: 26px;
 }
-
 
 .card {
-    border-radius: 5px;
-    position: relative;
-    min-height: 200px!important;
-    background-color:  #3298CB!important;
-    -webkit-transition: background-color 150ms linear;
-    -ms-transition: background-color 150ms linear;
-    transition: background-color 150ms linear;
-    color: white!important;
-    text-align: left;
-    word-wrap: normal;
+  border-radius: 5px;
+  position: relative;
+  min-height: 200px !important;
+  background-color: #3298cb !important;
+  -webkit-transition: background-color 150ms linear;
+  -ms-transition: background-color 150ms linear;
+  transition: background-color 150ms linear;
+  color: white !important;
+  text-align: left;
+  word-wrap: normal;
 }
 
-.card:hover{
-    cursor: pointer;
-    background-color: #ACE7FF!important;
-    color: black!important;
-    -webkit-transition: background-color 150ms linear;
-    -ms-transition: background-color 150ms linear;
-    transition: background-color 150ms linear;
+.card:hover {
+  cursor: pointer;
+  background-color: #ace7ff !important;
+  color: black !important;
+  -webkit-transition: background-color 150ms linear;
+  -ms-transition: background-color 150ms linear;
+  transition: background-color 150ms linear;
 }
 
 .blockview-child {
-    width: 80%;
-    height: 200px;
-    border-radius: 10px;
-    margin: 20px auto;
-    overflow: hidden;
+  width: 80%;
+  height: 200px;
+  border-radius: 10px;
+  margin: 20px auto;
+  overflow: hidden;
 }
 
-
-span.clear { 
-    clear: left; 
-    display: block; 
+span.clear {
+  clear: left;
+  display: block;
 }
 
 .check-label {
-    width: min-content;
+  width: min-content;
 }
 
 .check-label > input {
-    margin-right: 10px;
+  margin-right: 10px;
 }
 
-input[type="checkbox"] {
-    vertical-align: center;
+input[type='checkbox'] {
+  vertical-align: center;
 }
 
-.studentdetails-modal input[type="text"] {
-    width: 170px;
-    height: 25px;
-    font-size: 18px;
-    padding-bottom: 15px;
-    -webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
-    -moz-box-sizing: border-box;    /* Firefox, other Gecko */
-    box-sizing: border-box;         /* Opera/IE 8+ */
-}  
+.studentdetails-modal input[type='text'] {
+  width: 170px;
+  height: 25px;
+  font-size: 18px;
+  padding-bottom: 15px;
+  -webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
+  -moz-box-sizing: border-box; /* Firefox, other Gecko */
+  box-sizing: border-box; /* Opera/IE 8+ */
+}
 
 .card-buttons {
-    position: relative;
-    text-align: right;
+  position: relative;
+  text-align: right;
 }
 
 /*CSS for popup to add field in student modal*/
 
 .popup-modal {
-    z-index: 1000;   
-    vertical-align: middle;
+  z-index: 1000;
+  vertical-align: middle;
 }
 
-.popup-modal input[type="text"] {
-    width: 170px;
-    height: 20px;
-    font-size: 18px;
+.popup-modal input[type='text'] {
+  width: 170px;
+  height: 20px;
+  font-size: 18px;
 }
 
 .popup-content {
-    margin: auto;
-    background: rgb(255, 255, 255);
-    border: solid;
-    width: 32%;
-    height: 15%;
-    padding: 5px;
-    padding-top: 10px;
-    font-size: 18px;
-  }
-  
-  .popup-overlay {
-    background: rgba(0, 0, 0, 0.75);
-  }
-  
+  margin: auto;
+  background: rgb(255, 255, 255);
+  border: solid;
+  width: auto;
+  height: auto;
+  padding: 5px;
+  padding-top: 10px;
+  font-size: 18px;
+}
+
+.popup-overlay {
+  background: rgba(0, 0, 0, 0.75);
+}
+
+.popup-addcollege {
+  z-index: 1000;
+  vertical-align: middle;
+  background: rgb(255, 255, 255);
+  width: auto;
+  height: auto;
+  padding: 5px;
+}
+
+.popup-header {
+  font-size: 18;
+}
+
+.popup-addcollcontent {
+  z-index: 1000;
+  vertical-align: middle;
+  margin: auto;
+  background: rgb(255, 255, 255);
+  font-size: 16px;
+}
+
+.popup-addcollege input[type='text'] {
+  width: 100px;
+  height: 17px;
+  font-size: 16px;
+}

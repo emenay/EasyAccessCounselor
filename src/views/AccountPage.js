@@ -1,12 +1,11 @@
-import React, { useContext } from "react";
-import { UserContext } from "../providers/UserProvider";
-import {auth, db} from "../firebase/firebase";
+import React, { useContext } from 'react'
+import { UserContext } from '../providers/UserProvider'
+import { auth, db } from '../firebase/firebase'
 
 // import React, { useState } from "react";
 // import { Button, Form, Group, FormControl, FormLabel } from "react-bootstrap";
 // import "./Account.css";
 // import GoogleButton from 'react-google-button';
-
 
 /*
 class AccountPage extends React.Component {
@@ -24,7 +23,6 @@ class AccountPage extends React.Component {
 
 // export default function Login() {
 //   const [email, setEmail] = React.useState("");
-
 
 //   function validateForm() {
 //     return email.length > 0;
@@ -48,7 +46,7 @@ class AccountPage extends React.Component {
 //             onChange={e => setEmail(e.target.value)}
 //           />
 //         </Form.Group>
-       
+
 //         <Button block bsSize="large" disabled={!validateForm()} type="submit">
 //           Submit
 //         </Button>
@@ -62,23 +60,32 @@ class AccountPage extends React.Component {
 //   );
 // }
 
-
 const AccountPage = () => {
-  const user = useContext(UserContext);
-  const {displayName, email} = user;
+  const user = useContext(UserContext)
+  const { displayName, email } = user
   return (
-    <div >
-        <div>
-        <h2 >{displayName}</h2>
-        <h3 >{email}</h3>
-        <button  onClick = {() => {auth.signOut()}}>Sign out</button>
-        </div>
-      <button  onClick = {() => {db.collection("cohortCode").add({
-        cohort: "unc",
-        studentID: "1231251"
-      })}}>Generate cohort Code</button>
+    <div>
+      <div>
+        <h2>{displayName}</h2>
+        <h3>{email}</h3>
+        <button
+          onClick={() => {
+            auth.signOut()
+          }}>
+          Sign out
+        </button>
+      </div>
+      <button
+        onClick={() => {
+          db.collection('cohortCode').add({
+            cohort: 'unc',
+            studentID: '1231251',
+          })
+        }}>
+        Generate cohort Code
+      </button>
     </div>
-  ) 
-};
+  )
+}
 
-export default AccountPage;
+export default AccountPage

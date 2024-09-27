@@ -1,84 +1,84 @@
-
-
 .login-content {
-    width: 45%;
-    display: flex;
-    flex-direction: column;
-    min-height: 300px;
-    height: 70%;
-    margin: auto;
+  width: 45%;
+  display: flex;
+  flex-direction: column;
+  min-height: 300px;
+  height: 70%;
+  margin: auto;
 }
 
 .login-tabs {
-    width: 100%;
-    height: 60px;
-    display: flex;
-    justify-content: space-between;
+  width: 100%;
+  height: 60px;
+  display: flex;
+  justify-content: space-between;
 }
 
 .login-tab {
-    border-top-left-radius: 15px;
-    border-top-right-radius: 15px;
-    background-color: white;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    height: 100%;
-    width: 43%;    
-    border-bottom: 1px solid #707070;
-    cursor: pointer;
+  border-top-left-radius: 15px;
+  border-top-right-radius: 15px;
+  background-color: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: 100%;
+  width: 43%;
+  border-bottom: 1px solid #707070;
+  cursor: pointer;
 }
 
 .selected {
-    border-bottom: 0;
+  border-bottom: 0;
 }
 
 .login-tab p {
-    font-size: 20px;
-    color: #3298CB;
+  font-size: 20px;
+  color: #3298cb;
 }
 
 .login-body {
-    background-color: white;
-    border-bottom-left-radius: 20px;
-    border-bottom-right-radius: 20px;
-    height: 100%;
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-evenly;
-    padding: 10px 70px;
+  background-color: white;
+  border-bottom-left-radius: 20px;
+  border-bottom-right-radius: 20px;
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  padding: 10px 70px;
 }
 
 .login-button {
-    width: 100%;
-    max-width: 100%;
-    font-size: 24px;
-    text-align: center;
-    color: white;
-    display: inline-block;
+  cursor: pointer;
+  width: 100%;
+  max-width: 100%;
+  font-size: 24px;
+  text-align: center;
+  color: white;
+  background-color: rgb(50, 152, 202);
+  display: inline-block;
 }
 
 .background {
-    background: linear-gradient(299deg, #3298CB 0%, #1D5977 44%, #194C66 100%);
-    width: 100%;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
+  background: linear-gradient(299deg, #3298cb 0%, #1d5977 44%, #194c66 100%);
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 .password-reset {
-    text-decoration: underline;
-    cursor: pointer;
+  text-decoration: underline;
+  cursor: pointer;
 }
 
 .welcome-text {
-    text-align: left;
-    font-size: 24px;
-    color: #3298CB;
+  text-align: left;
+  font-size: 24px;
+  color: #3298cb;
 }
 
 .input {
-    width: 100%;
+  width: 100%;
 }
